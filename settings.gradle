@@ -1,0 +1,3 @@
+include ':falu'
+include ':app'
+rootProject.name = "Falu"
