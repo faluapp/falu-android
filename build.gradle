@@ -18,6 +18,13 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven {
+            url 'https://pkgs.dev.azure.com/tingle/_packaging/tingle-maven/maven/v1'
+            credentials {
+                username "AZURE_ARTIFACTS"
+                password System.getenv("AZURE_ARTIFACTS_ENV_ACCESS_TOKEN") ?: "${azureArtifactsGradleAccessToken}"
+            }
+        }
     }
 }
 
