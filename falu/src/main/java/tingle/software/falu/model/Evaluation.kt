@@ -91,4 +91,12 @@ enum class EvaluationScope {
 
     @SerializedName("business")
     BUSINESS;
+
+    val description: String
+        get() {
+            return when (this) {
+                PERSONAL -> "personal"
+                BUSINESS -> "business"
+            }
+        }
 }
