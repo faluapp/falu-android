@@ -54,6 +54,7 @@ publishing {
             groupId "${group_id}"
             artifactId "${project.name}"
             version getPublishVersion()
+//            artifact("$buildDir/outputs/aar/$project.name-release.aar")
         }
     }
 
