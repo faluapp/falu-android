@@ -6,7 +6,7 @@ buildscript {
     ext.target_sdk_version = 30
 
     ext.group_id = 'tingle.software.falu'
-    ext.vsts_url = 'https://pkgs.dev.azure.com/tingle/_packaging/tingle-maven/maven/v1'
+    ext.packaging_url = 'https://pkgs.dev.azure.com/tingle/_packaging/tingle-maven/maven/v1'
 
     repositories {
         google()
@@ -31,7 +31,7 @@ allprojects {
         google()
         jcenter()
         maven {
-            url 'https://pkgs.dev.azure.com/tingle/_packaging/tingle-maven/maven/v1'
+            url "${packaging_url}"
             credentials {
                 username "AZURE_ARTIFACTS"
                 password System.getenv("AZURE_ARTIFACTS_ENV_ACCESS_TOKEN") ?: "${azureArtifactsGradleAccessToken}"
@@ -48,7 +48,7 @@ ext.getPublishUserName = { ->
 ext.getPublishPassword = { ->
     return coalesce(System.getenv("AZURE_ARTIFACTS_ENV_ACCESS_TOKEN"), "dummy")
 }
-ext.getPublishUrl = { -> return coalesce(System.getenv("PACKAGING_URL"), "${vsts_url}") }
+ext.getPublishUrl = { -> return coalesce(System.getenv("PACKAGING_URL"), "${packaging_url}") }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
