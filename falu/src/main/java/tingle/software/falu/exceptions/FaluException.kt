@@ -10,7 +10,7 @@ import java.util.*
  */
 abstract class FaluException(
     val problem: HttpApiResponseProblem? = null,
-    val statusCode: Int = 0,
+    val statusCode: Int? = 0,
     cause: Throwable? = null,
     message: String? = problem?.description
 ) : Exception(message, cause) {

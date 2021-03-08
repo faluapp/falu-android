@@ -7,7 +7,7 @@ import software.tingle.api.HttpApiResponseProblem
  */
 class APIException(
     problem: HttpApiResponseProblem? = null,
-    statusCode: Int = 0,
+    statusCode: Int? = 0,
     message: String? = problem?.description,
     cause: Throwable? = null
 ) : FaluException(
