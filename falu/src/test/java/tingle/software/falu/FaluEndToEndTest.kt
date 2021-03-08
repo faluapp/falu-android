@@ -10,6 +10,9 @@ class FaluUnitTest {
         assertEquals(4, 2 + 2)
     }
 
+        val file = File(context.cacheDir, "falu.pdf")
+        val fileStream = context.resources.openRawResource(R.raw.falu)
+        copyStreamToFile(fileStream, file)
 
     private fun copyStreamToFile(inputStream: InputStream, outputFile: File) {
         inputStream.use { input ->
