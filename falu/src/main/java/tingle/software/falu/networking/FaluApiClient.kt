@@ -10,15 +10,21 @@ import software.tingle.api.AbstractHttpApiClient
 import software.tingle.api.BuildConfig
 import software.tingle.api.ResourceResponse
 import software.tingle.api.authentication.AuthenticationHeaderProvider
+import tingle.software.falu.exceptions.APIConnectionException
+import tingle.software.falu.exceptions.APIException
+import tingle.software.falu.exceptions.AuthenticationException
 import tingle.software.falu.model.EvaluationRequest
 import tingle.software.falu.model.EvaluationResponse
-import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 internal class FaluApiClient internal constructor(publishableKey: String) :
     AbstractHttpApiClient(FaluAuthenticationHeaderProvider(publishableKey)) {
 
-    @Throws(IOException::class)
+    @Throws(
+        AuthenticationException::class,
+        APIConnectionException::class,
+        APIException::class
+    )
     suspend fun createEvaluation(request: EvaluationRequest): ResourceResponse<EvaluationResponse> {
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
