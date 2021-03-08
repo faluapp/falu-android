@@ -44,6 +44,12 @@ stages:
               configFilePath: '$(Build.SourcesDirectory)/GitVersion.yml'
 
           # TODO: add tasks for build and test before assembling
+          - task: Gradle@2
+              displayName: 'gradlew test -p falu --stacktrace'
+              inputs:
+                gradleWrapperFile: '$(wrapperScript)'
+                tasks: 'test -p falu  --stacktrace'
+                testResultsFiles: '**/build/test-results/TEST-*.xml'
 
           - task: Gradle@2
             displayName: 'gradlew assembleRelease -p falu --stacktrace'
