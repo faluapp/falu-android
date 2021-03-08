@@ -1,7 +1,12 @@
 package tingle.software.falu.model
 
+import android.os.Parcelable
+import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
+import software.tingle.api.adapters.ISO8601DateAdapter
 import java.io.File
+import java.util.*
 
 /**
  * [The evaluation request object](https://falu.io)
@@ -84,6 +89,16 @@ data class EvaluationRequest(
     }
 }
 
+@Parcelize
+data class EvaluationResponse constructor(
+    var id: String,
+    var currency: String?,
+    var scope: EvaluationScope?,
+    @JsonAdapter(ISO8601DateAdapter::class)
+    var created: Date?,
+    @JsonAdapter(ISO8601DateAdapter::class)
+    var updated: Date?
+) : Parcelable
 
 enum class EvaluationScope {
     @SerializedName("personal")
