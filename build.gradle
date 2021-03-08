@@ -5,7 +5,7 @@ buildscript {
     ext.compile_sdk_version = 30
     ext.target_sdk_version = 30
 
-    ext.group_id = 'tingle.software.api'
+    ext.group_id = 'tingle.software.falu'
     ext.vsts_url = 'https://pkgs.dev.azure.com/tingle/_packaging/tingle-maven/maven/v1'
 
     repositories {
@@ -14,6 +14,7 @@ buildscript {
     }
     dependencies {
         classpath "com.android.tools.build:gradle:4.1.2"
+        classpath 'digital.wup:android-maven-publish:3.6.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong

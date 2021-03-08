@@ -2,6 +2,7 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
     id 'kotlin-parcelize'
+    id 'digital.wup.android-maven-publish'
 }
 
 android {
@@ -42,6 +43,28 @@ android {
 
     testOptions {
         unitTests.includeAndroidResources = true
+    }
+}
+
+publishing {
+    publications {
+        mavenAar(MavenPublication) {
+            from components.android
+
+            groupId "${group_id}"
+            artifactId "${project.name}"
+            version getPublishVersion()
+        }
+    }
+
+    repositories {
+        maven {
+            url getPublishUrl()
+            credentials {
+                username getPublishUserName()
+                password getPublishPassword()
+            }
+        }
     }
 }
 
