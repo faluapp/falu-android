@@ -6,7 +6,6 @@ import java.net.HttpURLConnection
 /**
  * No valid API key provided.
  *
- * [Errors](https://stripe.com/docs/api/errors)
  */
 class AuthenticationException internal constructor(
     problem: HttpApiResponseProblem,

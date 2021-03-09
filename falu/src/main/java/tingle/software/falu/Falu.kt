@@ -17,9 +17,18 @@ class Falu internal constructor(
 ) {
     private val publishableKey = ApiKeyValidator().requireValid(publishableKey)
 
-    constructor(publishableKey: String) : this(
+    /**
+     * Constructor with publishable key.
+     *
+     * @param publishableKey the client's publishable key
+     * @param enableLogging enable logging in FALU SDK; disabled by default.
+     * It is recommended to disable logging in production.
+     */
+    constructor(
+        publishableKey: String, enableLogging: Boolean = false
+    ) : this(
         ApiKeyValidator.get().requireValid(publishableKey),
-        FaluRepository(publishableKey)
+        FaluRepository(publishableKey, enableLogging)
     )
 
 
