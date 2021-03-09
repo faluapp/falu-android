@@ -92,8 +92,8 @@ stages:
 
         steps:
           - task: Gradle@1
-            displayName: 'gradlew publish --stacktrace'
+            displayName: 'gradlew publish -p falu --stacktrace'
             inputs:
               gradleWrapperFile: '$(wrapperScript)'
-              tasks: 'publish --stacktrace'
+              tasks: 'publish -p falu --stacktrace'
               publishJUnitResults: false
