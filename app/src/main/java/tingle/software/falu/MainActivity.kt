@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
 
         falu.createEvaluation(request, object : ApiResultCallback<EvaluationResponse>{
             override fun onSuccess(result: EvaluationResponse) {
-                TODO("Not yet implemented")
+                print(result.id)
             }
 
             override fun onError(e: Exception) {

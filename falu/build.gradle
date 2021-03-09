@@ -81,7 +81,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    implementation 'tingle.software.api:lending:4.1.92'
+    implementation 'tingle.software.api:abstractions:4.1.93'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation "org.mockito:mockito-core:3.8.0"
