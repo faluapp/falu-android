@@ -13,9 +13,12 @@ import kotlin.coroutines.CoroutineContext
 /**
  * A base class for Falu-related API requests.
  */
-internal abstract class FaluApiRepository internal constructor(publishableKey: String) :
+internal abstract class FaluApiRepository internal constructor(
+    publishableKey: String,
+    enableLogging: Boolean = false
+) :
     CoroutineScope {
-    protected val faluApiClient = FaluApiClient(publishableKey)
+    protected val faluApiClient = FaluApiClient(publishableKey, enableLogging)
 
     override val coroutineContext: CoroutineContext
         get() = Job() + Dispatchers.Main
@@ -31,7 +34,7 @@ internal abstract class FaluApiRepository internal constructor(publishableKey: S
             return@withContext
         }
 
-        val exception =  APIException( problem = response?.error, statusCode = response?.statusCode)
+        val exception = APIException(problem = response?.error, statusCode = response?.statusCode)
         dispatchError(exception, callbacks)
     }
 

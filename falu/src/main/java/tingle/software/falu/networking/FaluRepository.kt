@@ -9,8 +9,8 @@ import tingle.software.falu.model.EvaluationResponse
 /**
  * Makes network requests to the Falu API.
  */
-internal class FaluRepository internal constructor(publishableKey: String) :
-    FaluApiRepository(publishableKey) {
+internal class FaluRepository internal constructor(publishableKey: String, enableLogging: Boolean) :
+    FaluApiRepository(publishableKey, enableLogging) {
 
     /**
      * Create an evaluation asynchronously

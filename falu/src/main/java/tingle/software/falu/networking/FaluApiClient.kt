@@ -16,7 +16,12 @@ import tingle.software.falu.model.EvaluationRequest
 import tingle.software.falu.model.EvaluationResponse
 import java.util.concurrent.TimeUnit
 
-internal class FaluApiClient internal constructor(publishableKey: String) :
+internal class FaluApiClient
+@JvmOverloads
+internal constructor(
+    publishableKey: String,
+    private val enableLogging: Boolean = false
+) :
     AbstractHttpApiClient(FaluAuthenticationHeaderProvider(publishableKey)) {
 
     @Throws(
@@ -55,8 +60,9 @@ internal class FaluApiClient internal constructor(publishableKey: String) :
             .readTimeout(50, TimeUnit.SECONDS)
             .writeTimeout(50, TimeUnit.SECONDS)
 
-        builder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-
+        if (enableLogging) {
+            builder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+        }
 
         return super.buildBackChannel(builder)
     }
