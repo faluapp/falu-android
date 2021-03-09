@@ -25,15 +25,14 @@ internal abstract class FaluApiRepository internal constructor(publishableKey: S
     protected suspend fun <TResource> handleFaluResponse(
         response: ResourceResponse<TResource>?,
         callbacks: ApiResultCallback<TResource>
-    ) = withContext(Dispatchers.Default) {
+    ) = withContext(Dispatchers.Main) {
         if (response != null && response.successful() && response.resource != null) {
             callbacks.onSuccess(response.resource!!)
             return@withContext
         }
 
-        callbacks.onError(
-            APIException( problem = response?.error, statusCode = response?.statusCode),
-        )
+        val exception =  APIException( problem = response?.error, statusCode = response?.statusCode)
+        dispatchError(exception, callbacks)
     }
 
     // dispatch errors
