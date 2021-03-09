@@ -9,7 +9,7 @@ class APIException(
     problem: HttpApiResponseProblem? = null,
     statusCode: Int? = 0,
     errorCode: String? = problem?.code,
-    message: String? = problem?.code,
+    message: String? = problem?.description,
     cause: Throwable? = null
 ) : FaluException(
     problem = problem,

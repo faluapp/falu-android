@@ -13,7 +13,7 @@ abstract class FaluException(
     val statusCode: Int? = 0,
     val errorCode: String? = problem?.code,
     cause: Throwable? = null,
-    message: String? = problem?.code
+    message: String? = problem?.description
 ) : Exception(message, cause) {
 
 
