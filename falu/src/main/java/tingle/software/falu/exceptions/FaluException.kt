@@ -11,20 +11,20 @@ import java.util.*
 abstract class FaluException(
     val problem: HttpApiResponseProblem? = null,
     val statusCode: Int? = 0,
+    val errorCode: String? = problem?.code,
     cause: Throwable? = null,
-    val code: String? = problem?.code,
-    message: String? = problem?.description
+    message: String? = problem?.code
 ) : Exception(message, cause) {
 
 
     override fun hashCode(): Int {
-        return Objects.hash(problem, statusCode, code, message)
+        return Objects.hash(problem, statusCode, errorCode, message)
     }
 
     private fun typedEquals(ex: FaluException): Boolean {
         return problem == ex.problem &&
                 statusCode == ex.statusCode &&
-                code == ex.code &&
+                errorCode == ex.errorCode &&
                 message == ex.message
     }
 
@@ -38,7 +38,9 @@ abstract class FaluException(
 
     override fun toString(): String {
         return listOfNotNull(
-            statusCode.let { "Status Code: $it" },
+            statusCode.let { "Response code: $it" },
+            errorCode.let { "Error Code: $it" },
+            message.let { "$it" },
             super.toString()
         ).joinToString(separator = "\n")
     }
