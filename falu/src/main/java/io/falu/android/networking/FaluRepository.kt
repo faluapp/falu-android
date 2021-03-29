@@ -5,6 +5,8 @@ import kotlinx.coroutines.launch
 import io.falu.android.ApiResultCallback
 import io.falu.android.model.EvaluationRequest
 import io.falu.android.model.EvaluationResponse
+import io.falu.android.model.Payment
+import io.falu.android.model.PaymentRequest
 
 /**
  * Makes network requests to the Falu API.
@@ -40,5 +42,30 @@ internal class FaluRepository internal constructor(publishableKey: String, enabl
 
         }
 
+    }
+
+    /**
+     * Create a payment asynchronously
+     *
+     * See [Create a payment](https://api.falu.io/v1/payments).
+     * `POST /v1/payments`
+     *
+     * @param request [The payment request object](https://falu.io)
+     * @param callbacks [ApiResultCallback] to receive the result or error
+     *
+     */
+    fun createPaymentAsync(request: PaymentRequest, callbacks: ApiResultCallback<Payment>){
+        launch (Dispatchers.IO){
+            runCatching {
+                faluApiClient.createPayment(request)
+            }.fold(
+                onSuccess = {
+                    handleFaluResponse(it, callbacks)
+                },
+                onFailure = {
+                    dispatchError(it, callbacks)
+                }
+            )
+        }
     }
 }

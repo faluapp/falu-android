@@ -2,6 +2,8 @@ package io.falu.android
 
 import io.falu.android.model.EvaluationRequest
 import io.falu.android.model.EvaluationResponse
+import io.falu.android.model.Payment
+import io.falu.android.model.PaymentRequest
 import io.falu.android.networking.FaluRepository
 
 /**
@@ -47,5 +49,22 @@ class Falu internal constructor(
         callbacks: ApiResultCallback<EvaluationResponse>
     ) {
         faluRepository.createEvaluationAsync(request, callbacks)
+    }
+
+    /**
+     * Create a payment asynchronously
+     *
+     * See [Create a payment](https://api.falu.io/v1/payments).
+     * `POST /v1/payments`
+     *
+     * @param request [The payment request object](https://falu.io)
+     * @param callbacks [ApiResultCallback] to receive the result or error
+     *
+     */
+    fun createPayment(
+        request: PaymentRequest,
+        callbacks: ApiResultCallback<Payment>
+    ) {
+        faluRepository.createPaymentAsync(request, callbacks)
     }
 }
