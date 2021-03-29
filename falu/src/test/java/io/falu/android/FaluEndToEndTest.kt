@@ -6,14 +6,12 @@ import androidx.test.core.app.ApplicationProvider
 import com.nhaarman.mockitokotlin2.argWhere
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
+import io.falu.android.exceptions.FaluException
+import io.falu.android.model.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import io.falu.android.exceptions.FaluException
-import io.falu.android.model.EvaluationRequest
-import io.falu.android.model.EvaluationResponse
-import io.falu.android.model.EvaluationScope
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -58,6 +56,28 @@ class FaluEndToEndTest {
                 it is FaluException
             }
         )
+    }
+
+    @Test
+    fun testMpesaPaymentInitRequest() {
+        val callback: ApiResultCallback<Payment> = mock()
+
+        val mpesa = PaymentInitiationMpesa()
+        mpesa.phone = "+254712345678"
+        mpesa.reference = "+254712345678"
+        mpesa.kind = MpesaStkPushTransactionType.CUSTOMER_PAYS_BILL_ONLINE
+
+        val request = PaymentRequest(
+            amount = 100,
+            currency = "kes",
+            mpesa = mpesa
+        )
+
+        falu.createPayment(request, callback)
+
+        verify(callback).onSuccess(result = argWhere {
+            it.status != PaymentStatus.FAILED && it.mpesa != null
+        })
     }
 
     private fun copyStreamToFile(inputStream: InputStream, outputFile: File) {
