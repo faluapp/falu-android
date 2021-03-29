@@ -58,3 +58,89 @@ enum class MpesaStkPushTransactionType {
     @SerializedName("customerPayBillOnline")
     CUSTOMER_PAYS_BILL_ONLINE,
 }
+
+enum class PaymentStatus {
+    @SerializedName("pending")
+    PENDING,
+
+    @SerializedName("succeeded")
+    SUCCEEDED,
+
+    @SerializedName("failed")
+    FAILED
+}
+
+
+enum class PaymentType {
+    @SerializedName("mpesa")
+    MPESA,
+
+    @SerializedName("airtelmoney")
+    AIRTEL_MONEY,
+
+    @SerializedName("mtnmoney")
+    MTN_MONEY,
+
+    @SerializedName("pesalink")
+    PESALINK
+}
+
+/**
+ * [The payment object](https://falu.io)
+ */
+class Payment : FaluModel() {
+    /**
+     * Unique identifier for the object
+     */
+    var id: String = ""
+
+    /**
+     * Amount of the payment in smallest currency unit.
+     */
+    var amount: Int = 0
+
+    /**
+     * Three-letter ISO currency code, in lowercase
+     */
+    var currency: String = "kes"
+
+    /**
+     * The status of a payment
+     */
+    var status: PaymentStatus = PaymentStatus.PENDING
+
+    /**
+     * Time at which the object was created.
+     */
+    var created: Date = Date()
+
+    /**
+     * Time at which the object was last updated
+     */
+    var updated: Date? = null
+
+    /**
+     * The medium used for the payment
+     */
+    var type: PaymentType? = null
+
+    /**
+     * Represents the provider details for a Pesalink payment
+     */
+    var pesalink: Any? = null
+
+    /**
+     * Identifier of the reversal, if the payment has been reversed
+     */
+    var reversalId: String? = null
+
+    /**
+     * Unique identifier for the workspace that the object belongs to
+     */
+    var workspaceId: String = ""
+
+    /**
+     * Indicates if this object belongs in the live environment
+     */
+    var live: Boolean = false
+}
