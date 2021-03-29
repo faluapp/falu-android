@@ -5,7 +5,7 @@ buildscript {
     ext.compile_sdk_version = 30
     ext.target_sdk_version = 30
 
-    ext.group_id = 'tingle.software.falu'
+    ext.group_id = 'io.falu'
     ext.packaging_url = 'https://pkgs.dev.azure.com/tingle/_packaging/tingle-maven/maven/v1'
 
     repositories {
