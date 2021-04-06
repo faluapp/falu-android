@@ -26,8 +26,10 @@ class Falu internal constructor(
      * @param enableLogging enable logging in FALU SDK; disabled by default.
      * It is recommended to disable logging in production.
      */
+    @JvmOverloads
     constructor(
-        publishableKey: String, enableLogging: Boolean = false
+        publishableKey: String,
+        enableLogging: Boolean = false
     ) : this(
         ApiKeyValidator.get().requireValid(publishableKey),
         FaluRepository(publishableKey, enableLogging)
