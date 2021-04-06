@@ -1,13 +1,13 @@
 package io.falu.android.networking
 
+import io.falu.android.ApiResultCallback
+import io.falu.android.exceptions.APIException
+import io.falu.android.exceptions.FaluException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
 import software.tingle.api.ResourceResponse
-import io.falu.android.ApiResultCallback
-import io.falu.android.exceptions.APIException
-import io.falu.android.exceptions.FaluException
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -15,7 +15,7 @@ import kotlin.coroutines.CoroutineContext
  */
 internal abstract class FaluApiRepository internal constructor(
     publishableKey: String,
-    enableLogging: Boolean = false
+    enableLogging: Boolean
 ) :
     CoroutineScope {
     protected val faluApiClient = FaluApiClient(publishableKey, enableLogging)

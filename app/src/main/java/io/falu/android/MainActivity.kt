@@ -2,9 +2,7 @@ package io.falu.android
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import io.falu.android.model.EvaluationRequest
-import io.falu.android.model.EvaluationResponse
-import io.falu.android.model.EvaluationScope
+import io.falu.android.model.*
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -14,7 +12,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val falu = Falu("pk_test_cbw2Bxslzkxf7sUAg6932NYm1ApTX7C0TEMbvCYss")
+        val falu = Falu("pk_test_cbw2Bxslzkxf7sUAg6932NYm1ApTX7C0TEMbvCYss", BuildConfig.DEBUG)
 
         val file = File(cacheDir, "falu.pdf")
         val fileStream = resources.openRawResource(R.raw.falu)
@@ -37,6 +35,26 @@ class MainActivity : AppCompatActivity() {
 
             override fun onError(e: Exception) {
                 print(e)
+            }
+        })
+
+        val mpesa = PaymentInitiationMpesa()
+        mpesa.phone = "+254712345678"
+        mpesa.reference = "+254712345678"
+        mpesa.kind = MpesaStkPushTransactionType.CUSTOMER_PAYS_BILL_ONLINE
+
+        val paymentRequest = PaymentRequest(
+            amount = 100,
+            currency = "kes",
+            mpesa = mpesa
+        )
+
+        falu.createPayment(paymentRequest, object: ApiResultCallback<Payment>{
+            override fun onSuccess(result: Payment) {
+
+            }
+
+            override fun onError(e: Exception) {
             }
         })
     }
