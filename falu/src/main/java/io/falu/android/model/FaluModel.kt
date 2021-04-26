@@ -1,6 +1,10 @@
 package io.falu.android.model
 
-open class FaluModel {
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+open class FaluModel : Parcelable {
     /**
      * An optional arbitrary string attached to the object.
      * Mainly used to describe the object and often useful for displaying to users.
