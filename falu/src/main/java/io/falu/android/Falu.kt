@@ -1,5 +1,6 @@
 package io.falu.android
 
+import android.content.Context
 import io.falu.android.model.EvaluationRequest
 import io.falu.android.model.EvaluationResponse
 import io.falu.android.model.Payment
@@ -28,11 +29,12 @@ class Falu internal constructor(
      */
     @JvmOverloads
     constructor(
+        context: Context,
         publishableKey: String,
         enableLogging: Boolean = false
     ) : this(
         ApiKeyValidator.get().requireValid(publishableKey),
-        FaluRepository(publishableKey, enableLogging)
+        FaluRepository(context, publishableKey, enableLogging)
     )
 
 
