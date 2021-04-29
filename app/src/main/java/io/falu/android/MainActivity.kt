@@ -1,7 +1,7 @@
 package io.falu.android
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import io.falu.android.model.*
 import java.io.File
 import java.io.FileOutputStream
@@ -12,7 +12,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val falu = Falu("pk_test_cbw2Bxslzkxf7sUAg6932NYm1ApTX7C0TEMbvCYss", BuildConfig.DEBUG)
+        val falu =
+            Falu(this, "pk_test_cbw2Bxslzkxf7sUAg6932NYm1ApTX7C0TEMbvCYss", BuildConfig.DEBUG)
 
         val file = File(cacheDir, "falu.pdf")
         val fileStream = resources.openRawResource(R.raw.falu)
@@ -28,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         )
 
 
-        falu.createEvaluation(request, object : ApiResultCallback<EvaluationResponse>{
+        falu.createEvaluation(request, object : ApiResultCallback<EvaluationResponse> {
             override fun onSuccess(result: EvaluationResponse) {
                 print(result.id)
             }
@@ -49,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             mpesa = mpesa
         )
 
-        falu.createPayment(paymentRequest, object: ApiResultCallback<Payment>{
+        falu.createPayment(paymentRequest, object : ApiResultCallback<Payment> {
             override fun onSuccess(result: Payment) {
 
             }
