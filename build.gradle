@@ -42,6 +42,7 @@ allprojects {
 
 ext.coalesce = { param1, param2 -> return param1 != null ? param1 : param2 }
 ext.getPublishVersion = { -> return coalesce(System.getenv("BUILD_BUILDNUMBER"), "1.0") }
+ext.getPublishVersionCode = { -> return 'git rev-list HEAD --count'.execute().text.trim() }
 ext.getPublishUserName = { ->
     return coalesce(System.getenv("PACKAGING_USERNAME"), "AZURE_ARTIFACTS")
 }
