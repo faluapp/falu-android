@@ -1,18 +1,23 @@
 package io.falu.android.networking
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import android.content.Context
 import io.falu.android.ApiResultCallback
 import io.falu.android.model.EvaluationRequest
 import io.falu.android.model.EvaluationResponse
 import io.falu.android.model.Payment
 import io.falu.android.model.PaymentRequest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Makes network requests to the Falu API.
  */
-internal class FaluRepository internal constructor(publishableKey: String, enableLogging: Boolean) :
-    FaluApiRepository(publishableKey, enableLogging) {
+internal class FaluRepository internal constructor(
+    context: Context,
+    publishableKey: String,
+    enableLogging: Boolean
+) :
+    BaseApiRepository(context, publishableKey, enableLogging) {
 
     /**
      * Create an evaluation asynchronously
@@ -54,8 +59,8 @@ internal class FaluRepository internal constructor(publishableKey: String, enabl
      * @param callbacks [ApiResultCallback] to receive the result or error
      *
      */
-    fun createPaymentAsync(request: PaymentRequest, callbacks: ApiResultCallback<Payment>){
-        launch (Dispatchers.IO){
+    fun createPaymentAsync(request: PaymentRequest, callbacks: ApiResultCallback<Payment>) {
+        launch(Dispatchers.IO) {
             runCatching {
                 faluApiClient.createPayment(request)
             }.fold(

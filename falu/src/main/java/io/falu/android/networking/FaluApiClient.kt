@@ -13,17 +13,19 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.logging.HttpLoggingInterceptor
 import software.tingle.api.AbstractHttpApiClient
 import software.tingle.api.ResourceResponse
 import software.tingle.api.authentication.AuthenticationHeaderProvider
 import java.util.concurrent.TimeUnit
 
-internal class FaluApiClient
-internal constructor(
+internal class FaluApiClient internal constructor(
     publishableKey: String,
-    enableLogging: Boolean
+    private val appDetailsInterceptor: AppDetailsInterceptor,
+    private val enableLogging: Boolean
 ) :
-    AbstractHttpApiClient(FaluAuthenticationHeaderProvider(publishableKey), enableLogging) {
+    AbstractHttpApiClient(FaluAuthenticationHeaderProvider(publishableKey)
+    ) {
 
     @Throws(
         AuthenticationException::class,
@@ -68,10 +70,15 @@ internal constructor(
 
     override fun buildBackChannel(builder: OkHttpClient.Builder): OkHttpClient {
         builder
+            .addInterceptor(appDetailsInterceptor)
             .followRedirects(false)
             .connectTimeout(50, TimeUnit.SECONDS) // default is 10 seconds
             .readTimeout(50, TimeUnit.SECONDS)
             .writeTimeout(50, TimeUnit.SECONDS)
+
+        if (enableLogging) {
+            builder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+        }
 
         return super.buildBackChannel(builder)
     }
