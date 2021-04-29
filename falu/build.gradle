@@ -15,6 +15,8 @@ android {
         versionCode 1
         versionName "1.0"
 
+        buildConfigField("String", "FALU_VERSION_NAME", "\"${getPublishVersion()}\"")
+        buildConfigField("String", "FALU_VERSION_CODE", "\"${getPublishVersionCode()}\"")
         vectorDrawables.useSupportLibrary = true
 
         testOptions {
@@ -81,7 +83,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    implementation 'tingle.software.api:abstractions:4.1.95'
+    implementation 'tingle.software.api:abstractions:4.1.96'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation "org.mockito:mockito-core:3.8.0"
