@@ -2,6 +2,7 @@ package io.falu.android.networking
 
 import android.content.Context
 import android.os.Build
+import io.falu.android.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.Response
 
@@ -26,7 +27,8 @@ internal class AppDetailsInterceptor internal constructor(
             .header("X-App-Package-Id", packageName)
             .header("X-App-Version-Name", appVersionName)
             .header("X-App-Version-Code", appVersionCode)
-            .header("Falu-Agent", userAgent)
+            .header("X-App-Kind", appKind)
+            .header("User-Agent", userAgent)
             .build()
 
         return chain.proceed(request)
@@ -35,10 +37,6 @@ internal class AppDetailsInterceptor internal constructor(
     @Suppress("DEPRECATION")
     internal fun buildUserAgent(context: Context): String {
         with(context.packageManager) {
-            val applicationInfo = context.applicationInfo
-            val stringId = applicationInfo.labelRes
-            val appName = if (stringId == 0) applicationInfo.nonLocalizedLabel.toString()
-            else context.getString(stringId)
 
             val manufacturer = Build.MANUFACTURER
             val model = Build.MODEL
@@ -47,7 +45,7 @@ internal class AppDetailsInterceptor internal constructor(
 
             val installerName = getInstallerPackageName(context.packageName) ?: "StandAloneInstall"
 
-            return "$appName / $appVersionName($appVersionCode); $installerName; ($manufacturer; $model; SDK $version; Android $versionRelease)"
+            return "falu-android/${BuildConfig.FALU_VERSION_NAME}(${BuildConfig.FALU_VERSION_CODE}); $installerName; ($manufacturer; $model; SDK $version; Android $versionRelease)"
         }
     }
 }
