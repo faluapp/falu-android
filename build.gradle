@@ -13,7 +13,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.2.2'
-        classpath 'digital.wup:android-maven-publish:3.6.3'
+        classpath 'io.github.gradle-nexus:publish-plugin:1.1.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -22,7 +22,7 @@ buildscript {
 }
 
 plugins {
-    id "net.linguica.maven-settings" version "0.5"
+    id "io.github.gradle-nexus.publish-plugin" version "1.1.0"
 }
 
 allprojects {
@@ -42,6 +42,18 @@ ext.getPublishUrl = { -> return System.getenv("PUBLISHING_URL") ?: "https://oss.
 ext["signing.keyId"] = System.getenv("SIGNING_KEY_ID")
 ext["signing.password"] = System.getenv("SIGNING_PASSWORD")
 ext["signing.secretKeyRingFile"] = System.getenv("SIGNING_FILE_PATH")
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            stagingProfileId = getPublishStagingProfileId()
+            username = getPublishUsername()
+            password = getPublishPassword()
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+        }
+    }
+}
 
 task clean(type: Delete) {
     delete rootProject.buildDir
