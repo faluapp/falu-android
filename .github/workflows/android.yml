@@ -1,0 +1,36 @@
+name: Falu
+
+on:
+  push:
+    tags:
+      - '*'
+    paths-ignore: # do not trigger for changes in docs
+      - docs/**
+      - README.md
+      - CHANGELOG.md
+      - LICENSE.md
+  pull_request:
+    branches: [ main ]
+    paths-ignore: # do not trigger for changes in docs
+      - docs/**
+      - README.md
+      - CHANGELOG.md
+      - LICENSE.md
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Build with Gradle
+      run: ./gradlew build
