@@ -6,7 +6,6 @@ buildscript {
     ext.target_sdk_version = 30
 
     ext.group_id = 'io.falu'
-    ext.packaging_url = 'https://pkgs.dev.azure.com/tingle/_packaging/tingle-maven/maven/v1'
 
     repositories {
         google()
@@ -33,16 +32,16 @@ allprojects {
     }
 }
 
-ext.coalesce = { param1, param2 -> return param1 != null ? param1 : param2 }
-ext.getPublishVersion = { -> return coalesce(System.getenv("BUILD_BUILDNUMBER"), "1.0") }
+ext.getPublishVersion = { -> return System.getenv("BUILD_BUILDNUMBER") ?: "1.0" }
 ext.getPublishVersionCode = { -> return 'git rev-list HEAD --count'.execute().text.trim() }
-ext.getPublishUserName = { ->
-    return coalesce(System.getenv("PACKAGING_USERNAME"), "AZURE_ARTIFACTS")
-}
-ext.getPublishPassword = { ->
-    return coalesce(System.getenv("AZURE_ARTIFACTS_ENV_ACCESS_TOKEN"), "dummy")
-}
-ext.getPublishUrl = { -> return coalesce(System.getenv("PACKAGING_URL"), "${packaging_url}") }
+ext.getPublishUsername = { -> return System.getenv("PUBLISHING_USERNAME") ?: "" }
+ext.getPublishPassword = { -> return System.getenv("PUBLISHING_PASSWORD") ?: "" }
+ext.getPublishStagingProfileId = { -> return System.getenv("PUBLISHING_PROFILE_ID") ?: "" }
+ext.getPublishUrl = { -> return System.getenv("PUBLISHING_URL") ?: "https://oss.sonatype.org/service/local/staging/deploy/maven2/" }
+
+ext["signing.keyId"] = System.getenv("SIGNING_KEY_ID")
+ext["signing.password"] = System.getenv("SIGNING_PASSWORD")
+ext["signing.secretKeyRingFile"] = System.getenv("SIGNING_FILE_PATH")
 
 task clean(type: Delete) {
     delete rootProject.buildDir
