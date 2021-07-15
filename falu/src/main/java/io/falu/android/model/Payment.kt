@@ -50,7 +50,13 @@ class PaymentInitiationMpesa {
     /**
      * The kind of mpesa STK push to be sent out
      */
+    @Deprecated("paybill property is favored instead")
     var kind: MpesaStkPushTransactionType = MpesaStkPushTransactionType.CUSTOMER_BUYS_GOODS_ONLINE
+
+    /**
+     * Set true if the payment to be initiated is to be made to a paybill; false, the payment is made to a BuyGoods till
+     */
+    var paybill: Boolean = false
 
     /**
      * The shortcode of the receiver. When not provided, it defaults to the default recipient.
