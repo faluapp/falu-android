@@ -1,7 +1,7 @@
-## Falu Android SDK
-
 ![Falu](https://github.com/tinglesoftware/falu-android-sdk/workflows//badge.svg)
 ![Language](https://img.shields.io/badge/language-Kotlin%205.0-green.svg)
+
+# Falu Android SDK
 
 Falu's Android SDK simplifies the process of building excellent financial services into Android applications.
 We expose APIs that will enable to you to make payment and client evaluation requests.
@@ -16,11 +16,11 @@ We expose APIs that will enable to you to make payment and client evaluation req
 Add `falu` to your `build.gradle` dependencies.
 
 ```gradle
-implementation `io.falu:falu:VERSION_NUMBER`
+implementation "io.falu:falu:VERSION_NUMBER"
 ```
 # Getting Started
 
 ### Setup Guide
-Get started with our ![Setup Guide](https://falu.io/docs/).
+Get started with our [Setup Guide](https://falu.io/docs/).
 
 ### Examples 
