@@ -10,7 +10,7 @@ abstract class AbstractAppDetails(private val context: Context) {
         get() {
             with(context.packageManager) {
                 return try {
-                    getPackageInfo(context.packageName, 0).versionName
+                    getPackageInfo(context.packageName, 0).versionName ?: "0.0.0"
                 } catch (e: PackageManager.NameNotFoundException) {
                     "nameNotFound"
                 }
