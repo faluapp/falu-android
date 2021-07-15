@@ -3,27 +3,32 @@ package io.falu.android
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import com.nhaarman.mockitokotlin2.argWhere
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import io.falu.android.exceptions.FaluException
-import io.falu.android.model.*
+import io.falu.android.model.EvaluationRequest
+import io.falu.android.model.EvaluationScope
+import io.falu.android.model.PaymentInitiationMpesa
+import io.falu.android.model.PaymentRequest
+import io.falu.android.networking.FaluApiClient
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import kotlin.test.AfterTest
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 @RunWith(RobolectricTestRunner::class)
+@Config( manifest="AndroidManifest.xml")
 @ExperimentalCoroutinesApi
 class FaluEndToEndTest {
 
     private val context: Context = ApplicationProvider.getApplicationContext()
-    private val falu = Falu(FakeKeys.TEST_PUBLISHABLE_KEY)
+    private val apiClient = FaluApiClient(context, FakeKeys.TEST_PUBLISHABLE_KEY, true)
 
     private val testDispatcher = TestCoroutineDispatcher()
 
@@ -34,8 +39,6 @@ class FaluEndToEndTest {
 
     @Test
     fun testCreateEvaluationThrowsException() {
-        val createEvalCallback: ApiResultCallback<EvaluationResponse> = mock()
-
         val file = File(context.cacheDir, "falu.pdf")
         val fileStream = context.resources.openRawResource(R.raw.falu)
         copyStreamToFile(fileStream, file)
@@ -49,23 +52,18 @@ class FaluEndToEndTest {
             description = ""
         )
 
-        falu.createEvaluation(request, createEvalCallback)
-
-        verify(createEvalCallback).onError(
-            argWhere {
-                it is FaluException
-            }
-        )
+        runBlocking(Dispatchers.IO) {
+            val response = apiClient.createEvaluation(request)
+            assertEquals(true, !response.successful())
+        }
     }
 
     @Test
     fun testMpesaPaymentInitRequest() {
-        val callback: ApiResultCallback<Payment> = mock()
-
         val mpesa = PaymentInitiationMpesa()
         mpesa.phone = "+254712345678"
-        mpesa.reference = "+254712345678"
-        mpesa.kind = MpesaStkPushTransactionType.CUSTOMER_PAYS_BILL_ONLINE
+        mpesa.reference = "254712345678"
+        mpesa.paybill = true
 
         val request = PaymentRequest(
             amount = 100,
@@ -73,11 +71,10 @@ class FaluEndToEndTest {
             mpesa = mpesa
         )
 
-        falu.createPayment(request, callback)
-
-        verify(callback).onSuccess(result = argWhere {
-            it.status != PaymentStatus.FAILED && it.mpesa != null
-        })
+        runBlocking(Dispatchers.IO) {
+            val response = apiClient.createPayment(request)
+            assertEquals(true, response.successful())
+        }
     }
 
     private fun copyStreamToFile(inputStream: InputStream, outputFile: File) {
