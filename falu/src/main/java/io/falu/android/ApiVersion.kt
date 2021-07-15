@@ -9,14 +9,13 @@ package io.falu.android
  * See [https://falu.io) for latest
  * API changes.
  */
-internal data class ApiVersion internal constructor(internal val code: String) {
+internal data class ApiVersion internal constructor(internal val version: String) {
 
-    override fun toString(): String {
-        return code
-    }
+    val code: String
+        get() = version
 
     internal companion object {
-        private const val API_VERSION_CODE: String = "2021-03-02"
+        private const val API_VERSION_CODE: String = "2020-09-08"
 
         private val INSTANCE = ApiVersion(API_VERSION_CODE)
 
