@@ -71,6 +71,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Set Publish Version
+      id: version
+      run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+
     - name: set up JDK 1.8
       uses: actions/setup-java@v1
       with:
@@ -92,4 +96,6 @@ jobs:
         SIGNING_PASSWORD: ${{ secrets.SIGNING_KEY }}
         SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
         SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+        PUBLISH_VERSION: ${{ steps.version.outputs.tag }}
+
 

@@ -32,7 +32,7 @@ afterEvaluate {
                 artifact bundleReleaseAar
 
                 groupId "${group_id}"
-                artifactId "${project.name}"
+                artifactId project.artifactId
                 version getPublishVersion()
 
                 pom {

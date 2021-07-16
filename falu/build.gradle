@@ -73,4 +73,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
 
+ext {
+    artifactId = "falu-android"
+}
+
 apply from: "${rootDir}/deploy/deploy.gradle"
