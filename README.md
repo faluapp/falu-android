@@ -1,4 +1,4 @@
-![Falu](https://github.com/tinglesoftware/falu-android-sdk/workflows//badge.svg)
+[![Falu](https://github.com/tinglesoftware/falu-android-sdk/actions/workflows/android.yml/badge.svg)](https://github.com/tinglesoftware/falu-android-sdk/actions/workflows/android.yml)
 ![Language](https://img.shields.io/badge/language-Kotlin%205.0-green.svg)
 
 # Falu Android SDK
