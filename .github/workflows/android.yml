@@ -87,7 +87,7 @@ jobs:
       run: ./gradlew assembleRelease -p falu --stacktrace
 
     - name: Publish to MavenCentral
-      run: ./gradlew publishReleasePublicationToSonatypeRepository --max-workers 1 closeAndReleaseSonatypeStagingRepository
+      run: ./gradlew publishReleasePublicationToSonatypeRepository --max-workers 1 closeAndReleaseSonatypeStagingRepository --stacktrace
       env:
         PUBLISHING_USERNAME: ${{ secrets.PUBLISHING_USERNAME }}
         PUBLISHING_PASSWORD: ${{ secrets.PUBLISHING_PASSWORD }}
