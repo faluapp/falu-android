@@ -38,7 +38,7 @@ afterEvaluate {
                 pom {
                     name = project.name
                     packaging = "aar"
-                    description = ""
+                    description = "Falu Android SDK"
                     url = "https://github.com/tinglesoftware/falu-android-sdk"
 
                     scm {
