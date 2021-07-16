@@ -102,11 +102,7 @@ afterEvaluate {
 }
 
 signing {
-    useInMemoryPgpKeys(
-            rootProject.ext["signing.keyId"],
-            rootProject.ext["signing.key"],
-            rootProject.ext["signing.password"],
-    )
+    useInMemoryPgpKeys(getSigningKeyId(), getSigningKey(), getSigningPassword())
     sign publishing.publications
 }
 
