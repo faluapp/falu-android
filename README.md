@@ -16,7 +16,7 @@ We expose APIs that will enable to you to make payment and client evaluation req
 Add `falu` to your `build.gradle` dependencies.
 
 ```gradle
-implementation "io.falu:falu:VERSION_NUMBER"
+implementation "io.falu:falu-android:VERSION_NUMBER"
 ```
 # Getting Started
 
