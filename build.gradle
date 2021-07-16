@@ -32,7 +32,7 @@ allprojects {
     }
 }
 
-ext.getPublishVersion = { -> return System.getenv("PUBLISH_VERSION") ?: "1.0" }
+ext.getPublishVersion = { -> return System.getenv("BUILD_BUILDNUMBER") ?: "1.0" }
 ext.getPublishVersionCode = { -> return 'git rev-list HEAD --count'.execute().text.trim() }
 ext.getPublishUsername = { -> return System.getenv("PUBLISHING_USERNAME") ?: "" }
 ext.getPublishPassword = { -> return System.getenv("PUBLISHING_PASSWORD") ?: "" }
