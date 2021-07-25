@@ -17,9 +17,4 @@ open class FaluModel : Parcelable {
      * The key can only contain alphanumeric, and ‘-’, ‘_’ characters, and the string has to start with a letter.
      */
     var metadata: Any? = null
-
-    /**
-     * Set of values that you can attach to an object. This can be useful for searching.
-     */
-    var tags: Array<String>? = null
 }
