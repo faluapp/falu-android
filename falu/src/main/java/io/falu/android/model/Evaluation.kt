@@ -63,29 +63,18 @@ data class EvaluationRequest(
     /**
      * Metadata
      */
-    var metadata: Any? = null,
-
-    /**
-     * Tags
-     */
-    var tags: Array<String>? = null
+    var metadata: Any? = null
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as EvaluationRequest
-
-        if (tags != null) {
-            if (other.tags == null) return false
-            if (!tags.contentEquals(other.tags)) return false
-        } else if (other.tags != null) return false
-
         return true
     }
 
     override fun hashCode(): Int {
-        return tags?.contentHashCode() ?: 0
+        // TODO: implement better hash code generation
+        return 0
     }
 }
 
