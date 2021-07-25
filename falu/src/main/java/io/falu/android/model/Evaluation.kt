@@ -63,7 +63,7 @@ data class EvaluationRequest(
     /**
      * Metadata
      */
-    var metadata: Any? = null
+    var metadata: Map<String, String>? = null
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
