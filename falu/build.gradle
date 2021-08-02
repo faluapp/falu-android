@@ -59,7 +59,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    implementation 'software.tingle:abstractions:1.0.1'
+    implementation 'software.tingle:abstractions:1.0.2'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation "org.mockito:mockito-core:3.11.2"
