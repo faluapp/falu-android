@@ -5,10 +5,10 @@ import io.falu.android.ApiVersion
 import io.falu.android.exceptions.APIConnectionException
 import io.falu.android.exceptions.APIException
 import io.falu.android.exceptions.AuthenticationException
-import io.falu.android.model.EvaluationRequest
-import io.falu.android.model.EvaluationResponse
 import io.falu.android.model.Payment
 import io.falu.android.model.PaymentRequest
+import io.falu.android.model.evaluations.Evaluation
+import io.falu.android.model.evaluations.EvaluationRequest
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -35,7 +35,7 @@ internal class FaluApiClient internal constructor(
         APIConnectionException::class,
         APIException::class
     )
-    suspend fun createEvaluation(request: EvaluationRequest): ResourceResponse<EvaluationResponse> {
+    suspend fun createEvaluation(request: EvaluationRequest): ResourceResponse<Evaluation> {
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart(
@@ -55,7 +55,7 @@ internal class FaluApiClient internal constructor(
         val builder = Request.Builder()
             .url("$baseUrl/v1/evaluations")
             .post(requestBody)
-        return executeAsync(builder, EvaluationResponse::class.java)
+        return executeAsync(builder, Evaluation::class.java)
     }
 
     @Throws(
