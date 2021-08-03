@@ -1,10 +1,10 @@
 package io.falu.android
 
 import android.content.Context
-import io.falu.android.model.EvaluationRequest
-import io.falu.android.model.EvaluationResponse
 import io.falu.android.model.Payment
 import io.falu.android.model.PaymentRequest
+import io.falu.android.model.evaluations.Evaluation
+import io.falu.android.model.evaluations.EvaluationRequest
 import io.falu.android.networking.FaluRepository
 
 /**
@@ -50,7 +50,7 @@ class Falu internal constructor(
      */
     fun createEvaluation(
         request: EvaluationRequest,
-        callbacks: ApiResultCallback<EvaluationResponse>
+        callbacks: ApiResultCallback<Evaluation>
     ) {
         faluRepository.createEvaluationAsync(request, callbacks)
     }

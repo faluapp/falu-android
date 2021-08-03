@@ -2,10 +2,10 @@ package io.falu.android.networking
 
 import android.content.Context
 import io.falu.android.ApiResultCallback
-import io.falu.android.model.EvaluationRequest
-import io.falu.android.model.EvaluationResponse
 import io.falu.android.model.Payment
 import io.falu.android.model.PaymentRequest
+import io.falu.android.model.evaluations.Evaluation
+import io.falu.android.model.evaluations.EvaluationRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -31,7 +31,7 @@ internal class FaluRepository internal constructor(
      */
     fun createEvaluationAsync(
         request: EvaluationRequest,
-        callbacks: ApiResultCallback<EvaluationResponse>
+        callbacks: ApiResultCallback<Evaluation>
     ) {
         launch(Dispatchers.IO) {
             kotlin.runCatching {

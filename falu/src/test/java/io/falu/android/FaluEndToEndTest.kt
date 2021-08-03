@@ -3,10 +3,10 @@ package io.falu.android
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import io.falu.android.model.EvaluationRequest
-import io.falu.android.model.EvaluationScope
 import io.falu.android.model.PaymentInitiationMpesa
 import io.falu.android.model.PaymentRequest
+import io.falu.android.model.evaluations.EvaluationRequest
+import io.falu.android.model.evaluations.EvaluationScope
 import io.falu.android.networking.FaluApiClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,7 +23,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @RunWith(RobolectricTestRunner::class)
-@Config( manifest="AndroidManifest.xml")
+@Config(manifest = "AndroidManifest.xml")
 @ExperimentalCoroutinesApi
 class FaluEndToEndTest {
 
@@ -49,7 +49,6 @@ class FaluEndToEndTest {
             phone = "+2547123456789",
             password = "12345678",
             file = file,
-            description = ""
         )
 
         runBlocking(Dispatchers.IO) {
