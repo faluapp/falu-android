@@ -2,7 +2,6 @@ package io.falu.android.models.evaluations
 
 import android.os.Parcelable
 import com.google.gson.annotations.JsonAdapter
-import io.falu.android.models.StatementProvider
 import kotlinx.parcelize.Parcelize
 import software.tingle.api.adapters.ISO8601DateAdapter
 import java.util.*
