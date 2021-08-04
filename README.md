@@ -1,4 +1,3 @@
-[![Falu](https://github.com/tinglesoftware/falu-android-sdk/actions/workflows/android.yml/badge.svg)](https://github.com/tinglesoftware/falu-sdk-android/actions/workflows/android.yml)
 ![Language](https://img.shields.io/badge/language-Kotlin%205.0-green.svg)
 
 # Falu Android SDK
@@ -21,7 +20,7 @@ implementation "io.falu:falu-android:VERSION_NUMBER"
 # Getting Started
 
 ### Setup Guide
-Get started with our [Setup Guide](https://falu.io/docs/).
+Get started with our [Setup Guide](https://docs.falu.io/guides/developer/quickstart).
 
 
 ### Creating an instance of `Falu`
@@ -31,7 +30,7 @@ Create an instance `Falu` since its the entry point to SDK
 ```kotlin
     val falu = FaluApiClient(this, "PUBLIC_KEY")
 ```
-The [public key](https://falu.io/guides/keys) is mandatory. Failing to provide it will result into an `Exception` when interacting with Falu.
+The [public key](https://docs.falu.io/guides/keys) is mandatory. Failing to provide it will result into an `Exception` when interacting with Falu.
 
 You can also enable logging of network operations as follows:
 ```kotlin
@@ -46,7 +45,7 @@ Once you have finished the setup process, you can proceed to use the features an
 
 ## Evalautions
 
-Use this feature when you want to know the credit score/worth of a user.
+Use this feature when you want to know the credit score/worth of a  user.
 This will allow you to know your user's spending habits from their financial statements.
 Vist [Credit scoring customers using the Evaluations API](https://docs.falu.io/guides/evaluations) for more information relating to this.
 
@@ -64,7 +63,7 @@ Vist [Credit scoring customers using the Evaluations API](https://docs.falu.io/g
     ...
 
     private val callback = object : ApiResultCallback<Evaluation> {
-        override fun onSuccess(result: Array<Insight>) {
+        override fun onSuccess(result: Evaluation) {
             // display in UI element
         }
 
@@ -75,3 +74,39 @@ Vist [Credit scoring customers using the Evaluations API](https://docs.falu.io/g
 ```
 
 ## Payments
+
+Create a `Payment` object when initiating payments from a customer.
+Falu supports several payment methods including `MPESA`.
+See [How to Authorize Payments](https://docs.falu.io/guides/payments/authorizations) and
+[How to Accept Payments](https://docs.falu.io/guides/payments) for information.
+
+How to initiate `MPESA` payments:
+
+```kotlin
+    val mpesa = MpesaPaymentRequest(
+            phone = "+254712345678",
+            reference = "254712345678",
+            paybill = true,
+            destination = "00110"
+        )
+
+    val request = PaymentRequest(
+            amount = 100,
+            currency = "kes",
+            mpesa = mpesa
+        )
+
+    falu.createPayment(request, callback)  
+
+    ...  
+
+    private val callback = object : ApiResultCallback<Payment> {
+        override fun onSuccess(result: Payment) {
+            // display in UI element
+        }
+
+        override fun onError(e: Exception) {
+            print(e)
+        }
+    } 
+```
