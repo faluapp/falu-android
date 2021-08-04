@@ -5,7 +5,7 @@ import java.util.*
 /**
  * [The Money object](https://falu.io)
  */
-class Money(
+internal data class Money(
     var amount: Number,
     var currency: Currency,
 ) {
