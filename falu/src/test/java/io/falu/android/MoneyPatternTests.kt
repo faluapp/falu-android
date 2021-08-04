@@ -1,6 +1,6 @@
 package io.falu.android
 
-import io.falu.android.model.Money
+import io.falu.android.models.payments.Money
 import org.junit.Test
 import java.util.*
 import kotlin.test.assertEquals

@@ -1,4 +1,4 @@
-package io.falu.android.model
+package io.falu.android.models
 
 enum class StatementProvider {
     MPESA;

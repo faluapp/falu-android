@@ -1,7 +1,7 @@
-package io.falu.android.model.evaluations
+package io.falu.android.models.evaluations
 
-import io.falu.android.model.FaluModel
-import io.falu.android.model.StatementProvider
+import io.falu.android.models.FaluModel
+import io.falu.android.models.StatementProvider
 import kotlinx.parcelize.Parcelize
 import java.io.File
 

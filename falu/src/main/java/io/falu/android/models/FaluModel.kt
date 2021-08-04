@@ -1,4 +1,4 @@
-package io.falu.android.model
+package io.falu.android.models
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
