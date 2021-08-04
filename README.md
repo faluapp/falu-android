@@ -73,3 +73,5 @@ Vist [Credit scoring customers using the Evaluations API](https://docs.falu.io/g
         }
     }    
 ```
+
+## Payments

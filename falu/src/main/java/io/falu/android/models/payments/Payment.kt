@@ -1,6 +1,7 @@
-package io.falu.android.model
+package io.falu.android.models.payments
 
 import com.google.gson.annotations.SerializedName
+import io.falu.android.models.FaluModel
 import java.util.*
 
 /**

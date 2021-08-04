@@ -1,4 +1,4 @@
-package io.falu.android.model.evaluations
+package io.falu.android.models.evaluations
 
 import android.os.Parcelable
 import com.google.gson.annotations.JsonAdapter

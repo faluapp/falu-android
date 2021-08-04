@@ -3,10 +3,10 @@ package io.falu.android
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import io.falu.android.model.PaymentInitiationMpesa
-import io.falu.android.model.PaymentRequest
-import io.falu.android.model.evaluations.EvaluationRequest
-import io.falu.android.model.evaluations.EvaluationScope
+import io.falu.android.models.PaymentInitiationMpesa
+import io.falu.android.models.PaymentRequest
+import io.falu.android.models.evaluations.EvaluationRequest
+import io.falu.android.models.evaluations.EvaluationScope
 import io.falu.android.networking.FaluApiClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
