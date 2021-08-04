@@ -1,11 +1,11 @@
-package io.falu.android.model
+package io.falu.android.models.payments
 
 import java.util.*
 
 /**
  * [The Money object](https://falu.io)
  */
-class Money(
+internal data class Money(
     var amount: Number,
     var currency: Currency,
 ) {

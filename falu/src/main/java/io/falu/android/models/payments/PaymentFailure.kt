@@ -1,0 +1,26 @@
+package io.falu.android.models.payments
+
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+import java.util.*
+
+/**
+ * [The Payment Failure object](https://falu.io)
+ */
+@Parcelize
+data class PaymentFailure(
+    /**
+     * Reason for failure of a payment, transfer or reversal
+     */
+    var reason: FailureReason,
+
+    /**
+     * Time at which failure occurred
+     */
+    var timestamp: Date?,
+
+    /**
+     * Failure message as received from teh provider
+     */
+    var detail: String?,
+) : Parcelable
