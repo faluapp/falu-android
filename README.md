@@ -46,7 +46,7 @@ Once you have finished the setup process, you can proceed to use the features an
 
 ## Evalautions
 
-Use this feature when you want to know the credit score/worth of your user.
+Use this feature when you want to know the credit score/worth of a user.
 This will allow you to know your user's spending habits from their financial statements.
 Vist [Credit scoring customers using the Evaluations API](https://docs.falu.io/guides/evaluations) for more information relating to this.
 

@@ -3,10 +3,10 @@ package io.falu.android
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import io.falu.android.models.PaymentInitiationMpesa
-import io.falu.android.models.PaymentRequest
 import io.falu.android.models.evaluations.EvaluationRequest
 import io.falu.android.models.evaluations.EvaluationScope
+import io.falu.android.models.payments.MpesaPaymentRequest
+import io.falu.android.models.payments.PaymentRequest
 import io.falu.android.networking.FaluApiClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -59,10 +59,12 @@ class FaluEndToEndTest {
 
     @Test
     fun testMpesaPaymentInitRequest() {
-        val mpesa = PaymentInitiationMpesa()
-        mpesa.phone = "+254712345678"
-        mpesa.reference = "254712345678"
-        mpesa.paybill = true
+        val mpesa = MpesaPaymentRequest(
+            phone = "+254712345678",
+            reference = "254712345678",
+            paybill = true,
+            destination = "00110"
+        )
 
         val request = PaymentRequest(
             amount = 100,

@@ -1,10 +1,10 @@
 package io.falu.android
 
 import android.content.Context
-import io.falu.android.models.Payment
-import io.falu.android.models.PaymentRequest
 import io.falu.android.models.evaluations.Evaluation
 import io.falu.android.models.evaluations.EvaluationRequest
+import io.falu.android.models.payments.Payment
+import io.falu.android.models.payments.PaymentRequest
 import io.falu.android.networking.FaluRepository
 
 /**

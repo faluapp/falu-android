@@ -2,10 +2,10 @@ package io.falu.android.networking
 
 import android.content.Context
 import io.falu.android.ApiResultCallback
-import io.falu.android.models.Payment
-import io.falu.android.models.PaymentRequest
 import io.falu.android.models.evaluations.Evaluation
 import io.falu.android.models.evaluations.EvaluationRequest
+import io.falu.android.models.payments.Payment
+import io.falu.android.models.payments.PaymentRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

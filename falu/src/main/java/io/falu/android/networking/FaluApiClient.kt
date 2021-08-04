@@ -5,10 +5,10 @@ import io.falu.android.ApiVersion
 import io.falu.android.exceptions.APIConnectionException
 import io.falu.android.exceptions.APIException
 import io.falu.android.exceptions.AuthenticationException
-import io.falu.android.models.Payment
-import io.falu.android.models.PaymentRequest
 import io.falu.android.models.evaluations.Evaluation
 import io.falu.android.models.evaluations.EvaluationRequest
+import io.falu.android.models.payments.Payment
+import io.falu.android.models.payments.PaymentRequest
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
