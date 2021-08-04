@@ -28,13 +28,13 @@ Get started with our [Setup Guide](https://docs.falu.io/guides/developer/quickst
 Create an instance `Falu` since its the entry point to SDK
 
 ```kotlin
-    val falu = FaluApiClient(this, "PUBLIC_KEY")
+val falu = FaluApiClient(this, "PUBLIC_KEY")
 ```
 The [public key](https://docs.falu.io/guides/keys) is mandatory. Failing to provide it will result into an `Exception` when interacting with Falu.
 
 You can also enable logging of network operations as follows:
 ```kotlin
-    val falu = FaluApiClient(this, "PUBLIC_KEY", true)
+val falu = FaluApiClient(this, "PUBLIC_KEY", true)
 ```
 **NOTE**: It is recommended to **disable** logging in production
 
@@ -50,27 +50,27 @@ This will allow you to know your user's spending habits from their financial sta
 Vist [Credit scoring customers using the Evaluations API](https://docs.falu.io/guides/evaluations) for more information relating to this.
 
 ```kotlin
-   val request = EvaluationRequest(
-            scope = EvaluationScope.PERSONAL,
-            name = "JOHN DOE",
-            phone = "+2547123456789",
-            password = "12345678",
-            file = file,
-        )
+val request = EvaluationRequest(
+        scope = EvaluationScope.PERSONAL,
+        name = "JOHN DOE",
+        phone = "+2547123456789",
+        password = "12345678",
+        file = file,
+    )
 
-    falu.createEvaluation(request, callback)
+falu.createEvaluation(request, callback)
 
-    ...
+...
 
-    private val callback = object : ApiResultCallback<Evaluation> {
-        override fun onSuccess(result: Evaluation) {
-            // display in UI element
-        }
+private val callback = object : ApiResultCallback<Evaluation> {
+    override fun onSuccess(result: Evaluation) {
+        // display in UI element
+    }
 
-        override fun onError(e: Exception) {
-            print(e)
-        }
-    }    
+    override fun onError(e: Exception) {
+        print(e)
+    }
+}    
 ```
 
 ## Payments
@@ -83,30 +83,30 @@ See [How to Authorize Payments](https://docs.falu.io/guides/payments/authorizati
 How to initiate `MPESA` payments:
 
 ```kotlin
-    val mpesa = MpesaPaymentRequest(
-            phone = "+254712345678",
-            reference = "254712345678",
-            paybill = true,
-            destination = "00110"
-        )
+val mpesa = MpesaPaymentRequest(
+        phone = "+254712345678",
+        reference = "254712345678",
+        paybill = true,
+        destination = "00110"
+    )
 
-    val request = PaymentRequest(
-            amount = 100,
-            currency = "kes",
-            mpesa = mpesa
-        )
+val request = PaymentRequest(
+        amount = 100,
+        currency = "kes",
+        mpesa = mpesa
+    )
 
-    falu.createPayment(request, callback)  
+falu.createPayment(request, callback)  
 
-    ...  
+...  
 
-    private val callback = object : ApiResultCallback<Payment> {
-        override fun onSuccess(result: Payment) {
-            // display in UI element
-        }
+private val callback = object : ApiResultCallback<Payment> {
+    override fun onSuccess(result: Payment) {
+        // display in UI element
+    }
 
-        override fun onError(e: Exception) {
-            print(e)
-        }
-    } 
+    override fun onError(e: Exception) {
+        print(e)
+    }
+} 
 ```
