@@ -24,6 +24,6 @@ data class PaymentRequest(
         this.amount = Money(
             amount,
             Currency.getInstance(currency.uppercase())
-        ).toCents
+        ).amountInMinorUnits
     }
 }
