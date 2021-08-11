@@ -1,6 +1,6 @@
 ![Language](https://img.shields.io/badge/language-Kotlin%205.0-green.svg)
 
-# Falu Android SDK
+# Falu Android
 
 Falu's Android SDK simplifies the process of building excellent financial services into Android applications.
 We expose APIs that will enable to you to make payment and client evaluation requests.
@@ -23,7 +23,7 @@ implementation "io.falu:falu-android:VERSION_NUMBER"
 Get started with our [Setup Guide](https://docs.falu.io/guides/developer/quickstart).
 
 
-### Creating an instance of `Falu`
+### Creating an instance of Falu
 
 Create an instance `Falu` since its the entry point to SDK
 
@@ -43,7 +43,7 @@ val falu = FaluApiClient(this, "PUBLIC_KEY", true)
 Once you have finished the setup process, you can proceed to use the features and functionalities offered by the SDK
 
 
-## Evalautions
+## Evaluations
 
 Use this feature when you want to know the credit score/worth of a  user.
 This will allow you to know your user's spending habits from their financial statements.
@@ -60,8 +60,7 @@ val request = EvaluationRequest(
 
 falu.createEvaluation(request, callback)
 
-...
-
+// api response callbacks
 private val callback = object : ApiResultCallback<Evaluation> {
     override fun onSuccess(result: Evaluation) {
         // display in UI element
@@ -84,10 +83,10 @@ How to initiate `MPESA` payments:
 
 ```kotlin
 val mpesa = MpesaPaymentRequest(
-        phone = "+254712345678",
-        reference = "254712345678",
+        phone = "+254722000000",
+        reference = "254722000000",
         paybill = true,
-        destination = "00110"
+        destination = "200200"
     )
 
 val request = PaymentRequest(
@@ -98,8 +97,7 @@ val request = PaymentRequest(
 
 falu.createPayment(request, callback)  
 
-...  
-
+// api response callbacks
 private val callback = object : ApiResultCallback<Payment> {
     override fun onSuccess(result: Payment) {
         // display in UI element
