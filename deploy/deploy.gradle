@@ -38,19 +38,19 @@ afterEvaluate {
                 pom {
                     name = project.name
                     packaging = "aar"
-                    description = "Falu Android SDK"
-                    url = "https://github.com/tinglesoftware/falu-android-sdk"
+                    description = "Falu Android"
+                    url = "https://github.com/tinglesoftware/falu-android"
 
                     scm {
-                        url = "https://github.com/tinglesoftware/falu-android-sdk"
-                        connection = "scm:git:github.com/tinglesoftware/falu-android-sdk"
-                        developerConnection = "scm:git:ssh://github.com/tinglesoftware/falu-android-sdk.git"
+                        url = "https://github.com/tinglesoftware/falu-android"
+                        connection = "scm:git:github.com/tinglesoftware/falu-android"
+                        developerConnection = "scm:git:ssh://github.com/tinglesoftware/falu-android.git"
                     }
 
                     licenses {
                         license {
                             name = "MIT License"
-                            url = "https://raw.githubusercontent.com/tinglesoftware/falu-android-sdk/main/LICENSE"
+                            url = "https://raw.githubusercontent.com/tinglesoftware/falu-android/main/LICENSE"
                             distribution = "repo"
                         }
                     }
