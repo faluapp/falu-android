@@ -28,13 +28,13 @@ Get started with our [Setup Guide](https://docs.falu.io/guides/developer/quickst
 Create an instance `Falu` since its the entry point to SDK
 
 ```kotlin
-val falu = FaluApiClient(this, "PUBLIC_KEY")
+val falu = Falu(this, "PUBLIC_KEY")
 ```
 The [public key](https://docs.falu.io/guides/keys) is mandatory. Failing to provide it will result into an `Exception` when interacting with Falu.
 
 You can also enable logging of network operations as follows:
 ```kotlin
-val falu = FaluApiClient(this, "PUBLIC_KEY", true)
+val falu = Falu(this, "PUBLIC_KEY", true)
 ```
 **NOTE**: It is recommended to **disable** logging in production
 
