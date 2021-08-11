@@ -1,6 +1,7 @@
 package io.falu.android.models.payments
 
 import java.util.*
+import kotlin.math.pow
 
 /**
  * [The Money object](https://falu.io)
@@ -9,6 +10,7 @@ internal data class Money(
     var amount: Number,
     var currency: Currency,
 ) {
+    @Deprecated("Use amountInMinorUnits")
     val toCents: Int
         get() {
             return when (currency.currencyCode) {
@@ -16,6 +18,13 @@ internal data class Money(
                     DEFAULT_CENTS.times(amount.toInt())
                 }
             }
+        }
+
+    /// Minor Unit is a fraction of the base (ex. cents, stotinka, etc.)
+    val amountInMinorUnits: Int
+        get() {
+            val units = 10.toDouble().pow(currency.defaultFractionDigits)
+            return (amount.toDouble().times(units)).toInt()
         }
 
     private val toShillings: Int
