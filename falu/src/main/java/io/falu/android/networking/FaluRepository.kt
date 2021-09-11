@@ -4,8 +4,11 @@ import android.content.Context
 import io.falu.android.ApiResultCallback
 import io.falu.android.models.evaluations.Evaluation
 import io.falu.android.models.evaluations.EvaluationRequest
+import io.falu.android.models.files.FaluFile
+import io.falu.android.models.files.UploadRequest
 import io.falu.android.models.payments.Payment
 import io.falu.android.models.payments.PaymentRequest
+import io.falu.android.utils.getMediaType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -13,7 +16,7 @@ import kotlinx.coroutines.launch
  * Makes network requests to the Falu API.
  */
 internal class FaluRepository internal constructor(
-    context: Context,
+    private val context: Context,
     publishableKey: String,
     enableLogging: Boolean
 ) :
@@ -63,6 +66,32 @@ internal class FaluRepository internal constructor(
         launch(Dispatchers.IO) {
             runCatching {
                 faluApiClient.createPayment(request)
+            }.fold(
+                onSuccess = {
+                    handleFaluResponse(it, callbacks)
+                },
+                onFailure = {
+                    dispatchError(it, callbacks)
+                }
+            )
+        }
+    }
+
+    /**
+     * Upload a file asynchronously
+     *
+     * See [Upload a file](https://api.falu.io/v1/file).
+     * `POST /v1/files`
+     *
+     * @param request [The upload request object](https://falu.io)
+     * @param callbacks [ApiResultCallback] to receive the result or error
+     *
+     */
+    fun uploadFileAsync(request: UploadRequest, callbacks: ApiResultCallback<FaluFile>) {
+        request.mediaType = getMediaType(context, request.file)
+        launch(Dispatchers.IO) {
+            runCatching {
+                faluApiClient.uploadFile(request)
             }.fold(
                 onSuccess = {
                     handleFaluResponse(it, callbacks)

@@ -3,6 +3,8 @@ package io.falu.android
 import android.content.Context
 import io.falu.android.models.evaluations.Evaluation
 import io.falu.android.models.evaluations.EvaluationRequest
+import io.falu.android.models.files.FaluFile
+import io.falu.android.models.files.UploadRequest
 import io.falu.android.models.payments.Payment
 import io.falu.android.models.payments.PaymentRequest
 import io.falu.android.networking.FaluRepository
@@ -48,6 +50,7 @@ class Falu internal constructor(
      * @param callbacks [ApiResultCallback] to receive the result or error
      *
      */
+    @Deprecated("")
     fun createEvaluation(
         request: EvaluationRequest,
         callbacks: ApiResultCallback<Evaluation>
@@ -70,5 +73,19 @@ class Falu internal constructor(
         callbacks: ApiResultCallback<Payment>
     ) {
         faluRepository.createPaymentAsync(request, callbacks)
+    }
+
+    /**
+     * Upload a file asynchronously
+     *
+     * See [Upload a file](https://api.falu.io/v1/file).
+     * `POST /v1/files`
+     *
+     * @param request [The upload request object](https://falu.io)
+     * @param callbacks [ApiResultCallback] to receive the result or error
+     *
+     */
+    fun uploadFile(request: UploadRequest, callbacks: ApiResultCallback<FaluFile>) {
+        faluRepository.uploadFileAsync(request, callbacks)
     }
 }
