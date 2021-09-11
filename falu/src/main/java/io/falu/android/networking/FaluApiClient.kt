@@ -7,6 +7,8 @@ import io.falu.android.exceptions.APIException
 import io.falu.android.exceptions.AuthenticationException
 import io.falu.android.models.evaluations.Evaluation
 import io.falu.android.models.evaluations.EvaluationRequest
+import io.falu.android.models.files.FaluFile
+import io.falu.android.models.files.UploadRequest
 import io.falu.android.models.payments.Payment
 import io.falu.android.models.payments.PaymentRequest
 import okhttp3.MediaType.Companion.toMediaType
@@ -35,6 +37,7 @@ internal class FaluApiClient internal constructor(
         APIConnectionException::class,
         APIException::class
     )
+    @Deprecated("")
     suspend fun createEvaluation(request: EvaluationRequest): ResourceResponse<Evaluation> {
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
@@ -76,23 +79,23 @@ internal class FaluApiClient internal constructor(
         APIConnectionException::class,
         APIException::class
     )
-    fun uploadFile(request: UploadRequest): ResourceResponse<Evaluation> {
+    fun uploadFile(request: UploadRequest): ResourceResponse<FaluFile> {
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart(
                 "file",
                 request.file.name,
-                request.file.asRequestBody(MEDIA_TYPE_ALL)
+                request.file.asRequestBody(request.mediaType)
             )
             .addFormDataPart("purpose", request.purpose.purpose)
-            .addFormDataPart("expires", ISO8601Utils.format(request.date))
+            // .addFormDataPart("expires", ISO8601Utils.format(request.date))
             .addFormDataPart("Description", request.description ?: "")
             .build()
 
         val builder = Request.Builder()
             .url("$baseUrl/v1/file")
             .post(requestBody)
-        return execute(builder, Evaluation::class.java)
+        return execute(builder, FaluFile::class.java)
     }
 
     override fun buildBackChannel(builder: OkHttpClient.Builder): OkHttpClient {

@@ -1,7 +1,9 @@
 package io.falu.android.models.files
 
+import okhttp3.MediaType
 import java.io.File
 import java.util.*
+
 
 data class UploadRequest(
     /**
@@ -18,4 +20,6 @@ data class UploadRequest(
      */
     var date: Date? = null,
     var description: String? = null
-)
+) {
+    internal lateinit var mediaType: MediaType
+}
