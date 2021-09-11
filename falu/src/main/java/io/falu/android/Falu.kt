@@ -85,7 +85,7 @@ class Falu internal constructor(
      * @param callbacks [ApiResultCallback] to receive the result or error
      *
      */
-    fun uploadFile(request: UploadRequest, callbacks: ApiResultCallback<FaluFile>) {
+    fun createFile(request: UploadRequest, callbacks: ApiResultCallback<FaluFile>) {
         faluRepository.uploadFileAsync(request, callbacks)
     }
 }

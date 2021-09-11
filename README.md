@@ -56,7 +56,7 @@ offered by the SDK
 
 Use this feature when you want to know the credit score/worth of a user. This will allow you to know
 your user's spending habits from their financial statements.
-Vist [Credit scoring customers using the Evaluations API](https://docs.falu.io/guides/evaluations)
+Visit [Credit scoring customers using the Evaluations API](https://docs.falu.io/guides/evaluations)
 for more information relating to this.
 
 ```kotlin
@@ -117,4 +117,31 @@ private val callback = object : ApiResultCallback<Payment> {
         print(e)
     }
 } 
+```
+
+## Upload files
+
+This feature allows you to upload files whether for evaluation or customer identification. See the
+documentation for more information on how to
+handle [files and uploads](https://docs.falu.io/guides/files)
+
+```kotlin
+val request = UploadRequest(     
+    file = file,
+    purpose = FilePurpose.CUSTOMER_EVALUATION
+)
+
+// making the request
+falu.createFile(request, callbacks)
+
+// api response callbacks
+private val callbacks = object : ApiResultCallback<FaluFile> {
+    override fun onSuccess(result: FaluFile) {
+        // File upload succeeded
+    }
+
+    override fun onError(e: Exception) {
+        // File upload failed
+    }
+}
 ```
