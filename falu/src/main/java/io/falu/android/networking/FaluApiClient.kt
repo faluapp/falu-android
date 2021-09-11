@@ -71,6 +71,30 @@ internal class FaluApiClient internal constructor(
         return executeAsync(builder, Payment::class.java)
     }
 
+    @Throws(
+        AuthenticationException::class,
+        APIConnectionException::class,
+        APIException::class
+    )
+    fun uploadFile(request: UploadRequest): ResourceResponse<Evaluation> {
+        val requestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart(
+                "file",
+                request.file.name,
+                request.file.asRequestBody(MEDIA_TYPE_ALL)
+            )
+            .addFormDataPart("purpose", request.purpose.purpose)
+            .addFormDataPart("expires", ISO8601Utils.format(request.date))
+            .addFormDataPart("Description", request.description ?: "")
+            .build()
+
+        val builder = Request.Builder()
+            .url("$baseUrl/v1/file")
+            .post(requestBody)
+        return execute(builder, Evaluation::class.java)
+    }
+
     override fun buildBackChannel(builder: OkHttpClient.Builder): OkHttpClient {
         builder
             .addInterceptor(appDetailsInterceptor)
