@@ -4,7 +4,7 @@ apply plugin: "maven-publish"
 task androidJavadocs(type: Javadoc) {
     excludes = ['**/*.kt']
     source = android.sourceSets.main.java.srcDirs
-    classpath = configurations.implementation
+    classpath = configurations.compile
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
 }
 
