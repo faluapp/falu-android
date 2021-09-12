@@ -1,8 +1,12 @@
+<a href="https://www.falu.io">
+    <img src="https://cdn.falu.io/tools/logo.png" alt="Falu Logo" title="Falu" width="120" height="120" align="right">
+</a>
+
+# Falu Android
+
 ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/tinglesoftware/falu-android?label=gradle)
 [![Build Status](https://dev.azure.com/tingle/Core/_apis/build/status/Falu/Falu%20SDK%20-%20android?repoName=tinglesoftware%2Ffalu-android&branchName=refs%2Fpull%2F15%2Fmerge)](https://dev.azure.com/tingle/Core/_build/latest?definitionId=510&repoName=tinglesoftware%2Ffalu-android&branchName=refs%2Fpull%2F15%2Fmerge)
 ![Language](https://img.shields.io/badge/language-Kotlin%205.0-green.svg)
-
-# Falu Android
 
 Falu's Android SDK simplifies the process of building excellent financial services into Android
 applications. We expose APIs that will enable to you to make payment and client evaluation requests.
