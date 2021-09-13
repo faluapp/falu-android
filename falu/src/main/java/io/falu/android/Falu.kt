@@ -50,7 +50,6 @@ class Falu internal constructor(
      * @param callbacks [ApiResultCallback] to receive the result or error
      *
      */
-    @Deprecated("")
     fun createEvaluation(
         request: EvaluationRequest,
         callbacks: ApiResultCallback<Evaluation>

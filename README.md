@@ -69,7 +69,7 @@ val request = EvaluationRequest(
     name = "JOHN DOE",
     phone = "+2547123456789",
     password = "12345678",
-    file = file,
+    fileId = "file_602a8dd0a54847479a874de4"
 )
 
 falu.createEvaluation(request, callback)

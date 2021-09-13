@@ -47,7 +47,7 @@ data class EvaluationRequest(
     var password: String?,
 
     /**
-     * Statement file uploaded with the http request
+     * Unique identifier of the file containing the statement.
      */
-    var file: File
+    var fileId: String
 ) : FaluModel()

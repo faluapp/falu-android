@@ -42,16 +42,12 @@ class FaluEndToEndTest {
 
     @Test
     fun testCreateEvaluationThrowsException() {
-        val file = File(context.cacheDir, "falu.pdf")
-        val fileStream = context.resources.openRawResource(R.raw.falu)
-        copyStreamToFile(fileStream, file)
-
         val request = EvaluationRequest(
             scope = EvaluationScope.PERSONAL,
             name = "JOHN DOE",
             phone = "+2547123456789",
             password = "12345678",
-            file = file,
+            fileId = "file_602a8dd0a54847479a874de4",
         )
 
         runBlocking(Dispatchers.IO) {
