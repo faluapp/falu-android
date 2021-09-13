@@ -37,27 +37,10 @@ internal class FaluApiClient internal constructor(
         APIConnectionException::class,
         APIException::class
     )
-    @Deprecated("")
     suspend fun createEvaluation(request: EvaluationRequest): ResourceResponse<Evaluation> {
-        val requestBody = MultipartBody.Builder()
-            .setType(MultipartBody.FORM)
-            .addFormDataPart(
-                "File",
-                request.file.name,
-                request.file.asRequestBody(MEDIA_TYPE_ALL)
-            )
-            .addFormDataPart("Currency", request.currency)
-            .addFormDataPart("Scope", request.scope.description)
-            .addFormDataPart("Provider", request.provider.desc)
-            .addFormDataPart("Name", request.name)
-            .addFormDataPart("Phone", request.phone ?: "")
-            .addFormDataPart("Password", request.password ?: "")
-            .addFormDataPart("Description", request.description ?: "")
-            .build()
-
         val builder = Request.Builder()
             .url("$baseUrl/v1/evaluations")
-            .post(requestBody)
+            .post(makeJson(request).toRequestBody(MEDIA_TYPE_JSON))
         return executeAsync(builder, Evaluation::class.java)
     }
 
@@ -117,7 +100,6 @@ internal class FaluApiClient internal constructor(
 
     companion object {
         private const val baseUrl = "https://api.falu.io"
-        private val MEDIA_TYPE_ALL = "*/*".toMediaType()
     }
 }
 
