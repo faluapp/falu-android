@@ -76,7 +76,7 @@ internal class FaluApiClient internal constructor(
             .build()
 
         val builder = Request.Builder()
-            .url("$baseUrl/v1/file")
+            .url("$baseUrl/v1/files")
             .post(requestBody)
         return execute(builder, FaluFile::class.java)
     }
