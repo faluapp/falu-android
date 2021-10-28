@@ -62,7 +62,7 @@ dependencies {
     implementation 'software.tingle:abstractions:1.0.2'
 
     testImplementation 'junit:junit:4.13.2'
-    testImplementation "org.mockito:mockito-core:3.12.4"
+    testImplementation "org.mockito:mockito-core:4.0.0"
     testImplementation 'org.robolectric:robolectric:4.6.1'
     testImplementation 'androidx.test:core-ktx:1.4.0'
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
