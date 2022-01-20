@@ -49,5 +49,5 @@ data class EvaluationRequest(
     /**
      * Unique identifier of the file containing the statement.
      */
-    var fileId: String
+    var file: String
 ) : FaluModel()

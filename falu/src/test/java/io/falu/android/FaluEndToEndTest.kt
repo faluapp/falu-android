@@ -47,7 +47,7 @@ class FaluEndToEndTest {
             name = "JOHN DOE",
             phone = "+2547123456789",
             password = "12345678",
-            fileId = "file_602a8dd0a54847479a874de4",
+            file = "file_602a8dd0a54847479a874de4",
         )
 
         runBlocking(Dispatchers.IO) {
