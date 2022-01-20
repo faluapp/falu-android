@@ -27,8 +27,8 @@ implementation "io.falu:falu-android:VERSION_NUMBER"
 ```
 
 # Getting Started
- 
-### Setup Guide
+
+## Setup Guide
 
 Get started with our [Setup Guide](https://docs.falu.io/guides/developer/quickstart).
 
