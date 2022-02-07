@@ -29,7 +29,7 @@ data class Payment(
     /**
      * The status of a payment
      */
-    var status: PaymentStatus,
+    var status: String,
 
     /**
      * Time at which the object was created.
@@ -58,7 +58,7 @@ data class Payment(
     /**
      * The medium used for the payment
      */
-    var type: PaymentType?,
+    var type: String?,
 
     /**
      * Represents the provider details for a MPESA payment

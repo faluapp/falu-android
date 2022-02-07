@@ -26,7 +26,7 @@ data class Evaluation constructor(
      * Represents the scope within which an evaluation is generated.
      * This can also be considered the purpose of the evaluation.
      */
-    var scope: EvaluationScope?,
+    var scope: String?,
 
     /**
      * Time at which the object was created.
@@ -43,7 +43,7 @@ data class Evaluation constructor(
     /**
      * Represents the status of an evaluation
      */
-    var status: EvaluationStatus?,
+    var status: String?,
 
     /**
      * Indicates if this object belongs in the live environment
@@ -53,7 +53,7 @@ data class Evaluation constructor(
     /**
      * Unique identifier for the workspace that the evaluation belongs to.
      */
-    var workspaceId: String,
+    var workspace: String,
 
     /**
      * Represents the scoring result for an evaluation.

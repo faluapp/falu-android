@@ -70,7 +70,7 @@ internal class FaluApiClient internal constructor(
                 request.file.name,
                 request.file.asRequestBody(request.mediaType)
             )
-            .addFormDataPart("purpose", request.purpose.purpose)
+            .addFormDataPart("purpose", request.purpose)
             // .addFormDataPart("expires", ISO8601Utils.format(request.date))
             .addFormDataPart("Description", request.description ?: "")
             .build()

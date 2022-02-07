@@ -14,7 +14,7 @@ data class EvaluationStatement(
     /**
      * Represents the kind of provider used for a statement in an evaluation.
      */
-    var provider: StatementProvider?,
+    var provider: String?,
 
     /**
      * Email found in the statement.

@@ -4,10 +4,6 @@ package io.falu.android
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import io.falu.android.models.evaluations.EvaluationRequest
-import io.falu.android.models.evaluations.EvaluationScope
-import io.falu.android.models.files.FaluFile
-import io.falu.android.models.files.FilePurpose
-import io.falu.android.models.files.UploadRequest
 import io.falu.android.models.payments.MpesaPaymentRequest
 import io.falu.android.models.payments.PaymentRequest
 import io.falu.android.networking.FaluApiClient
@@ -32,7 +28,7 @@ class FaluEndToEndTest {
 
     private val context: Context = ApplicationProvider.getApplicationContext()
     private val apiClient = FaluApiClient(context, FakeKeys.TEST_PUBLISHABLE_KEY, true)
-    private val falu =  Falu(context, FakeKeys.TEST_PUBLISHABLE_KEY, true)
+    private val falu = Falu(context, FakeKeys.TEST_PUBLISHABLE_KEY, true)
     private val testDispatcher = TestCoroutineDispatcher()
 
     @AfterTest
@@ -43,11 +39,12 @@ class FaluEndToEndTest {
     @Test
     fun testCreateEvaluationThrowsException() {
         val request = EvaluationRequest(
-            scope = EvaluationScope.PERSONAL,
+            scope = "personal",
             name = "JOHN DOE",
             phone = "+2547123456789",
             password = "12345678",
             file = "file_602a8dd0a54847479a874de4",
+            provider = "mpesa"
         )
 
         runBlocking(Dispatchers.IO) {
