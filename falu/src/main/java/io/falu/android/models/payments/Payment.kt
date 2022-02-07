@@ -78,7 +78,7 @@ data class Payment(
     /**
      * Unique identifier for the workspace that the object belongs to
      */
-    var workspaceId: String?,
+    var workspace: String?,
 
     /**
      * Indicates if this object belongs in the live environment
