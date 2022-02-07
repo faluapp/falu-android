@@ -12,7 +12,7 @@ data class PaymentFailure(
     /**
      * Reason for failure of a payment, transfer or reversal
      */
-    var reason: FailureReason,
+    var reason: String,
 
     /**
      * Time at which failure occurred
