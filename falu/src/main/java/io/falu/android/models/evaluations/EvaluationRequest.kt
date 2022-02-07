@@ -18,13 +18,13 @@ data class EvaluationRequest(
      * Represents the scope within which an evaluation is generated.
      * This can also be considered the purpose of the evaluation.
      */
-    var scope: EvaluationScope,
+    var scope: String,
 
     /**
      * Represents the kind of provider used for a statement in an evaluation.
      *
      */
-    var provider: StatementProvider = StatementProvider.MPESA,
+    var provider: String,
 
     /**
      * The full name of the person or business that owns the statement.
