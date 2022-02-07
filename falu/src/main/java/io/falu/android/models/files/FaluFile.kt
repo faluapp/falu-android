@@ -25,7 +25,7 @@ data class FaluFile(
     /**
      * Purpose for a file
      */
-    var purpose: FilePurpose?,
+    var purpose: String?,
     /**
      * Purpose for a file
      */

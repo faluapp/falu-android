@@ -14,7 +14,7 @@ data class UploadRequest(
     /**
      * Purpose for a file
      */
-    var purpose: FilePurpose,
+    var purpose: String,
     /**
      * Time at which the file expires.
      */
