@@ -6,7 +6,7 @@ plugins {
 
 android {
     compileSdkVersion Integer.parseInt("${compile_sdk_version}")
-    buildToolsVersion "30.0.3"
+    buildToolsVersion "31.0.3"
 
     defaultConfig {
         minSdkVersion Integer.parseInt("${min_sdk_version}")
