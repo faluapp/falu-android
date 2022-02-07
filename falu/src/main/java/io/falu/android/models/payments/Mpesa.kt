@@ -1,6 +1,7 @@
 package io.falu.android.models.payments
 
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -31,6 +32,7 @@ data class Mpesa(
     /**
      * The target business short code
      */
+    @SerializedName("business_short_code")
     var businessShortCode: String?,
 
     /**
