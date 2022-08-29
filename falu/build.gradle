@@ -63,11 +63,11 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    implementation 'software.tingle:abstractions:1.0.2'
+    implementation 'software.tingle:abstractions:1.0.3'
 
     testImplementation 'junit:junit:4.13.2'
-    testImplementation "org.mockito:mockito-core:4.6.1"
-    testImplementation 'org.robolectric:robolectric:4.8.1'
+    testImplementation "org.mockito:mockito-core:4.7.0"
+    testImplementation 'org.robolectric:robolectric:4.8.2'
     testImplementation 'androidx.test:core-ktx:1.4.0'
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
