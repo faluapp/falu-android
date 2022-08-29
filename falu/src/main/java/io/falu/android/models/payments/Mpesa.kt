@@ -12,7 +12,7 @@ data class Mpesa(
     /**
      * Type of payment
      */
-    var type: PaymentType?,
+    var type: String?,
 
     /**
      * Reference the payment was made in.
