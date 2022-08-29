@@ -3,7 +3,6 @@ package io.falu.android
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import io.falu.android.models.evaluations.EvaluationRequest
 import io.falu.android.models.payments.MpesaPaymentRequest
 import io.falu.android.models.payments.PaymentRequest
 import io.falu.android.networking.FaluApiClient
@@ -34,23 +33,6 @@ class FaluEndToEndTest {
     @AfterTest
     fun cleanup() {
         testDispatcher.cleanupTestCoroutines()
-    }
-
-    @Test
-    fun testCreateEvaluationThrowsException() {
-        val request = EvaluationRequest(
-            scope = "personal",
-            name = "JOHN DOE",
-            phone = "+2547123456789",
-            password = "12345678",
-            file = "file_602a8dd0a54847479a874de4",
-            provider = "mpesa"
-        )
-
-        runBlocking(Dispatchers.IO) {
-            val response = apiClient.createEvaluation(request)
-            assertEquals(true, !response.successful())
-        }
     }
 
     @Test
