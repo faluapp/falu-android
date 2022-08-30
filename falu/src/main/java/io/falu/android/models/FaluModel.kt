@@ -6,6 +6,11 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 open class FaluModel : Parcelable {
     /**
+     * Unique identifier for the workspace that the object belongs to.
+     */
+    var workspace: String? = null
+
+    /**
      * An optional arbitrary string attached to the object.
      * Mainly used to describe the object and often useful for displaying to users.
      */
