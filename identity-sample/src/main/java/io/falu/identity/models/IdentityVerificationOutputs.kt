@@ -1,7 +1,6 @@
-package io.falu.android.models.identityVerification
+package io.falu.identity.models
 
 import com.google.gson.annotations.SerializedName
-import io.falu.android.models.PhysicalAddress
 import java.util.*
 
 data class IdentityVerificationOutputs(
@@ -40,5 +39,4 @@ data class IdentityVerificationOutputs(
     @SerializedName("other_names")
     var otherNames: MutableList<String>?,
 
-    var address: PhysicalAddress?,
-)
+    )
