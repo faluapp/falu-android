@@ -1,14 +1,16 @@
-package io.falu.android.utils
+package io.falu.core.utils
 
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
 import android.webkit.MimeTypeMap
+import androidx.annotation.RestrictTo
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import java.io.File
 
-internal fun getMediaType(context: Context, file: File): MediaType {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun getMediaType(context: Context, file: File): MediaType {
     val uri = Uri.fromFile(file)
 
     val mimeType: String? = if (ContentResolver.SCHEME_CONTENT == uri.scheme) {

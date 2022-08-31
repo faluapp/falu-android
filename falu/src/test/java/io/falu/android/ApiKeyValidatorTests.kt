@@ -1,5 +1,6 @@
 package io.falu.android
 
+import io.falu.core.ApiKeyValidator
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import kotlin.test.assertFailsWith
@@ -17,7 +18,7 @@ class ApiKeyValidatorTests {
     @Test
     fun testSecretKeyThrowsException() {
         assertFailsWith<IllegalArgumentException> {
-            ApiKeyValidator.get().requireValid(FakeKeys.FAKE_SECRET_KEY)
+            ApiKeyValidator.get().requireValid(io.falu.android.FakeKeys.FAKE_SECRET_KEY)
         }
     }
 
