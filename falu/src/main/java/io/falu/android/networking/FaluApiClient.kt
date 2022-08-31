@@ -1,16 +1,16 @@
 package io.falu.android.networking
 
 import android.content.Context
-import io.falu.android.ApiVersion
-import io.falu.android.exceptions.APIConnectionException
-import io.falu.android.exceptions.APIException
-import io.falu.android.exceptions.AuthenticationException
+import io.falu.core.exceptions.APIConnectionException
+import io.falu.core.exceptions.APIException
+import io.falu.core.exceptions.AuthenticationException
 import io.falu.android.models.evaluations.Evaluation
 import io.falu.android.models.evaluations.EvaluationRequest
 import io.falu.android.models.files.FaluFile
 import io.falu.android.models.files.UploadRequest
 import io.falu.android.models.payments.Payment
 import io.falu.android.models.payments.PaymentRequest
+import io.falu.core.ApiVersion
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request

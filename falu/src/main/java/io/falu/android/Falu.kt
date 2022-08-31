@@ -8,6 +8,8 @@ import io.falu.android.models.files.UploadRequest
 import io.falu.android.models.payments.Payment
 import io.falu.android.models.payments.PaymentRequest
 import io.falu.android.networking.FaluRepository
+import io.falu.core.ApiKeyValidator
+import io.falu.core.ApiResultCallback
 
 /**
  * Entry-point to the Falu SDK
@@ -52,7 +54,7 @@ class Falu internal constructor(
      */
     fun createEvaluation(
         request: EvaluationRequest,
-        callbacks: ApiResultCallback<Evaluation>
+        callbacks: io.falu.core.ApiResultCallback<Evaluation>
     ) {
         faluRepository.createEvaluationAsync(request, callbacks)
     }

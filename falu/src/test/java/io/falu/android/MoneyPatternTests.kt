@@ -13,7 +13,7 @@ class MoneyPatternTests {
             amount = 20000,
             currency = Currency.getInstance("kes".toUpperCase())
         )
-        assertEquals(2000000, money.toCents)
+        assertEquals(2000000, money.amountInMinorUnits)
     }
 
 }

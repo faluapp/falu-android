@@ -1,4 +1,6 @@
-package io.falu.android
+package io.falu.core
+
+import androidx.annotation.RestrictTo
 
 /**
  * A class that represents a FALU API version.
@@ -9,18 +11,21 @@ package io.falu.android
  * See [https://falu.io) for latest
  * API changes.
  */
-internal data class ApiVersion internal constructor(internal val version: String) {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+data class ApiVersion internal constructor(internal val version: String) {
 
     val code: String
         get() = version
 
-    internal companion object {
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    companion object {
         private const val API_VERSION_CODE: String = "2022-01-01"
 
         private val INSTANCE = ApiVersion(API_VERSION_CODE)
 
+        @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
         @JvmSynthetic
-        internal fun get(): ApiVersion {
+        fun get(): ApiVersion {
             return INSTANCE
         }
     }

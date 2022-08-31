@@ -1,29 +1,16 @@
 plugins {
     id 'com.android.library'
-    id 'kotlin-android'
-    id 'kotlin-parcelize'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
-    compileSdkVersion Integer.parseInt("${compile_sdk_version}")
-    buildToolsVersion "31.0.0"
+    compileSdk 32
 
     defaultConfig {
-        minSdkVersion Integer.parseInt("${min_sdk_version}")
-        targetSdkVersion Integer.parseInt("${target_sdk_version}")
-        versionCode 1
-        versionName "1.0"
-
-        buildConfigField("String", "FALU_VERSION_NAME", "\"${getPublishVersion()}\"")
-        buildConfigField("String", "FALU_VERSION_CODE", "\"${getPublishVersionCode()}\"")
-        vectorDrawables.useSupportLibrary = true
-
-        testOptions {
-            unitTests.returnDefaultValues = true
-        }
+        minSdk 21
+        targetSdk 32
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments clearPackageData: 'true'
         consumerProguardFiles "consumer-rules.pro"
     }
 
@@ -33,35 +20,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
-    testOptions {
-        unitTests {
-            // Note: without this, all Robolectric tests using BuildConfig will fail.
-            includeAndroidResources = true
-        }
-    }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
     kotlinOptions {
         jvmTarget = '1.8'
-    }
-
-    testOptions {
-        unitTests.includeAndroidResources = true
-    }
-
-    lintOptions {
-        abortOnError false
     }
 }
 
 dependencies {
-    implementation project(":core")
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    api 'software.tingle:abstractions:1.0.4'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation "org.mockito:mockito-core:4.7.0"
@@ -74,9 +46,3 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
-
-ext {
-    artifactId = "falu-android"
-}
-
-apply from: "${rootDir}/deploy/deploy.gradle"
