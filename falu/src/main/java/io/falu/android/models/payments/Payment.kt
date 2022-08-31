@@ -76,11 +76,6 @@ data class Payment(
     var reversalId: String?,
 
     /**
-     * Unique identifier for the workspace that the object belongs to
-     */
-    var workspace: String?,
-
-    /**
      * Indicates if this object belongs in the live environment
      */
     var live: Boolean

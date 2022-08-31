@@ -1,4 +1,4 @@
-package io.falu.android.models.identityVerification
+package io.falu.identity.models
 
 import com.google.gson.annotations.SerializedName
 
@@ -13,20 +13,20 @@ data class IdentityVerificationOptions(
      * Options for the id number check.
      */
     @SerializedName("id_number")
-    var idNumber: IdentityVerificationOptionsForIdNumber?,
+    var idNumber: IdentityVerificationOptionsForIdNumber? = null,
 
     /**
      * Options for the document check.
      */
-    var document: IdentityVerificationOptionsForDocument?,
+    var document: IdentityVerificationOptionsForDocument? = null,
 
     /**
      * Options for the selfie check.
      */
-    var selfie: IdentityVerificationOptionsForSelfie?,
+    var selfie: IdentityVerificationOptionsForSelfie? = null,
 
     /**
      * Options for the video check.
      */
-    var video: IdentityVerificationOptionsForVideo?
+    var video: IdentityVerificationOptionsForVideo? = null
 )

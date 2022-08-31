@@ -1,4 +1,4 @@
-package io.falu.android.models.identityVerification
+package io.falu.identity.models
 
 data class IdentityVerificationOptionsForSelfie(
     /**
