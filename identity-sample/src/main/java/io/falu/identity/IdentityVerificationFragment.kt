@@ -7,14 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import io.falu.identity.databinding.FragmentIdentityVerificationBinding
-import io.falu.identity.models.IdentityVerificationCreationRequest
-import io.falu.identity.models.IdentityVerificationOptions
-import io.falu.identity.models.IdentityVerificationOptionsForDocument
 
 class IdentityVerificationFragment : Fragment() {
     private var _binding: FragmentIdentityVerificationBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: IdentityVerificationViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,15 +28,14 @@ class IdentityVerificationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         binding.buttonStartVerification.setOnClickListener {
-//            startVerification(
-//                allowDrivingLicense = binding.cbAllowedTypeDl.isChecked,
-//                allowPassport = binding.cbAllowedTypePassport.isChecked,
-//                allowIdentityCard = binding.cbAllowedTypeId.isChecked,
-//                allowUploads = binding.cbAllowUploads.isChecked,
-//                requireLiveCapture = binding.cbRequireLiveCapture.isChecked
-//            )
+            startVerification(
+                allowDrivingLicense = binding.cbAllowedTypeDl.isChecked,
+                allowPassport = binding.cbAllowedTypePassport.isChecked,
+                allowIdentityCard = binding.cbAllowedTypeId.isChecked,
+                allowUploads = binding.cbAllowUploads.isChecked,
+                requireLiveCapture = binding.cbRequireLiveCapture.isChecked
+            )
         }
     }
 
@@ -52,23 +51,25 @@ class IdentityVerificationFragment : Fragment() {
         allowUploads: Boolean,
         requireLiveCapture: Boolean
     ) {
-        val request = IdentityVerificationCreationRequest(
-            options = IdentityVerificationOptions(
-                allowUploads = allowUploads,
-                document = IdentityVerificationOptionsForDocument(
-                    live = requireLiveCapture,
-                    allowed = mutableListOf<String>().also {
-                        if (allowDrivingLicense) it.add(ALLOWED_TYPE_DRIVING_LICENSE)
-                        if (allowPassport) it.add(ALLOWED_TYPE_PASSPORT)
-                        if (allowIdentityCard) it.add(ALLOWED_TYPE_ID_CARD)
-                    }
-                )
-            ),
-            type = "document"
-        )
-
         binding.progressCircular.visibility = View.VISIBLE
+        viewModel.requestIdentityVerification(
+            allowDrivingLicense,
+            allowPassport,
+            allowIdentityCard,
+            allowUploads,
+            requireLiveCapture
+        ).observe(viewLifecycleOwner) { result ->
+            binding.progressCircular.visibility = View.VISIBLE
 
+            if (result.successful() && result.resource != null) {
+                val verification = result.resource!!
+                CustomTabsIntent.Builder().build()
+                    .launchUrl(
+                        requireContext(),
+                        Uri.parse(verification.url)
+                    )
+            }
+        }
     }
 
     companion object {
