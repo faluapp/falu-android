@@ -18,7 +18,7 @@ class ApiKeyValidatorTests {
     @Test
     fun testSecretKeyThrowsException() {
         assertFailsWith<IllegalArgumentException> {
-            ApiKeyValidator.get().requireValid(io.falu.android.FakeKeys.FAKE_SECRET_KEY)
+            ApiKeyValidator.get().requireValid(FakeKeys.FAKE_SECRET_KEY)
         }
     }
 
