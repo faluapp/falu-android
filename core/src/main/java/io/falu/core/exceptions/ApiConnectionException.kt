@@ -1,5 +1,6 @@
-package io.falu.android.exceptions
+package io.falu.core.exceptions
 
+import androidx.annotation.RestrictTo
 import java.io.IOException
 
 class APIConnectionException(
@@ -9,9 +10,10 @@ class APIConnectionException(
     cause = cause,
     message = message
 ) {
-    internal companion object {
+    companion object {
+        @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
         @JvmSynthetic
-        internal fun create(e: IOException, url: String? = null): APIConnectionException {
+        fun create(e: IOException, url: String? = null): APIConnectionException {
             val displayUrl = listOfNotNull(
                 "FALU",
                 "($url)".takeUnless { url.isNullOrBlank() }

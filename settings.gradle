@@ -1,2 +1,4 @@
 include ':falu'
 rootProject.name = "Falu"
+include ':identity-sample'
+include ':core'

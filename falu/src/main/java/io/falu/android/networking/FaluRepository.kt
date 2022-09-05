@@ -1,14 +1,14 @@
 package io.falu.android.networking
 
 import android.content.Context
-import io.falu.android.ApiResultCallback
+import io.falu.core.ApiResultCallback
 import io.falu.android.models.evaluations.Evaluation
 import io.falu.android.models.evaluations.EvaluationRequest
 import io.falu.android.models.files.FaluFile
 import io.falu.android.models.files.UploadRequest
 import io.falu.android.models.payments.Payment
 import io.falu.android.models.payments.PaymentRequest
-import io.falu.android.utils.getMediaType
+import io.falu.core.utils.getMediaType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -34,7 +34,7 @@ internal class FaluRepository internal constructor(
      */
     fun createEvaluationAsync(
         request: EvaluationRequest,
-        callbacks: ApiResultCallback<Evaluation>
+        callbacks: io.falu.core.ApiResultCallback<Evaluation>
     ) {
         launch(Dispatchers.IO) {
             kotlin.runCatching {
@@ -62,7 +62,7 @@ internal class FaluRepository internal constructor(
      * @param callbacks [ApiResultCallback] to receive the result or error
      *
      */
-    fun createPaymentAsync(request: PaymentRequest, callbacks: ApiResultCallback<Payment>) {
+    fun createPaymentAsync(request: PaymentRequest, callbacks: io.falu.core.ApiResultCallback<Payment>) {
         launch(Dispatchers.IO) {
             runCatching {
                 faluApiClient.createPayment(request)
@@ -87,7 +87,7 @@ internal class FaluRepository internal constructor(
      * @param callbacks [ApiResultCallback] to receive the result or error
      *
      */
-    fun uploadFileAsync(request: UploadRequest, callbacks: ApiResultCallback<FaluFile>) {
+    fun uploadFileAsync(request: UploadRequest, callbacks: io.falu.core.ApiResultCallback<FaluFile>) {
         request.mediaType = getMediaType(context, request.file)
         launch(Dispatchers.IO) {
             runCatching {

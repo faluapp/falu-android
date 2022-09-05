@@ -1,5 +1,6 @@
-package io.falu.android.exceptions
+package io.falu.core.exceptions
 
+import androidx.annotation.RestrictTo
 import org.json.JSONException
 import software.tingle.api.HttpApiResponseProblem
 import java.io.IOException
@@ -45,7 +46,8 @@ abstract class FaluException(
         ).joinToString(separator = "\n")
     }
 
-    internal companion object {
+    companion object {
+        @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
         fun create(throwable: Throwable): FaluException {
             return when (throwable) {
                 is FaluException -> throwable

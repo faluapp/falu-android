@@ -1,5 +1,6 @@
 package io.falu.android
 
+import io.falu.core.ApiKeyValidator
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import kotlin.test.assertFailsWith

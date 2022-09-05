@@ -1,4 +1,4 @@
-package io.falu.android
+package io.falu.core
 
 /**
  * Generic interface for an API operation callback that either returns a
