@@ -4,111 +4,126 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tv_allowed_type"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_document_options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="@string/identity_verification_allowed_types"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@id/view_allowed_types"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="1dp"
+        app:layout_constraintBottom_toTopOf="@id/view_verification_options"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="8dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/identity_verification_allowed_types"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+            <LinearLayout
+                android:id="@+id/view_allowed_types"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@+id/view_verification_options"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/sw_allowed_type_dl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/identity_verification_allowed_type_driver_license" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/sw_allowed_type_passport"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/identity_verification_allowed_type_passport" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/sw_allowed_type_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/identity_verification_allowed_type_identity_card" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
 
     <LinearLayout
-        android:id="@+id/view_allowed_types"
+        android:id="@+id/view_verification_options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/cb_require_live_capture"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="32dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/card_document_options">
 
-        <CheckBox
-            android:id="@+id/cb_allowed_type_dl"
-            android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="@string/identity_verification_allowed_type_driver_license" />
+            android:text="@string/identity_verification_options"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 
-        <CheckBox
-            android:id="@+id/cb_allowed_type_passport"
-            android:layout_width="wrap_content"
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/sw_allow_document_selfie"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="@string/identity_verification_allowed_type_passport" />
+            android:checked="false"
+            android:text="@string/identity_verification_require_selfie" />
 
-        <CheckBox
-            android:id="@+id/cb_allowed_type_id"
-            android:layout_width="wrap_content"
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/sw_allow_uploads"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="@string/identity_verification_allowed_type_identity_card" />
+            android:checked="false"
+            android:text="@string/identity_verification_allow_uploads" />
+
     </LinearLayout>
 
-    <CheckBox
-        android:id="@+id/cb_require_live_capture"
+
+    <LinearLayout
+        android:id="@+id/view_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:checked="true"
-        android:text="@string/identity_verification_require_live"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_allowed_types" />
-
-    <CheckBox
-        android:id="@+id/cb_allow_uploads"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:checked="true"
-        android:text="@string/identity_verification_allow_uploads"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cb_require_live_capture" />
-
-    <View
-        android:id="@+id/view_results_separator"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="16dp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toTopOf="@id/progress_circular"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cb_allow_uploads" />
-
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/progress_circular"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:visibility="invisible"
-        app:indicatorSize="28dp"
-        app:layout_constraintBottom_toTopOf="@id/button_start_verification"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_results_separator"
-        app:layout_constraintVertical_weight="1" />
-
-
-    <Button
-        android:id="@+id/button_start_verification"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_start_verification"
+        android:gravity="center"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/progress_circular" />
+        app:layout_constraintTop_toBottomOf="@id/view_verification_options"
+        app:layout_constraintVertical_bias="0.94">
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/view_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="invisible"
+            app:indicatorSize="28dp" />
+
+        <Button
+            android:id="@+id/button_start_verification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_start_verification" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,9 +1,10 @@
 <resources>
     <string name="app_name">Identity Verification Sample</string>
 
-    <string name="button_start_verification">Start Verification</string>
-    <string name="identity_verification_allowed_types">Allowed Types</string>
-    <string name="identity_verification_require_live">Require Live Capture</string>
+    <string name="button_start_verification">Verify Identity</string>
+    <string name="identity_verification_allowed_types">Available document types</string>
+    <string name="identity_verification_options">Identity Verification Options</string>
+    <string name="identity_verification_require_selfie">Use document and selfie</string>
     <string name="identity_verification_allow_uploads">Allow Uploads</string>
     <string name="identity_verification_allowed_type_driver_license">Driver License</string>
     <string name="identity_verification_allowed_type_passport">Passport</string>

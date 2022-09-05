@@ -30,11 +30,11 @@ class IdentityVerificationFragment : Fragment() {
 
         binding.buttonStartVerification.setOnClickListener {
             startVerification(
-                allowDrivingLicense = binding.cbAllowedTypeDl.isChecked,
-                allowPassport = binding.cbAllowedTypePassport.isChecked,
-                allowIdentityCard = binding.cbAllowedTypeId.isChecked,
-                allowUploads = binding.cbAllowUploads.isChecked,
-                requireLiveCapture = binding.cbRequireLiveCapture.isChecked
+                allowDrivingLicense = binding.swAllowedTypeDl.isChecked,
+                allowPassport = binding.swAllowedTypePassport.isChecked,
+                allowIdentityCard = binding.swAllowedTypeId.isChecked,
+                allowUploads = binding.swAllowUploads.isChecked,
+                allowDocumentSelfie = binding.swAllowDocumentSelfie.isChecked,
             )
         }
     }
@@ -49,17 +49,17 @@ class IdentityVerificationFragment : Fragment() {
         allowPassport: Boolean,
         allowIdentityCard: Boolean,
         allowUploads: Boolean,
-        requireLiveCapture: Boolean
+        allowDocumentSelfie: Boolean
     ) {
-        binding.progressCircular.visibility = View.VISIBLE
+        binding.viewProgress.visibility = View.VISIBLE
         viewModel.requestIdentityVerification(
             allowDrivingLicense,
             allowPassport,
             allowIdentityCard,
             allowUploads,
-            requireLiveCapture
+            allowDocumentSelfie
         ).observe(viewLifecycleOwner) { result ->
-            binding.progressCircular.visibility = View.VISIBLE
+            binding.viewProgress.visibility = View.GONE
 
             if (result.successful() && result.resource != null) {
                 val verification = result.resource!!
@@ -70,11 +70,5 @@ class IdentityVerificationFragment : Fragment() {
                     )
             }
         }
-    }
-
-    companion object {
-        const val ALLOWED_TYPE_DRIVING_LICENSE = "driving_license"
-        const val ALLOWED_TYPE_PASSPORT = "passport"
-        const val ALLOWED_TYPE_ID_CARD = "id_card"
     }
 }
