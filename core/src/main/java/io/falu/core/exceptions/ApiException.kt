@@ -1,5 +1,6 @@
-package io.falu.android.exceptions
+package io.falu.core.exceptions
 
+import androidx.annotation.RestrictTo
 import software.tingle.api.HttpApiResponseProblem
 
 /**
@@ -18,7 +19,8 @@ class APIException(
     cause = cause,
     message = message
 ) {
-    internal constructor(throwable: Throwable) : this(
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    constructor(throwable: Throwable) : this(
         message = throwable.message,
         cause = throwable
     )

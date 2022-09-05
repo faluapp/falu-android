@@ -10,16 +10,6 @@ internal data class Money(
     var amount: Number,
     var currency: Currency,
 ) {
-    @Deprecated("Use amountInMinorUnits")
-    val toCents: Int
-        get() {
-            return when (currency.currencyCode) {
-                else -> {
-                    DEFAULT_CENTS.times(amount.toInt())
-                }
-            }
-        }
-
     /// Minor Unit is a fraction of the base (ex. cents, stotinka, etc.)
     val amountInMinorUnits: Int
         get() {
