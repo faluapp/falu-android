@@ -1,0 +1,6 @@
+<resources>
+    <!--Welcome-->
+    <string name="welcome_button_get_started">Get Started</string>
+    <string name="welcome_subtitle">%1$s partners with Falu for secure identity verification.</string>
+    <string name="welcome_body">Falu identity was built with the global privacy regulations in mind.\nData security &amp; privacy are important to us. You are about to begin the identity verification process.\nData collected will be handled according to the Falu <b><font fgcolor="#2a034d">Privacy Policy</font></b> and the 1$s <b><font fgcolor="#2a034d">Privacy Policy</font></b>.\n\nKindly have your identification document close by and get started with the process!</string>
+</resources>
