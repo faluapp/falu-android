@@ -2,4 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.falu.identity">
 
+    <application>
+        <activity
+            android:name=".IdentityVerificationActivity"
+            android:exported="false" />
+    </application>
+
 </manifest>

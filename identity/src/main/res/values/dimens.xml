@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- body content -->
+    <dimen name="element_spacing_normal_quarter">2dp</dimen>
+    <dimen name="element_spacing_normal_half">4dp</dimen>
+    <dimen name="element_spacing_normal">8dp</dimen>
+    <dimen name="content_padding_normal">16dp</dimen>
+    <dimen name="content_padding_normal_2x">32dp</dimen>
+    <dimen name="content_padding_normal_3x">48dp</dimen>
+    <dimen name="content_padding_normal_4x">64dp</dimen>
+    <dimen name="content_padding_dialog">24dp</dimen>
+    <dimen name="text_size_medium">14sp</dimen>
+    <dimen name="text_size_large">18sp</dimen>
+</resources>
