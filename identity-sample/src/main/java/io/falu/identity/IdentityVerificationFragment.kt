@@ -1,5 +1,6 @@
 package io.falu.identity
 
+import android.content.ContentResolver
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import io.falu.identity.databinding.FragmentIdentityVerificationBinding
 
-class IdentityVerificationFragment : Fragment() {
+class IdentityVerificationFragment : Fragment(), IdentityVerificationResultCallback {
     private var _binding: FragmentIdentityVerificationBinding? = null
     private val binding get() = _binding!!
 
@@ -25,17 +26,31 @@ class IdentityVerificationFragment : Fragment() {
         return binding.root
     }
 
+    private val logoUri: Uri
+        get() = Uri.Builder()
+            .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
+            .authority(resources.getResourcePackageName(R.mipmap.ic_launcher))
+            .appendPath(resources.getResourceTypeName(R.mipmap.ic_launcher))
+            .appendPath(resources.getResourceEntryName(R.mipmap.ic_launcher))
+            .build()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val verificationView = FaluIdentityVerificationView.create(
+            fragment = this,
+            logo = logoUri,
+            callback = this
+        )
         binding.buttonStartVerification.setOnClickListener {
-            startVerification(
-                allowDrivingLicense = binding.swAllowedTypeDl.isChecked,
-                allowPassport = binding.swAllowedTypePassport.isChecked,
-                allowIdentityCard = binding.swAllowedTypeId.isChecked,
-                allowUploads = binding.swAllowUploads.isChecked,
-                allowDocumentSelfie = binding.swAllowDocumentSelfie.isChecked,
-            )
+            verificationView.open("", "")
+//            startVerification(
+//                allowDrivingLicense = binding.swAllowedTypeDl.isChecked,
+//                allowPassport = binding.swAllowedTypePassport.isChecked,
+//                allowIdentityCard = binding.swAllowedTypeId.isChecked,
+//                allowUploads = binding.swAllowUploads.isChecked,
+//                allowDocumentSelfie = binding.swAllowDocumentSelfie.isChecked,
+//            )
         }
     }
 
@@ -70,5 +85,9 @@ class IdentityVerificationFragment : Fragment() {
                     )
             }
         }
+    }
+
+    override fun onVerificationResult(result: IdentityVerificationResult?) {
+
     }
 }
