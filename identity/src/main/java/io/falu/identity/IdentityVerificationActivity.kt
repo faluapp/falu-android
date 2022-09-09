@@ -1,11 +1,17 @@
 package io.falu.identity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import io.falu.identity.databinding.ActivityIdentityVerificationBinding
 
-class IdentityVerificationActivity : AppCompatActivity() {
+internal class IdentityVerificationActivity : AppCompatActivity() {
+
+    private val binding by lazy {
+        ActivityIdentityVerificationBinding.inflate(layoutInflater)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_identity_verification)
+        setContentView(binding.root)
     }
 }
