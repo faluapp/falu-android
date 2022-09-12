@@ -18,5 +18,14 @@
         android:id="@+id/fragment_document_selection"
         android:name="io.falu.identity.documents.DocumentSelectionFragment"
         android:label="DocumentSelectionFragment"
-        tool:layout="@layout/fragment_document_selection" />
+        tool:layout="@layout/fragment_document_selection" >
+        <action
+            android:id="@+id/action_fragment_document_selection_to_fragment_document_capture_methods"
+            app:destination="@id/fragment_document_capture_methods" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_document_capture_methods"
+        android:name="io.falu.identity.documents.DocumentCaptureMethodsFragment"
+        android:label="DocumentCaptureMethodsFragment"
+        tool:layout="@layout/fragment_document_capture_methods"/>
 </navigation>
