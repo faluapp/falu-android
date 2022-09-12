@@ -25,72 +25,32 @@
                 android:text="@string/document_selection_subtitle"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
-
-            <LinearLayout
+            <com.google.android.material.chip.ChipGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                app:singleSelection="true">
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card_identity_card"
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_identity_card"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardCornerRadius="@dimen/element_spacing_normal">
+                    android:text="@string/document_selection_document_identity_card" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/content_padding_normal">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/document_selection_document_identity_card"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card_passport"
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_passport"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardCornerRadius="@dimen/element_spacing_normal">
+                    android:text="@string/document_selection_document_passport" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/content_padding_normal">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/document_selection_document_passport"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card_driving_license"
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_driving_license"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardCornerRadius="@dimen/element_spacing_normal">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/content_padding_normal">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/document_selection_document_driver_license"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-            </LinearLayout>
+                    android:text="@string/document_selection_document_driver_license" />
+            </com.google.android.material.chip.ChipGroup>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
