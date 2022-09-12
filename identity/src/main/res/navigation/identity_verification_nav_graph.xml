@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
     android:id="@+id/identity_verification_nav_graph"
-    app:startDestination="@id/welcomeFragment">
+    app:startDestination="@id/fragment_welcome">
 
     <fragment
-        android:id="@+id/welcomeFragment"
+        android:id="@+id/fragment_welcome"
         android:name="io.falu.identity.welcome.WelcomeFragment"
-        android:label="WelcomeFragment" >
+        android:label="WelcomeFragment"
+        tool:layout="@layout/fragment_welcome">
         <action
-            android:id="@+id/action_welcomeFragment_to_documentSelectionFragment"
-            app:destination="@id/documentSelectionFragment" />
+            android:id="@+id/action_fragment_welcome_to_fragment_document_selection"
+            app:destination="@id/fragment_document_selection" />
     </fragment>
     <fragment
-        android:id="@+id/documentSelectionFragment"
+        android:id="@+id/fragment_document_selection"
         android:name="io.falu.identity.documents.DocumentSelectionFragment"
-        android:label="DocumentSelectionFragment" />
+        android:label="DocumentSelectionFragment"
+        tool:layout="@layout/fragment_document_selection" />
 </navigation>
