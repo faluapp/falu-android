@@ -40,14 +40,16 @@ internal class UploadDocumentFragment : AbstractCaptureFragment() {
                 identityDocumentType?.getIdentityDocumentName(requireContext())
             )
 
-        captureDocumentViewModel.captureDocumentImages(fragment = this,
+        captureDocumentViewModel.captureDocumentImages(
+            fragment = this,
             onFrontImagePicked = {
-
+                uploadDocument(uri = it)
             },
             onBackImagePicked = {
-
+                uploadDocument(uri = it)
             }
         )
+
         binding.cardDocumentFront.setOnClickListener {
             captureDocumentViewModel.pickImageFront()
         }
