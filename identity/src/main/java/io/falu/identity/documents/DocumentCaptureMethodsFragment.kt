@@ -4,7 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.IdRes
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import io.falu.identity.R
+import io.falu.identity.api.models.IdentityDocumentType
+import io.falu.identity.capture.AbstractCaptureFragment.Companion.getIdentityDocumentName
 import io.falu.identity.databinding.FragmentDocumentCaptureMethodsBinding
 
 class DocumentCaptureMethodsFragment : Fragment() {
@@ -22,5 +28,26 @@ class DocumentCaptureMethodsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val identityDocumentType =
+            requireArguments().getSerializable(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE) as? IdentityDocumentType
+
+        binding.tvDocumentCaptureMethod.text =
+            getString(R.string.document_capture_method_subtitle, identityDocumentType?.getIdentityDocumentName(requireContext() ))
+
+        binding.buttonContinue.setOnClickListener {
+            val bundle =
+                bundleOf(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE to identityDocumentType)
+            findNavController().navigate(identityDocumentType!!.toUploadDestination(), bundle)
+        }
+    }
+
+    internal companion object {
+        @IdRes
+        private fun IdentityDocumentType.toUploadDestination() =
+            when (this) {
+                IdentityDocumentType.IDENTITY_CARD -> R.id.action_fragment_document_capture_methods_to_fragment_document_upload
+                IdentityDocumentType.PASSPORT -> R.id.action_fragment_document_capture_methods_to_fragment_document_upload
+                IdentityDocumentType.DRIVING_LICENSE -> R.id.action_fragment_document_capture_methods_to_fragment_document_upload
+            }
     }
 }

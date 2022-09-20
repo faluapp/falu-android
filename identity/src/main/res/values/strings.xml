@@ -20,4 +20,8 @@
     <string name="document_capture_method_photo">Take picture of the document</string>
     <string name="document_capture_method_upload">Upload the document</string>
 
+    <!--Upload Document -->
+    <string name="upload_document_capture_title">%1$s upload</string>
+    <string name="upload_document_capture_document_font">Front of %1$s</string>
+    <string name="upload_document_capture_document_back">Back of %1$s</string>
 </resources>

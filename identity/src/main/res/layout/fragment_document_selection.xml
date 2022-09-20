@@ -26,6 +26,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <com.google.android.material.chip.ChipGroup
+                android:id="@+id/group_document_types"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:singleSelection="true">
