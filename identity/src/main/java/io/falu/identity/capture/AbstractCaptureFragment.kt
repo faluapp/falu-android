@@ -1,6 +1,7 @@
 package io.falu.identity.capture
 
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -17,6 +18,10 @@ internal abstract class AbstractCaptureFragment : Fragment() {
 
         identityDocumentType =
             requireArguments().getSerializable(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE) as? IdentityDocumentType
+    }
+
+    protected fun uploadDocument(uri: Uri) {
+
     }
 
     internal companion object {
