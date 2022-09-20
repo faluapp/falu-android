@@ -39,6 +39,22 @@ internal class UploadDocumentFragment : AbstractCaptureFragment() {
                 R.string.upload_document_capture_document_back,
                 identityDocumentType?.getIdentityDocumentName(requireContext())
             )
+
+        captureDocumentViewModel.captureDocumentImages(fragment = this,
+            onFrontImagePicked = {
+
+            },
+            onBackImagePicked = {
+
+            }
+        )
+        binding.cardDocumentFront.setOnClickListener {
+            captureDocumentViewModel.pickImageFront()
+        }
+
+        binding.cardDocumentBack.setOnClickListener {
+            captureDocumentViewModel.pickImageBack()
+        }
     }
 
     override fun onDestroyView() {
