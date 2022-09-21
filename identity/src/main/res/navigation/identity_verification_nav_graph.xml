@@ -31,10 +31,18 @@
         <action
             android:id="@+id/action_fragment_document_capture_methods_to_fragment_document_upload"
             app:destination="@id/fragment_document_upload" />
+        <action
+            android:id="@+id/action_fragment_document_capture_methods_to_fragment_photo_upload"
+            app:destination="@id/fragment_photo_upload" />
     </fragment>
     <fragment
         android:id="@+id/fragment_document_upload"
         android:name="io.falu.identity.capture.upload.UploadDocumentFragment"
         android:label="UploadDocumentFragment"
         tool:layout="@layout/fragment_upload_document"/>
+    <fragment
+        android:id="@+id/fragment_photo_upload"
+        android:name="io.falu.identity.capture.photo.PhotoUploadFragment"
+        android:label="PhotoUploadFragment"
+        tool:layout="@layout/fragment_photo_upload"/>
 </navigation>

@@ -34,10 +34,20 @@ class DocumentCaptureMethodsFragment : Fragment() {
         binding.tvDocumentCaptureMethod.text =
             getString(R.string.document_capture_method_subtitle, identityDocumentType?.getIdentityDocumentName(requireContext() ))
 
+        var captureDestination: Int = 0
+
+        binding.groupCaptureMethods.setOnCheckedStateChangeListener { group, _ ->
+            when (group.checkedChipId) {
+                R.id.chip_capture_method_scan -> captureDestination = identityDocumentType!!.toUploadDestination()
+                R.id.chip_capture_method_photo -> captureDestination = identityDocumentType!!.toPhotoUploadDestination()
+                R.id.chip_capture_method_upload -> captureDestination = identityDocumentType!!.toUploadDestination()
+            }
+        }
+
         binding.buttonContinue.setOnClickListener {
             val bundle =
                 bundleOf(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE to identityDocumentType)
-            findNavController().navigate(identityDocumentType!!.toUploadDestination(), bundle)
+            findNavController().navigate(captureDestination, bundle)
         }
     }
 
@@ -48,6 +58,14 @@ class DocumentCaptureMethodsFragment : Fragment() {
                 IdentityDocumentType.IDENTITY_CARD -> R.id.action_fragment_document_capture_methods_to_fragment_document_upload
                 IdentityDocumentType.PASSPORT -> R.id.action_fragment_document_capture_methods_to_fragment_document_upload
                 IdentityDocumentType.DRIVING_LICENSE -> R.id.action_fragment_document_capture_methods_to_fragment_document_upload
+            }
+
+        @IdRes
+        private fun IdentityDocumentType.toPhotoUploadDestination() =
+            when (this) {
+                IdentityDocumentType.IDENTITY_CARD -> R.id.action_fragment_document_capture_methods_to_fragment_photo_upload
+                IdentityDocumentType.PASSPORT -> R.id.action_fragment_document_capture_methods_to_fragment_photo_upload
+                IdentityDocumentType.DRIVING_LICENSE -> R.id.action_fragment_document_capture_methods_to_fragment_photo_upload
             }
     }
 }
