@@ -3,6 +3,10 @@
     <string name="button_continue">Continue</string>
     <string name="identity_verification_title_identity_verification">Identity verification</string>
 
+    <!--Permission Explanation-->
+    <string name="permission_explanation_title">Permission Required!</string>
+    <string name="permission_explanation_camera">The camera permission is required take photos of your verification documents. Choose OK to authorize.</string>
+
     <!--Welcome-->
     <string name="welcome_button_get_started">Get Started</string>
     <string name="welcome_subtitle">%1$s partners with Falu for secure identity verification.</string>

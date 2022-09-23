@@ -6,14 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IdRes
 import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import io.falu.identity.R
 import io.falu.identity.api.models.IdentityDocumentType
-import io.falu.identity.capture.AbstractCaptureFragment.Companion.getIdentityDocumentName
+import io.falu.identity.capture.AbstractCaptureFragment
 import io.falu.identity.databinding.FragmentDocumentCaptureMethodsBinding
 
-class DocumentCaptureMethodsFragment : Fragment() {
+internal class DocumentCaptureMethodsFragment : AbstractCaptureFragment() {
     private var _binding: FragmentDocumentCaptureMethodsBinding? = null
     private val binding get() = _binding!!
 
@@ -32,23 +31,49 @@ class DocumentCaptureMethodsFragment : Fragment() {
             requireArguments().getSerializable(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE) as? IdentityDocumentType
 
         binding.tvDocumentCaptureMethod.text =
-            getString(R.string.document_capture_method_subtitle, identityDocumentType?.getIdentityDocumentName(requireContext() ))
+            getString(
+                R.string.document_capture_method_subtitle,
+                identityDocumentType?.getIdentityDocumentName(requireContext())
+            )
 
-        var captureDestination: Int = 0
+        var captureDestination = 0
 
         binding.groupCaptureMethods.setOnCheckedStateChangeListener { group, _ ->
             when (group.checkedChipId) {
-                R.id.chip_capture_method_scan -> captureDestination = identityDocumentType!!.toUploadDestination()
-                R.id.chip_capture_method_photo -> captureDestination = identityDocumentType!!.toPhotoUploadDestination()
-                R.id.chip_capture_method_upload -> captureDestination = identityDocumentType!!.toUploadDestination()
+                R.id.chip_capture_method_scan -> captureDestination =
+                    identityDocumentType!!.toUploadDestination()
+                R.id.chip_capture_method_photo -> captureDestination =
+                    identityDocumentType!!.toPhotoUploadDestination()
+                R.id.chip_capture_method_upload -> captureDestination =
+                    identityDocumentType!!.toUploadDestination()
             }
         }
 
         binding.buttonContinue.setOnClickListener {
-            val bundle =
-                bundleOf(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE to identityDocumentType)
-            findNavController().navigate(captureDestination, bundle)
+            if (binding.chipCaptureMethodPhoto.isChecked || binding.chipCaptureMethodPhoto.isChecked) {
+                requestCameraPermissions(
+                    onCameraPermissionGranted = { onCameraPermissionGranted(captureDestination) },
+                    onCameraPermissionDenied = { onCameraPermissionDenied() }
+                )
+                return@setOnClickListener
+            } else {
+                navigateToDestination(captureDestination)
+            }
         }
+    }
+
+    private fun navigateToDestination(destinationId: Int) {
+        val bundle =
+            bundleOf(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE to identityDocumentType)
+        findNavController().navigate(destinationId, bundle)
+    }
+
+    private fun onCameraPermissionGranted(destinationId: Int) {
+        navigateToDestination(destinationId)
+    }
+
+    private fun onCameraPermissionDenied() {
+        // navigate to camera permissions denied view
     }
 
     internal companion object {
