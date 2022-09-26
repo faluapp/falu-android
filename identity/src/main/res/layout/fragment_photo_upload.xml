@@ -30,7 +30,7 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <androidx.camera.view.PreviewView
+                    <io.falu.identity.camera.CameraView
                         android:id="@+id/view_camera_preview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
