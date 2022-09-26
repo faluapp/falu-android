@@ -40,7 +40,7 @@ internal class UploadDocumentFragment : AbstractCaptureFragment() {
                 identityDocumentType?.getIdentityDocumentName(requireContext())
             )
 
-        captureDocumentViewModel.captureDocumentImages(
+        captureDocumentViewModel.pickDocumentImages(
             fragment = this,
             onFrontImagePicked = {
                 uploadDocument(uri = it)
