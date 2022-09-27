@@ -2,8 +2,8 @@
 buildscript {
     ext.kotlin_version = "1.7.10"
     ext.min_sdk_version = 21
-    ext.compile_sdk_version = 31
-    ext.target_sdk_version = 31
+    ext.compile_sdk_version = 33
+    ext.target_sdk_version = 33
 
     ext.group_id = 'io.falu'
 
@@ -12,7 +12,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.2'
+        classpath 'com.android.tools.build:gradle:7.3.0'
         classpath 'io.github.gradle-nexus:publish-plugin:1.1.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
