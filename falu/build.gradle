@@ -77,6 +77,8 @@ dependencies {
 
 ext {
     artifactId = "falu-android"
+    artifactName = "falu-android"
+    artifactDescription = "SDK for Falu Android"
 }
 
 apply from: "${rootDir}/deploy/deploy.gradle"
