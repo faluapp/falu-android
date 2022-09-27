@@ -4,8 +4,6 @@ import android.content.Context
 import io.falu.core.exceptions.APIConnectionException
 import io.falu.core.exceptions.APIException
 import io.falu.core.exceptions.AuthenticationException
-import io.falu.android.models.evaluations.Evaluation
-import io.falu.android.models.evaluations.EvaluationRequest
 import io.falu.android.models.files.FaluFile
 import io.falu.android.models.files.UploadRequest
 import io.falu.android.models.payments.Payment
@@ -30,18 +28,6 @@ internal class FaluApiClient internal constructor(
 
     private val appDetailsInterceptor = AppDetailsInterceptor(context)
     private val apiVersionInterceptor = ApiVersionInterceptor(ApiVersion.get().code)
-
-    @Throws(
-        AuthenticationException::class,
-        APIConnectionException::class,
-        APIException::class
-    )
-    suspend fun createEvaluation(request: EvaluationRequest): ResourceResponse<Evaluation> {
-        val builder = Request.Builder()
-            .url("$baseUrl/v1/evaluations")
-            .post(makeJson(request).toRequestBody(MEDIA_TYPE_JSON))
-        return executeAsync(builder, Evaluation::class.java)
-    }
 
     @Throws(
         AuthenticationException::class,
