@@ -23,9 +23,9 @@ afterEvaluate {
                 version getPublishVersion()
 
                 pom {
-                    name = project.name
+                    name = project.artifactName
                     packaging = "aar"
-                    description = "Falu Android"
+                    description = project.artifactDescription
                     url = "https://github.com/tinglesoftware/falu-android"
 
                     scm {
