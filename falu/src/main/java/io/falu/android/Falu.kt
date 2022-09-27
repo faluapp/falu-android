@@ -1,8 +1,6 @@
 package io.falu.android
 
 import android.content.Context
-import io.falu.android.models.evaluations.Evaluation
-import io.falu.android.models.evaluations.EvaluationRequest
 import io.falu.android.models.files.FaluFile
 import io.falu.android.models.files.UploadRequest
 import io.falu.android.models.payments.Payment
@@ -16,7 +14,6 @@ import io.falu.core.ApiResultCallback
  *
  * Supports asynchronous methods to access the following Falu APIs:
  *
- * * [Evaluations API] [Create Evaluation] - Create an evaluation
  */
 class Falu internal constructor(
     publishableKey: String,
@@ -41,23 +38,6 @@ class Falu internal constructor(
         FaluRepository(context, publishableKey, enableLogging)
     )
 
-
-    /**
-     * Create an evaluation asynchronously
-     *
-     * See [Create an evaluation](https://api.falu.io/v1/evaluations).
-     * `POST /v1/evaluations`
-     *
-     * @param request [The evaluation request object](https://falu.io)
-     * @param callbacks [ApiResultCallback] to receive the result or error
-     *
-     */
-    fun createEvaluation(
-        request: EvaluationRequest,
-        callbacks: io.falu.core.ApiResultCallback<Evaluation>
-    ) {
-        faluRepository.createEvaluationAsync(request, callbacks)
-    }
 
     /**
      * Create a payment asynchronously
