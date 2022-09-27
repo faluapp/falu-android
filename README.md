@@ -9,7 +9,7 @@
 ![Language](https://img.shields.io/badge/language-Kotlin%205.0-green.svg)
 
 Falu's Android SDK simplifies the process of building excellent financial services into Android
-applications. We expose APIs that will enable to you to make payment and client evaluation requests.
+applications. We expose APIs that will enable to you to make payment and handle identity verification.
 
 ## Installation
 
@@ -56,36 +56,6 @@ val falu = Falu(this, "PUBLIC_KEY", true)
 Once you have finished the setup process, you can proceed to use the features and functionalities
 offered by the SDK
 
-## Evaluations
-
-Use this feature when you want to know the credit score/worth of a user. This will allow you to know
-your user's spending habits from their financial statements.
-Visit [Credit scoring customers using the Evaluations API](https://docs.falu.io/guides/evaluations)
-for more information relating to this.
-
-```kotlin
-val request = EvaluationRequest(
-    scope = EvaluationScope.PERSONAL,
-    name = "JOHN DOE",
-    phone = "+2547123456789",
-    password = "12345678",
-    fileId = "file_602a8dd0a54847479a874de4"
-)
-
-falu.createEvaluation(request, callback)
-
-// api response callbacks
-private val callback = object : ApiResultCallback<Evaluation> {
-    override fun onSuccess(result: Evaluation) {
-        // display in UI element
-    }
-
-    override fun onError(e: Exception) {
-        print(e)
-    }
-}    
-```
-
 ## Payments
 
 Create a `Payment` object when initiating payments from a customer. Falu supports several payment
@@ -120,19 +90,19 @@ private val callback = object : ApiResultCallback<Payment> {
     override fun onError(e: Exception) {
         print(e)
     }
-} 
+}
 ```
 
 ## Upload files
 
-This feature allows you to upload files whether for evaluation or customer identification. See the
+This feature allows you to upload files. See the
 documentation for more information on how to
 handle [files and uploads](https://docs.falu.io/guides/files)
 
 ```kotlin
-val request = UploadRequest(     
+val request = UploadRequest(
     file = file,
-    purpose = FilePurpose.CUSTOMER_EVALUATION
+    purpose = "customer.selfie"
 )
 
 // making the request
