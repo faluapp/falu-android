@@ -46,3 +46,11 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
+
+ext {
+    artifactId = "falu-core"
+    artifactName = "Falu Core"
+    artifactDescription = "Common packages for Falu Android"
+}
+
+apply from: "${rootDir}/deploy/deploy.gradle"
