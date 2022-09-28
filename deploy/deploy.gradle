@@ -67,7 +67,7 @@ afterEvaluate {
 
                         final depGroup = dep.group
                         final depName = dep.name
-                        final depVersion = dep.version
+                        final depVersion = dep.version != 'unspecified' ? dep.version : getPublishVersion()
 
                         final dependencyNode = dependenciesNode.appendNode("dependency")
                         dependencyNode.appendNode("groupId", depGroup)
@@ -76,8 +76,13 @@ afterEvaluate {
                         dependencyNode.appendNode("scope", scope)
 
                     }
-                    configurations.api.getDependencies().each { dep -> addDependency(dep, "compile") }
-                    configurations.implementation.getDependencies().each { dep -> addDependency(dep, "runtime") }
+
+                    if (configurations.hasProperty("api")) {
+                        configurations.api.getDependencies().each { dep -> addDependency(dep, "compile") }
+                    }
+                    if (configurations.hasProperty("implementation")) {
+                        configurations.implementation.getDependencies().each { dep -> addDependency(dep, "runtime") }
+                    }
                 }
             }
         }
