@@ -1,11 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext.kotlin_version = "1.7.10"
-    ext.min_sdk_version = 21
-    ext.compile_sdk_version = 33
-    ext.target_sdk_version = 33
-
-    ext.group_id = 'io.falu'
 
     repositories {
         google()
@@ -26,6 +21,8 @@ plugins {
 }
 
 allprojects {
+    group = GROUP
+
     repositories {
         google()
         mavenCentral()
@@ -60,7 +57,17 @@ if (keyContent != null) {
     ext['signing.secretKeyRingFile'] = keyFile.absolutePath
 }
 
+ext {
+    min_sdk_version = 21
+    compile_sdk_version = 33
+    target_sdk_version = 33
+
+    group_id = GROUP
+}
+
 nexusPublishing {
+    packageGroup = GROUP
+
     repositories {
         sonatype {
             stagingProfileId = getPublishStagingProfileId()
