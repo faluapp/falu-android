@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import io.falu.identity.databinding.FragmentIdentityVerificationBinding
@@ -16,6 +15,7 @@ class IdentityVerificationFragment : Fragment(), IdentityVerificationResultCallb
     private val binding get() = _binding!!
 
     private val viewModel: IdentityVerificationViewModel by activityViewModels()
+    private lateinit var verificationView: FaluIdentityVerificationView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,20 +37,19 @@ class IdentityVerificationFragment : Fragment(), IdentityVerificationResultCallb
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val verificationView = FaluIdentityVerificationView.create(
+        verificationView = FaluIdentityVerificationView.create(
             fragment = this,
             logo = logoUri,
             callback = this
         )
         binding.buttonStartVerification.setOnClickListener {
-            verificationView.open("", "")
-//            startVerification(
-//                allowDrivingLicense = binding.swAllowedTypeDl.isChecked,
-//                allowPassport = binding.swAllowedTypePassport.isChecked,
-//                allowIdentityCard = binding.swAllowedTypeId.isChecked,
-//                allowUploads = binding.swAllowUploads.isChecked,
-//                allowDocumentSelfie = binding.swAllowDocumentSelfie.isChecked,
-//            )
+            startVerification(
+                allowDrivingLicense = binding.swAllowedTypeDl.isChecked,
+                allowPassport = binding.swAllowedTypePassport.isChecked,
+                allowIdentityCard = binding.swAllowedTypeId.isChecked,
+                allowUploads = binding.swAllowUploads.isChecked,
+                allowDocumentSelfie = binding.swAllowDocumentSelfie.isChecked,
+            )
         }
     }
 
@@ -78,11 +77,13 @@ class IdentityVerificationFragment : Fragment(), IdentityVerificationResultCallb
 
             if (result.successful() && result.resource != null) {
                 val verification = result.resource!!
-                CustomTabsIntent.Builder().build()
-                    .launchUrl(
-                        requireContext(),
-                        Uri.parse(verification.url)
-                    )
+                verificationView.open(verification.id, verification.temporaryKey)
+
+//                CustomTabsIntent.Builder().build()
+//                    .launchUrl(
+//                        requireContext(),
+//                        Uri.parse(verification.url)
+//                    )
             }
         }
     }

@@ -43,6 +43,10 @@ data class IdentityVerification(
     /**
      * Unique identifiers of the reports for this verification.
      */
-    var reports: MutableList<String>?
+    var reports: MutableList<String>?,
 
+    /**
+     */
+    @SerializedName("temporary_key")
+    var temporaryKey: String
 )
