@@ -1,6 +1,7 @@
 package io.falu.identity.api
 
 import android.content.Context
+import io.falu.core.ApiKeyValidator
 import io.falu.core.ApiVersion
 import io.falu.core.ApiVersionInterceptor
 import okhttp3.OkHttpClient
@@ -17,7 +18,6 @@ internal class IdentityVerificationApiClient(
 ) : AbstractHttpApiClient(IdentityVerificationAuthProvider(apiKey)) {
     private val appDetailsInterceptor = AppDetailsInterceptor(context)
     private val apiVersionInterceptor = ApiVersionInterceptor(ApiVersion.get().code)
-
     override fun buildBackChannel(builder: OkHttpClient.Builder): OkHttpClient {
         builder
             .addInterceptor(appDetailsInterceptor)
@@ -39,10 +39,11 @@ internal class IdentityVerificationApiClient(
     }
 }
 
-internal class IdentityVerificationAuthProvider internal constructor(private val apiKey: String) :
+internal class IdentityVerificationAuthProvider internal constructor(apiKey: String) :
     AuthenticationHeaderProvider() {
+    private val temporaryKey = ApiKeyValidator.get().requireValid(apiKey)
 
     override fun getParameter(request: Request.Builder): String {
-        return apiKey
+        return temporaryKey
     }
 }

@@ -4,17 +4,30 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
+import io.falu.identity.api.IdentityVerificationApiClient
 import io.falu.identity.databinding.ActivityIdentityVerificationBinding
 
 internal class IdentityVerificationActivity : AppCompatActivity() {
-    private val verificationViewModel: IdentityVerificationViewModel by viewModels()
+
+    private val verificationViewModel: IdentityVerificationViewModel by viewModels {
+        IdentityVerificationViewModel.factoryProvider(this, apiClient)
+    }
+
+    private val contractArgs by lazy {
+        requireNotNull(ContractArgs.getFromIntent(intent)) {
+            "Arguments are required."
+        }
+    }
 
     private val binding by lazy {
         ActivityIdentityVerificationBinding.inflate(layoutInflater)
     }
 
+    private lateinit var apiClient: IdentityVerificationApiClient
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        val contractArgs = ContractArgs.getFromIntent(intent)!!
+        apiClient =
+            IdentityVerificationApiClient(this, contractArgs.temporaryKey, BuildConfig.DEBUG)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         setNavigationController()
