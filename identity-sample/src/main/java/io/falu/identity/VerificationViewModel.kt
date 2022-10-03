@@ -13,7 +13,7 @@ import software.tingle.api.ResourceResponse
 import software.tingle.api.authentication.EmptyAuthenticationProvider
 import java.util.concurrent.TimeUnit
 
-class IdentityVerificationViewModel(application: Application) : AndroidViewModel(application) {
+class VerificationViewModel(application: Application) : AndroidViewModel(application) {
     private val apiClient = ApiClient()
 
     fun requestIdentityVerification(

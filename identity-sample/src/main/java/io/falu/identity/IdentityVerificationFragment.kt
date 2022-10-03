@@ -14,7 +14,7 @@ class IdentityVerificationFragment : Fragment(), IdentityVerificationResultCallb
     private var _binding: FragmentIdentityVerificationBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: IdentityVerificationViewModel by activityViewModels()
+    private val viewModel: VerificationViewModel by activityViewModels()
     private lateinit var verificationView: FaluIdentityVerificationView
 
     override fun onCreateView(
