@@ -4,10 +4,15 @@ import android.content.Context
 import io.falu.core.ApiKeyValidator
 import io.falu.core.ApiVersion
 import io.falu.core.ApiVersionInterceptor
+import io.falu.core.exceptions.APIConnectionException
+import io.falu.core.exceptions.APIException
+import io.falu.core.exceptions.AuthenticationException
+import io.falu.identity.api.models.Verification
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import software.tingle.api.AbstractHttpApiClient
+import software.tingle.api.ResourceResponse
 import software.tingle.api.authentication.AuthenticationHeaderProvider
 import java.util.concurrent.TimeUnit
 
@@ -18,6 +23,20 @@ internal class IdentityVerificationApiClient(
 ) : AbstractHttpApiClient(IdentityVerificationAuthProvider(apiKey)) {
     private val appDetailsInterceptor = AppDetailsInterceptor(context)
     private val apiVersionInterceptor = ApiVersionInterceptor(ApiVersion.get().code)
+
+    @Throws(
+        AuthenticationException::class,
+        APIConnectionException::class,
+        APIException::class
+    )
+    fun getVerification(): ResourceResponse<Verification> {
+        val builder = Request.Builder()
+            .url("$baseUrl/v1/verification")
+            .get()
+
+        return execute(builder, Verification::class.java)
+    }
+
     override fun buildBackChannel(builder: OkHttpClient.Builder): OkHttpClient {
         builder
             .addInterceptor(appDetailsInterceptor)

@@ -5,7 +5,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import io.falu.identity.api.IdentityVerificationApiClient
+import io.falu.identity.api.models.Verification
 import io.falu.identity.databinding.ActivityIdentityVerificationBinding
+import software.tingle.api.HttpApiResponseProblem
 
 internal class IdentityVerificationActivity : AppCompatActivity() {
 
@@ -33,6 +35,20 @@ internal class IdentityVerificationActivity : AppCompatActivity() {
         setNavigationController()
 
         binding.ivIdentityVerification.setImageURI(contractArgs.workspaceLogo)
+
+        verificationViewModel.fetchVerification()
+        verificationViewModel.observeForVerificationResults(
+            this,
+            onSuccess = { onVerificationSuccessful(it) },
+            onFailure = { onVerificationFailure(it) })
+    }
+
+    private fun onVerificationSuccessful(verification: Verification) {
+        binding.tvWorkspaceName.text = verification.workspace.name
+    }
+
+    private fun onVerificationFailure(error: HttpApiResponseProblem?) {
+        // TODO: Finish verification with failure result
     }
 
     private fun setNavigationController() {
