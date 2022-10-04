@@ -52,6 +52,7 @@
             android:id="@+id/button_get_started"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:text="@string/welcome_button_get_started" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
