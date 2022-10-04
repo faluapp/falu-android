@@ -1,15 +1,16 @@
 package io.falu.android.networking
 
 import android.content.Context
-import io.falu.core.exceptions.APIConnectionException
-import io.falu.core.exceptions.APIException
-import io.falu.core.exceptions.AuthenticationException
-import io.falu.core.models.FaluFile
 import io.falu.android.models.files.UploadRequest
 import io.falu.android.models.payments.Payment
 import io.falu.android.models.payments.PaymentRequest
 import io.falu.core.ApiVersion
 import io.falu.core.ApiVersionInterceptor
+import io.falu.core.exceptions.APIConnectionException
+import io.falu.core.exceptions.APIException
+import io.falu.core.exceptions.AuthenticationException
+import io.falu.core.models.FaluFile
+import io.falu.core.utils.getMediaType
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -22,7 +23,7 @@ import software.tingle.api.authentication.AuthenticationHeaderProvider
 import java.util.concurrent.TimeUnit
 
 internal class FaluApiClient internal constructor(
-    context: Context,
+    private val context: Context,
     publishableKey: String,
     private val enableLogging: Boolean
 ) : AbstractHttpApiClient(FaluAuthenticationHeaderProvider(publishableKey)) {
@@ -54,7 +55,7 @@ internal class FaluApiClient internal constructor(
             .addFormDataPart(
                 "file",
                 request.file.name,
-                request.file.asRequestBody(request.mediaType)
+                request.file.asRequestBody(request.file.getMediaType(context))
             )
             .addFormDataPart("purpose", request.purpose)
             // .addFormDataPart("expires", ISO8601Utils.format(request.date))

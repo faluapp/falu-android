@@ -10,8 +10,8 @@ import okhttp3.MediaType.Companion.toMediaType
 import java.io.File
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun getMediaType(context: Context, file: File): MediaType {
-    val uri = Uri.fromFile(file)
+fun File.getMediaType(context: Context): MediaType {
+    val uri = Uri.fromFile(this)
 
     val mimeType: String? = if (ContentResolver.SCHEME_CONTENT == uri.scheme) {
         val resolver = context.contentResolver
