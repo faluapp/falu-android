@@ -2,7 +2,7 @@ package io.falu.android.networking
 
 import android.content.Context
 import io.falu.core.ApiResultCallback
-import io.falu.android.models.files.FaluFile
+import io.falu.core.models.FaluFile
 import io.falu.android.models.files.UploadRequest
 import io.falu.android.models.payments.Payment
 import io.falu.android.models.payments.PaymentRequest
