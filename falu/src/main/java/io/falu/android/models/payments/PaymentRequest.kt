@@ -1,6 +1,6 @@
 package io.falu.android.models.payments
 
-import io.falu.android.models.FaluModel
+import io.falu.core.models.FaluModel
 import java.util.*
 
 /**

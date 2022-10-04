@@ -4,7 +4,7 @@ import android.content.Context
 import io.falu.core.exceptions.APIConnectionException
 import io.falu.core.exceptions.APIException
 import io.falu.core.exceptions.AuthenticationException
-import io.falu.android.models.files.FaluFile
+import io.falu.core.models.FaluFile
 import io.falu.android.models.files.UploadRequest
 import io.falu.android.models.payments.Payment
 import io.falu.android.models.payments.PaymentRequest
