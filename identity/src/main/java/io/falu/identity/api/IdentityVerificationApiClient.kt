@@ -7,17 +7,22 @@ import io.falu.core.ApiVersionInterceptor
 import io.falu.core.exceptions.APIConnectionException
 import io.falu.core.exceptions.APIException
 import io.falu.core.exceptions.AuthenticationException
+import io.falu.core.models.FaluFile
+import io.falu.core.utils.getMediaType
 import io.falu.identity.api.models.Verification
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.logging.HttpLoggingInterceptor
 import software.tingle.api.AbstractHttpApiClient
 import software.tingle.api.ResourceResponse
 import software.tingle.api.authentication.AuthenticationHeaderProvider
+import java.io.File
 import java.util.concurrent.TimeUnit
 
 internal class IdentityVerificationApiClient(
-    context: Context,
+    private val context: Context,
     apiKey: String,
     private val enableLogging: Boolean
 ) : AbstractHttpApiClient(IdentityVerificationAuthProvider(apiKey)) {
@@ -35,6 +40,29 @@ internal class IdentityVerificationApiClient(
             .get()
 
         return execute(builder, Verification::class.java)
+    }
+
+    @Throws(
+        AuthenticationException::class,
+        APIConnectionException::class,
+        APIException::class
+    )
+    fun uploadIdentityDocuments(
+        verificationId: String,
+        purpose: String,
+        file: File
+    ): ResourceResponse<FaluFile> {
+        val requestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("file", file.name, file.asRequestBody(file.getMediaType(context)))
+            .addFormDataPart("Purpose", purpose)
+            .addFormDataPart("Verification", verificationId)
+            .build()
+
+        val builder = Request.Builder()
+            .url("$baseUrl/v1/files")
+            .post(requestBody)
+        return execute(builder, FaluFile::class.java)
     }
 
     override fun buildBackChannel(builder: OkHttpClient.Builder): OkHttpClient {

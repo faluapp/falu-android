@@ -1,12 +1,11 @@
 package io.falu.android.networking
 
 import android.content.Context
-import io.falu.core.ApiResultCallback
-import io.falu.core.models.FaluFile
 import io.falu.android.models.files.UploadRequest
 import io.falu.android.models.payments.Payment
 import io.falu.android.models.payments.PaymentRequest
-import io.falu.core.utils.getMediaType
+import io.falu.core.ApiResultCallback
+import io.falu.core.models.FaluFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -30,7 +29,10 @@ internal class FaluRepository internal constructor(
      * @param callbacks [ApiResultCallback] to receive the result or error
      *
      */
-    fun createPaymentAsync(request: PaymentRequest, callbacks: io.falu.core.ApiResultCallback<Payment>) {
+    fun createPaymentAsync(
+        request: PaymentRequest,
+        callbacks: io.falu.core.ApiResultCallback<Payment>
+    ) {
         launch(Dispatchers.IO) {
             runCatching {
                 faluApiClient.createPayment(request)
@@ -55,8 +57,10 @@ internal class FaluRepository internal constructor(
      * @param callbacks [ApiResultCallback] to receive the result or error
      *
      */
-    fun uploadFileAsync(request: UploadRequest, callbacks: io.falu.core.ApiResultCallback<FaluFile>) {
-        request.mediaType = getMediaType(context, request.file)
+    fun uploadFileAsync(
+        request: UploadRequest,
+        callbacks: ApiResultCallback<FaluFile>
+    ) {
         launch(Dispatchers.IO) {
             runCatching {
                 faluApiClient.uploadFile(request)
