@@ -5,11 +5,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.camera.CameraPermissionsFragment
 import io.falu.identity.documents.DocumentSelectionFragment
 
 internal abstract class AbstractCaptureFragment : CameraPermissionsFragment() {
+    protected val identityViewModel: IdentityVerificationViewModel by activityViewModels()
     protected val captureDocumentViewModel: CaptureDocumentViewModel by activityViewModels()
     protected var identityDocumentType: IdentityDocumentType? = null
 
@@ -20,8 +22,8 @@ internal abstract class AbstractCaptureFragment : CameraPermissionsFragment() {
             requireArguments().getSerializable(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE) as? IdentityDocumentType
     }
 
-    protected fun uploadDocument(uri: Uri) {
-
+    protected fun uploadDocument(uri: Uri, documentSide: String? = null) {
+        identityViewModel.uploadVerificationDocument(uri, documentSide)
     }
 
     internal companion object {
