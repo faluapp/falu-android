@@ -7,12 +7,13 @@ import androidx.navigation.fragment.NavHostFragment
 import io.falu.identity.api.IdentityVerificationApiClient
 import io.falu.identity.api.models.Verification
 import io.falu.identity.databinding.ActivityIdentityVerificationBinding
+import io.falu.identity.utils.FileUtils
 import software.tingle.api.HttpApiResponseProblem
 
 internal class IdentityVerificationActivity : AppCompatActivity() {
 
     private val verificationViewModel: IdentityVerificationViewModel by viewModels {
-        IdentityVerificationViewModel.factoryProvider(this, apiClient)
+        IdentityVerificationViewModel.factoryProvider(this, apiClient, fileUtils, contractArgs)
     }
 
     private val contractArgs by lazy {
@@ -23,6 +24,10 @@ internal class IdentityVerificationActivity : AppCompatActivity() {
 
     private val binding by lazy {
         ActivityIdentityVerificationBinding.inflate(layoutInflater)
+    }
+
+    private val fileUtils by lazy {
+        FileUtils(this)
     }
 
     private lateinit var apiClient: IdentityVerificationApiClient

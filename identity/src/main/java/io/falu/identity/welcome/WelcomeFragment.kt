@@ -37,9 +37,6 @@ class WelcomeFragment : Fragment() {
             onSuccess = { onVerificationSuccessful(it) },
             onFailure = { onVerificationFailure(it) })
 
-
-        binding.tvWelcomeBody.movementMethod = LinkMovementMethod.getInstance()
-
         binding.buttonGetStarted.setOnClickListener {
             findNavController().navigate(R.id.action_fragment_welcome_to_fragment_document_selection)
         }
@@ -58,7 +55,7 @@ class WelcomeFragment : Fragment() {
     }
 
     private fun onVerificationFailure(error: HttpApiResponseProblem?) {
-        binding.buttonGetStarted.isEnabled = false
+       // binding.buttonGetStarted.isEnabled = false
         // TODO: Redirect to error fragment
     }
 

@@ -50,11 +50,11 @@ internal class UploadDocumentFragment : AbstractCaptureFragment() {
             }
         )
 
-        binding.cardDocumentFront.setOnClickListener {
+        binding.buttonSelectFront.setOnClickListener {
             captureDocumentViewModel.pickImageFront()
         }
 
-        binding.cardDocumentBack.setOnClickListener {
+        binding.buttonSelectBack.setOnClickListener {
             captureDocumentViewModel.pickImageBack()
         }
     }
