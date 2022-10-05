@@ -35,5 +35,11 @@ internal data class BusinessInfo(
      * The Terms of Service URL of the business
      */
     @SerializedName("terms_of_service_url")
-    var tosUrl: String?
+    var tosUrl: String?,
+
+    /**
+     * The brand icon for the business
+     */
+    @SerializedName("brand_icon_url")
+    var brandIconUrl: String?
 )

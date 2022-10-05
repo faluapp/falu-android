@@ -1,5 +1,7 @@
 package io.falu.identity.api.models
 
+import com.google.gson.annotations.SerializedName
+
 internal data class Verification(
     /**
      * Unique identifier of the identity verification
@@ -12,5 +14,7 @@ internal data class Verification(
     var workspace: WorkspaceInfo,
     var business: BusinessInfo,
     var type: VerificationType,
-    var url: String,
+    var options: VerificationOptions,
+    @SerializedName("return_url")
+    var returnUrl: String?,
 )
