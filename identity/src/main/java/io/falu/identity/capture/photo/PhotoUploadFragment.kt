@@ -56,11 +56,11 @@ internal class PhotoUploadFragment : AbstractCaptureFragment() {
                 identityDocumentType?.getIdentityDocumentName(requireContext())
             )
 
-        binding.cardDocumentFront.setOnClickListener {
+        binding.buttonSelectFront.setOnClickListener {
             captureDocumentViewModel.captureImageFront(requireContext())
         }
 
-        binding.cardDocumentBack.setOnClickListener {
+        binding.buttonSelectBack.setOnClickListener {
             captureDocumentViewModel.captureImageBack(requireContext())
         }
     }

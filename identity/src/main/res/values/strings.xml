@@ -1,6 +1,7 @@
 <resources>
     <!--General-->
     <string name="button_continue">Continue</string>
+    <string name="button_select">Select</string>
     <string name="identity_verification_title_identity_verification">Identity verification</string>
 
     <!--Permission Explanation-->
