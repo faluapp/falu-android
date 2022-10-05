@@ -1,10 +1,12 @@
 package io.falu.identity
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistryOwner
 import io.falu.identity.api.IdentityVerificationApiClient
 import io.falu.identity.api.models.Verification
+import io.falu.identity.utils.FileUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,7 +17,11 @@ import kotlin.coroutines.CoroutineContext
 /**
  * View model that is shared across all fragments
  */
-internal class IdentityVerificationViewModel(private val apiClient: IdentityVerificationApiClient) :
+internal class IdentityVerificationViewModel(
+    private val apiClient: IdentityVerificationApiClient,
+    private val contractArgs: ContractArgs,
+    private val fileUtils: FileUtils
+) :
     ViewModel(),
     CoroutineScope {
 
@@ -23,7 +29,6 @@ internal class IdentityVerificationViewModel(private val apiClient: IdentityVeri
         get() = Dispatchers.IO
 
     private val verification = MutableLiveData<ResourceResponse<Verification>>()
-    val verificationPage: LiveData<ResourceResponse<Verification>> = verification
 
     fun fetchVerification() {
         launch(Dispatchers.IO) {
@@ -35,6 +40,29 @@ internal class IdentityVerificationViewModel(private val apiClient: IdentityVeri
                 },
                 onFailure = {
                     Log.e(TAG, "Error getting verification", it)
+                }
+            )
+        }
+    }
+
+    internal fun uploadVerificationDocument(uri: Uri, documentSide: String?) {
+        launch(Dispatchers.IO) {
+            runCatching {
+                apiClient.uploadIdentityDocuments(
+                    contractArgs.verificationId,
+                    "identity.document",
+                    file = fileUtils.createFileFromUri(
+                        fileUri = uri,
+                        contractArgs.verificationId,
+                        documentSide
+                    )
+                )
+            }.fold(
+                onSuccess = {
+
+                },
+                onFailure = {
+
                 }
             )
         }
@@ -59,7 +87,9 @@ internal class IdentityVerificationViewModel(private val apiClient: IdentityVeri
 
         fun factoryProvider(
             savedStateRegistryOwner: SavedStateRegistryOwner,
-            apiClient: IdentityVerificationApiClient
+            apiClient: IdentityVerificationApiClient,
+            fileUtils: FileUtils,
+            contractArgs: ContractArgs,
         ): AbstractSavedStateViewModelFactory =
             object : AbstractSavedStateViewModelFactory(savedStateRegistryOwner, null) {
                 override fun <T : ViewModel> create(
@@ -67,7 +97,7 @@ internal class IdentityVerificationViewModel(private val apiClient: IdentityVeri
                     modelClass: Class<T>,
                     handle: SavedStateHandle
                 ): T {
-                    return IdentityVerificationViewModel(apiClient) as T
+                    return IdentityVerificationViewModel(apiClient, contractArgs, fileUtils) as T
                 }
             }
     }
