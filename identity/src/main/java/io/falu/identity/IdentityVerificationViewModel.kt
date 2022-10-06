@@ -4,7 +4,9 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistryOwner
+import io.falu.core.models.FaluFile
 import io.falu.identity.api.IdentityVerificationApiClient
+import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.Verification
 import io.falu.identity.utils.FileUtils
 import kotlinx.coroutines.CoroutineScope
@@ -29,6 +31,7 @@ internal class IdentityVerificationViewModel(
         get() = Dispatchers.IO
 
     private val verification = MutableLiveData<ResourceResponse<Verification>>()
+    private val documentUpload = MutableLiveData<ResourceResponse<FaluFile>>()
 
     fun fetchVerification() {
         launch(Dispatchers.IO) {
@@ -45,16 +48,17 @@ internal class IdentityVerificationViewModel(
         }
     }
 
-    internal fun uploadVerificationDocument(uri: Uri, documentSide: String?) {
+    internal fun uploadVerificationDocument(uri: Uri, documentSide: DocumentSide) {
         launch(Dispatchers.IO) {
             runCatching {
                 apiClient.uploadIdentityDocuments(
-                    contractArgs.verificationId,
-                    "identity.document",
+                    verification = contractArgs.verificationId,
+                    purpose = "identity.document",
+                    documentSide = documentSide,
                     file = fileUtils.createFileFromUri(
                         fileUri = uri,
                         contractArgs.verificationId,
-                        documentSide
+                        documentSide.code
                     )
                 )
             }.fold(
@@ -76,6 +80,20 @@ internal class IdentityVerificationViewModel(
         verification.observe(owner) { response ->
             if (response != null && response.successful() && response.resource != null) {
                 onSuccess(response.resource!!)
+            } else {
+                onFailure(response.error)
+            }
+        }
+    }
+
+    fun observerForDocumentUploadResults(
+        owner: LifecycleOwner,
+        onSuccess: (() -> Unit),
+        onFailure: ((HttpApiResponseProblem?) -> Unit)
+    ) {
+        documentUpload.observe(owner) { response ->
+            if (response != null && response.successful() && response.resource != null) {
+                onSuccess()
             } else {
                 onFailure(response.error)
             }

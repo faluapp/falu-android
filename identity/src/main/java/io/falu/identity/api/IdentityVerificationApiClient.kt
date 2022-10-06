@@ -48,15 +48,17 @@ internal class IdentityVerificationApiClient(
         APIException::class
     )
     fun uploadIdentityDocuments(
-        verificationId: String,
+        verification: String,
         purpose: String,
+        documentSide: DocumentSide,
         file: File
     ): ResourceResponse<FaluFile> {
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("file", file.name, file.asRequestBody(file.getMediaType(context)))
-            .addFormDataPart("Purpose", purpose)
-            .addFormDataPart("Verification", verificationId)
+            .addFormDataPart("purpose", purpose)
+            .addFormDataPart("document-side", documentSide.code)
+            .addFormDataPart("verification", verification)
             .build()
 
         val builder = Request.Builder()

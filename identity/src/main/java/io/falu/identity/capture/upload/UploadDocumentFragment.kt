@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import io.falu.identity.R
+import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.capture.AbstractCaptureFragment
 import io.falu.identity.databinding.FragmentUploadDocumentBinding
 
@@ -43,10 +44,10 @@ internal class UploadDocumentFragment : AbstractCaptureFragment() {
         captureDocumentViewModel.pickDocumentImages(
             fragment = this,
             onFrontImagePicked = {
-                uploadDocument(uri = it)
+                uploadDocument(uri = it, DocumentSide.FRONT)
             },
             onBackImagePicked = {
-                uploadDocument(uri = it)
+                uploadDocument(uri = it, DocumentSide.BACK)
             }
         )
 
@@ -57,6 +58,30 @@ internal class UploadDocumentFragment : AbstractCaptureFragment() {
         binding.buttonSelectBack.setOnClickListener {
             captureDocumentViewModel.pickImageBack()
         }
+    }
+
+    override fun showDocumentFrontUploading() {
+        binding.buttonSelectFront.visibility = View.GONE
+        binding.progressSelectFront.visibility = View.VISIBLE
+        binding.ivFrontUploaded.visibility = View.GONE
+    }
+
+    override fun showDocumentBackUploading() {
+        binding.buttonSelectBack.visibility = View.GONE
+        binding.progressSelectBack.visibility = View.VISIBLE
+        binding.ivBackUploaded.visibility = View.GONE
+    }
+
+    override fun showDocumentFrontDoneUploading() {
+        binding.buttonSelectFront.visibility = View.GONE
+        binding.progressSelectFront.visibility = View.GONE
+        binding.ivFrontUploaded.visibility = View.VISIBLE
+    }
+
+    override fun showDocumentBackDoneUploading() {
+        binding.buttonSelectBack.visibility = View.GONE
+        binding.progressSelectBack.visibility = View.GONE
+        binding.ivBackUploaded.visibility = View.VISIBLE
     }
 
     override fun onDestroyView() {

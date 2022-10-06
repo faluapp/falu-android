@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -73,6 +74,15 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:visibility="gone" />
+
+                            <ImageView
+                                android:id="@+id/iv_front_uploaded"
+                                android:layout_width="@dimen/content_padding_normal"
+                                android:layout_height="@dimen/content_padding_normal"
+                                android:src="@drawable/ic_check_circle"
+                                android:visibility="gone"
+                                app:tint="?android:colorPrimary"
+                                tools:ignore="ContentDescription" />
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -116,6 +126,15 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:visibility="gone" />
+
+                            <ImageView
+                                android:id="@+id/iv_back_uploaded"
+                                android:layout_width="@dimen/content_padding_normal"
+                                android:layout_height="@dimen/content_padding_normal"
+                                android:src="@drawable/ic_check_circle"
+                                android:visibility="gone"
+                                app:tint="?android:colorPrimary"
+                                tools:ignore="ContentDescription" />
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
