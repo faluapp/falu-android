@@ -30,8 +30,13 @@ internal class IdentityVerificationViewModel(
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO
 
-    private val verification = MutableLiveData<ResourceResponse<Verification>>()
-    private val documentUpload = MutableLiveData<ResourceResponse<FaluFile>>()
+    private val _verification = MutableLiveData<ResourceResponse<Verification>?>()
+    val verification: LiveData<ResourceResponse<Verification>?>
+        get() = _verification
+
+    private val _documentUpload = MutableLiveData<ResourceResponse<FaluFile>?>()
+    private val documentUpload: LiveData<ResourceResponse<FaluFile>?>
+        get() = _documentUpload
 
     fun fetchVerification() {
         launch(Dispatchers.IO) {
@@ -39,7 +44,7 @@ internal class IdentityVerificationViewModel(
                 apiClient.getVerification()
             }.fold(
                 onSuccess = {
-                    verification.postValue(it)
+                    _verification.postValue(it)
                 },
                 onFailure = {
                     Log.e(TAG, "Error getting verification", it)
@@ -63,7 +68,7 @@ internal class IdentityVerificationViewModel(
                 )
             }.fold(
                 onSuccess = {
-
+                    _documentUpload.postValue(it)
                 },
                 onFailure = {
 
@@ -81,7 +86,7 @@ internal class IdentityVerificationViewModel(
             if (response != null && response.successful() && response.resource != null) {
                 onSuccess(response.resource!!)
             } else {
-                onFailure(response.error)
+                onFailure(response?.error)
             }
         }
     }
@@ -95,7 +100,7 @@ internal class IdentityVerificationViewModel(
             if (response != null && response.successful() && response.resource != null) {
                 onSuccess()
             } else {
-                onFailure(response.error)
+                onFailure(response?.error)
             }
         }
     }
