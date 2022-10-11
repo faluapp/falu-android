@@ -32,7 +32,6 @@ internal abstract class AbstractCaptureFragment : CameraPermissionsFragment() {
         identityViewModel.uploadVerificationDocument(uri, documentSide)
     }
 
-
     protected abstract fun showDocumentFrontUploading()
 
     protected abstract fun showDocumentBackUploading()
