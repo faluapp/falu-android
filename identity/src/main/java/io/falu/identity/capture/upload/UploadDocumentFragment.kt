@@ -51,6 +51,16 @@ internal class UploadDocumentFragment : AbstractCaptureFragment() {
             }
         )
 
+        identityViewModel.observerForDocumentUploadResults(
+            viewLifecycleOwner,
+            onSuccess = {
+                println("AKAKAKAKAKAKAAK")
+            },
+            onFailure = {
+                resetFrontUploading()
+            }
+        )
+
         binding.buttonSelectFront.setOnClickListener {
             captureDocumentViewModel.pickImageFront()
         }
@@ -58,6 +68,11 @@ internal class UploadDocumentFragment : AbstractCaptureFragment() {
         binding.buttonSelectBack.setOnClickListener {
             captureDocumentViewModel.pickImageBack()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun showDocumentFrontUploading() {
@@ -84,8 +99,9 @@ internal class UploadDocumentFragment : AbstractCaptureFragment() {
         binding.ivBackUploaded.visibility = View.VISIBLE
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun resetFrontUploading(){
+        binding.buttonSelectFront.visibility = View.VISIBLE
+        binding.progressSelectFront.visibility = View.GONE
+        binding.ivFrontUploaded.visibility = View.GONE
     }
 }
