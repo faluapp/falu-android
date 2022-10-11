@@ -42,6 +42,7 @@ internal class IdentityVerificationActivity : AppCompatActivity() {
         binding.ivIdentityVerification.setImageURI(contractArgs.workspaceLogo)
 
         verificationViewModel.fetchVerification()
+        verificationViewModel.fetchSupportedCountries()
         verificationViewModel.observeForVerificationResults(
             this,
             onSuccess = { onVerificationSuccessful(it) },

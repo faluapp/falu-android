@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -37,7 +38,6 @@ class DocumentSelectionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel.supportedCountries.observe(viewLifecycleOwner, observeForSupportedCountries)
         viewModel.verification.observe(viewLifecycleOwner, observeForVerification)
 
@@ -62,6 +62,14 @@ class DocumentSelectionFragment : Fragment() {
     private val observeForSupportedCountries =
         Observer<ResourceResponse<Array<SupportedCountry>>?> { response ->
             if (response != null && response.successful() && response.resource != null) {
+                val countries = response.resource!!
+
+                val countriesAdapter = ArrayAdapter(
+                    requireContext(),
+                    R.layout.dropdown_menu_popup_item,
+                    countries.map { it.country.name })
+                binding.inputAssetIssuingCountry.setAdapter(countriesAdapter)
+                binding.inputAssetIssuingCountry.setText(countriesAdapter.getItem(0), false)
             } else {
             }
         }

@@ -42,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/content_padding_normal"
-        android:layout_marginBottom="@dimen/content_padding_normal"
+        android:paddingBottom="@dimen/element_spacing_normal"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,6 +52,6 @@
             android:id="@+id/button_get_started"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-             android:text="@string/welcome_button_get_started" />
+            android:text="@string/welcome_button_get_started" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
