@@ -15,10 +15,12 @@
     <string name="welcome_body">Falu identity was built with the global privacy regulations in mind.\nData security &amp; privacy are important to us. You are about to begin the identity verification process.\nData collected will be handled according to the Falu <b><a href='https://tingle.software/legal/privacy-policy'>Privacy Policy</a></b> and the %1$s.\n\nKindly have your identification document close by and get started with the process!</string>
 
     <!--Document Selection-->
-    <string name="document_selection_subtitle">Select preferred identification document</string>
+    <string name="document_selection_subtitle">Select issuing country to which see which identity documents are acceptable.</string>
+    <string name="document_selection_accepted_documents">Accepted Documents</string>
     <string name="document_selection_document_driver_license">Driver License</string>
     <string name="document_selection_document_passport">Passport</string>
     <string name="document_selection_document_identity_card">Identity Card</string>
+    <string name="document_selection_hint_issuing_country">Issuing Country</string>
 
     <!--Document Capture Methods-->
     <string name="document_capture_method_subtitle">Select how you will provide your %1$s for verification</string>
