@@ -5,10 +5,10 @@ import com.google.gson.annotations.SerializedName
 import io.falu.identity.R
 
 internal enum class IdentityDocumentType {
-    @SerializedName("driving_license")
+    @SerializedName("id_card")
     IDENTITY_CARD,
 
-    @SerializedName("driving_license")
+    @SerializedName("passport")
     PASSPORT,
 
     @SerializedName("driving_license")
