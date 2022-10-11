@@ -5,9 +5,11 @@ import android.util.Log
 import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistryOwner
 import io.falu.core.models.FaluFile
+import io.falu.identity.api.CountriesApiClient
 import io.falu.identity.api.IdentityVerificationApiClient
 import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.Verification
+import io.falu.identity.api.models.country.SupportedCountry
 import io.falu.identity.utils.FileUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,20 +25,33 @@ internal class IdentityVerificationViewModel(
     private val apiClient: IdentityVerificationApiClient,
     private val contractArgs: ContractArgs,
     private val fileUtils: FileUtils
-) :
-    ViewModel(),
-    CoroutineScope {
+) : ViewModel(), CoroutineScope {
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO
 
+    private val countriesApiClient = CountriesApiClient()
+
+    /**
+     *
+     */
     private val _verification = MutableLiveData<ResourceResponse<Verification>?>()
     val verification: LiveData<ResourceResponse<Verification>?>
         get() = _verification
 
+    /**
+     *
+     */
     private val _documentUpload = MutableLiveData<ResourceResponse<FaluFile>?>()
     private val documentUpload: LiveData<ResourceResponse<FaluFile>?>
         get() = _documentUpload
+
+    /**
+     *
+     */
+    private val _supportedCountries = MutableLiveData<ResourceResponse<Array<SupportedCountry>>?>()
+    val supportedCountries: LiveData<ResourceResponse<Array<SupportedCountry>>?>
+        get() = _supportedCountries
 
     fun fetchVerification() {
         launch(Dispatchers.IO) {
@@ -72,6 +87,21 @@ internal class IdentityVerificationViewModel(
                 },
                 onFailure = {
 
+                }
+            )
+        }
+    }
+
+    internal fun fetchSupportedCountries() {
+        launch(Dispatchers.IO) {
+            runCatching {
+                countriesApiClient.getSupportedCountries()
+            }.fold(
+                onSuccess = {
+                    _supportedCountries.postValue(it)
+                },
+                onFailure = {
+                    Log.e(TAG, "Error getting verification", it)
                 }
             )
         }
