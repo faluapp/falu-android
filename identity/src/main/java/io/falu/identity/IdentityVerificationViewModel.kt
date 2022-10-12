@@ -112,13 +112,29 @@ internal class IdentityVerificationViewModel(
         onSuccess: ((Verification) -> Unit),
         onFailure: ((HttpApiResponseProblem?) -> Unit)
     ) {
-        verification.observe(owner) { response ->
+        verification.observe(owner, Observer<ResourceResponse<Verification>?> { response ->
             if (response != null && response.successful() && response.resource != null) {
                 onSuccess(response.resource!!)
             } else {
                 onFailure(response?.error)
             }
-        }
+        })
+    }
+
+    fun observerForSupportedCountriesResults(
+        owner: LifecycleOwner,
+        onSuccess: ((Array<SupportedCountry>) -> Unit),
+        onFailure: ((HttpApiResponseProblem?) -> Unit)
+    ) {
+        supportedCountries.observe(
+            owner,
+            Observer<ResourceResponse<Array<SupportedCountry>>?> { response ->
+                if (response != null && response.successful() && response.resource != null) {
+                    onSuccess(response.resource!!)
+                } else {
+                    onFailure(response?.error)
+                }
+            })
     }
 
     fun observerForDocumentUploadResults(
@@ -126,13 +142,13 @@ internal class IdentityVerificationViewModel(
         onSuccess: (() -> Unit),
         onFailure: ((HttpApiResponseProblem?) -> Unit)
     ) {
-        documentUpload.observe(owner) { response ->
+        documentUpload.observe(owner, Observer<ResourceResponse<FaluFile>?> { response ->
             if (response != null && response.successful() && response.resource != null) {
                 onSuccess()
             } else {
                 onFailure(response?.error)
             }
-        }
+        })
     }
 
     internal companion object {
