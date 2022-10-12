@@ -8,17 +8,11 @@ internal data class VerificationOptions(
      */
     @SerializedName("allow_uploads")
     var allowUploads: Boolean? = null,
-
-    /**
-     * Options for the id number check.
-     */
-    @SerializedName("id_number")
-    var idNumber: VerificationOptionsForIdNumber? = null,
-
+    
     /**
      * Options for the document check.
      */
-    var document: VerificationOptionsForDocument? = null,
+    var document: VerificationOptionsForDocument,
 
     /**
      * Options for the selfie check.

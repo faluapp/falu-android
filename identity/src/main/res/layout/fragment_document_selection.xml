@@ -74,6 +74,7 @@
                         style="@style/Widget.MaterialComponents.Chip.Choice"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:enabled="false"
                         android:text="@string/document_selection_document_identity_card"
                         app:chipCornerRadius="@dimen/element_spacing_normal_half" />
 
@@ -82,6 +83,7 @@
                         style="@style/Widget.MaterialComponents.Chip.Choice"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:enabled="false"
                         android:text="@string/document_selection_document_passport"
                         app:chipCornerRadius="@dimen/element_spacing_normal_half" />
 
@@ -90,6 +92,7 @@
                         style="@style/Widget.MaterialComponents.Chip.Choice"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:enabled="false"
                         android:text="@string/document_selection_document_driver_license"
                         app:chipCornerRadius="@dimen/element_spacing_normal_half" />
                 </com.google.android.material.chip.ChipGroup>
@@ -102,8 +105,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/content_padding_normal"
-        android:paddingBottom="@dimen/element_spacing_normal"
         android:orientation="vertical"
+        android:paddingBottom="@dimen/element_spacing_normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scrollView">

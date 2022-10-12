@@ -8,7 +8,6 @@ import android.widget.ArrayAdapter
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
@@ -16,7 +15,6 @@ import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.Verification
 import io.falu.identity.api.models.country.SupportedCountry
 import io.falu.identity.databinding.FragmentDocumentSelectionBinding
-import software.tingle.api.ResourceResponse
 
 class DocumentSelectionFragment : Fragment() {
 
@@ -38,8 +36,13 @@ class DocumentSelectionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.supportedCountries.observe(viewLifecycleOwner, observeForSupportedCountries)
-        viewModel.verification.observe(viewLifecycleOwner, observeForVerification)
+        viewModel.observerForSupportedCountriesResults(
+            viewLifecycleOwner,
+            onSuccess = { onSupportedCountriesListed(it.toList()) },
+            onFailure = {
+                // TODO: Navigate to error page
+            }
+        )
 
         binding.buttonContinue.setOnClickListener {
             val bundle = bundleOf(KEY_IDENTITY_DOCUMENT_TYPE to identityDocumentType)
@@ -59,25 +62,42 @@ class DocumentSelectionFragment : Fragment() {
         }
     }
 
-    private val observeForSupportedCountries =
-        Observer<ResourceResponse<Array<SupportedCountry>>?> { response ->
-            if (response != null && response.successful() && response.resource != null) {
-                val countries = response.resource!!
+    /**
+     *
+     */
+    private fun onSupportedCountriesListed(countries: List<SupportedCountry>) {
+        val countriesAdapter = ArrayAdapter(
+            requireContext(),
+            R.layout.dropdown_menu_popup_item,
+            countries.map { it.country.name })
 
-                val countriesAdapter = ArrayAdapter(
-                    requireContext(),
-                    R.layout.dropdown_menu_popup_item,
-                    countries.map { it.country.name })
-                binding.inputAssetIssuingCountry.setAdapter(countriesAdapter)
-                binding.inputAssetIssuingCountry.setText(countriesAdapter.getItem(0), false)
-            } else {
-            }
+        binding.inputAssetIssuingCountry.setAdapter(countriesAdapter)
+        binding.inputAssetIssuingCountry.setText(countriesAdapter.getItem(0), false)
+        binding.inputAssetIssuingCountry.setOnItemClickListener { _, _, _, _ ->
+            val country = getSupportedCountry(countries)
+            viewModel.observeForVerificationResults(
+                viewLifecycleOwner,
+                onSuccess = { acceptedDocumentOptions(it, country) },
+                onFailure = {}
+            )
         }
+    }
 
-    private val observeForVerification = Observer<ResourceResponse<Verification>?> { response ->
-        if (response != null && response.successful() && response.resource != null) {
-        } else {
-        }
+    private fun getSupportedCountry(countries: List<SupportedCountry>): SupportedCountry {
+        val country = binding.inputAssetIssuingCountry.text.toString()
+        return countries.first { it.country.name == country }
+    }
+
+    private fun acceptedDocumentOptions(verification: Verification, country: SupportedCountry) {
+        val acceptedDocuments =
+            country.documents.intersect(verification.options.document.allowed.toSet())
+
+        binding.chipIdentityCard.isEnabled =
+            acceptedDocuments.contains(IdentityDocumentType.IDENTITY_CARD)
+        binding.chipPassport.isEnabled =
+            acceptedDocuments.contains(IdentityDocumentType.PASSPORT)
+        binding.chipPassport.isEnabled =
+            acceptedDocuments.contains(IdentityDocumentType.DRIVING_LICENSE)
     }
 
     override fun onDestroyView() {
