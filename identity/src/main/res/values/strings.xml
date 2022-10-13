@@ -12,7 +12,7 @@
     <!--Welcome-->
     <string name="welcome_button_get_started">Get Started</string>
     <string name="welcome_subtitle">%1$s partners with Falu for secure identity verification.</string>
-    <string name="welcome_body">Falu identity was built with the global privacy regulations in mind.\nData security &amp; privacy are important to us. You are about to begin the identity verification process.\nData collected will be handled according to the Falu <b><a href='https://tingle.software/legal/privacy-policy'>Privacy Policy</a></b> and the %1$s.\n\nKindly have your identification document close by and get started with the process!</string>
+    <string name="welcome_body">Falu identity was built with the global privacy regulations in mind.\nData security &amp; privacy are important to us. You are about to begin the identity verification process.\nData collected will be handled according to the Falu <b><a href='https://tingle.software/legal/privacy-policy'>Privacy Policy</a></b>.\n\nKindly have your identification document close by and get started with the process!</string>
 
     <!--Document Selection-->
     <string name="document_selection_subtitle">Select issuing country to which see which identity documents are acceptable.</string>
