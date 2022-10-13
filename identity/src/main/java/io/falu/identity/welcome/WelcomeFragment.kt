@@ -64,6 +64,7 @@ class WelcomeFragment : Fragment() {
         val document = JsonPatchDocument().replace("consent", accepted)
         binding.progressCircular.visibility = View.VISIBLE
         updateVerification(viewModel, document, onSuccess = {
+            binding.progressCircular.visibility = View.GONE
             findNavController().navigate(R.id.action_fragment_welcome_to_fragment_document_selection)
         })
     }
