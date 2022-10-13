@@ -45,17 +45,15 @@ class WelcomeFragment : Fragment() {
     private fun onVerificationSuccessful(verification: Verification) {
         binding.buttonGetStarted.isEnabled = true
         binding.tvWelcomeSubtitle.text =
-            getString(R.string.welcome_subtitle, verification.workspace.name)
-        binding.tvWelcomeBody.text = getString(
-            R.string.welcome_body,
-            verification.business.name,
-        )
+            getString(
+                R.string.welcome_subtitle,
+                verification.workspace.name.replaceFirstChar { it.uppercase() })
         binding.tvWelcomeBody.movementMethod = LinkMovementMethod.getInstance()
 
     }
 
     private fun onVerificationFailure(error: HttpApiResponseProblem?) {
-       // binding.buttonGetStarted.isEnabled = false
+        // binding.buttonGetStarted.isEnabled = false
         // TODO: Redirect to error fragment
     }
 
