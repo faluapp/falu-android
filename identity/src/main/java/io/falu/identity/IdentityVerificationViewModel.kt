@@ -8,8 +8,8 @@ import io.falu.core.models.FaluFile
 import io.falu.identity.api.CountriesApiClient
 import io.falu.identity.api.IdentityVerificationApiClient
 import io.falu.identity.api.models.DocumentSide
-import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.country.SupportedCountry
+import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.utils.FileUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -50,13 +50,13 @@ internal class IdentityVerificationViewModel(
      *
      */
     private val _supportedCountries = MutableLiveData<ResourceResponse<Array<SupportedCountry>>?>()
-    val supportedCountries: LiveData<ResourceResponse<Array<SupportedCountry>>?>
+    private val supportedCountries: LiveData<ResourceResponse<Array<SupportedCountry>>?>
         get() = _supportedCountries
 
     fun fetchVerification() {
         launch(Dispatchers.IO) {
             runCatching {
-                apiClient.getVerification()
+                apiClient.getVerification(contractArgs.verificationId)
             }.fold(
                 onSuccess = {
                     _verification.postValue(it)

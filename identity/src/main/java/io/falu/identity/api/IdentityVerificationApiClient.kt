@@ -9,7 +9,8 @@ import io.falu.core.exceptions.APIException
 import io.falu.core.exceptions.AuthenticationException
 import io.falu.core.models.FaluFile
 import io.falu.core.utils.getMediaType
-import io.falu.identity.api.models.Verification
+import io.falu.identity.api.models.DocumentSide
+import io.falu.identity.api.models.verification.Verification
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -34,9 +35,9 @@ internal class IdentityVerificationApiClient(
         APIConnectionException::class,
         APIException::class
     )
-    fun getVerification(): ResourceResponse<Verification> {
+    fun getVerification(verification: String): ResourceResponse<Verification> {
         val builder = Request.Builder()
-            .url("$baseUrl/v1/verification")
+            .url("$baseUrl/v1/identity/verifications/$verification/workflow")
             .get()
 
         return execute(builder, Verification::class.java)
