@@ -15,10 +15,12 @@ import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.logging.HttpLoggingInterceptor
 import software.tingle.api.AbstractHttpApiClient
 import software.tingle.api.ResourceResponse
 import software.tingle.api.authentication.AuthenticationHeaderProvider
+import software.tingle.api.patch.JsonPatchDocument
 import java.io.File
 import java.util.concurrent.TimeUnit
 
@@ -39,6 +41,22 @@ internal class IdentityVerificationApiClient(
         val builder = Request.Builder()
             .url("$baseUrl/v1/identity/verifications/$verification/workflow")
             .get()
+
+        return execute(builder, Verification::class.java)
+    }
+
+    @Throws(
+        AuthenticationException::class,
+        APIConnectionException::class,
+        APIException::class
+    )
+    fun updateVerification(
+        verification: String,
+        document: JsonPatchDocument
+    ): ResourceResponse<Verification> {
+        val builder = Request.Builder()
+            .url("$baseUrl/v1/identity/verifications/$verification/workflow")
+            .patch(makeJson(document.getOperations()).toRequestBody(MEDIA_TYPE_PATH_JSON))
 
         return execute(builder, Verification::class.java)
     }

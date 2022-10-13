@@ -12,7 +12,9 @@ import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.databinding.FragmentWelcomeBinding
+import io.falu.identity.utils.updateVerification
 import software.tingle.api.HttpApiResponseProblem
+import software.tingle.api.patch.JsonPatchDocument
 
 class WelcomeFragment : Fragment() {
 
@@ -37,24 +39,33 @@ class WelcomeFragment : Fragment() {
             onSuccess = { onVerificationSuccessful(it) },
             onFailure = { onVerificationFailure(it) })
 
-        binding.buttonGetStarted.setOnClickListener {
-            findNavController().navigate(R.id.action_fragment_welcome_to_fragment_document_selection)
+        binding.buttonAccept.setOnClickListener {
+            submitConsentData(true)
+        }
+
+        binding.buttonDecline.setOnClickListener {
+            submitConsentData(false)
         }
     }
 
     private fun onVerificationSuccessful(verification: Verification) {
-        binding.buttonGetStarted.isEnabled = true
         binding.tvWelcomeSubtitle.text =
             getString(
                 R.string.welcome_subtitle,
                 verification.workspace.name.replaceFirstChar { it.uppercase() })
         binding.tvWelcomeBody.movementMethod = LinkMovementMethod.getInstance()
-
     }
 
     private fun onVerificationFailure(error: HttpApiResponseProblem?) {
-        // binding.buttonGetStarted.isEnabled = false
         // TODO: Redirect to error fragment
+    }
+
+    private fun submitConsentData(accepted: Boolean) {
+        val document = JsonPatchDocument().replace("consent", accepted)
+        binding.progressCircular.visibility = View.VISIBLE
+        updateVerification(viewModel, document, onSuccess = {
+            findNavController().navigate(R.id.action_fragment_welcome_to_fragment_document_selection)
+        })
     }
 
     override fun onDestroyView() {
