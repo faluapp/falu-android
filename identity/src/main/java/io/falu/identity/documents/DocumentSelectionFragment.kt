@@ -12,9 +12,11 @@ import androidx.navigation.fragment.findNavController
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.models.IdentityDocumentType
-import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.country.SupportedCountry
+import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.databinding.FragmentDocumentSelectionBinding
+import io.falu.identity.utils.updateVerification
+import software.tingle.api.patch.JsonPatchDocument
 
 class DocumentSelectionFragment : Fragment() {
 
@@ -45,11 +47,17 @@ class DocumentSelectionFragment : Fragment() {
         )
 
         binding.buttonContinue.setOnClickListener {
-            val bundle = bundleOf(KEY_IDENTITY_DOCUMENT_TYPE to identityDocumentType)
-            findNavController().navigate(
-                R.id.action_fragment_document_selection_to_fragment_document_capture_methods,
-                bundle
-            )
+            val country = binding.buttonContinue.tag as SupportedCountry
+            val document = JsonPatchDocument()
+                .replace("country", country.country.code)
+
+            updateVerification(viewModel, document, onSuccess = {
+                val bundle = bundleOf(KEY_IDENTITY_DOCUMENT_TYPE to identityDocumentType)
+                findNavController().navigate(
+                    R.id.action_fragment_document_selection_to_fragment_document_capture_methods,
+                    bundle
+                )
+            })
         }
 
         binding.groupDocumentTypes.setOnCheckedStateChangeListener { group, _ ->
@@ -71,10 +79,11 @@ class DocumentSelectionFragment : Fragment() {
             R.layout.dropdown_menu_popup_item,
             countries.map { it.country.name })
 
+        val country = getSupportedCountry(countries)
         binding.inputAssetIssuingCountry.setAdapter(countriesAdapter)
         binding.inputAssetIssuingCountry.setText(countriesAdapter.getItem(0), false)
         binding.inputAssetIssuingCountry.setOnItemClickListener { _, _, _, _ ->
-            val country = getSupportedCountry(countries)
+            binding.buttonContinue.tag = country
             viewModel.observeForVerificationResults(
                 viewLifecycleOwner,
                 onSuccess = { acceptedDocumentOptions(it, country) },
@@ -90,7 +99,7 @@ class DocumentSelectionFragment : Fragment() {
 
     private fun acceptedDocumentOptions(verification: Verification, country: SupportedCountry) {
         val acceptedDocuments =
-            country.documents.intersect(verification.options.document.allowed.toSet())
+            verification.options.document.allowed.toSet().intersect(country.documents.toSet())
 
         binding.chipIdentityCard.isEnabled =
             acceptedDocuments.contains(IdentityDocumentType.IDENTITY_CARD)
