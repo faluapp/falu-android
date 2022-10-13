@@ -5,7 +5,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import io.falu.identity.api.IdentityVerificationApiClient
-import io.falu.identity.api.models.Verification
+import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.databinding.ActivityIdentityVerificationBinding
 import io.falu.identity.utils.FileUtils
 import software.tingle.api.HttpApiResponseProblem
