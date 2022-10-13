@@ -8,7 +8,7 @@ import io.falu.core.models.FaluFile
 import io.falu.identity.api.CountriesApiClient
 import io.falu.identity.api.IdentityVerificationApiClient
 import io.falu.identity.api.models.DocumentSide
-import io.falu.identity.api.models.Verification
+import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.country.SupportedCountry
 import io.falu.identity.utils.FileUtils
 import kotlinx.coroutines.CoroutineScope

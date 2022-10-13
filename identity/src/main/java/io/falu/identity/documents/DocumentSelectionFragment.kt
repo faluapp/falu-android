@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.models.IdentityDocumentType
-import io.falu.identity.api.models.Verification
+import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.country.SupportedCountry
 import io.falu.identity.databinding.FragmentDocumentSelectionBinding
 

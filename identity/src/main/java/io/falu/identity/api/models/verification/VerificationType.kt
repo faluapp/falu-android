@@ -1,4 +1,4 @@
-package io.falu.identity.api.models
+package io.falu.identity.api.models.verification
 
 import com.google.gson.annotations.SerializedName
 

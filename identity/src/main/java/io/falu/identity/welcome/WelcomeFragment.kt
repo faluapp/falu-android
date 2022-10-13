@@ -10,7 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
-import io.falu.identity.api.models.Verification
+import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.databinding.FragmentWelcomeBinding
 import software.tingle.api.HttpApiResponseProblem
 
