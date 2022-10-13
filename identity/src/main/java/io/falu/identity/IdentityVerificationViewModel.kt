@@ -14,8 +14,10 @@ import io.falu.identity.utils.FileUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import software.tingle.api.HttpApiResponseProblem
 import software.tingle.api.ResourceResponse
+import software.tingle.api.patch.JsonPatchDocument
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -53,7 +55,7 @@ internal class IdentityVerificationViewModel(
     private val supportedCountries: LiveData<ResourceResponse<Array<SupportedCountry>>?>
         get() = _supportedCountries
 
-    fun fetchVerification() {
+    internal fun fetchVerification() {
         launch(Dispatchers.IO) {
             runCatching {
                 apiClient.getVerification(contractArgs.verificationId)
@@ -87,6 +89,25 @@ internal class IdentityVerificationViewModel(
                 },
                 onFailure = {
 
+                }
+            )
+        }
+    }
+
+    internal fun updateVerification(
+        document: JsonPatchDocument,
+        onSuccess: (() -> Unit),
+        onFailure: ((HttpApiResponseProblem?) -> Unit)
+    ) {
+        launch(Dispatchers.IO) {
+            runCatching {
+                apiClient.updateVerification(contractArgs.verificationId, document)
+            }.fold(
+                onSuccess = { response ->
+                    handleResponse(response, onSuccess = { onSuccess() }, onError = {onFailure(response.error)})
+                },
+                onFailure = {
+                    Log.e(TAG, "Error updating verification", it)
                 }
             )
         }
@@ -149,6 +170,18 @@ internal class IdentityVerificationViewModel(
                 onFailure(response?.error)
             }
         })
+    }
+
+    private suspend fun <TResource> handleResponse(
+        response: ResourceResponse<TResource>?,
+        onSuccess: ((TResource) -> Unit),
+        onError: ((ResourceResponse<TResource>?) -> Unit)
+    ) = withContext(Dispatchers.Main) {
+        if (response != null && response.successful() && response.resource != null) {
+            onSuccess(response.resource!!)
+            return@withContext
+        }
+        onError(response)
     }
 
     internal companion object {
