@@ -43,13 +43,14 @@ class IdentityVerificationFragment : Fragment(), IdentityVerificationResultCallb
             callback = this
         )
         binding.buttonStartVerification.setOnClickListener {
-            startVerification(
-                allowDrivingLicense = binding.swAllowedTypeDl.isChecked,
-                allowPassport = binding.swAllowedTypePassport.isChecked,
-                allowIdentityCard = binding.swAllowedTypeId.isChecked,
-                allowUploads = binding.swAllowUploads.isChecked,
-                allowDocumentSelfie = binding.swAllowDocumentSelfie.isChecked,
-            )
+             verificationView.open("idv_2g5tW2u4MEj8DFSnZELOZ7jrQqL", "ftkt_ALSzbWhtpdROpyGZu9g2JHLnPsaaW9O3QG")
+//            startVerification(
+//                allowDrivingLicense = binding.swAllowedTypeDl.isChecked,
+//                allowPassport = binding.swAllowedTypePassport.isChecked,
+//                allowIdentityCard = binding.swAllowedTypeId.isChecked,
+//                allowUploads = binding.swAllowUploads.isChecked,
+//                allowDocumentSelfie = binding.swAllowDocumentSelfie.isChecked,
+//            )
         }
     }
 

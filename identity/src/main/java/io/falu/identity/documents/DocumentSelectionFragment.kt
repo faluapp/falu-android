@@ -93,7 +93,6 @@ class DocumentSelectionFragment : Fragment() {
         getVerificationResults(country)
 
         binding.inputAssetIssuingCountry.setOnItemClickListener { _, _, _, _ ->
-            binding.buttonContinue.tag = country
             getVerificationResults(country)
         }
     }
@@ -110,6 +109,7 @@ class DocumentSelectionFragment : Fragment() {
      *
      */
     private fun getVerificationResults(country: SupportedCountry) {
+        binding.buttonContinue.tag = country
         viewModel.observeForVerificationResults(
             viewLifecycleOwner,
             onSuccess = { acceptedDocumentOptions(it, country) },

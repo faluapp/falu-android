@@ -26,51 +26,83 @@
                 android:text="@string/document_capture_method_subtitle"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
-            <com.google.android.material.chip.ChipGroup
+            <LinearLayout
                 android:id="@+id/group_capture_methods"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:singleSelection="true">
+                android:orientation="vertical">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_capture_method_scan"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/view_capture_method_scan"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/document_capture_method_scan" />
+                    android:layout_marginBottom="@dimen/element_spacing_normal"
+                    android:background="?attr/selectableItemBackgroundBorderless">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_capture_method_photo"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="@dimen/element_spacing_normal"
+                        android:paddingVertical="@dimen/content_padding_normal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/document_capture_method_scan"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/view_capture_method_photo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/document_capture_method_photo" />
+                    android:layout_marginBottom="@dimen/element_spacing_normal"
+                    android:background="?attr/selectableItemBackgroundBorderless">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_capture_method_upload"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="@dimen/element_spacing_normal"
+                        android:paddingVertical="@dimen/content_padding_normal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/document_capture_method_photo"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/view_capture_method_upload"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/document_capture_method_upload" />
-            </com.google.android.material.chip.ChipGroup>
+                    android:layout_marginBottom="@dimen/element_spacing_normal"
+                    android:background="?attr/selectableItemBackgroundBorderless">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="@dimen/element_spacing_normal"
+                        android:paddingVertical="@dimen/content_padding_normal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/document_capture_method_upload"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <LinearLayout
-        android:id="@+id/view_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/content_padding_normal"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_continue"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/button_continue" />
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
