@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IdRes
 import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import io.falu.identity.R
 import io.falu.identity.api.models.IdentityDocumentType
@@ -40,44 +39,50 @@ internal class DocumentCaptureMethodsFragment : CameraPermissionsFragment() {
                 identityDocumentType.getIdentityDocumentName(requireContext())
             )
 
-        var captureDestination = 0
-
-        binding.groupCaptureMethods.setOnCheckedStateChangeListener { group, _ ->
-            when (group.checkedChipId) {
-                R.id.chip_capture_method_scan -> captureDestination =
-                    identityDocumentType.toUploadDestination()
-                R.id.chip_capture_method_photo -> captureDestination =
-                    identityDocumentType.toPhotoUploadDestination()
-                R.id.chip_capture_method_upload -> captureDestination =
-                    identityDocumentType.toUploadDestination()
-            }
+        binding.viewCaptureMethodScan.setOnClickListener {
+            checkCameraPermissions(identityDocumentType.toUploadDestination())
         }
 
-        binding.buttonContinue.setOnClickListener {
-            if (binding.chipCaptureMethodPhoto.isChecked || binding.chipCaptureMethodPhoto.isChecked) {
-                requestCameraPermissions(
-                    onCameraPermissionGranted = { onCameraPermissionGranted(captureDestination) },
-                    onCameraPermissionDenied = { onCameraPermissionDenied() }
-                )
-                return@setOnClickListener
-            } else {
-                navigateToDestination(captureDestination)
-            }
+        binding.viewCaptureMethodPhoto.setOnClickListener {
+            checkCameraPermissions(identityDocumentType.toPhotoUploadDestination())
+        }
+
+        binding.viewCaptureMethodUpload.setOnClickListener {
+            navigateToDestination(identityDocumentType.toUploadDestination())
         }
     }
 
-    private fun navigateToDestination(destinationId: Int) {
+    /**
+     *
+     */
+    private fun navigateToDestination(@IdRes destinationId: Int) {
         val bundle =
             bundleOf(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE to identityDocumentType)
         findNavController().navigate(destinationId, bundle)
     }
 
-    private fun onCameraPermissionGranted(destinationId: Int) {
+    /**
+     *
+     */
+    private fun onCameraPermissionGranted(@IdRes destinationId: Int) {
         navigateToDestination(destinationId)
     }
 
+    /**
+     *
+     */
     private fun onCameraPermissionDenied() {
         // navigate to camera permissions denied view
+    }
+
+    /**
+     *
+     */
+    private fun checkCameraPermissions(@IdRes destinationId: Int) {
+        requestCameraPermissions(
+            onCameraPermissionGranted = { onCameraPermissionGranted(destinationId) },
+            onCameraPermissionDenied = { onCameraPermissionDenied() }
+        )
     }
 
     internal companion object {
