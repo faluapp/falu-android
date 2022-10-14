@@ -7,9 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IdRes
 import androidx.core.os.bundleOf
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.models.IdentityDocumentType
+import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.camera.CameraPermissionsFragment
 import io.falu.identity.databinding.FragmentDocumentCaptureMethodsBinding
 
@@ -17,6 +20,7 @@ internal class DocumentCaptureMethodsFragment : CameraPermissionsFragment() {
     private var _binding: FragmentDocumentCaptureMethodsBinding? = null
     private val binding get() = _binding!!
 
+    private val viewModel: IdentityVerificationViewModel by activityViewModels()
     private lateinit var identityDocumentType: IdentityDocumentType
 
     override fun onCreateView(
@@ -50,6 +54,12 @@ internal class DocumentCaptureMethodsFragment : CameraPermissionsFragment() {
         binding.viewCaptureMethodUpload.setOnClickListener {
             navigateToDestination(identityDocumentType.toUploadDestination())
         }
+
+        viewModel.observeForVerificationResults(
+            viewLifecycleOwner,
+            onSuccess = { onVerificationSuccessful(it) },
+            onFailure = {}
+        )
     }
 
     /**
@@ -83,6 +93,14 @@ internal class DocumentCaptureMethodsFragment : CameraPermissionsFragment() {
             onCameraPermissionGranted = { onCameraPermissionGranted(destinationId) },
             onCameraPermissionDenied = { onCameraPermissionDenied() }
         )
+    }
+
+    /**
+     *
+     */
+    private fun onVerificationSuccessful(verification: Verification) {
+        val allowUploads = verification.options.allowUploads
+        binding.viewCaptureMethodUpload.visibility = if (allowUploads) View.VISIBLE else View.GONE
     }
 
     internal companion object {

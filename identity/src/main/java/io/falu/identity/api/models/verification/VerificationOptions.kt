@@ -15,7 +15,7 @@ internal data class VerificationOptions(
      * Whether to allow uploads for documents, images and videos. This only applies to document related checks.
      */
     @SerializedName("allow_uploads")
-    var allowUploads: Boolean? = null,
+    var allowUploads: Boolean = false,
 
     /**
      * Options for the document check.
