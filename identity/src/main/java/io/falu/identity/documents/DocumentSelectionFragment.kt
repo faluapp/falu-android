@@ -60,7 +60,9 @@ class DocumentSelectionFragment : Fragment() {
             })
         }
 
-        binding.groupDocumentTypes.setOnCheckedStateChangeListener { group, _ ->
+        binding.groupDocumentTypes.setOnCheckedStateChangeListener { group, checkIds ->
+            binding.buttonContinue.isEnabled = checkIds.isNotEmpty()
+
             when (group.checkedChipId) {
                 R.id.chip_passport -> identityDocumentType = IdentityDocumentType.PASSPORT
                 R.id.chip_identity_card -> identityDocumentType = IdentityDocumentType.IDENTITY_CARD
@@ -68,6 +70,11 @@ class DocumentSelectionFragment : Fragment() {
                     IdentityDocumentType.DRIVING_LICENSE
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     /**
@@ -79,24 +86,40 @@ class DocumentSelectionFragment : Fragment() {
             R.layout.dropdown_menu_popup_item,
             countries.map { it.country.name })
 
-        val country = getSupportedCountry(countries)
         binding.inputAssetIssuingCountry.setAdapter(countriesAdapter)
         binding.inputAssetIssuingCountry.setText(countriesAdapter.getItem(0), false)
+
+        val country = getSupportedCountry(countries)
+        getVerificationResults(country)
+
         binding.inputAssetIssuingCountry.setOnItemClickListener { _, _, _, _ ->
             binding.buttonContinue.tag = country
-            viewModel.observeForVerificationResults(
-                viewLifecycleOwner,
-                onSuccess = { acceptedDocumentOptions(it, country) },
-                onFailure = {}
-            )
+            getVerificationResults(country)
         }
     }
 
+    /**
+     *
+     */
     private fun getSupportedCountry(countries: List<SupportedCountry>): SupportedCountry {
         val country = binding.inputAssetIssuingCountry.text.toString()
         return countries.first { it.country.name == country }
     }
 
+    /**
+     *
+     */
+    private fun getVerificationResults(country: SupportedCountry) {
+        viewModel.observeForVerificationResults(
+            viewLifecycleOwner,
+            onSuccess = { acceptedDocumentOptions(it, country) },
+            onFailure = {}
+        )
+    }
+
+    /**
+     *
+     */
     private fun acceptedDocumentOptions(verification: Verification, country: SupportedCountry) {
         val acceptedDocuments =
             verification.options.document.allowed.toSet().intersect(country.documents.toSet())
@@ -105,13 +128,8 @@ class DocumentSelectionFragment : Fragment() {
             acceptedDocuments.contains(IdentityDocumentType.IDENTITY_CARD)
         binding.chipPassport.isEnabled =
             acceptedDocuments.contains(IdentityDocumentType.PASSPORT)
-        binding.chipPassport.isEnabled =
+        binding.chipDrivingLicense.isEnabled =
             acceptedDocuments.contains(IdentityDocumentType.DRIVING_LICENSE)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     internal companion object {
