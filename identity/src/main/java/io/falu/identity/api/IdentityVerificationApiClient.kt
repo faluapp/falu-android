@@ -10,6 +10,7 @@ import io.falu.core.exceptions.AuthenticationException
 import io.falu.core.models.FaluFile
 import io.falu.core.utils.getMediaType
 import io.falu.identity.api.models.verification.Verification
+import io.falu.identity.api.models.verification.VerificationUploadRequest
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -81,6 +82,22 @@ internal class IdentityVerificationApiClient(
             .url("$baseUrl/v1/files")
             .post(requestBody)
         return execute(builder, FaluFile::class.java)
+    }
+
+    @Throws(
+        AuthenticationException::class,
+        APIConnectionException::class,
+        APIException::class
+    )
+    fun submitVerificationDocuments(
+        verification: String,
+        request: VerificationUploadRequest
+    ): ResourceResponse<Verification> {
+        val builder = Request.Builder()
+            .url("$baseUrl/v1/identity/verifications/$verification/workflow/submit")
+            .post(makeJson(request).toRequestBody(MEDIA_TYPE_JSON))
+
+        return execute(builder, Verification::class.java)
     }
 
     override fun buildBackChannel(builder: OkHttpClient.Builder): OkHttpClient {

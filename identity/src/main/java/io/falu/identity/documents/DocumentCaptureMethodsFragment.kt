@@ -15,6 +15,8 @@ import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.camera.CameraPermissionsFragment
 import io.falu.identity.databinding.FragmentDocumentCaptureMethodsBinding
+import io.falu.identity.utils.updateVerification
+import software.tingle.api.patch.JsonPatchDocument
 
 internal class DocumentCaptureMethodsFragment : CameraPermissionsFragment() {
     private var _binding: FragmentDocumentCaptureMethodsBinding? = null
@@ -100,7 +102,8 @@ internal class DocumentCaptureMethodsFragment : CameraPermissionsFragment() {
      */
     private fun onVerificationSuccessful(verification: Verification) {
         val allowUploads = verification.options.allowUploads
-        binding.viewCaptureMethodUpload.visibility = if (allowUploads) View.VISIBLE else View.GONE
+        binding.viewCaptureMethodUpload.visibility =
+            if (allowUploads) View.VISIBLE else View.VISIBLE
     }
 
     internal companion object {

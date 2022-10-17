@@ -10,6 +10,7 @@ import io.falu.identity.api.IdentityVerificationApiClient
 import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.country.SupportedCountry
 import io.falu.identity.api.models.verification.Verification
+import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.utils.FileUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -111,6 +112,28 @@ internal class IdentityVerificationViewModel(
                 },
                 onFailure = {
                     Log.e(TAG, "Error updating verification", it)
+                }
+            )
+        }
+    }
+
+    internal fun submitVerificationResults(
+        uploadRequest: VerificationUploadRequest,
+        onSuccess: ((Verification) -> Unit),
+        onFailure: ((HttpApiResponseProblem?) -> Unit)
+    ) {
+        launch(Dispatchers.IO) {
+            runCatching {
+                apiClient.submitVerificationDocuments(contractArgs.verificationId, uploadRequest)
+            }.fold(
+                onSuccess = { response ->
+                    handleResponse(
+                        response,
+                        onSuccess = { onSuccess(it) },
+                        onError = { onFailure(response.error) })
+                },
+                onFailure = {
+                    Log.e(TAG, "Error submitting verification", it)
                 }
             )
         }
