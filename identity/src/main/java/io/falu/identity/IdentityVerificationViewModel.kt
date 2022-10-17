@@ -44,13 +44,6 @@ internal class IdentityVerificationViewModel(
     /**
      *
      */
-    private val _documentUpload = MutableLiveData<ResourceResponse<FaluFile>?>()
-    private val documentUpload: LiveData<ResourceResponse<FaluFile>?>
-        get() = _documentUpload
-
-    /**
-     *
-     */
     private val _supportedCountries = MutableLiveData<ResourceResponse<Array<SupportedCountry>>?>()
     private val supportedCountries: LiveData<ResourceResponse<Array<SupportedCountry>>?>
         get() = _supportedCountries
@@ -70,13 +63,17 @@ internal class IdentityVerificationViewModel(
         }
     }
 
-    internal fun uploadVerificationDocument(uri: Uri, documentSide: DocumentSide) {
+    internal fun uploadVerificationDocument(
+        uri: Uri,
+        documentSide: DocumentSide,
+        onSuccess: (FaluFile) -> Unit,
+        onFailure: (HttpApiResponseProblem?) -> Unit
+    ) {
         launch(Dispatchers.IO) {
             runCatching {
                 apiClient.uploadIdentityDocuments(
                     verification = contractArgs.verificationId,
-                    purpose = "identity.document",
-                    documentSide = documentSide,
+                    purpose = "identity.private",
                     file = fileUtils.createFileFromUri(
                         fileUri = uri,
                         contractArgs.verificationId,
@@ -84,11 +81,14 @@ internal class IdentityVerificationViewModel(
                     )
                 )
             }.fold(
-                onSuccess = {
-                    _documentUpload.postValue(it)
+                onSuccess = { response ->
+                    handleResponse(
+                        response,
+                        onSuccess = { onSuccess(it) },
+                        onError = { onFailure(response.error) })
                 },
                 onFailure = {
-
+                    Log.e(TAG, "Error uploading verification document", it)
                 }
             )
         }
@@ -104,7 +104,10 @@ internal class IdentityVerificationViewModel(
                 apiClient.updateVerification(contractArgs.verificationId, document)
             }.fold(
                 onSuccess = { response ->
-                    handleResponse(response, onSuccess = { onSuccess() }, onError = {onFailure(response.error)})
+                    handleResponse(
+                        response,
+                        onSuccess = { onSuccess() },
+                        onError = { onFailure(response.error) })
                 },
                 onFailure = {
                     Log.e(TAG, "Error updating verification", it)
@@ -156,20 +159,6 @@ internal class IdentityVerificationViewModel(
                     onFailure(response?.error)
                 }
             })
-    }
-
-    fun observerForDocumentUploadResults(
-        owner: LifecycleOwner,
-        onSuccess: (() -> Unit),
-        onFailure: ((HttpApiResponseProblem?) -> Unit)
-    ) {
-        documentUpload.observe(owner, Observer<ResourceResponse<FaluFile>?> { response ->
-            if (response != null && response.successful() && response.resource != null) {
-                onSuccess()
-            } else {
-                onFailure(response?.error)
-            }
-        })
     }
 
     private suspend fun <TResource> handleResponse(
