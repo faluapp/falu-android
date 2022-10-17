@@ -24,6 +24,8 @@ internal class UploadDocumentFragment : AbstractCaptureFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.cardDocumentBack.visibility =
+            if (isPassport) View.GONE else View.GONE
 
         binding.tvUploadTitle.text =
             getString(
@@ -99,7 +101,7 @@ internal class UploadDocumentFragment : AbstractCaptureFragment() {
         binding.ivBackUploaded.visibility = View.VISIBLE
     }
 
-    private fun resetFrontUploading(){
+    private fun resetFrontUploading() {
         binding.buttonSelectFront.visibility = View.VISIBLE
         binding.progressSelectFront.visibility = View.GONE
         binding.ivFrontUploaded.visibility = View.GONE
