@@ -1,9 +1,6 @@
 package io.falu.identity.api.models.verification
 
 import com.google.gson.annotations.SerializedName
-import io.falu.identity.api.models.VerificationOptionsForDocument
-import io.falu.identity.api.models.VerificationOptionsForSelfie
-import io.falu.identity.api.models.VerificationOptionsForVideo
 
 internal data class VerificationOptions(
     /**

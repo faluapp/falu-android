@@ -1,4 +1,6 @@
-package io.falu.identity.api.models
+package io.falu.identity.api.models.verification
+
+import io.falu.identity.api.models.IdentityDocumentType
 
 internal data class VerificationOptionsForDocument(
     /**
