@@ -40,6 +40,9 @@ internal abstract class AbstractCaptureFragment : CameraPermissionsFragment() {
 
     protected abstract fun showDocumentBackDoneUploading()
 
+    protected val isPassport: Boolean
+        get() = identityDocumentType == IdentityDocumentType.PASSPORT
+
     internal companion object {
         fun IdentityDocumentType.getIdentityDocumentName(context: Context) =
             context.getString(this.titleRes)

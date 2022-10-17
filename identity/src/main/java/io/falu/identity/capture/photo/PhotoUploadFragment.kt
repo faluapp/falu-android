@@ -41,6 +41,9 @@ internal class PhotoUploadFragment : AbstractCaptureFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.cardDocumentBack.visibility =
+            if (isPassport) View.GONE else View.GONE
+
         binding.tvUploadTitle.text =
             getString(
                 R.string.upload_document_capture_title,
