@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import io.falu.core.models.FaluFile
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.IdentityDocumentType
@@ -29,8 +30,26 @@ internal abstract class AbstractCaptureFragment : CameraPermissionsFragment() {
         } else {
             showDocumentBackUploading()
         }
-        identityViewModel.uploadVerificationDocument(uri, documentSide)
+
+        identityViewModel.uploadVerificationDocument(
+            uri,
+            documentSide,
+            onSuccess = {
+                if (documentSide == DocumentSide.FRONT) {
+                    showDocumentFrontDoneUploading()
+                } else {
+                    showDocumentBackDoneUploading()
+                }
+
+                fileUploadResults(it, documentSide)
+            },
+            onFailure = {
+                // TODO:// Redirect to error fragment
+            }
+        )
     }
+
+    protected abstract fun fileUploadResults(file: FaluFile, documentSide: DocumentSide)
 
     protected abstract fun showDocumentFrontUploading()
 

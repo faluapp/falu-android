@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import io.falu.core.models.FaluFile
 import io.falu.identity.R
 import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.capture.AbstractCaptureFragment
@@ -60,6 +61,10 @@ internal class UploadDocumentFragment : AbstractCaptureFragment() {
         binding.buttonSelectBack.setOnClickListener {
             captureDocumentViewModel.pickImageBack()
         }
+    }
+
+    override fun fileUploadResults(file: FaluFile, documentSide: DocumentSide) {
+
     }
 
     override fun onDestroyView() {
