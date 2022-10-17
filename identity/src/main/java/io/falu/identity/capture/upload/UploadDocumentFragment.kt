@@ -53,16 +53,6 @@ internal class UploadDocumentFragment : AbstractCaptureFragment() {
             }
         )
 
-        identityViewModel.observerForDocumentUploadResults(
-            viewLifecycleOwner,
-            onSuccess = {
-                println("AKAKAKAKAKAKAAK")
-            },
-            onFailure = {
-                resetFrontUploading()
-            }
-        )
-
         binding.buttonSelectFront.setOnClickListener {
             captureDocumentViewModel.pickImageFront()
         }

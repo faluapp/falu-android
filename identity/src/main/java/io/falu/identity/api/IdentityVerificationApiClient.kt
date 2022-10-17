@@ -9,7 +9,6 @@ import io.falu.core.exceptions.APIException
 import io.falu.core.exceptions.AuthenticationException
 import io.falu.core.models.FaluFile
 import io.falu.core.utils.getMediaType
-import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.verification.Verification
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -69,15 +68,13 @@ internal class IdentityVerificationApiClient(
     fun uploadIdentityDocuments(
         verification: String,
         purpose: String,
-        documentSide: DocumentSide,
         file: File
     ): ResourceResponse<FaluFile> {
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("file", file.name, file.asRequestBody(file.getMediaType(context)))
             .addFormDataPart("purpose", purpose)
-            .addFormDataPart("document-side", documentSide.code)
-            .addFormDataPart("verification", verification)
+            .addFormDataPart("owner", verification)
             .build()
 
         val builder = Request.Builder()
