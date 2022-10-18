@@ -4,9 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import io.falu.core.models.FaluFile
 import io.falu.identity.R
+import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.models.DocumentSide
+import io.falu.identity.api.models.UploadType
 import io.falu.identity.capture.AbstractCaptureFragment
 import io.falu.identity.databinding.FragmentUploadDocumentBinding
 
@@ -47,10 +48,10 @@ internal class UploadDocumentFragment : AbstractCaptureFragment() {
         captureDocumentViewModel.pickDocumentImages(
             fragment = this,
             onFrontImagePicked = {
-                uploadDocument(uri = it, DocumentSide.FRONT)
+                uploadDocument(uri = it, DocumentSide.FRONT, UploadType.UPLOAD)
             },
             onBackImagePicked = {
-                uploadDocument(uri = it, DocumentSide.BACK)
+                uploadDocument(uri = it, DocumentSide.BACK, UploadType.UPLOAD)
             }
         )
 
@@ -61,10 +62,6 @@ internal class UploadDocumentFragment : AbstractCaptureFragment() {
         binding.buttonSelectBack.setOnClickListener {
             captureDocumentViewModel.pickImageBack()
         }
-    }
-
-    override fun fileUploadResults(file: FaluFile, documentSide: DocumentSide) {
-
     }
 
     override fun onDestroyView() {
@@ -84,7 +81,7 @@ internal class UploadDocumentFragment : AbstractCaptureFragment() {
         binding.ivBackUploaded.visibility = View.GONE
     }
 
-    override fun showDocumentFrontDoneUploading() {
+    override fun showDocumentFrontDoneUploading(disposition: DocumentUploadDisposition) {
         binding.buttonSelectFront.visibility = View.GONE
         binding.progressSelectFront.visibility = View.GONE
         binding.ivFrontUploaded.visibility = View.VISIBLE
@@ -96,9 +93,7 @@ internal class UploadDocumentFragment : AbstractCaptureFragment() {
         binding.ivBackUploaded.visibility = View.VISIBLE
     }
 
-    private fun resetFrontUploading() {
-        binding.buttonSelectFront.visibility = View.VISIBLE
-        binding.progressSelectFront.visibility = View.GONE
-        binding.ivFrontUploaded.visibility = View.GONE
+    override fun showBothSidesUploaded(disposition: DocumentUploadDisposition) {
+
     }
 }

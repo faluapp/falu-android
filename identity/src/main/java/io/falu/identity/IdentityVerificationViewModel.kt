@@ -43,7 +43,7 @@ internal class IdentityVerificationViewModel(
     private val _documentUploadDisposition = MutableLiveData(
         DocumentUploadDisposition(front = null, back = null)
     )
-    private val documentUploadDisposition: LiveData<DocumentUploadDisposition>
+    val documentUploadDisposition: LiveData<DocumentUploadDisposition>
         get() = _documentUploadDisposition
 
     /**
