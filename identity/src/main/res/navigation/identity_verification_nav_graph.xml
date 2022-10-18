@@ -5,6 +5,10 @@
     android:id="@+id/identity_verification_nav_graph"
     app:startDestination="@id/fragment_welcome">
 
+    <action
+        android:id="@+id/action_global_fragment_confirmation"
+        app:destination="@id/fragment_confirmation" />
+
     <fragment
         android:id="@+id/fragment_welcome"
         android:name="io.falu.identity.welcome.WelcomeFragment"
@@ -39,10 +43,15 @@
         android:id="@+id/fragment_document_upload"
         android:name="io.falu.identity.capture.upload.UploadDocumentFragment"
         android:label="UploadDocumentFragment"
-        tool:layout="@layout/fragment_upload_document"/>
+        tool:layout="@layout/fragment_upload_document" />
     <fragment
         android:id="@+id/fragment_photo_upload"
         android:name="io.falu.identity.capture.photo.PhotoUploadFragment"
         android:label="PhotoUploadFragment"
-        tool:layout="@layout/fragment_photo_upload"/>
+        tool:layout="@layout/fragment_photo_upload" />
+    <fragment
+        android:id="@+id/fragment_confirmation"
+        android:name="io.falu.identity.confirmation.ConfirmationFragment"
+        android:label="ConfirmationFragment"
+        tool:layout="@layout/fragment_confirmation" />
 </navigation>
