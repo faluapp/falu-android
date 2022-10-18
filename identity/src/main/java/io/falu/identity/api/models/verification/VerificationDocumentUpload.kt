@@ -11,6 +11,6 @@ internal data class VerificationDocumentUpload(
 
 internal data class VerificationDocumentSide(
     var type: UploadType,
-    var score: Float?,
+    var score: Float? = null,
     var file: String,
 )

@@ -10,8 +10,10 @@ import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.UploadType
+import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.camera.CameraPermissionsFragment
 import io.falu.identity.documents.DocumentSelectionFragment
+import io.falu.identity.utils.submitVerificationData
 
 internal abstract class AbstractCaptureFragment : CameraPermissionsFragment() {
     protected val identityViewModel: IdentityVerificationViewModel by activityViewModels()
@@ -71,7 +73,30 @@ internal abstract class AbstractCaptureFragment : CameraPermissionsFragment() {
         }
     }
 
+    protected fun attemptDocumentSubmission(uploadRequest: VerificationUploadRequest) {
+        identityViewModel.observeForVerificationResults(
+            viewLifecycleOwner,
+            onSuccess = { verification ->
+                when {
+                    verification.selfieRequired -> {
+
+                    }
+                    verification.videoRequired -> {
+
+                    }
+                    else -> {
+                        submitVerificationData(identityViewModel, uploadRequest)
+                    }
+                }
+            },
+            onFailure = {
+                // TODO: Display error messages
+            }
+        )
+    }
+
     internal companion object {
+        private val TAG: String = AbstractCaptureFragment::class.java.simpleName
         fun IdentityDocumentType.getIdentityDocumentName(context: Context) =
             context.getString(this.titleRes)
     }

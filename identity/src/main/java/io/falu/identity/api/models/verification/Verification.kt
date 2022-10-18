@@ -28,4 +28,16 @@ internal data class Verification(
     var branding: Branding?,
     var requirements: Requirement,
     var supported: Boolean = true
-)
+) {
+    val selfieRequired: Boolean
+        get() = options.selfie != null
+
+    val videoRequired: Boolean
+        get() = options.video != null
+
+    val hasRequirementErrors: Boolean
+        get() = requirements.errors.isNotEmpty()
+
+    val submitted: Boolean
+        get() = status == VerificationStatus.PROCESSING
+}
