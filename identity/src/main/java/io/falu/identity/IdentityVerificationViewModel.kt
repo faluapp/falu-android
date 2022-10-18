@@ -4,13 +4,15 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistryOwner
-import io.falu.core.models.FaluFile
 import io.falu.identity.api.CountriesApiClient
+import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.IdentityVerificationApiClient
 import io.falu.identity.api.models.DocumentSide
+import io.falu.identity.api.models.UploadType
 import io.falu.identity.api.models.country.SupportedCountry
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationUploadRequest
+import io.falu.identity.api.models.verification.VerificationUploadResult
 import io.falu.identity.utils.FileUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -34,6 +36,15 @@ internal class IdentityVerificationViewModel(
         get() = Dispatchers.IO
 
     private val countriesApiClient = CountriesApiClient()
+
+    /**
+     *
+     */
+    private val _documentUploadDisposition = MutableLiveData(
+        DocumentUploadDisposition(front = null, back = null)
+    )
+    private val documentUploadDisposition: LiveData<DocumentUploadDisposition>
+        get() = _documentUploadDisposition
 
     /**
      *
@@ -67,8 +78,7 @@ internal class IdentityVerificationViewModel(
     internal fun uploadVerificationDocument(
         uri: Uri,
         documentSide: DocumentSide,
-        onSuccess: (FaluFile) -> Unit,
-        onFailure: (HttpApiResponseProblem?) -> Unit
+        type: UploadType,
     ) {
         launch(Dispatchers.IO) {
             runCatching {
@@ -83,10 +93,17 @@ internal class IdentityVerificationViewModel(
                 )
             }.fold(
                 onSuccess = { response ->
-                    handleResponse(
-                        response,
-                        onSuccess = { onSuccess(it) },
-                        onError = { onFailure(response.error) })
+                    if (response.successful() && response.resource != null) {
+                        val result = VerificationUploadResult(response.resource!!, type)
+                        _documentUploadDisposition.postValue(
+                            DocumentUploadDisposition().modify(
+                                documentSide,
+                                result
+                            )
+                        )
+                    } else {
+                        // TODO: 2022-10-18 Handle errors
+                    }
                 },
                 onFailure = {
                     Log.e(TAG, "Error uploading verification document", it)
@@ -127,10 +144,6 @@ internal class IdentityVerificationViewModel(
                 apiClient.submitVerificationDocuments(contractArgs.verificationId, uploadRequest)
             }.fold(
                 onSuccess = { response ->
-                    handleResponse(
-                        response,
-                        onSuccess = { onSuccess(it) },
-                        onError = { onFailure(response.error) })
                 },
                 onFailure = {
                     Log.e(TAG, "Error submitting verification", it)
