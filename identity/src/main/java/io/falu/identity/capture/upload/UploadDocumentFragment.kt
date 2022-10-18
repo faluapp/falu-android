@@ -30,7 +30,7 @@ internal class UploadDocumentFragment : AbstractCaptureFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.cardDocumentBack.visibility =
-            if (isPassport) View.GONE else View.GONE
+            if (isPassport) View.GONE else View.VISIBLE
 
         binding.tvUploadTitle.text =
             getString(
