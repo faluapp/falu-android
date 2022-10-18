@@ -134,7 +134,7 @@ internal class IdentityVerificationViewModel(
         }
     }
 
-    internal fun submitVerificationResults(
+    internal fun submitVerificationData(
         uploadRequest: VerificationUploadRequest,
         onSuccess: ((Verification) -> Unit),
         onFailure: ((HttpApiResponseProblem?) -> Unit)
