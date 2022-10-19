@@ -12,6 +12,7 @@ import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.databinding.FragmentWelcomeBinding
+import io.falu.identity.utils.navigateToApiResponseProblemFragment
 import io.falu.identity.utils.updateVerification
 import software.tingle.api.HttpApiResponseProblem
 import software.tingle.api.patch.JsonPatchDocument
@@ -57,16 +58,19 @@ class WelcomeFragment : Fragment() {
     }
 
     private fun onVerificationFailure(error: HttpApiResponseProblem?) {
-        // TODO: Redirect to error fragment
+        navigateToApiResponseProblemFragment(error)
     }
 
     private fun submitConsentData(accepted: Boolean) {
         val document = JsonPatchDocument().replace("consent", accepted)
         binding.progressCircular.visibility = View.VISIBLE
-        updateVerification(viewModel, document, onSuccess = {
-            binding.progressCircular.visibility = View.GONE
-            findNavController().navigate(R.id.action_fragment_welcome_to_fragment_document_selection)
-        })
+        updateVerification(
+            viewModel,
+            document,
+            onSuccess = {
+                binding.progressCircular.visibility = View.GONE
+                findNavController().navigate(R.id.action_fragment_welcome_to_fragment_document_selection)
+            })
     }
 
     override fun onDestroyView() {

@@ -10,6 +10,10 @@
     <string name="permission_explanation_title">Permission Required!</string>
     <string name="permission_explanation_camera">The camera permission is required take photos of your verification documents. Choose OK to authorize.</string>
 
+    <!--Errors-->
+    <string name="error_title">Something went wrong!</string>
+    <string name="error_description_server">The connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. Retry later.</string>
+    <string name="error_title_verification_data_incomplete">Missing Verification Data!</string>
     <!--Welcome-->
     <string name="welcome_button_accept">Accept</string>
     <string name="welcome_button_decline">Decline</string>

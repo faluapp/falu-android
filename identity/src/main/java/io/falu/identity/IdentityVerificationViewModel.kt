@@ -102,7 +102,7 @@ internal class IdentityVerificationViewModel(
                             current.modify(documentSide, result)
                         }
                     } else {
-                        handleResponse(response, onError = { onError(response.error) })
+                        handleResponse(response, onError = { onError(it?.error) })
                     }
                 },
                 onFailure = {
@@ -115,7 +115,7 @@ internal class IdentityVerificationViewModel(
 
     internal fun updateVerification(
         document: JsonPatchDocument,
-        onSuccess: (() -> Unit),
+        onSuccess: ((Verification) -> Unit),
         onError: ((HttpApiResponseProblem?) -> Unit),
         onFailure: ((Throwable) -> Unit)
     ) {
@@ -126,8 +126,8 @@ internal class IdentityVerificationViewModel(
                 onSuccess = { response ->
                     handleResponse(
                         response,
-                        onSuccess = { onSuccess() },
-                        onError = { onError(response.error) })
+                        onSuccess = { onSuccess(it) },
+                        onError = { onError(it?.error) })
                 },
                 onFailure = {
                     Log.e(TAG, "Error updating verification", it)
@@ -151,7 +151,7 @@ internal class IdentityVerificationViewModel(
                     handleResponse(
                         response,
                         onSuccess = onSuccess,
-                        onError = { onError(response.error) })
+                        onError = { onError(it?.error) })
                 },
                 onFailure = {
                     Log.e(TAG, "Error submitting verification", it)
@@ -212,7 +212,7 @@ internal class IdentityVerificationViewModel(
         onError: ((ResourceResponse<TResource>?) -> Unit)
     ) = withContext(Dispatchers.Main) {
         if (response != null && response.successful() && response.resource != null) {
-            onSuccess?.let { response.resource!! }
+            onSuccess?.invoke(response.resource!!)
             return@withContext
         }
         onError(response)

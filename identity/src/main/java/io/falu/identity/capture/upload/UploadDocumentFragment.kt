@@ -96,6 +96,18 @@ internal class UploadDocumentFragment : AbstractCaptureFragment() {
         binding.ivBackUploaded.visibility = View.VISIBLE
     }
 
+    override fun resetViews(documentSide: DocumentSide) {
+        if (documentSide == DocumentSide.FRONT) {
+            binding.buttonSelectFront.visibility = View.VISIBLE
+            binding.progressSelectFront.visibility = View.GONE
+            binding.ivFrontUploaded.visibility = View.GONE
+        } else {
+            binding.buttonSelectBack.visibility = View.VISIBLE
+            binding.progressSelectBack.visibility = View.GONE
+            binding.ivBackUploaded.visibility = View.GONE
+        }
+    }
+
     override fun showBothSidesUploaded(disposition: DocumentUploadDisposition) {
         binding.buttonContinue.isEnabled = true
         binding.buttonContinue.setOnClickListener {
