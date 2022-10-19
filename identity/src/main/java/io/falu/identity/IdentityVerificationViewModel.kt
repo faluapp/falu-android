@@ -16,6 +16,8 @@ import io.falu.identity.api.models.verification.VerificationUploadResult
 import io.falu.identity.utils.FileUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import software.tingle.api.HttpApiResponseProblem
@@ -78,6 +80,8 @@ internal class IdentityVerificationViewModel(
         uri: Uri,
         documentSide: DocumentSide,
         type: UploadType,
+        onError: (HttpApiResponseProblem?) -> Unit,
+        onFailure: (Throwable) -> Unit
     ) {
         launch(Dispatchers.IO) {
             runCatching {
@@ -98,11 +102,12 @@ internal class IdentityVerificationViewModel(
                             current.modify(documentSide, result)
                         }
                     } else {
-                        // TODO: 2022-10-18 Handle errors
+                        handleResponse(response, onError = { onError(response.error) })
                     }
                 },
                 onFailure = {
                     Log.e(TAG, "Error uploading verification document", it)
+                    handleFailureResponse(it, onFailure = onFailure)
                 }
             )
         }
@@ -111,7 +116,8 @@ internal class IdentityVerificationViewModel(
     internal fun updateVerification(
         document: JsonPatchDocument,
         onSuccess: (() -> Unit),
-        onFailure: ((HttpApiResponseProblem?) -> Unit)
+        onError: ((HttpApiResponseProblem?) -> Unit),
+        onFailure: ((Throwable) -> Unit)
     ) {
         launch(Dispatchers.IO) {
             runCatching {
@@ -121,10 +127,11 @@ internal class IdentityVerificationViewModel(
                     handleResponse(
                         response,
                         onSuccess = { onSuccess() },
-                        onError = { onFailure(response.error) })
+                        onError = { onError(response.error) })
                 },
                 onFailure = {
                     Log.e(TAG, "Error updating verification", it)
+                    handleFailureResponse(it, onFailure = onFailure)
                 }
             )
         }
@@ -133,16 +140,22 @@ internal class IdentityVerificationViewModel(
     internal fun submitVerificationData(
         uploadRequest: VerificationUploadRequest,
         onSuccess: ((Verification) -> Unit),
-        onFailure: ((HttpApiResponseProblem?) -> Unit)
+        onError: ((HttpApiResponseProblem?) -> Unit),
+        onFailure: (Throwable) -> Unit
     ) {
         launch(Dispatchers.IO) {
             runCatching {
                 apiClient.submitVerificationDocuments(contractArgs.verificationId, uploadRequest)
             }.fold(
                 onSuccess = { response ->
+                    handleResponse(
+                        response,
+                        onSuccess = onSuccess,
+                        onError = { onError(response.error) })
                 },
                 onFailure = {
                     Log.e(TAG, "Error submitting verification", it)
+                    handleFailureResponse(it, onFailure = onFailure)
                 }
             )
         }
@@ -166,13 +179,13 @@ internal class IdentityVerificationViewModel(
     fun observeForVerificationResults(
         owner: LifecycleOwner,
         onSuccess: ((Verification) -> Unit),
-        onFailure: ((HttpApiResponseProblem?) -> Unit)
+        onError: ((HttpApiResponseProblem?) -> Unit)
     ) {
         verification.observe(owner, Observer<ResourceResponse<Verification>?> { response ->
             if (response != null && response.successful() && response.resource != null) {
                 onSuccess(response.resource!!)
             } else {
-                onFailure(response?.error)
+                onError(response?.error)
             }
         })
     }
@@ -180,7 +193,7 @@ internal class IdentityVerificationViewModel(
     fun observerForSupportedCountriesResults(
         owner: LifecycleOwner,
         onSuccess: ((Array<SupportedCountry>) -> Unit),
-        onFailure: ((HttpApiResponseProblem?) -> Unit)
+        onError: ((HttpApiResponseProblem?) -> Unit)
     ) {
         supportedCountries.observe(
             owner,
@@ -188,21 +201,28 @@ internal class IdentityVerificationViewModel(
                 if (response != null && response.successful() && response.resource != null) {
                     onSuccess(response.resource!!)
                 } else {
-                    onFailure(response?.error)
+                    onError(response?.error)
                 }
             })
     }
 
     private suspend fun <TResource> handleResponse(
         response: ResourceResponse<TResource>?,
-        onSuccess: ((TResource) -> Unit),
+        onSuccess: ((TResource) -> Unit)? = null,
         onError: ((ResourceResponse<TResource>?) -> Unit)
     ) = withContext(Dispatchers.Main) {
         if (response != null && response.successful() && response.resource != null) {
-            onSuccess(response.resource!!)
+            onSuccess?.let { response.resource!! }
             return@withContext
         }
         onError(response)
+    }
+
+    private suspend fun handleFailureResponse(
+        throwable: Throwable,
+        onFailure: (Throwable) -> Unit
+    ) = withContext(Dispatchers.Main) {
+        onFailure(throwable)
     }
 
     internal companion object {

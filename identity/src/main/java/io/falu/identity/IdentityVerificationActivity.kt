@@ -46,7 +46,7 @@ internal class IdentityVerificationActivity : AppCompatActivity() {
         verificationViewModel.observeForVerificationResults(
             this,
             onSuccess = { onVerificationSuccessful(it) },
-            onFailure = { onVerificationFailure(it) })
+            onError = { onVerificationFailure(it) })
     }
 
     private fun onVerificationSuccessful(verification: Verification) {

@@ -19,7 +19,7 @@ internal fun Fragment.updateVerification(
             navigateToApiResponseProblemFragment(it)
         },
         onFailure = {
-            navigateToErrorFragment()
+            navigateToErrorFragment(it)
         })
 }
 
@@ -44,7 +44,7 @@ internal fun Fragment.submitVerificationData(
             navigateToApiResponseProblemFragment(it)
         },
         onFailure = {
-            navigateToErrorFragment()
+            navigateToErrorFragment(it)
         }
     )
 }
@@ -52,7 +52,7 @@ internal fun Fragment.submitVerificationData(
 /**
  * The destination is [ErrorFragment]
  */
-internal fun Fragment.navigateToErrorFragment() {
+internal fun Fragment.navigateToErrorFragment(it: Throwable) {
     findNavController().navigate(R.id.action_global_fragment_error)
 }
 
