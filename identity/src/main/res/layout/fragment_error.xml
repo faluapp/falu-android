@@ -23,7 +23,7 @@
                 android:id="@+id/tv_error_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                 android:gravity="center_horizontal"
+                android:gravity="center_horizontal"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
             <TextView
@@ -33,6 +33,15 @@
                 android:gravity="center_horizontal"
                 android:paddingTop="@dimen/element_spacing_normal"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView
+                android:id="@+id/tv_error_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:paddingTop="@dimen/element_spacing_normal"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

@@ -46,9 +46,11 @@ internal abstract class AbstractCaptureFragment : CameraPermissionsFragment() {
             documentSide,
             type = type,
             onError = {
+                resetViews(documentSide)
                 navigateToApiResponseProblemFragment(it)
             },
             onFailure = {
+                resetViews(documentSide)
                 navigateToErrorFragment(it)
             })
     }
@@ -62,6 +64,8 @@ internal abstract class AbstractCaptureFragment : CameraPermissionsFragment() {
     protected abstract fun showDocumentBackDoneUploading()
 
     protected abstract fun showBothSidesUploaded(disposition: DocumentUploadDisposition)
+
+    protected abstract fun resetViews(documentSide: DocumentSide)
 
     protected val isPassport: Boolean
         get() = identityDocumentType == IdentityDocumentType.PASSPORT

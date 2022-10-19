@@ -1,5 +1,6 @@
 package io.falu.identity.utils
 
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import io.falu.identity.IdentityVerificationViewModel
@@ -53,7 +54,8 @@ internal fun Fragment.submitVerificationData(
  * The destination is [ErrorFragment]
  */
 internal fun Fragment.navigateToErrorFragment(it: Throwable) {
-    findNavController().navigate(R.id.action_global_fragment_error)
+    val bundle = bundleOf(KEY_ERROR_CAUSE to it)
+    findNavController().navigate(R.id.action_global_fragment_error, bundle)
 }
 
 /**
@@ -62,3 +64,5 @@ internal fun Fragment.navigateToErrorFragment(it: Throwable) {
 internal fun Fragment.navigateToApiResponseProblemFragment(it: HttpApiResponseProblem?) {
     findNavController().navigate(R.id.action_global_fragment_api_response_problem)
 }
+
+internal const val KEY_ERROR_CAUSE = "cause"

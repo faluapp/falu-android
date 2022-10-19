@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import io.falu.core.models.FaluFile
 import io.falu.identity.R
 import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.models.DocumentSide
@@ -94,6 +93,18 @@ internal class PhotoUploadFragment : AbstractCaptureFragment() {
         binding.buttonSelectBack.visibility = View.GONE
         binding.progressSelectBack.visibility = View.GONE
         binding.ivBackUploaded.visibility = View.VISIBLE
+    }
+
+    override fun resetViews(documentSide: DocumentSide) {
+        if (documentSide == DocumentSide.FRONT) {
+            binding.buttonSelectFront.visibility = View.VISIBLE
+            binding.progressSelectFront.visibility = View.GONE
+            binding.ivFrontUploaded.visibility = View.GONE
+        } else {
+            binding.buttonSelectBack.visibility = View.VISIBLE
+            binding.progressSelectBack.visibility = View.GONE
+            binding.ivBackUploaded.visibility = View.GONE
+        }
     }
 
     override fun showBothSidesUploaded(disposition: DocumentUploadDisposition) {
