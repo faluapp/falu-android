@@ -60,7 +60,7 @@ internal class DocumentCaptureMethodsFragment : CameraPermissionsFragment() {
         viewModel.observeForVerificationResults(
             viewLifecycleOwner,
             onSuccess = { onVerificationSuccessful(it) },
-            onFailure = {}
+            onError = {}
         )
     }
 

@@ -41,7 +41,7 @@ class DocumentSelectionFragment : Fragment() {
         viewModel.observerForSupportedCountriesResults(
             viewLifecycleOwner,
             onSuccess = { onSupportedCountriesListed(it.toList()) },
-            onFailure = {
+            onError = {
                 // TODO: Navigate to error page
             }
         )
@@ -113,7 +113,7 @@ class DocumentSelectionFragment : Fragment() {
         viewModel.observeForVerificationResults(
             viewLifecycleOwner,
             onSuccess = { acceptedDocumentOptions(it, country) },
-            onFailure = {}
+            onError = {}
         )
     }
 

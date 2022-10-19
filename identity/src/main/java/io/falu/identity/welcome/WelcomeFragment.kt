@@ -37,7 +37,7 @@ class WelcomeFragment : Fragment() {
         viewModel.observeForVerificationResults(
             viewLifecycleOwner,
             onSuccess = { onVerificationSuccessful(it) },
-            onFailure = { onVerificationFailure(it) })
+            onError = { onVerificationFailure(it) })
 
         binding.buttonAccept.setOnClickListener {
             submitConsentData(true)
