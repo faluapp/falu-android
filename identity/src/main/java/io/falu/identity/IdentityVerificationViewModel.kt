@@ -40,11 +40,10 @@ internal class IdentityVerificationViewModel(
     /**
      *
      */
-    private val _documentUploadDisposition = MutableLiveData(
-        DocumentUploadDisposition(front = null, back = null)
-    )
+    private val disposition: DocumentUploadDisposition = DocumentUploadDisposition()
+    private val _documentUploadDisposition = MutableStateFlow(disposition)
     val documentUploadDisposition: LiveData<DocumentUploadDisposition>
-        get() = _documentUploadDisposition
+        get() = _documentUploadDisposition.asLiveData(Dispatchers.Main)
 
     /**
      *
@@ -95,12 +94,9 @@ internal class IdentityVerificationViewModel(
                 onSuccess = { response ->
                     if (response.successful() && response.resource != null) {
                         val result = VerificationUploadResult(response.resource!!, type)
-                        _documentUploadDisposition.postValue(
-                            DocumentUploadDisposition().modify(
-                                documentSide,
-                                result
-                            )
-                        )
+                        _documentUploadDisposition.update { current ->
+                            current.modify(documentSide, result)
+                        }
                     } else {
                         // TODO: 2022-10-18 Handle errors
                     }
