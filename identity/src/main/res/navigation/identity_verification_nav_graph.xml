@@ -9,6 +9,14 @@
         android:id="@+id/action_global_fragment_confirmation"
         app:destination="@id/fragment_confirmation" />
 
+    <action
+        android:id="@+id/action_global_fragment_error"
+        app:destination="@id/fragment_error" />
+
+   <action
+        android:id="@+id/action_global_fragment_api_response_problem"
+        app:destination="@id/fragment_api_response_problem" />
+
     <fragment
         android:id="@+id/fragment_welcome"
         android:name="io.falu.identity.welcome.WelcomeFragment"
@@ -54,4 +62,14 @@
         android:name="io.falu.identity.confirmation.ConfirmationFragment"
         android:label="ConfirmationFragment"
         tool:layout="@layout/fragment_confirmation" />
+    <fragment
+        android:id="@+id/fragment_error"
+        android:name="io.falu.identity.error.ErrorFragment"
+        android:label="ErrorFragment"
+        tool:layout="@layout/fragment_error" />
+    <fragment
+        android:id="@+id/fragment_api_response_problem"
+        android:name="io.falu.identity.error.ApiResponseProblemFragment"
+        android:label=".ApiResponseProblemFragment"
+        tool:layout="@layout/fragment_error" />
 </navigation>
