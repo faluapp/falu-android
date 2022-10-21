@@ -15,6 +15,7 @@ import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.country.SupportedCountry
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.databinding.FragmentDocumentSelectionBinding
+import io.falu.identity.utils.navigateToApiResponseProblemFragment
 import io.falu.identity.utils.updateVerification
 import software.tingle.api.patch.JsonPatchDocument
 
@@ -42,7 +43,7 @@ class DocumentSelectionFragment : Fragment() {
             viewLifecycleOwner,
             onSuccess = { onSupportedCountriesListed(it.toList()) },
             onError = {
-                // TODO: Navigate to error page
+                navigateToApiResponseProblemFragment(it)
             }
         )
 

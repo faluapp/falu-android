@@ -14,6 +14,8 @@
     <string name="error_title">Something went wrong!</string>
     <string name="error_description_server">The connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. Retry later.</string>
     <string name="error_title_verification_data_incomplete">Missing Verification Data!</string>
+    <string name="error_title_http_error">Something went wrong!</string>
+    <string name="error_description_http_error">The following unexpected errors occurred:\n\n<b>%1$s</b>.\n\nPlease try again later!</string>
     <!--Welcome-->
     <string name="welcome_button_accept">Accept</string>
     <string name="welcome_button_decline">Decline</string>
