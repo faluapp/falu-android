@@ -41,22 +41,22 @@
         android:label="DocumentCaptureMethodsFragment"
         tool:layout="@layout/fragment_document_capture_methods">
         <action
-            android:id="@+id/action_fragment_document_capture_methods_to_fragment_document_upload"
-            app:destination="@id/fragment_document_upload" />
+            android:id="@+id/action_fragment_document_capture_methods_to_fragment_upload_capture"
+            app:destination="@id/fragment_upload_capture" />
         <action
-            android:id="@+id/action_fragment_document_capture_methods_to_fragment_photo_upload"
-            app:destination="@id/fragment_photo_upload" />
+            android:id="@+id/action_fragment_document_capture_methods_to_fragment_manual_capture"
+            app:destination="@id/fragment_manual_capture" />
     </fragment>
     <fragment
-        android:id="@+id/fragment_document_upload"
-        android:name="io.falu.identity.capture.upload.UploadDocumentFragment"
+        android:id="@+id/fragment_upload_capture"
+        android:name="io.falu.identity.capture.upload.UploadCaptureFragment"
         android:label="UploadDocumentFragment"
-        tool:layout="@layout/fragment_upload_document" />
+        tool:layout="@layout/fragment_upload_capture" />
     <fragment
-        android:id="@+id/fragment_photo_upload"
-        android:name="io.falu.identity.capture.photo.PhotoUploadFragment"
+        android:id="@+id/fragment_manual_capture"
+        android:name="io.falu.identity.capture.manual.ManualCaptureFragment"
         android:label="PhotoUploadFragment"
-        tool:layout="@layout/fragment_photo_upload" />
+        tool:layout="@layout/fragment_manual_capture" />
     <fragment
         android:id="@+id/fragment_confirmation"
         android:name="io.falu.identity.confirmation.ConfirmationFragment"

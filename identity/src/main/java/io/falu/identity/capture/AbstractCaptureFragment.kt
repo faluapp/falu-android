@@ -12,6 +12,8 @@ import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.UploadType
+import io.falu.identity.api.models.verification.VerificationDocumentSide
+import io.falu.identity.api.models.verification.VerificationDocumentUpload
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.camera.CameraPermissionsFragment
 import io.falu.identity.documents.DocumentSelectionFragment
@@ -100,7 +102,7 @@ internal abstract class AbstractCaptureFragment : CameraPermissionsFragment() {
         }
     }
 
-    protected fun attemptDocumentSubmission(uploadRequest: VerificationUploadRequest) {
+    protected fun attemptDocumentSubmission(disposition: DocumentUploadDisposition) {
         identityViewModel.observeForVerificationResults(
             viewLifecycleOwner,
             onSuccess = { verification ->
@@ -112,6 +114,26 @@ internal abstract class AbstractCaptureFragment : CameraPermissionsFragment() {
 
                     }
                     else -> {
+                        val front = VerificationDocumentSide(
+                            type = disposition.front!!.type!!,
+                            file = disposition.front!!.file.id,
+                        )
+                        val back = if (identityDocumentType == IdentityDocumentType.PASSPORT) {
+                            null
+                        } else {
+                            VerificationDocumentSide(
+                                type = disposition.back!!.type!!,
+                                file = disposition.back!!.file.id,
+                            )
+                        }
+
+                        val uploadRequest = VerificationUploadRequest(
+                            document = VerificationDocumentUpload(
+                                type = identityDocumentType!!,
+                                front = front,
+                                back = back
+                            )
+                        )
                         submitVerificationData(identityViewModel, uploadRequest)
                     }
                 }
