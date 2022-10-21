@@ -7,15 +7,13 @@ import android.view.ViewGroup
 import io.falu.identity.R
 import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.models.DocumentSide
+import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.UploadType
-import io.falu.identity.api.models.verification.VerificationDocumentSide
-import io.falu.identity.api.models.verification.VerificationDocumentUpload
-import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.capture.AbstractCaptureFragment
-import io.falu.identity.databinding.FragmentUploadDocumentBinding
+import io.falu.identity.databinding.FragmentUploadCaptureBinding
 
-internal class UploadDocumentFragment : AbstractCaptureFragment() {
-    private var _binding: FragmentUploadDocumentBinding? = null
+internal class UploadCaptureFragment : AbstractCaptureFragment() {
+    private var _binding: FragmentUploadCaptureBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -23,7 +21,7 @@ internal class UploadDocumentFragment : AbstractCaptureFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentUploadDocumentBinding.inflate(inflater, container, false)
+        _binding = FragmentUploadCaptureBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -65,6 +63,11 @@ internal class UploadDocumentFragment : AbstractCaptureFragment() {
         binding.buttonSelectBack.setOnClickListener {
             captureDocumentViewModel.pickImageBack()
         }
+
+        binding.buttonContinue.setOnClickListener {
+            val disposition = binding.buttonContinue.tag as DocumentUploadDisposition
+            attemptDocumentSubmission(disposition)
+        }
     }
 
     override fun onDestroyView() {
@@ -88,6 +91,11 @@ internal class UploadDocumentFragment : AbstractCaptureFragment() {
         binding.buttonSelectFront.visibility = View.GONE
         binding.progressSelectFront.visibility = View.GONE
         binding.ivFrontUploaded.visibility = View.VISIBLE
+
+        if (identityDocumentType == IdentityDocumentType.PASSPORT) {
+            binding.buttonContinue.isEnabled = true
+            binding.buttonContinue.tag = disposition
+        }
     }
 
     override fun showDocumentBackDoneUploading() {
@@ -110,22 +118,6 @@ internal class UploadDocumentFragment : AbstractCaptureFragment() {
 
     override fun showBothSidesUploaded(disposition: DocumentUploadDisposition) {
         binding.buttonContinue.isEnabled = true
-        binding.buttonContinue.setOnClickListener {
-            // TODO: 2020-10-18 Show progress indicator
-            val uploadRequest = VerificationUploadRequest(
-                document = VerificationDocumentUpload(
-                    type = identityDocumentType!!,
-                    front = VerificationDocumentSide(
-                        type = disposition.front!!.type!!,
-                        file = disposition.front!!.file.id,
-                    ),
-                    back = VerificationDocumentSide(
-                        type = disposition.back!!.type!!,
-                        file = disposition.back!!.file.id,
-                    ),
-                )
-            )
-            attemptDocumentSubmission(uploadRequest)
-        }
+        binding.buttonContinue.tag = disposition
     }
 }

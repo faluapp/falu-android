@@ -15,8 +15,6 @@ import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.camera.CameraPermissionsFragment
 import io.falu.identity.databinding.FragmentDocumentCaptureMethodsBinding
-import io.falu.identity.utils.updateVerification
-import software.tingle.api.patch.JsonPatchDocument
 
 internal class DocumentCaptureMethodsFragment : CameraPermissionsFragment() {
     private var _binding: FragmentDocumentCaptureMethodsBinding? = null
@@ -110,17 +108,17 @@ internal class DocumentCaptureMethodsFragment : CameraPermissionsFragment() {
         @IdRes
         private fun IdentityDocumentType.toUploadDestination() =
             when (this) {
-                IdentityDocumentType.IDENTITY_CARD -> R.id.action_fragment_document_capture_methods_to_fragment_document_upload
-                IdentityDocumentType.PASSPORT -> R.id.action_fragment_document_capture_methods_to_fragment_document_upload
-                IdentityDocumentType.DRIVING_LICENSE -> R.id.action_fragment_document_capture_methods_to_fragment_document_upload
+                IdentityDocumentType.IDENTITY_CARD -> R.id.action_fragment_document_capture_methods_to_fragment_upload_capture
+                IdentityDocumentType.PASSPORT -> R.id.action_fragment_document_capture_methods_to_fragment_upload_capture
+                IdentityDocumentType.DRIVING_LICENSE -> R.id.action_fragment_document_capture_methods_to_fragment_upload_capture
             }
 
         @IdRes
         private fun IdentityDocumentType.toPhotoUploadDestination() =
             when (this) {
-                IdentityDocumentType.IDENTITY_CARD -> R.id.action_fragment_document_capture_methods_to_fragment_photo_upload
-                IdentityDocumentType.PASSPORT -> R.id.action_fragment_document_capture_methods_to_fragment_photo_upload
-                IdentityDocumentType.DRIVING_LICENSE -> R.id.action_fragment_document_capture_methods_to_fragment_photo_upload
+                IdentityDocumentType.IDENTITY_CARD -> R.id.action_fragment_document_capture_methods_to_fragment_manual_capture
+                IdentityDocumentType.PASSPORT -> R.id.action_fragment_document_capture_methods_to_fragment_manual_capture
+                IdentityDocumentType.DRIVING_LICENSE -> R.id.action_fragment_document_capture_methods_to_fragment_manual_capture
             }
 
         fun IdentityDocumentType.getIdentityDocumentName(context: Context) =

@@ -1,4 +1,4 @@
-package io.falu.identity.capture.photo
+package io.falu.identity.capture.manual
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,13 +7,14 @@ import android.view.ViewGroup
 import io.falu.identity.R
 import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.models.DocumentSide
+import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.UploadType
 import io.falu.identity.capture.AbstractCaptureFragment
-import io.falu.identity.databinding.FragmentPhotoUploadBinding
+import io.falu.identity.databinding.FragmentManualCaptureBinding
 import io.falu.identity.utils.FileUtils
 
-internal class PhotoUploadFragment : AbstractCaptureFragment() {
-    private var _binding: FragmentPhotoUploadBinding? = null
+internal class ManualCaptureFragment : AbstractCaptureFragment() {
+    private var _binding: FragmentManualCaptureBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +38,7 @@ internal class PhotoUploadFragment : AbstractCaptureFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentPhotoUploadBinding.inflate(inflater, container, false)
+        _binding = FragmentManualCaptureBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -69,6 +70,11 @@ internal class PhotoUploadFragment : AbstractCaptureFragment() {
         binding.buttonSelectBack.setOnClickListener {
             captureDocumentViewModel.captureImageBack(requireContext())
         }
+
+        binding.buttonContinue.setOnClickListener {
+            val disposition = binding.buttonContinue.tag as DocumentUploadDisposition
+            attemptDocumentSubmission(disposition)
+        }
     }
 
     override fun showDocumentFrontUploading() {
@@ -87,6 +93,11 @@ internal class PhotoUploadFragment : AbstractCaptureFragment() {
         binding.buttonSelectFront.visibility = View.GONE
         binding.progressSelectFront.visibility = View.GONE
         binding.ivFrontUploaded.visibility = View.VISIBLE
+
+        if (identityDocumentType == IdentityDocumentType.PASSPORT) {
+            binding.buttonContinue.isEnabled = true
+            binding.buttonContinue.tag = disposition
+        }
     }
 
     override fun showDocumentBackDoneUploading() {
@@ -108,6 +119,7 @@ internal class PhotoUploadFragment : AbstractCaptureFragment() {
     }
 
     override fun showBothSidesUploaded(disposition: DocumentUploadDisposition) {
-
+        binding.buttonContinue.isEnabled = true
+        binding.buttonContinue.tag = disposition
     }
 }
