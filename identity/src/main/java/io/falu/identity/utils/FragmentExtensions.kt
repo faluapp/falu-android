@@ -62,7 +62,11 @@ internal fun Fragment.navigateToErrorFragment(it: Throwable) {
  * The destination is [ApiResponseProblemFragment]
  */
 internal fun Fragment.navigateToApiResponseProblemFragment(it: HttpApiResponseProblem?) {
-    findNavController().navigate(R.id.action_global_fragment_api_response_problem)
+    val description =
+        it?.getErrorDescription(requireContext()) ?: getString(R.string.error_description_server)
+    val bundle = bundleOf(KEY_ERROR_DESCRIPTION to description)
+    findNavController().navigate(R.id.action_global_fragment_api_response_problem, bundle)
 }
 
-internal const val KEY_ERROR_CAUSE = "cause"
+internal const val KEY_ERROR_CAUSE = ":cause"
+internal const val KEY_ERROR_DESCRIPTION = ":error-description"

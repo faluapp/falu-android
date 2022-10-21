@@ -14,9 +14,6 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-/**
- * TODO: document your custom view class.
- */
 class CameraView : FrameLayout {
     private lateinit var windowManager: WindowManager
     private lateinit var viewCameraPreview: PreviewView
