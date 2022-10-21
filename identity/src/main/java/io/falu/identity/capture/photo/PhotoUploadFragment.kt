@@ -21,8 +21,8 @@ internal class PhotoUploadFragment : AbstractCaptureFragment() {
         val fileUtils = FileUtils(requireContext())
 
         captureDocumentViewModel.captureDocumentImages(
-            fragment = this,
-            fileUtils = fileUtils,
+            this,
+            fileUtils,
             onFrontImageCaptured = {
                 uploadDocument(uri = it, DocumentSide.FRONT, UploadType.MANUAL)
             },

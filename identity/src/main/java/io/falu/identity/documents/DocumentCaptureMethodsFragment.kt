@@ -103,7 +103,7 @@ internal class DocumentCaptureMethodsFragment : CameraPermissionsFragment() {
     private fun onVerificationSuccessful(verification: Verification) {
         val allowUploads = verification.options.allowUploads
         binding.viewCaptureMethodUpload.visibility =
-            if (allowUploads) View.VISIBLE else View.VISIBLE
+            if (allowUploads) View.VISIBLE else View.GONE
     }
 
     internal companion object {
