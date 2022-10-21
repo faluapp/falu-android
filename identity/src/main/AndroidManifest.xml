@@ -7,7 +7,9 @@
     <application>
         <activity
             android:name=".IdentityVerificationActivity"
-            android:exported="false" />
+            android:configChanges="orientation|keyboardHidden"
+            android:exported="false"
+            android:screenOrientation="portrait" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

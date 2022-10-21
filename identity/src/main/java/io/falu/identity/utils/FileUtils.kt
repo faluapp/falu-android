@@ -14,7 +14,7 @@ import java.util.*
 
 internal class FileUtils internal constructor(private val context: Context) {
 
-    val imageUri: Uri
+    val internalFileUri: Uri
         get() {
             imageFile.also { return getFileUri(imageFile) }
         }

@@ -2,11 +2,17 @@ package io.falu.identity.capture
 
 import android.content.Context
 import android.net.Uri
+import androidx.activity.result.ActivityResultCaller
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.AbstractSavedStateViewModelFactory
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.savedstate.SavedStateRegistryOwner
 import io.falu.identity.utils.FileUtils
 
-internal class CaptureDocumentViewModel() : ViewModel() {
+internal class CaptureDocumentViewModel(
+    private val stateHandle: SavedStateHandle
+) : ViewModel() {
 
     private lateinit var imageCaptureFront: ImageCapture
     private lateinit var imageCaptureBack: ImageCapture
@@ -17,13 +23,15 @@ internal class CaptureDocumentViewModel() : ViewModel() {
      *
      */
     fun captureDocumentImages(
-        fragment: Fragment,
-        fileUtils: FileUtils,
+        caller: ActivityResultCaller,
+        utils: FileUtils,
         onFrontImageCaptured: (Uri) -> Unit,
         onBackImageCaptured: (Uri) -> Unit
     ) {
-        imageCaptureFront = ImageCapture(fragment, fileUtils, onFrontImageCaptured)
-        imageCaptureBack = ImageCapture(fragment, fileUtils, onBackImageCaptured)
+        imageCaptureFront =
+            ImageCapture(caller, utils, stateHandle, KEY_FRONT_IMAGE_URI, onFrontImageCaptured)
+        imageCaptureBack =
+            ImageCapture(caller, utils, stateHandle, KEY_BACK_IMAGE_URI, onBackImageCaptured)
     }
 
     /**
@@ -64,5 +72,24 @@ internal class CaptureDocumentViewModel() : ViewModel() {
      */
     fun pickImageBack() {
         backImagePicker.pickImage()
+    }
+
+    internal class CaptureDocumentViewModelFactory(
+        ownerProvider: () -> SavedStateRegistryOwner,
+    ) : AbstractSavedStateViewModelFactory(ownerProvider(), null) {
+
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(
+            key: String,
+            modelClass: Class<T>,
+            handle: SavedStateHandle
+        ): T {
+            return CaptureDocumentViewModel(handle) as T
+        }
+    }
+
+    internal companion object {
+        const val KEY_FRONT_IMAGE_URI = ":front"
+        const val KEY_BACK_IMAGE_URI = ":back"
     }
 }

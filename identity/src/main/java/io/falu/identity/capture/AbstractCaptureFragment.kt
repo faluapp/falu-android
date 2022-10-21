@@ -5,6 +5,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.models.DocumentSide
@@ -19,8 +21,18 @@ import io.falu.identity.utils.submitVerificationData
 
 internal abstract class AbstractCaptureFragment : CameraPermissionsFragment() {
     protected val identityViewModel: IdentityVerificationViewModel by activityViewModels()
-    protected val captureDocumentViewModel: CaptureDocumentViewModel by activityViewModels()
+
+    private var captureDocumentViewModelFactory: ViewModelProvider.Factory =
+        CaptureDocumentViewModel.CaptureDocumentViewModelFactory(
+            { this }
+        )
+
+    protected val captureDocumentViewModel: CaptureDocumentViewModel by viewModels {
+        captureDocumentViewModelFactory
+    }
+
     protected var identityDocumentType: IdentityDocumentType? = null
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
