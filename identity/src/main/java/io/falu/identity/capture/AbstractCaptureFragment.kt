@@ -11,7 +11,7 @@ import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.IdentityDocumentType
-import io.falu.identity.api.models.UploadType
+import io.falu.identity.api.models.UploadMethod
 import io.falu.identity.api.models.verification.VerificationDocumentSide
 import io.falu.identity.api.models.verification.VerificationDocumentUpload
 import io.falu.identity.api.models.verification.VerificationUploadRequest
@@ -20,6 +20,8 @@ import io.falu.identity.documents.DocumentSelectionFragment
 import io.falu.identity.utils.navigateToApiResponseProblemFragment
 import io.falu.identity.utils.navigateToErrorFragment
 import io.falu.identity.utils.submitVerificationData
+import io.falu.identity.utils.updateVerification
+import software.tingle.api.patch.JsonPatchDocument
 
 internal abstract class AbstractCaptureFragment : CameraPermissionsFragment() {
     protected val identityViewModel: IdentityVerificationViewModel by activityViewModels()
@@ -47,7 +49,7 @@ internal abstract class AbstractCaptureFragment : CameraPermissionsFragment() {
     protected fun uploadDocument(
         uri: Uri,
         documentSide: DocumentSide,
-        type: UploadType = UploadType.MANUAL
+        type: UploadMethod = UploadMethod.MANUAL
     ) {
         if (documentSide == DocumentSide.FRONT) {
             showDocumentFrontUploading()
@@ -115,26 +117,31 @@ internal abstract class AbstractCaptureFragment : CameraPermissionsFragment() {
                     }
                     else -> {
                         val front = VerificationDocumentSide(
-                            type = disposition.front!!.type!!,
+                            method = disposition.front!!.method!!,
                             file = disposition.front!!.file.id,
                         )
                         val back = if (identityDocumentType == IdentityDocumentType.PASSPORT) {
                             null
                         } else {
                             VerificationDocumentSide(
-                                type = disposition.back!!.type!!,
+                                method = disposition.back!!.method!!,
                                 file = disposition.back!!.file.id,
                             )
                         }
 
-                        val uploadRequest = VerificationUploadRequest(
-                            document = VerificationDocumentUpload(
-                                type = identityDocumentType!!,
-                                front = front,
-                                back = back
-                            )
+                        val document = VerificationDocumentUpload(
+                            type = identityDocumentType!!,
+                            front = front,
+                            back = back
                         )
-                        submitVerificationData(identityViewModel, uploadRequest)
+
+                        val uploadRequest = VerificationUploadRequest(document = document)
+                        val patchDocument = JsonPatchDocument()
+                            .replace("/document", document)
+
+                        updateVerification(identityViewModel, patchDocument, onSuccess = {
+                            submitVerificationData(identityViewModel, uploadRequest)
+                        })
                     }
                 }
             },
@@ -145,7 +152,6 @@ internal abstract class AbstractCaptureFragment : CameraPermissionsFragment() {
     }
 
     internal companion object {
-        private val TAG: String = AbstractCaptureFragment::class.java.simpleName
         fun IdentityDocumentType.getIdentityDocumentName(context: Context) =
             context.getString(this.titleRes)
     }

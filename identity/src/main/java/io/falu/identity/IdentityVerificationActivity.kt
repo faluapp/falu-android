@@ -82,7 +82,6 @@ internal class IdentityVerificationActivity : AppCompatActivity() {
         // TODO: Navigate to error page
     }
 
-
     private fun finishWithVerificationResult(result: IdentityVerificationResult) {
         val intent = Intent()
         result.addToIntent(intent)

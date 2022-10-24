@@ -1,7 +1,7 @@
 package io.falu.identity.api.models.verification
 
 import io.falu.identity.api.models.IdentityDocumentType
-import io.falu.identity.api.models.UploadType
+import io.falu.identity.api.models.UploadMethod
 
 internal data class VerificationDocumentUpload(
     var type: IdentityDocumentType,
@@ -10,7 +10,7 @@ internal data class VerificationDocumentUpload(
 )
 
 internal data class VerificationDocumentSide(
-    var type: UploadType,
+    var method: UploadMethod,
     var score: Float? = null,
     var file: String,
 )
