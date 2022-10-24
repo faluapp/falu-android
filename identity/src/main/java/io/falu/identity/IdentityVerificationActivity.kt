@@ -1,11 +1,14 @@
 package io.falu.identity
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import io.falu.identity.api.IdentityVerificationApiClient
 import io.falu.identity.api.models.verification.Verification
+import io.falu.identity.api.models.verification.VerificationStatus
 import io.falu.identity.databinding.ActivityIdentityVerificationBinding
 import io.falu.identity.utils.FileUtils
 import software.tingle.api.HttpApiResponseProblem
@@ -41,20 +44,50 @@ internal class IdentityVerificationActivity : AppCompatActivity() {
 
         binding.ivIdentityVerification.setImageURI(contractArgs.workspaceLogo)
 
-        verificationViewModel.fetchVerification()
+        verificationViewModel.fetchVerification(
+            onFailure = {
+                finishWithVerificationResult(IdentityVerificationResult.Failed(it))
+            }
+        )
         verificationViewModel.fetchSupportedCountries()
         verificationViewModel.observeForVerificationResults(
             this,
             onSuccess = { onVerificationSuccessful(it) },
             onError = { onVerificationFailure(it) })
+
+        supportFragmentManager.setFragmentResultListener(
+            REQUEST_KEY_IDENTITY_VERIFICATION_RESULT,
+            this
+        ) { _, bundle ->
+            val result = IdentityVerificationResult.getFromBundle(bundle)
+            finishWithVerificationResult(result)
+        }
     }
 
     private fun onVerificationSuccessful(verification: Verification) {
         binding.tvWorkspaceName.text = verification.workspace.name
+
+        when (verification.status) {
+            VerificationStatus.INPUT_REQUIRED -> {
+            }
+            VerificationStatus.PROCESSING,
+            VerificationStatus.COMPLETED -> finishWithVerificationResult(
+                IdentityVerificationResult.Succeeded
+            )
+            VerificationStatus.CANCELLED -> finishWithVerificationResult(IdentityVerificationResult.Canceled)
+        }
     }
 
     private fun onVerificationFailure(error: HttpApiResponseProblem?) {
-        // TODO: Finish verification with failure result
+        // TODO: Navigate to error page
+    }
+
+
+    private fun finishWithVerificationResult(result: IdentityVerificationResult) {
+        val intent = Intent()
+        result.addToIntent(intent)
+        setResult(Activity.RESULT_OK, intent)
+        finish()
     }
 
     private fun setNavigationController() {
@@ -67,6 +100,9 @@ internal class IdentityVerificationActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
 
         //
+    }
 
+    internal companion object {
+        const val REQUEST_KEY_IDENTITY_VERIFICATION_RESULT = "key:identity-verification-result"
     }
 }
