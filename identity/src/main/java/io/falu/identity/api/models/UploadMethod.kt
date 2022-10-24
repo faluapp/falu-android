@@ -2,7 +2,7 @@ package io.falu.identity.api.models
 
 import com.google.gson.annotations.SerializedName
 
-internal enum class UploadType {
+internal enum class UploadMethod {
     @SerializedName("auto")
     AUTO,
 

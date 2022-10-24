@@ -8,7 +8,7 @@ import io.falu.identity.api.CountriesApiClient
 import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.IdentityVerificationApiClient
 import io.falu.identity.api.models.DocumentSide
-import io.falu.identity.api.models.UploadType
+import io.falu.identity.api.models.UploadMethod
 import io.falu.identity.api.models.country.SupportedCountry
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationUploadRequest
@@ -80,7 +80,7 @@ internal class IdentityVerificationViewModel(
     internal fun uploadVerificationDocument(
         uri: Uri,
         documentSide: DocumentSide,
-        type: UploadType,
+        type: UploadMethod,
         onError: (HttpApiResponseProblem?) -> Unit,
         onFailure: (Throwable) -> Unit
     ) {

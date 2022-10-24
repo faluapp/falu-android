@@ -8,7 +8,7 @@ import io.falu.identity.R
 import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.IdentityDocumentType
-import io.falu.identity.api.models.UploadType
+import io.falu.identity.api.models.UploadMethod
 import io.falu.identity.capture.AbstractCaptureFragment
 import io.falu.identity.databinding.FragmentUploadCaptureBinding
 
@@ -49,10 +49,10 @@ internal class UploadCaptureFragment : AbstractCaptureFragment() {
         captureDocumentViewModel.pickDocumentImages(
             fragment = this,
             onFrontImagePicked = {
-                uploadDocument(uri = it, DocumentSide.FRONT, UploadType.UPLOAD)
+                uploadDocument(uri = it, DocumentSide.FRONT, UploadMethod.UPLOAD)
             },
             onBackImagePicked = {
-                uploadDocument(uri = it, DocumentSide.BACK, UploadType.UPLOAD)
+                uploadDocument(uri = it, DocumentSide.BACK, UploadMethod.UPLOAD)
             }
         )
 

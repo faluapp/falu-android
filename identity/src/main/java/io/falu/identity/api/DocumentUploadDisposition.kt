@@ -3,7 +3,7 @@ package io.falu.identity.api
 import android.os.Parcelable
 import io.falu.core.models.FaluFile
 import io.falu.identity.api.models.DocumentSide
-import io.falu.identity.api.models.UploadType
+import io.falu.identity.api.models.UploadMethod
 import io.falu.identity.api.models.verification.VerificationUploadResult
 import kotlinx.parcelize.Parcelize
 import software.tingle.api.ResourceResponse
@@ -38,7 +38,7 @@ internal data class DocumentUploadDisposition(
         get() = front != null && back != null
 
     private fun getUploadResult(
-        type: UploadType?,
+        type: UploadMethod?,
         response: ResourceResponse<FaluFile>?
     ): VerificationUploadResult? {
         if (response != null && response.successful() && response.successful()) {
