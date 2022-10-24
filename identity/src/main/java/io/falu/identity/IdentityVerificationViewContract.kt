@@ -10,14 +10,14 @@ import androidx.core.os.bundleOf
 import kotlinx.parcelize.Parcelize
 
 internal class IdentityVerificationViewContract :
-    ActivityResultContract<ContractArgs, IdentityVerificationResult?>() {
+    ActivityResultContract<ContractArgs, IdentityVerificationResult>() {
     override fun createIntent(context: Context, input: ContractArgs): Intent {
         return Intent(context, IdentityVerificationActivity::class.java)
             .putExtras(input.contractArgsBundle)
     }
 
-    override fun parseResult(resultCode: Int, intent: Intent?): IdentityVerificationResult? {
-        return null
+    override fun parseResult(resultCode: Int, intent: Intent?): IdentityVerificationResult {
+        return IdentityVerificationResult.getFromIntent(intent)
     }
 }
 

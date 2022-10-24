@@ -13,24 +13,24 @@ internal class IdentityVerificationView private constructor(
     constructor(
         activity: ComponentActivity,
         logoUri: Uri,
-        resultCallback: IdentityVerificationResultCallback
+        callback: IdentityVerificationCallback
     ) : this(
         logoUri,
         activity.registerForActivityResult(
             IdentityVerificationViewContract(),
-            resultCallback::onVerificationResult
+            callback::onVerificationResult
         )
     )
 
     constructor(
         fragment: Fragment,
         logoUri: Uri,
-        resultCallback: IdentityVerificationResultCallback
+        callback: IdentityVerificationCallback
     ) : this(
         logoUri,
         fragment.registerForActivityResult(
             IdentityVerificationViewContract(),
-            resultCallback::onVerificationResult
+            callback::onVerificationResult
         )
     )
 

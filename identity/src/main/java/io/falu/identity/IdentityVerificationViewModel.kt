@@ -61,7 +61,7 @@ internal class IdentityVerificationViewModel(
     private val supportedCountries: LiveData<ResourceResponse<Array<SupportedCountry>>?>
         get() = _supportedCountries
 
-    internal fun fetchVerification() {
+    internal fun fetchVerification(onFailure: (Throwable) -> Unit) {
         launch(Dispatchers.IO) {
             runCatching {
                 apiClient.getVerification(contractArgs.verificationId)
@@ -71,6 +71,7 @@ internal class IdentityVerificationViewModel(
                 },
                 onFailure = {
                     Log.e(TAG, "Error getting verification", it)
+                    handleFailureResponse(it, onFailure = onFailure)
                 }
             )
         }
