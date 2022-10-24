@@ -49,18 +49,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scrollView">
 
-        <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:id="@+id/progress_circular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:indeterminate="true"
-            android:visibility="gone"
-            app:indicatorSize="@dimen/content_padding_normal" />
-
-        <com.google.android.material.button.MaterialButton
+        <io.falu.identity.ui.LoadingButton
             android:id="@+id/button_accept"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/welcome_button_accept" />
 

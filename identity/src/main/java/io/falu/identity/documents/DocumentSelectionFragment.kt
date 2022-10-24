@@ -47,7 +47,9 @@ class DocumentSelectionFragment : Fragment() {
             }
         )
 
+        binding.buttonContinue.text = getString(R.string.button_continue)
         binding.buttonContinue.setOnClickListener {
+            binding.buttonContinue.showProgress()
             val country = binding.buttonContinue.tag as SupportedCountry
             val document = JsonPatchDocument()
                 .replace("country", country.country.code)
