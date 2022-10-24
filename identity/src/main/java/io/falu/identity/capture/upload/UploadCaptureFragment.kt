@@ -64,7 +64,9 @@ internal class UploadCaptureFragment : AbstractCaptureFragment() {
             captureDocumentViewModel.pickImageBack()
         }
 
+        binding.buttonContinue.text = getString(R.string.button_continue)
         binding.buttonContinue.setOnClickListener {
+            binding.buttonContinue.showProgress()
             val disposition = binding.buttonContinue.tag as DocumentUploadDisposition
             attemptDocumentSubmission(disposition)
         }

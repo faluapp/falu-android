@@ -40,6 +40,7 @@ class WelcomeFragment : Fragment() {
             onSuccess = { onVerificationSuccessful(it) },
             onError = { onVerificationFailure(it) })
 
+        binding.buttonAccept.text = getString(R.string.welcome_button_accept)
         binding.buttonAccept.setOnClickListener {
             submitConsentData(true)
         }
@@ -63,12 +64,12 @@ class WelcomeFragment : Fragment() {
 
     private fun submitConsentData(accepted: Boolean) {
         val document = JsonPatchDocument().replace("consent", accepted)
-        binding.progressCircular.visibility = View.VISIBLE
+        binding.buttonAccept.showProgress()
         updateVerification(
             viewModel,
             document,
             onSuccess = {
-                binding.progressCircular.visibility = View.GONE
+                binding.buttonAccept.showProgress()
                 findNavController().navigate(R.id.action_fragment_welcome_to_fragment_document_selection)
             })
     }
