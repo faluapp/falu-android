@@ -1,5 +1,6 @@
 package io.falu.identity.welcome
 
+import android.content.Context
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
@@ -8,6 +9,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import io.falu.identity.IdentityVerificationResult
+import io.falu.identity.IdentityVerificationResultCallback
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.models.verification.Verification
@@ -18,11 +21,20 @@ import software.tingle.api.HttpApiResponseProblem
 import software.tingle.api.patch.JsonPatchDocument
 
 class WelcomeFragment : Fragment() {
-
     private var _binding: FragmentWelcomeBinding? = null
     private val binding get() = _binding!!
-
     private val viewModel: IdentityVerificationViewModel by activityViewModels()
+
+    private lateinit var callback: IdentityVerificationResultCallback
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try {
+            callback = context as IdentityVerificationResultCallback
+        } catch (e: ClassCastException) {
+            throw ClassCastException("$context must implement ${IdentityVerificationResultCallback::class.java}")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,7 +58,7 @@ class WelcomeFragment : Fragment() {
         }
 
         binding.buttonDecline.setOnClickListener {
-            submitConsentData(false)
+            callback.onFinishWithResult(IdentityVerificationResult.Canceled)
         }
     }
 

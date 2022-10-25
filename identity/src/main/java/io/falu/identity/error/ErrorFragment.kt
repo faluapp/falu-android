@@ -2,8 +2,6 @@ package io.falu.identity.error
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.setFragmentResult
-import io.falu.identity.IdentityVerificationActivity
 import io.falu.identity.IdentityVerificationResult
 import io.falu.identity.R
 import io.falu.identity.utils.KEY_ERROR_CAUSE
@@ -19,10 +17,7 @@ internal class ErrorFragment : AbstractErrorFragment() {
         binding.tvErrorMessage.text = throwable.message
 
         binding.buttonErrorAction.setOnClickListener {
-            setFragmentResult(
-                IdentityVerificationActivity.REQUEST_KEY_IDENTITY_VERIFICATION_RESULT,
-                IdentityVerificationResult.Failed(throwable).addToBundle()
-            )
+            callback.onFinishWithResult(IdentityVerificationResult.Failed(throwable))
         }
     }
 }

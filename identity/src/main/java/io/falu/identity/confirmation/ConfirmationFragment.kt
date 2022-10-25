@@ -1,18 +1,29 @@
 package io.falu.identity.confirmation
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
-import io.falu.identity.IdentityVerificationActivity
 import io.falu.identity.IdentityVerificationResult
+import io.falu.identity.IdentityVerificationResultCallback
 import io.falu.identity.databinding.FragmentConfirmationBinding
 
 internal class ConfirmationFragment : Fragment() {
     private var _binding: FragmentConfirmationBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var callback: IdentityVerificationResultCallback
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try {
+            callback = context as IdentityVerificationResultCallback
+        } catch (e: ClassCastException) {
+            throw ClassCastException("$context must implement ${IdentityVerificationResultCallback::class.java}")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,10 +38,7 @@ internal class ConfirmationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonFinish.setOnClickListener {
-            setFragmentResult(
-                IdentityVerificationActivity.REQUEST_KEY_IDENTITY_VERIFICATION_RESULT,
-                IdentityVerificationResult.Succeeded.addToBundle()
-            )
+            callback.onFinishWithResult(IdentityVerificationResult.Succeeded)
         }
     }
 
