@@ -18,7 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/content_padding_normal">
+            android:paddingHorizontal="@dimen/content_padding_normal"
+            android:paddingVertical="@dimen/element_spacing_normal">
 
             <TextView
                 android:id="@+id/tv_welcome_subtitle"

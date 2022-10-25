@@ -65,10 +65,16 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 
                 <View
+                    android:id="@+id/view_live"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="@dimen/element_spacing_normal"
                     android:background="?android:attr/dividerVertical" />
+
+                <include
+                    android:id="@+id/view_sandbox"
+                    layout="@layout/divider_live_mode"
+                    android:visibility="gone" />
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/fragment_container"
