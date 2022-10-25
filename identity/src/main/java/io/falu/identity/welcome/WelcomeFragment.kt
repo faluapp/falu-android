@@ -54,7 +54,7 @@ class WelcomeFragment : Fragment() {
 
         binding.buttonAccept.text = getString(R.string.welcome_button_accept)
         binding.buttonAccept.setOnClickListener {
-            submitConsentData(true)
+            submitConsentData()
         }
 
         binding.buttonDecline.setOnClickListener {
@@ -62,7 +62,13 @@ class WelcomeFragment : Fragment() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun onVerificationSuccessful(verification: Verification) {
+        hideProgressView()
         binding.tvWelcomeSubtitle.text =
             getString(
                 R.string.welcome_subtitle,
@@ -74,8 +80,8 @@ class WelcomeFragment : Fragment() {
         navigateToApiResponseProblemFragment(error)
     }
 
-    private fun submitConsentData(accepted: Boolean) {
-        val document = JsonPatchDocument().replace("consent", accepted)
+    private fun submitConsentData() {
+        val document = JsonPatchDocument().replace("consent", true)
         binding.buttonAccept.showProgress()
         updateVerification(
             viewModel,
@@ -86,8 +92,9 @@ class WelcomeFragment : Fragment() {
             })
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun hideProgressView() {
+        binding.progressView.visibility = View.GONE
+        binding.scrollView.visibility = View.VISIBLE
+        binding.viewButtons.visibility = View.VISIBLE
     }
 }
