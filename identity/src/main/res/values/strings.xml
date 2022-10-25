@@ -5,6 +5,7 @@
     <string name="button_select">Select</string>
     <string name="button_take_photo">Take Photo</string>
     <string name="identity_verification_title_identity_verification">Identity verification</string>
+    <string name="identity_verification_text_mode_sandbox">Sandbox/Test</string>
 
     <!--Permission Explanation-->
     <string name="permission_explanation_title">Permission Required!</string>

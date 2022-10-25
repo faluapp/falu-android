@@ -3,6 +3,7 @@ package io.falu.identity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
@@ -59,6 +60,9 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
 
     private fun onVerificationSuccessful(verification: Verification) {
         binding.tvWorkspaceName.text = verification.workspace.name
+        binding.viewLive.visibility = if (verification.live) View.VISIBLE else View.GONE
+        binding.viewSandbox.viewSandbox.visibility =
+            if (verification.live) View.GONE else View.VISIBLE
 
         when (verification.status) {
             VerificationStatus.INPUT_REQUIRED -> {
