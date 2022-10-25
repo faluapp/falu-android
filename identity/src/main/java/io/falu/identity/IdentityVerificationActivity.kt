@@ -13,7 +13,8 @@ import io.falu.identity.databinding.ActivityIdentityVerificationBinding
 import io.falu.identity.utils.FileUtils
 import software.tingle.api.HttpApiResponseProblem
 
-internal class IdentityVerificationActivity : AppCompatActivity() {
+internal class IdentityVerificationActivity : AppCompatActivity(),
+    IdentityVerificationResultCallback {
 
     private val verificationViewModel: IdentityVerificationViewModel by viewModels {
         IdentityVerificationViewModel.factoryProvider(this, apiClient, fileUtils, contractArgs)
@@ -54,14 +55,6 @@ internal class IdentityVerificationActivity : AppCompatActivity() {
             this,
             onSuccess = { onVerificationSuccessful(it) },
             onError = { onVerificationFailure(it) })
-
-        supportFragmentManager.setFragmentResultListener(
-            REQUEST_KEY_IDENTITY_VERIFICATION_RESULT,
-            this
-        ) { _, bundle ->
-            val result = IdentityVerificationResult.getFromBundle(bundle)
-            finishWithVerificationResult(result)
-        }
     }
 
     private fun onVerificationSuccessful(verification: Verification) {
@@ -71,10 +64,10 @@ internal class IdentityVerificationActivity : AppCompatActivity() {
             VerificationStatus.INPUT_REQUIRED -> {
             }
             VerificationStatus.PROCESSING,
-            VerificationStatus.COMPLETED -> finishWithVerificationResult(
+            VerificationStatus.COMPLETED -> onFinishWithResult(
                 IdentityVerificationResult.Succeeded
             )
-            VerificationStatus.CANCELLED -> finishWithVerificationResult(IdentityVerificationResult.Canceled)
+            VerificationStatus.CANCELLED -> onFinishWithResult(IdentityVerificationResult.Canceled)
         }
     }
 
@@ -83,6 +76,13 @@ internal class IdentityVerificationActivity : AppCompatActivity() {
     }
 
     private fun finishWithVerificationResult(result: IdentityVerificationResult) {
+        val intent = Intent()
+        result.addToIntent(intent)
+        setResult(Activity.RESULT_OK, intent)
+        finish()
+    }
+
+    override fun onFinishWithResult(result: IdentityVerificationResult) {
         val intent = Intent()
         result.addToIntent(intent)
         setResult(Activity.RESULT_OK, intent)
@@ -99,9 +99,5 @@ internal class IdentityVerificationActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
 
         //
-    }
-
-    internal companion object {
-        const val REQUEST_KEY_IDENTITY_VERIFICATION_RESULT = "key:identity-verification-result"
     }
 }
