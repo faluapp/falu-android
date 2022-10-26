@@ -45,12 +45,9 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
         setNavigationController()
 
         binding.ivIdentityVerification.setImageURI(contractArgs.workspaceLogo)
-
-        verificationViewModel.fetchVerification(
-            onFailure = {
-                finishWithVerificationResult(IdentityVerificationResult.Failed(it))
-            }
-        )
+        verificationViewModel.fetchVerification(onFailure = {
+            finishWithVerificationResult(IdentityVerificationResult.Failed(it))
+        })
         verificationViewModel.fetchSupportedCountries()
         verificationViewModel.observeForVerificationResults(
             this,
@@ -61,6 +58,7 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
     private fun onVerificationSuccessful(verification: Verification) {
         binding.tvWorkspaceName.text = verification.workspace.name
         binding.viewLive.visibility = if (verification.live) View.VISIBLE else View.GONE
+        binding.tvSupport.visibility = if (verification.support != null) View.VISIBLE else View.GONE
         binding.viewSandbox.viewSandbox.visibility =
             if (verification.live) View.GONE else View.VISIBLE
 
@@ -103,5 +101,8 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
         val navController = navHostFragment.navController
 
         //
+        binding.tvSupport.setOnClickListener {
+            navController.navigate(R.id.action_global_fragment_support)
+        }
     }
 }
