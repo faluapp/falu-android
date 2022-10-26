@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RestrictTo
 import io.falu.core.AbstractAppDetails
+import io.falu.identity.BuildConfig
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 internal class AppDetailsInterceptor internal constructor(context: Context) :
@@ -18,7 +19,7 @@ internal class AppDetailsInterceptor internal constructor(context: Context) :
 
             val installerName = getInstallerPackageName(context.packageName) ?: "StandAloneInstall"
 
-            return "falu-identity/${1.0}(${100}); $installerName; ($manufacturer; $model; SDK $version; Android $versionRelease)"
+            return "falu-identity/${BuildConfig.FALU_VERSION_NAME}(${BuildConfig.FALU_VERSION_CODE}); $installerName; ($manufacturer; $model; SDK $version; Android $versionRelease)"
         }
     }
 }
