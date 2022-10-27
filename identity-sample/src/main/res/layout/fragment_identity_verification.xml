@@ -4,6 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/sw_verification_option"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:checked="true"
+        android:paddingHorizontal="16dp"
+        android:text="@string/identity_verification_option"
+        app:layout_constraintBottom_toTopOf="@id/card_document_options"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_document_options"
         android:layout_width="match_parent"
@@ -13,8 +24,7 @@
         app:cardElevation="1dp"
         app:layout_constraintBottom_toTopOf="@id/view_verification_options"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
