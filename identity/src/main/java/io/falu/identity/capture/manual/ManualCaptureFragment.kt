@@ -46,6 +46,7 @@ internal class ManualCaptureFragment : AbstractCaptureFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.cardDocumentBack.visibility =
             if (isPassport) View.GONE else View.VISIBLE
+        binding.buttonContinue.isEnabled = false
 
         binding.tvUploadTitle.text =
             getString(

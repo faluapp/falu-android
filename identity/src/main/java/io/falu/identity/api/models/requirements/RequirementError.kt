@@ -10,8 +10,8 @@ internal data class RequirementError(
 ) {
     internal companion object {
         private val document_upload_ids = arrayOf(
-            R.id.action_fragment_document_capture_methods_to_fragment_upload_capture,
-            R.id.action_fragment_document_capture_methods_to_fragment_upload_capture,
+            R.id.fragment_manual_capture,
+            R.id.fragment_upload_capture,
         )
 
         /**
@@ -20,11 +20,11 @@ internal data class RequirementError(
         fun RequirementError.canNavigateBackTo(@IdRes source: Int) =
             when (requirement) {
                 RequirementType.CONSENT -> {
-                    source == R.id.action_fragment_welcome_to_fragment_document_selection
+                    source == R.id.fragment_welcome
                 }
                 RequirementType.COUNTRY,
                 RequirementType.DOCUMENT_TYPE -> {
-                    source == R.id.action_fragment_document_selection_to_fragment_document_capture_methods
+                    source == R.id.fragment_document_selection
                 }
                 RequirementType.DOCUMENT_FRONT,
                 RequirementType.DOCUMENT_BACK -> {
