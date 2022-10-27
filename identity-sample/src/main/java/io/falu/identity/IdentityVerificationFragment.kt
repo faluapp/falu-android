@@ -92,6 +92,16 @@ class IdentityVerificationFragment : Fragment(), IdentityVerificationCallback {
     }
 
     override fun onVerificationResult(result: IdentityVerificationResult) {
-
+        when (result) {
+            IdentityVerificationResult.Succeeded -> {
+                binding.tvResult.text = "Processing"
+            }
+            IdentityVerificationResult.Canceled -> {
+                binding.tvResult.text = "Canceled"
+            }
+            is IdentityVerificationResult.Failed -> {
+                binding.tvResult.text = "Failed : ${result.throwable}"
+            }
+        }
     }
 }

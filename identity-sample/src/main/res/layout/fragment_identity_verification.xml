@@ -121,6 +121,13 @@
         app:layout_constraintTop_toBottomOf="@id/view_verification_options"
         app:layout_constraintVertical_bias="0.94">
 
+        <TextView
+            android:id="@+id/tv_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/view_progress"
             android:layout_width="wrap_content"
