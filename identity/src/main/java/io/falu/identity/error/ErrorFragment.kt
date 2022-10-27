@@ -41,7 +41,7 @@ internal class ErrorFragment : AbstractErrorFragment() {
                 if (destination == UNKNOWN_DESTINATION) {
                     findNavController().navigate(DESTINATION_WELCOME_FRAGMENT)
                 } else {
-                    findNavController().navigate(destination)
+                    findNavController().navigateUp()
                 }
             }
         }

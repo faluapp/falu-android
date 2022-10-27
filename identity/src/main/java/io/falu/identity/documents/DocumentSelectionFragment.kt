@@ -48,6 +48,7 @@ class DocumentSelectionFragment : Fragment() {
         )
 
         binding.buttonContinue.text = getString(R.string.button_continue)
+        binding.buttonContinue.isEnabled = false
         binding.buttonContinue.setOnClickListener {
             binding.buttonContinue.showProgress()
             val country = binding.buttonContinue.tag as SupportedCountry

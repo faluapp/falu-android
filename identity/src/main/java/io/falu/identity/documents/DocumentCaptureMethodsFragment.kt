@@ -44,15 +44,15 @@ internal class DocumentCaptureMethodsFragment : CameraPermissionsFragment() {
             )
 
         binding.viewCaptureMethodScan.setOnClickListener {
-            checkCameraPermissions(identityDocumentType.toUploadDestination())
+            // checkCameraPermissions(identityDocumentType.toUploadCaptureDestination())
         }
 
         binding.viewCaptureMethodPhoto.setOnClickListener {
-            checkCameraPermissions(identityDocumentType.toPhotoUploadDestination())
+            checkCameraPermissions(identityDocumentType.toManualCaptureDestination())
         }
 
         binding.viewCaptureMethodUpload.setOnClickListener {
-            navigateToDestination(identityDocumentType.toUploadDestination())
+            navigateToDestination(identityDocumentType.toUploadCaptureDestination())
         }
 
         viewModel.observeForVerificationResults(
@@ -106,7 +106,7 @@ internal class DocumentCaptureMethodsFragment : CameraPermissionsFragment() {
 
     internal companion object {
         @IdRes
-        private fun IdentityDocumentType.toUploadDestination() =
+        private fun IdentityDocumentType.toUploadCaptureDestination() =
             when (this) {
                 IdentityDocumentType.IDENTITY_CARD -> R.id.action_fragment_document_capture_methods_to_fragment_upload_capture
                 IdentityDocumentType.PASSPORT -> R.id.action_fragment_document_capture_methods_to_fragment_upload_capture
@@ -114,7 +114,7 @@ internal class DocumentCaptureMethodsFragment : CameraPermissionsFragment() {
             }
 
         @IdRes
-        private fun IdentityDocumentType.toPhotoUploadDestination() =
+        private fun IdentityDocumentType.toManualCaptureDestination() =
             when (this) {
                 IdentityDocumentType.IDENTITY_CARD -> R.id.action_fragment_document_capture_methods_to_fragment_manual_capture
                 IdentityDocumentType.PASSPORT -> R.id.action_fragment_document_capture_methods_to_fragment_manual_capture
