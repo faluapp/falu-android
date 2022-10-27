@@ -56,13 +56,4 @@ internal class FileUtils internal constructor(private val context: Context) {
 
     private val imageFileName: String
         get() = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-
-    @CheckResult
-    private fun Bitmap.toJpgByteArray(quality: Int = 80): ByteArray =
-        ByteArrayOutputStream().use {
-            this.compress(Bitmap.CompressFormat.JPEG, quality, it)
-            it.flush()
-            it.toByteArray()
-        }
-
 }

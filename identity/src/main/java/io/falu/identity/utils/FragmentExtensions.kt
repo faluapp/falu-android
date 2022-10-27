@@ -1,21 +1,38 @@
 package io.falu.identity.utils
 
-import androidx.core.os.bundleOf
+import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.models.verification.VerificationUploadRequest
+import io.falu.identity.error.ErrorFragment.Companion.navigateWithApiExceptions
+import io.falu.identity.error.ErrorFragment.Companion.navigateWithFailure
+import io.falu.identity.error.ErrorFragment.Companion.navigateWithRequirementErrors
 import software.tingle.api.HttpApiResponseProblem
 import software.tingle.api.patch.JsonPatchDocument
 
 internal fun Fragment.updateVerification(
     viewModel: IdentityVerificationViewModel,
     document: JsonPatchDocument,
+    @IdRes source: Int,
     onSuccess: (() -> Unit)
 ) {
     viewModel.updateVerification(document,
-        onSuccess = { onSuccess() },
+        onSuccess = {
+            when {
+                it.hasRequirementErrors -> {
+                    findNavController().navigateWithRequirementErrors(
+                        requireContext(),
+                        source,
+                        it.requirements.errors.first()
+                    )
+                }
+                else -> {
+                    onSuccess()
+                }
+            }
+        },
         onError = {
             navigateToApiResponseProblemFragment(it)
         },
@@ -26,6 +43,7 @@ internal fun Fragment.updateVerification(
 
 internal fun Fragment.submitVerificationData(
     viewModel: IdentityVerificationViewModel,
+    @IdRes source: Int,
     verificationUploadRequest: VerificationUploadRequest
 ) {
     viewModel.submitVerificationData(
@@ -33,7 +51,11 @@ internal fun Fragment.submitVerificationData(
         onSuccess = {
             when {
                 it.hasRequirementErrors -> {
-                    // TODO: 2022-10-18
+                    findNavController().navigateWithRequirementErrors(
+                        requireContext(),
+                        source,
+                        it.requirements.errors.first()
+                    )
                 }
                 it.submitted -> {
                     findNavController()
@@ -54,19 +76,9 @@ internal fun Fragment.submitVerificationData(
  * The destination is [ErrorFragment]
  */
 internal fun Fragment.navigateToErrorFragment(it: Throwable) {
-    val bundle = bundleOf(KEY_ERROR_CAUSE to it)
-    findNavController().navigate(R.id.action_global_fragment_error, bundle)
+    findNavController().navigateWithFailure(requireContext(), it)
 }
 
-/**
- * The destination is [ApiResponseProblemFragment]
- */
 internal fun Fragment.navigateToApiResponseProblemFragment(it: HttpApiResponseProblem?) {
-    val description =
-        it?.getErrorDescription(requireContext()) ?: getString(R.string.error_description_server)
-    val bundle = bundleOf(KEY_ERROR_DESCRIPTION to description)
-    findNavController().navigate(R.id.action_global_fragment_api_response_problem, bundle)
+    findNavController().navigateWithApiExceptions(requireContext(), it)
 }
-
-internal const val KEY_ERROR_CAUSE = ":cause"
-internal const val KEY_ERROR_DESCRIPTION = ":error-description"

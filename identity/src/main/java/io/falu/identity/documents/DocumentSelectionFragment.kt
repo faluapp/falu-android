@@ -54,13 +54,17 @@ class DocumentSelectionFragment : Fragment() {
             val document = JsonPatchDocument()
                 .replace("country", country.country.code)
 
-            updateVerification(viewModel, document, onSuccess = {
-                val bundle = bundleOf(KEY_IDENTITY_DOCUMENT_TYPE to identityDocumentType)
-                findNavController().navigate(
-                    R.id.action_fragment_document_selection_to_fragment_document_capture_methods,
-                    bundle
-                )
-            })
+            updateVerification(
+                viewModel,
+                document,
+                source = R.id.action_fragment_welcome_to_fragment_document_selection,
+                onSuccess = {
+                    val bundle = bundleOf(KEY_IDENTITY_DOCUMENT_TYPE to identityDocumentType)
+                    findNavController().navigate(
+                        R.id.action_fragment_document_selection_to_fragment_document_capture_methods,
+                        bundle
+                    )
+                })
         }
 
         binding.groupDocumentTypes.setOnCheckedStateChangeListener { group, checkIds ->

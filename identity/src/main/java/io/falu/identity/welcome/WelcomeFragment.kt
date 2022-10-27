@@ -86,6 +86,7 @@ class WelcomeFragment : Fragment() {
         updateVerification(
             viewModel,
             document,
+            source = R.id.fragment_welcome,
             onSuccess = {
                 binding.buttonAccept.showProgress()
                 findNavController().navigate(R.id.action_fragment_welcome_to_fragment_document_selection)

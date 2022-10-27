@@ -51,6 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/content_padding_normal"
         android:orientation="vertical"
+        android:paddingTop="@dimen/element_spacing_normal"
         android:paddingBottom="@dimen/element_spacing_normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

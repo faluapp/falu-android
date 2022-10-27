@@ -75,7 +75,10 @@ internal class ManualCaptureFragment : AbstractCaptureFragment() {
         binding.buttonContinue.setOnClickListener {
             binding.buttonContinue.showProgress()
             val disposition = binding.buttonContinue.tag as DocumentUploadDisposition
-            attemptDocumentSubmission(disposition)
+            attemptDocumentSubmission(
+                source = R.id.action_fragment_document_capture_methods_to_fragment_manual_capture,
+                disposition
+            )
         }
     }
 
