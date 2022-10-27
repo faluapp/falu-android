@@ -6,11 +6,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import io.falu.identity.databinding.FragmentIdentityVerificationBinding
 
-class IdentityVerificationFragment : Fragment(), IdentityVerificationResultCallback {
+class IdentityVerificationFragment : Fragment(), IdentityVerificationCallback {
     private var _binding: FragmentIdentityVerificationBinding? = null
     private val binding get() = _binding!!
 
@@ -43,14 +44,13 @@ class IdentityVerificationFragment : Fragment(), IdentityVerificationResultCallb
             callback = this
         )
         binding.buttonStartVerification.setOnClickListener {
-             verificationView.open("idv_2g5tW2u4MEj8DFSnZELOZ7jrQqL", "ftkt_ALSzbWhtpdROpyGZu9g2JHLnPsaaW9O3QG")
-//            startVerification(
-//                allowDrivingLicense = binding.swAllowedTypeDl.isChecked,
-//                allowPassport = binding.swAllowedTypePassport.isChecked,
-//                allowIdentityCard = binding.swAllowedTypeId.isChecked,
-//                allowUploads = binding.swAllowUploads.isChecked,
-//                allowDocumentSelfie = binding.swAllowDocumentSelfie.isChecked,
-//            )
+            startVerification(
+                allowDrivingLicense = binding.swAllowedTypeDl.isChecked,
+                allowPassport = binding.swAllowedTypePassport.isChecked,
+                allowIdentityCard = binding.swAllowedTypeId.isChecked,
+                allowUploads = binding.swAllowUploads.isChecked,
+                allowDocumentSelfie = binding.swAllowDocumentSelfie.isChecked,
+            )
         }
     }
 
@@ -78,18 +78,20 @@ class IdentityVerificationFragment : Fragment(), IdentityVerificationResultCallb
 
             if (result.successful() && result.resource != null) {
                 val verification = result.resource!!
-                verificationView.open(verification.id, verification.temporaryKey)
-
-//                CustomTabsIntent.Builder().build()
-//                    .launchUrl(
-//                        requireContext(),
-//                        Uri.parse(verification.url)
-//                    )
+                if (binding.swVerificationOption.isChecked) {
+                    verificationView.open(verification.id, verification.temporaryKey)
+                } else {
+                    CustomTabsIntent.Builder().build()
+                        .launchUrl(
+                            requireContext(),
+                            Uri.parse(verification.url)
+                        )
+                }
             }
         }
     }
 
-    override fun onVerificationResult(result: IdentityVerificationResult?) {
+    override fun onVerificationResult(result: IdentityVerificationResult) {
 
     }
 }

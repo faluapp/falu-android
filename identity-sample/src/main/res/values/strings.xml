@@ -9,4 +9,5 @@
     <string name="identity_verification_allowed_type_driver_license">Driver License</string>
     <string name="identity_verification_allowed_type_passport">Passport</string>
     <string name="identity_verification_allowed_type_identity_card">Identity Card</string>
+    <string name="identity_verification_option">Use Native SDK</string>
 </resources>
