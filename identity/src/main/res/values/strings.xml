@@ -4,6 +4,8 @@
     <string name="button_finish">Complete</string>
     <string name="button_select">Select</string>
     <string name="button_take_photo">Take Photo</string>
+    <string name="button_rectify">Resolve Error</string>
+    <string name="button_cancel">Cancel</string>
     <string name="identity_verification_title_identity_verification">Identity verification</string>
     <string name="identity_verification_text_mode_sandbox">Sandbox/Test</string>
     <string name="identity_verification_text_help_and_support">Help And Support</string>
@@ -16,7 +18,7 @@
     <string name="error_title">Something went wrong!</string>
     <string name="error_description_server">The connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. Retry later.</string>
     <string name="error_title_verification_data_incomplete">Missing Verification Data!</string>
-    <string name="error_title_http_error">Something went wrong!</string>
+    <string name="error_title_unexpected_error">An unexpected error occurred. Please try again later.</string>
     <string name="error_description_http_error">The following unexpected errors occurred:\n\n<b>%1$s</b>.\n\nPlease try again later!</string>
 
     <!--Welcome-->

@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.IdRes
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -27,9 +28,7 @@ internal abstract class AbstractCaptureFragment : CameraPermissionsFragment() {
     protected val identityViewModel: IdentityVerificationViewModel by activityViewModels()
 
     private var captureDocumentViewModelFactory: ViewModelProvider.Factory =
-        CaptureDocumentViewModel.CaptureDocumentViewModelFactory(
-            { this }
-        )
+        CaptureDocumentViewModel.CaptureDocumentViewModelFactory { this }
 
     protected val captureDocumentViewModel: CaptureDocumentViewModel by viewModels {
         captureDocumentViewModelFactory
@@ -104,7 +103,10 @@ internal abstract class AbstractCaptureFragment : CameraPermissionsFragment() {
         }
     }
 
-    protected fun attemptDocumentSubmission(disposition: DocumentUploadDisposition) {
+    protected fun attemptDocumentSubmission(
+        @IdRes source: Int,
+        disposition: DocumentUploadDisposition
+    ) {
         identityViewModel.observeForVerificationResults(
             viewLifecycleOwner,
             onSuccess = { verification ->
@@ -139,8 +141,8 @@ internal abstract class AbstractCaptureFragment : CameraPermissionsFragment() {
                         val patchDocument = JsonPatchDocument()
                             .replace("/document", document)
 
-                        updateVerification(identityViewModel, patchDocument, onSuccess = {
-                            submitVerificationData(identityViewModel, uploadRequest)
+                        updateVerification(identityViewModel, patchDocument, source, onSuccess = {
+                            submitVerificationData(identityViewModel, source, uploadRequest)
                         })
                     }
                 }
