@@ -8,7 +8,9 @@ import androidx.annotation.IdRes
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import io.falu.identity.IdentityVerificationViewModel
+import io.falu.identity.R
 import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.IdentityDocumentType
@@ -112,7 +114,7 @@ internal abstract class AbstractCaptureFragment : CameraPermissionsFragment() {
             onSuccess = { verification ->
                 when {
                     verification.selfieRequired -> {
-
+                        findNavController().navigate(R.id.action_global_fragment_selfie)
                     }
                     verification.videoRequired -> {
 

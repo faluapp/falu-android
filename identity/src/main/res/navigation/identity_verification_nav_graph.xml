@@ -13,9 +13,13 @@
         android:id="@+id/action_global_fragment_error"
         app:destination="@id/fragment_error" />
 
-  <action
+    <action
         android:id="@+id/action_global_fragment_support"
         app:destination="@id/fragment_support" />
+
+    <action
+        android:id="@+id/action_global_fragment_selfie"
+        app:destination="@id/fragment_selfie" />
 
     <fragment
         android:id="@+id/fragment_welcome"
@@ -72,4 +76,9 @@
         android:name="io.falu.identity.support.SupportFragment"
         android:label="SupportFragment"
         tool:layout="@layout/fragment_support" />
+    <fragment
+        android:id="@+id/fragment_selfie"
+        android:name="io.falu.identity.selfie.SelfieFragment"
+        tool:layout="@layout/fragment_selfie"
+        android:label="SelfieFragment" />
 </navigation>
