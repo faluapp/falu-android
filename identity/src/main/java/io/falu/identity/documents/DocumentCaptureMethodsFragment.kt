@@ -82,7 +82,7 @@ internal class DocumentCaptureMethodsFragment : CameraPermissionsFragment() {
      *
      */
     private fun onCameraPermissionDenied() {
-        // navigate to camera permissions denied view
+        //TODO: navigate to camera permissions denied view
     }
 
     /**
