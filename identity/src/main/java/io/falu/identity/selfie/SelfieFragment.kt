@@ -1,5 +1,6 @@
 package io.falu.identity.selfie
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +9,9 @@ import androidx.camera.core.CameraSelector
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import io.falu.identity.IdentityVerificationViewModel
+import io.falu.identity.R
 import io.falu.identity.databinding.FragmentSelfieBinding
+import io.falu.identity.utils.navigateToApiResponseProblemFragment
 import io.falu.identity.utils.navigateToErrorFragment
 
 class SelfieFragment : Fragment() {
@@ -31,11 +34,53 @@ class SelfieFragment : Fragment() {
         binding.viewCamera.lifecycleOwner = viewLifecycleOwner
         binding.viewCamera.lensFacing = CameraSelector.LENS_FACING_FRONT
 
+        binding.buttonContinue.text = getString(R.string.button_continue)
+        binding.buttonContinue.isEnabled = false
+
         binding.buttonTakeSelfie.setOnClickListener {
             binding.viewCamera.takePhoto(
-                onCaptured = {},
+                onCaptured = { bindToUI(it) },
                 onCaptureError = { navigateToErrorFragment(it) }
             )
+        }
+
+        binding.buttonReset.setOnClickListener {
+            binding.viewSelfieCamera.visibility = View.VISIBLE
+            binding.viewSelfieResult.visibility = View.GONE
+        }
+    }
+
+    private fun bindToUI(uri: Uri?) {
+        val selfieUri = requireNotNull(uri) {
+            "Selfie uri is null"
+        }
+        binding.viewSelfieCamera.visibility = View.GONE
+        binding.viewSelfieResult.visibility = View.VISIBLE
+        binding.ivSelfie.setImageURI(selfieUri)
+
+        binding.buttonContinue.setOnClickListener {
+            uploadSelfie(selfieUri)
+        }
+    }
+
+    private fun uploadSelfie(uri: Uri) {
+        viewModel.uploadSelfieImage(
+            uri,
+            onFailure = { navigateToErrorFragment(it) },
+            onError = { navigateToApiResponseProblemFragment(it) },
+        )
+    }
+
+    private fun submitSelfieAndUploadedDocuments() {
+        viewModel.selfieUploadDisposition.observe(viewLifecycleOwner) {
+            when {
+                it.isUploaded -> {
+
+                }
+                else -> {
+                    //TODO: Reset views
+                }
+            }
         }
     }
 

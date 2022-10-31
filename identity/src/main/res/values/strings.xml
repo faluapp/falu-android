@@ -4,6 +4,7 @@
     <string name="button_finish">Complete</string>
     <string name="button_select">Select</string>
     <string name="button_take_photo">Take Photo</string>
+    <string name="button_take_again">Take Again</string>
     <string name="button_rectify">Resolve Error</string>
     <string name="button_cancel">Cancel</string>
     <string name="identity_verification_title_identity_verification">Identity verification</string>
@@ -54,4 +55,7 @@
     <string name="support_title_help_needed">Do you need help?</string>
     <string name="support_text_call">Call Us</string>
     <string name="support_text_email">Email Us</string>
+
+    <!--Selfie-->
+    <string name="selfie_text_take_selfie">Take a selfie</string>
 </resources>
