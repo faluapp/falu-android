@@ -1,12 +1,9 @@
 package io.falu.identity.utils
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import androidx.annotation.CheckResult
 import androidx.core.content.FileProvider
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -41,7 +38,7 @@ internal class FileUtils internal constructor(private val context: Context) {
             file
         )
 
-    private val imageFile: File
+    internal val imageFile: File
         get() {
             return File.createTempFile(
                 "JPEG_${imageFileName}_",
