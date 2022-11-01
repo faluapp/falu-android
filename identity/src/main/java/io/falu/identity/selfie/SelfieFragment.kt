@@ -72,16 +72,7 @@ class SelfieFragment : Fragment() {
     }
 
     private fun submitSelfieAndUploadedDocuments() {
-        viewModel.selfieUploadDisposition.observe(viewLifecycleOwner) {
-            when {
-                it.isUploaded -> {
 
-                }
-                else -> {
-                    //TODO: Reset views
-                }
-            }
-        }
     }
 
     override fun onDestroyView() {
