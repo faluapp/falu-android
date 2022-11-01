@@ -69,9 +69,9 @@ internal class UploadCaptureFragment : AbstractCaptureFragment() {
         binding.buttonContinue.setOnClickListener {
             binding.buttonContinue.showProgress()
             val disposition = binding.buttonContinue.tag as DocumentUploadDisposition
-            attemptDocumentSubmission(
+            updateVerificationAndAttemptDocumentSubmission(
                 source = R.id.action_fragment_document_capture_methods_to_fragment_upload_capture,
-                disposition
+                disposition.generateVerificationUploadRequest(identityDocumentType!!)
             )
         }
     }

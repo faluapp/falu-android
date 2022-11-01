@@ -15,8 +15,6 @@ import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.UploadMethod
-import io.falu.identity.api.models.verification.VerificationDocumentSide
-import io.falu.identity.api.models.verification.VerificationDocumentUpload
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.camera.CameraPermissionsFragment
 import io.falu.identity.documents.DocumentSelectionFragment
@@ -105,47 +103,34 @@ internal abstract class AbstractCaptureFragment : CameraPermissionsFragment() {
         }
     }
 
-    protected fun attemptDocumentSubmission(
+    protected fun updateVerificationAndAttemptDocumentSubmission(
         @IdRes source: Int,
-        disposition: DocumentUploadDisposition
+        verificationRequest: VerificationUploadRequest
+    ) {
+        val patchDocument = JsonPatchDocument()
+            .replace("/document", verificationRequest.document)
+
+        updateVerification(identityViewModel, patchDocument, source, onSuccess = {
+            attemptDocumentSubmission(source, verificationRequest)
+        })
+    }
+
+    private fun attemptDocumentSubmission(
+        @IdRes source: Int,
+        verificationRequest: VerificationUploadRequest
     ) {
         identityViewModel.observeForVerificationResults(
             viewLifecycleOwner,
             onSuccess = { verification ->
                 when {
                     verification.selfieRequired -> {
-                        findNavController().navigate(R.id.action_global_fragment_selfie)
-                    }
-                    verification.videoRequired -> {
-
+                        findNavController().navigate(
+                            R.id.action_global_fragment_selfie,
+                            verificationRequest.addToBundle()
+                        )
                     }
                     else -> {
-                        val front = VerificationDocumentSide(
-                            method = disposition.front!!.method!!,
-                            file = disposition.front!!.file.id,
-                        )
-                        val back = if (identityDocumentType == IdentityDocumentType.PASSPORT) {
-                            null
-                        } else {
-                            VerificationDocumentSide(
-                                method = disposition.back!!.method!!,
-                                file = disposition.back!!.file.id,
-                            )
-                        }
-
-                        val document = VerificationDocumentUpload(
-                            type = identityDocumentType!!,
-                            front = front,
-                            back = back
-                        )
-
-                        val uploadRequest = VerificationUploadRequest(document = document)
-                        val patchDocument = JsonPatchDocument()
-                            .replace("/document", document)
-
-                        updateVerification(identityViewModel, patchDocument, source, onSuccess = {
-                            submitVerificationData(identityViewModel, source, uploadRequest)
-                        })
+                        submitVerificationData(identityViewModel, source, verificationRequest)
                     }
                 }
             },

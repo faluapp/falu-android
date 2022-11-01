@@ -54,8 +54,7 @@ class WelcomeFragment : Fragment() {
 
         binding.buttonAccept.text = getString(R.string.welcome_button_accept)
         binding.buttonAccept.setOnClickListener {
-            findNavController().navigate(R.id.action_global_fragment_selfie)
-         //   submitConsentData()
+            submitConsentData()
         }
 
         binding.buttonDecline.setOnClickListener {
