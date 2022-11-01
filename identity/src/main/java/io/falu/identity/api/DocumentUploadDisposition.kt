@@ -2,6 +2,10 @@ package io.falu.identity.api
 
 import android.os.Parcelable
 import io.falu.identity.api.models.DocumentSide
+import io.falu.identity.api.models.IdentityDocumentType
+import io.falu.identity.api.models.verification.VerificationDocumentSide
+import io.falu.identity.api.models.verification.VerificationDocumentUpload
+import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.api.models.verification.VerificationUploadResult
 import kotlinx.parcelize.Parcelize
 
@@ -33,4 +37,27 @@ internal data class DocumentUploadDisposition(
 
     val isBothUploadLoad: Boolean
         get() = front != null && back != null
+
+    fun generateVerificationUploadRequest(identityDocumentType: IdentityDocumentType): VerificationUploadRequest {
+        val front = VerificationDocumentSide(
+            method = front!!.method!!,
+            file = front!!.file.id,
+        )
+        val back = if (identityDocumentType == IdentityDocumentType.PASSPORT) {
+            null
+        } else {
+            VerificationDocumentSide(
+                method = back!!.method!!,
+                file = back!!.file.id,
+            )
+        }
+
+        val document = VerificationDocumentUpload(
+            type = identityDocumentType,
+            front = front,
+            back = back
+        )
+
+        return VerificationUploadRequest(document = document)
+    }
 }

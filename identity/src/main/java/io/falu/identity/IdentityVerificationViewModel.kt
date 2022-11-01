@@ -4,10 +4,10 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistryOwner
+import io.falu.core.models.FaluFile
 import io.falu.identity.api.CountriesApiClient
 import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.IdentityVerificationApiClient
-import io.falu.identity.api.SelfieUploadDisposition
 import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.UploadMethod
 import io.falu.identity.api.models.country.SupportedCountry
@@ -47,13 +47,6 @@ internal class IdentityVerificationViewModel(
     private val _documentUploadDisposition = MutableStateFlow(disposition)
     val documentUploadDisposition: LiveData<DocumentUploadDisposition>
         get() = _documentUploadDisposition.asLiveData(Dispatchers.Main)
-
-    /**
-     *
-     */
-    private val _selfieUploadDisposition = MutableStateFlow(SelfieUploadDisposition())
-    val selfieUploadDisposition: LiveData<SelfieUploadDisposition>
-        get() = _selfieUploadDisposition.asLiveData(Dispatchers.Main)
 
     /**
      *
@@ -124,7 +117,7 @@ internal class IdentityVerificationViewModel(
 
     internal fun uploadSelfieImage(
         uri: Uri,
-        method: UploadMethod = UploadMethod.MANUAL,
+        onSuccess: (FaluFile) -> Unit,
         onError: (HttpApiResponseProblem?) -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
@@ -137,14 +130,10 @@ internal class IdentityVerificationViewModel(
                 )
             }.fold(
                 onSuccess = { response ->
-                    if (response.successful() && response.resource != null) {
-                        val result = VerificationUploadResult(response.resource!!, method)
-                        _selfieUploadDisposition.update { current ->
-                            current.update(result)
-                        }
-                    } else {
-                        handleResponse(response, onError = { onError(it?.error) })
-                    }
+                    handleResponse(
+                        response,
+                        onSuccess = { onSuccess(it) },
+                        onError = { onError(it?.error) })
                 },
                 onFailure = {
                     Log.e(TAG, "Error uploading selfie image", it)
