@@ -1,6 +1,7 @@
 package io.falu.identity.camera
 
 import android.content.Context
+import android.hardware.camera2.CameraManager
 import android.net.Uri
 import android.util.AttributeSet
 import android.util.Log
@@ -11,6 +12,9 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import io.falu.identity.R
+import io.falu.identity.api.models.CameraLens
+import io.falu.identity.api.models.CameraSettings
+import io.falu.identity.api.models.Exposure
 import io.falu.identity.utils.FileUtils
 
 class CameraView @JvmOverloads constructor(
@@ -30,6 +34,13 @@ class CameraView @JvmOverloads constructor(
     private var cameraProvider: ProcessCameraProvider? = null
 
     /**
+     * Detects, characterizes, and connects to a CameraDevice (used for all camera operations)
+     */
+    private val cameraManager: CameraManager by lazy {
+        context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+    }
+
+    /**
      * The direction of the camera, front or back
      */
     var lensFacing: Int
@@ -46,6 +57,9 @@ class CameraView @JvmOverloads constructor(
         set(value) {
             _lifecycleOwner = value
         }
+
+    val cameraInfo: CameraInfo?
+        get() = camera?.cameraInfo
 
     init {
         val view = inflate(context, R.layout.view_camera_preview, this)
@@ -137,6 +151,18 @@ class CameraView @JvmOverloads constructor(
                 }
             })
     }
+
+    /**
+     *
+     */
+    private val cameraSettings: CameraSettings
+        get() {
+            return CameraSettings(
+                lens = CameraLens(model = "", focalLength = 0F),
+                brightness = 0F,
+                exposure = Exposure(iso = 0F, duration = 0F)
+            )
+        }
 
     internal companion object {
         private val TAG = CameraView::class.java.simpleName

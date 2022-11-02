@@ -104,7 +104,7 @@ class SelfieFragment : Fragment() {
             submitVerificationData(identityViewModel, R.id.fragment_selfie, verificationRequest)
         })
     }
-    
+
     private val cameraSettings: CameraSettings
         get() {
             val info = binding.viewCamera.cameraInfo
