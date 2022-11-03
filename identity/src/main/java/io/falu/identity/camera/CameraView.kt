@@ -89,6 +89,7 @@ class CameraView @JvmOverloads constructor(
         val rotation = viewCameraPreview.display.rotation
         val cameraProvider = cameraProvider
             ?: throw IllegalStateException("Camera initialization failed.")
+
         val cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
 
         preview = Preview.Builder()
@@ -110,7 +111,11 @@ class CameraView @JvmOverloads constructor(
                 imageCapture
             )
 
-            preview?.setSurfaceProvider(viewCameraPreview.surfaceProvider)
+            val surfaceProvider = viewCameraPreview.surfaceProvider
+
+            surfaceProvider.onSurfaceRequested(SurfaceRequest())
+
+            preview?.setSurfaceProvider(surfaceProvider)
 
             observeCameraState(camera?.cameraInfo!!)
         } catch (e: Exception) {
@@ -166,7 +171,7 @@ class CameraView @JvmOverloads constructor(
 
     internal companion object {
         private val TAG = CameraView::class.java.simpleName
-        private const val RATIO_4_3_VALUE = 4.0 / 3.0
-        private const val RATIO_16_9_VALUE = 16.0 / 9.0
+        private const val ASPECT_RATIO_ID_CARD = 4.0 / 3.0
+        private const val ASPECT_RATIO_PASSPORT = 16.0 / 9.0
     }
 }

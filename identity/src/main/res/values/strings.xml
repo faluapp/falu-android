@@ -47,6 +47,10 @@
     <string name="upload_document_capture_document_font">Front of %1$s</string>
     <string name="upload_document_capture_document_back">Back of %1$s</string>
 
+    <!--Scan Capture -->
+    <string name="scan_capture_text_document_side">Scanning %1$s</string>
+    <string name="scan_capture_text_scan_message">Position your %1$s in the center.</string>
+
     <!-- Confirmation -->
     <string name="confirmation_title_verification_processing">Verification Processing</string>
     <string name="confirmation_text_gratitude">Thank you for submitting your documents.</string>
