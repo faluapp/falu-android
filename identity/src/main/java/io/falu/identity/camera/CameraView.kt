@@ -6,10 +6,14 @@ import android.net.Uri
 import android.util.AttributeSet
 import android.util.Log
 import android.widget.FrameLayout
+import android.widget.ImageView
+import androidx.annotation.DrawableRes
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.content.withStyledAttributes
 import androidx.lifecycle.LifecycleOwner
 import io.falu.identity.R
 import io.falu.identity.api.models.CameraLens
@@ -17,19 +21,44 @@ import io.falu.identity.api.models.CameraSettings
 import io.falu.identity.api.models.Exposure
 import io.falu.identity.utils.FileUtils
 
-class CameraView @JvmOverloads constructor(
+internal class CameraView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr) {
+) : ConstraintLayout(context, attrs, defStyleAttr) {
 
+    /**
+     *
+     */
+    private val viewCameraFrame: FrameLayout
+
+
+    /**
+     *
+     */
+    private val viewCameraPreview: PreviewView
+
+    /**
+     *
+     */
+    private val ivCameraBorder: ImageView
+
+    /**
+     *
+     */
     private val fileUtils = FileUtils(context)
+
     private lateinit var _lifecycleOwner: LifecycleOwner
 
-    private var viewCameraPreview: PreviewView
-    private var preview: Preview? = null
+    private var _cameraViewType: CameraViewType = CameraViewType.DEFAULT
     private var _lensFacing: Int = CameraSelector.LENS_FACING_BACK
+
+    @DrawableRes
+    private var border: Int = BORDERLESS
+
+    private var preview: Preview? = null
     private var imageCapture: ImageCapture? = null
+    private var imageAnalysis: ImageAnalysis? = null
     private var camera: Camera? = null
     private var cameraProvider: ProcessCameraProvider? = null
 
@@ -58,15 +87,56 @@ class CameraView @JvmOverloads constructor(
             _lifecycleOwner = value
         }
 
+    var cameraViewType: CameraViewType
+        get() = _cameraViewType
+        set(value) {
+            _cameraViewType = value
+        }
+
+    /**
+     *
+     */
     val cameraInfo: CameraInfo?
         get() = camera?.cameraInfo
 
     init {
-        val view = inflate(context, R.layout.view_camera_preview, this)
+        context.withStyledAttributes(attrs, R.styleable.CameraView) {
+            if (attrs != null) {
+                border = getResourceId(R.styleable.CameraView_cameraBorder, BORDERLESS)
+            }
+        }
 
+        val view = inflate(context, R.layout.view_camera_preview, this)
         viewCameraPreview = view.findViewById(R.id.view_preview)
+        viewCameraFrame = view.findViewById(R.id.view_camera_frame)
+        ivCameraBorder = view.findViewById(R.id.iv_camera_border)
+
+        post {
+            configureDimensions()
+            setBorder()
+        }
+        
         viewCameraPreview.post {
             configureCamera()
+        }
+    }
+
+    /**
+     *
+     */
+    private fun configureDimensions() {
+        listOf(viewCameraPreview, ivCameraBorder).forEach { view ->
+            (view.layoutParams as LayoutParams).dimensionRatio = cameraViewType.ratio
+        }
+    }
+
+    /**
+     *
+     */
+    private fun setBorder() {
+        if (border != BORDERLESS) {
+            // the space between the Camera Preview and other view areas
+            ivCameraBorder.background = ContextCompat.getDrawable(context, border)
         }
     }
 
@@ -87,6 +157,7 @@ class CameraView @JvmOverloads constructor(
      */
     private fun bindCameraUseCases() {
         val rotation = viewCameraPreview.display.rotation
+
         val cameraProvider = cameraProvider
             ?: throw IllegalStateException("Camera initialization failed.")
 
@@ -101,6 +172,10 @@ class CameraView @JvmOverloads constructor(
             .setTargetRotation(rotation)
             .build()
 
+        imageAnalysis = ImageAnalysis.Builder()
+            .setTargetRotation(rotation)
+            .build()
+
         cameraProvider.unbindAll()
 
         try {
@@ -108,12 +183,11 @@ class CameraView @JvmOverloads constructor(
                 lifecycleOwner,
                 cameraSelector,
                 preview,
-                imageCapture
+                imageCapture,
+                imageAnalysis
             )
 
             val surfaceProvider = viewCameraPreview.surfaceProvider
-
-            surfaceProvider.onSurfaceRequested(SurfaceRequest())
 
             preview?.setSurfaceProvider(surfaceProvider)
 
@@ -169,9 +243,28 @@ class CameraView @JvmOverloads constructor(
             )
         }
 
+    internal enum class CameraViewType(val ratio: String) {
+        /**
+         *
+         */
+        DEFAULT(ASPECT_RATIO_DEFAULT),
+
+        /**
+         *
+         */
+        ID(ASPECT_RATIO_ID_CARD),
+
+        /**
+         *
+         */
+        PASSPORT(ASPECT_RATIO_PASSPORT)
+    }
+
     internal companion object {
         private val TAG = CameraView::class.java.simpleName
-        private const val ASPECT_RATIO_ID_CARD = 4.0 / 3.0
-        private const val ASPECT_RATIO_PASSPORT = 16.0 / 9.0
+        private const val ASPECT_RATIO_ID_CARD = "3:2"
+        private const val ASPECT_RATIO_PASSPORT = "3:2"
+        private const val ASPECT_RATIO_DEFAULT = ""
+        private const val BORDERLESS = -1
     }
 }

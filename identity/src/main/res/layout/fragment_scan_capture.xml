@@ -33,7 +33,8 @@
         <io.falu.identity.camera.CameraView
             android:id="@+id/view_camera"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:cameraBorder="@drawable/ic_document_border" />
     </LinearLayout>
 
     <LinearLayout
