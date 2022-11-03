@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.camera.core.CameraSelector
+import io.falu.identity.R
 import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.capture.AbstractCaptureFragment
@@ -24,6 +26,25 @@ internal class ScanCaptureFragment : AbstractCaptureFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.tvScanDocumentSide.text = getString(
+            R.string.scan_capture_text_document_side,
+            identityDocumentType?.getIdentityDocumentName(requireContext())
+        )
+
+        binding.tvScanMessage.text = getString(
+            R.string.scan_capture_text_scan_message,
+            identityDocumentType?.getIdentityDocumentName(requireContext())
+        )
+
+        binding.viewCamera.lifecycleOwner = viewLifecycleOwner
+        binding.viewCamera.lensFacing = CameraSelector.LENS_FACING_BACK
+        binding.buttonContinue.text = getString(R.string.button_continue)
+
+        binding.buttonContinue.isEnabled = false
+        binding.buttonContinue.setOnClickListener {
+
+        }
     }
 
     override fun onDestroyView() {
