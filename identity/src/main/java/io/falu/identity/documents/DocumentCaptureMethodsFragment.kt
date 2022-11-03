@@ -44,7 +44,7 @@ internal class DocumentCaptureMethodsFragment : CameraPermissionsFragment() {
             )
 
         binding.viewCaptureMethodScan.setOnClickListener {
-            // checkCameraPermissions(identityDocumentType.toUploadCaptureDestination())
+             checkCameraPermissions(identityDocumentType.toScanCaptureDestination())
         }
 
         binding.viewCaptureMethodPhoto.setOnClickListener {
@@ -108,17 +108,24 @@ internal class DocumentCaptureMethodsFragment : CameraPermissionsFragment() {
         @IdRes
         private fun IdentityDocumentType.toUploadCaptureDestination() =
             when (this) {
-                IdentityDocumentType.IDENTITY_CARD -> R.id.action_fragment_document_capture_methods_to_fragment_upload_capture
-                IdentityDocumentType.PASSPORT -> R.id.action_fragment_document_capture_methods_to_fragment_upload_capture
+                IdentityDocumentType.IDENTITY_CARD,
+                IdentityDocumentType.PASSPORT,
                 IdentityDocumentType.DRIVING_LICENSE -> R.id.action_fragment_document_capture_methods_to_fragment_upload_capture
             }
 
         @IdRes
         private fun IdentityDocumentType.toManualCaptureDestination() =
             when (this) {
-                IdentityDocumentType.IDENTITY_CARD -> R.id.action_fragment_document_capture_methods_to_fragment_manual_capture
-                IdentityDocumentType.PASSPORT -> R.id.action_fragment_document_capture_methods_to_fragment_manual_capture
+                IdentityDocumentType.IDENTITY_CARD,
+                IdentityDocumentType.PASSPORT,
                 IdentityDocumentType.DRIVING_LICENSE -> R.id.action_fragment_document_capture_methods_to_fragment_manual_capture
+            }
+
+        private fun IdentityDocumentType.toScanCaptureDestination() =
+            when (this) {
+                IdentityDocumentType.IDENTITY_CARD,
+                IdentityDocumentType.PASSPORT,
+                IdentityDocumentType.DRIVING_LICENSE -> R.id.action_fragment_document_capture_methods_to_fragment_scan_capture
             }
 
         fun IdentityDocumentType.getIdentityDocumentName(context: Context) =
