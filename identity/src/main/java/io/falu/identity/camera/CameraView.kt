@@ -56,6 +56,7 @@ internal class CameraView @JvmOverloads constructor(
 
     @DrawableRes
     private var border: Int = BORDERLESS
+    private var brightness: Double = 0.0
 
     private var preview: Preview? = null
     private var imageCapture: ImageCapture? = null
@@ -93,12 +94,6 @@ internal class CameraView @JvmOverloads constructor(
         set(value) {
             _cameraViewType = value
         }
-
-    /**
-     *
-     */
-    val cameraInfo: CameraInfo?
-        get() = camera?.cameraInfo
 
     init {
         context.withStyledAttributes(attrs, R.styleable.CameraView) {
@@ -176,6 +171,11 @@ internal class CameraView @JvmOverloads constructor(
         imageAnalysis = ImageAnalysis.Builder()
             .setTargetRotation(rotation)
             .build()
+            .also {
+                it.setAnalyzer(ContextCompat.getMainExecutor(context), LumaAnalyzer {
+                    brightness = it
+                })
+            }
 
         cameraProvider.unbindAll()
 
@@ -246,7 +246,7 @@ internal class CameraView @JvmOverloads constructor(
 
             return CameraSettings(
                 lens = CameraLens(model = "Camera-X", focalLength = focalLength!!),
-                brightness = 0F,
+                brightness = brightness.toFloat(),
                 exposure = Exposure(iso = iso.toFloat(), duration = duration.toFloat())
             )
         }
