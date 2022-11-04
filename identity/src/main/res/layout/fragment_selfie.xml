@@ -17,7 +17,9 @@
     <FrameLayout
         android:id="@+id/view_selfie_camera"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/content_padding_normal"
+        android:layout_marginBottom="@dimen/content_padding_normal">
 
         <io.falu.identity.camera.CameraView
             android:id="@+id/view_camera"
@@ -28,9 +30,9 @@
             android:id="@+id/button_take_selfie"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_camera"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_marginBottom="@dimen/content_padding_normal"
+            android:src="@drawable/ic_camera"
             tools:ignore="ContentDescription" />
     </FrameLayout>
 

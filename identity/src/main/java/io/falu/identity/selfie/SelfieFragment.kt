@@ -11,9 +11,6 @@ import androidx.fragment.app.activityViewModels
 import io.falu.core.models.FaluFile
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
-import io.falu.identity.api.models.CameraLens
-import io.falu.identity.api.models.CameraSettings
-import io.falu.identity.api.models.Exposure
 import io.falu.identity.api.models.UploadMethod
 import io.falu.identity.api.models.verification.VerificationSelfieUpload
 import io.falu.identity.api.models.verification.VerificationUploadRequest
@@ -94,26 +91,16 @@ class SelfieFragment : Fragment() {
                 UploadMethod.MANUAL,
                 file = file.id,
                 variance = 0F,
-                camera = cameraSettings
             )
 
         val document = JsonPatchDocument().replace("/selfie", selfie)
 
         updateVerification(identityViewModel, document, R.id.fragment_selfie, onSuccess = {
+            selfie.camera = binding.viewCamera.cameraSettings
             verificationRequest.selfie = selfie
             submitVerificationData(identityViewModel, R.id.fragment_selfie, verificationRequest)
         })
     }
-
-    private val cameraSettings: CameraSettings
-        get() {
-            val info = binding.viewCamera.cameraInfo
-            return CameraSettings(
-                lens = CameraLens(model = "", focalLength = 0F),
-                brightness = 0F,
-                exposure = Exposure(iso = 0F, duration = 0F)
-            )
-        }
 
     override fun onDestroyView() {
         super.onDestroyView()
