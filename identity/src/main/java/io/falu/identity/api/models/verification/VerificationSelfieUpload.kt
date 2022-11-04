@@ -7,8 +7,8 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 internal data class VerificationSelfieUpload(
-    var type: UploadMethod,
+    var method: UploadMethod,
     var file: String,
     var variance: Float,
-    var camera: CameraSettings
-): Parcelable
+    var camera: CameraSettings? = null
+) : Parcelable

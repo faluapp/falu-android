@@ -1,6 +1,7 @@
 package io.falu.identity.camera
 
 import android.content.Context
+import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
 import android.net.Uri
 import android.util.AttributeSet
@@ -115,7 +116,7 @@ internal class CameraView @JvmOverloads constructor(
             configureDimensions()
             setBorder()
         }
-        
+
         viewCameraPreview.post {
             configureCamera()
         }
@@ -234,14 +235,24 @@ internal class CameraView @JvmOverloads constructor(
     /**
      *
      */
-    private val cameraSettings: CameraSettings
+    internal val cameraSettings: CameraSettings
         get() {
+            val extensions = cameraManager.getCameraCharacteristics(cameraId)
+            val focalLength =
+                extensions.get(CameraCharacteristics.LENS_INFO_AVAILABLE_FOCAL_LENGTHS)?.first()
+            val duration =
+                extensions.get(CameraCharacteristics.SENSOR_INFO_EXPOSURE_TIME_RANGE)!!.lower
+            val iso = extensions.get(CameraCharacteristics.SENSOR_INFO_SENSITIVITY_RANGE)!!.upper
+
             return CameraSettings(
-                lens = CameraLens(model = "", focalLength = 0F),
+                lens = CameraLens(model = "Camera-X", focalLength = focalLength!!),
                 brightness = 0F,
-                exposure = Exposure(iso = 0F, duration = 0F)
+                exposure = Exposure(iso = iso.toFloat(), duration = duration.toFloat())
             )
         }
+
+    private val cameraId: String
+        get() = cameraManager.cameraIdList.first()
 
     internal enum class CameraViewType(val ratio: String) {
         /**
@@ -264,7 +275,7 @@ internal class CameraView @JvmOverloads constructor(
         private val TAG = CameraView::class.java.simpleName
         private const val ASPECT_RATIO_ID_CARD = "3:2"
         private const val ASPECT_RATIO_PASSPORT = "3:2"
-        private const val ASPECT_RATIO_DEFAULT = ""
+        private const val ASPECT_RATIO_DEFAULT = "2:2"
         private const val BORDERLESS = -1
     }
 }
