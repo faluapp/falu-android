@@ -24,6 +24,7 @@ import kotlinx.coroutines.withContext
 import software.tingle.api.HttpApiResponseProblem
 import software.tingle.api.ResourceResponse
 import software.tingle.api.patch.JsonPatchDocument
+import java.io.File
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -62,13 +63,44 @@ internal class IdentityVerificationViewModel(
     private val supportedCountries: LiveData<ResourceResponse<Array<SupportedCountry>>?>
         get() = _supportedCountries
 
-    internal fun fetchVerification(onFailure: (Throwable) -> Unit) {
+    /**
+     *
+     */
+    private val _documentDetectorModelFile = MutableLiveData<ResourceResponse<File>?>()
+    private val documentDetectorModelFile: LiveData<ResourceResponse<File>?>
+        get() = _documentDetectorModelFile
+
+    /**
+     *
+     */
+    private val _documentTypeDetectorModelFile = MutableLiveData<ResourceResponse<File>?>()
+    private val documentTypeDetectorModelFile: LiveData<ResourceResponse<File>?>
+        get() = _documentTypeDetectorModelFile
+
+    internal fun fetchVerification(modelRequired: Boolean = true, onFailure: (Throwable) -> Unit) {
         launch(Dispatchers.IO) {
             runCatching {
                 apiClient.getVerification(contractArgs.verificationId)
             }.fold(
                 onSuccess = {
                     _verification.postValue(it)
+
+                    if (it.successful() && it.resource != null) {
+                        val verification = it.resource!!
+                        if (modelRequired) {
+
+                            downloadAIModel(
+                                verification.capture.models.document.url,
+                                _documentDetectorModelFile
+                            )
+
+                            downloadAIModel(
+                                verification.capture.models.documentType.url,
+                                _documentDetectorModelFile
+                            )
+                        }
+                    }
+
                 },
                 onFailure = {
                     Log.e(TAG, "Error getting verification", it)
@@ -198,6 +230,21 @@ internal class IdentityVerificationViewModel(
             }.fold(
                 onSuccess = {
                     _supportedCountries.postValue(it)
+                },
+                onFailure = {
+                    Log.e(TAG, "Error getting verification", it)
+                }
+            )
+        }
+    }
+
+    private fun downloadAIModel(url: String, liveData: MutableLiveData<ResourceResponse<File>?>) {
+        launch(Dispatchers.IO) {
+            runCatching {
+                countriesApiClient.downloadModelFile(url)
+            }.fold(
+                onSuccess = {
+                    liveData.postValue(it)
                 },
                 onFailure = {
                     Log.e(TAG, "Error getting verification", it)

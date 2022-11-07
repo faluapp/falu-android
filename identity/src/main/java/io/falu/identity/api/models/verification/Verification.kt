@@ -27,6 +27,7 @@ internal data class Verification(
     var support: Support?,
     var branding: Branding?,
     var requirements: Requirement,
+    var capture: VerificationCapture,
     var supported: Boolean = true
 ) {
     val selfieRequired: Boolean

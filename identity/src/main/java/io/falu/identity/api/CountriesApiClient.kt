@@ -11,6 +11,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import software.tingle.api.AbstractHttpApiClient
 import software.tingle.api.ResourceResponse
 import software.tingle.api.authentication.EmptyAuthenticationProvider
+import java.io.File
 import java.util.concurrent.TimeUnit
 
 internal class CountriesApiClient : AbstractHttpApiClient(EmptyAuthenticationProvider()) {
@@ -26,6 +27,18 @@ internal class CountriesApiClient : AbstractHttpApiClient(EmptyAuthenticationPro
             .get()
 
         return execute(builder, Array<SupportedCountry>::class.java)
+    }
+
+    @Throws(
+        AuthenticationException::class,
+        APIConnectionException::class,
+        APIException::class
+    )
+    fun downloadModelFile(url: String): ResourceResponse<File>{
+        val builder = Request.Builder()
+            .url(url)
+            .get()
+        return execute(builder, File::class.java)
     }
 
     override fun buildBackChannel(builder: OkHttpClient.Builder): OkHttpClient {
