@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.VisibleForTesting
 import androidx.fragment.app.Fragment
 import io.falu.identity.IdentityVerificationResult
 import io.falu.identity.IdentityVerificationResultCallback
@@ -14,7 +15,8 @@ internal class ConfirmationFragment : Fragment() {
     private var _binding: FragmentConfirmationBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var callback: IdentityVerificationResultCallback
+    @VisibleForTesting
+    internal lateinit var callback: IdentityVerificationResultCallback
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
