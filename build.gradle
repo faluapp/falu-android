@@ -66,6 +66,7 @@ ext {
     group_id = GROUP
 
     camerax_version = '1.1.0'
+    nav_version = "2.5.3"
 }
 
 nexusPublishing {
