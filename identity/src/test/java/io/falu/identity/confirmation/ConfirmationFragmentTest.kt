@@ -1,5 +1,6 @@
 package io.falu.identity.confirmation
 
+import android.os.Build
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.navigation.Navigation
 import androidx.navigation.testing.TestNavHostController
@@ -9,6 +10,7 @@ import io.falu.identity.IdentityVerificationResultCallback
 import io.falu.identity.R
 import io.falu.identity.databinding.FragmentConfirmationBinding
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.eq
@@ -17,9 +19,8 @@ import org.mockito.kotlin.verify
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-@Config(manifest = "AndroidManifest.xml")
-@ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
+@Config(sdk = [Build.VERSION_CODES.O_MR1])
 class ConfirmationFragmentTest {
     private val mockVerificationResultCallback = mock<IdentityVerificationResultCallback>()
 
