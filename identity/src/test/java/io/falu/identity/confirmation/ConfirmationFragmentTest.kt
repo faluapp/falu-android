@@ -9,8 +9,6 @@ import io.falu.identity.IdentityVerificationResult
 import io.falu.identity.IdentityVerificationResultCallback
 import io.falu.identity.R
 import io.falu.identity.databinding.FragmentConfirmationBinding
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.eq
@@ -37,10 +35,8 @@ class ConfirmationFragmentTest {
 
     private fun launchConfirmationFragment(block: (binding: FragmentConfirmationBinding, navController: TestNavHostController) -> Unit) =
         launchFragmentInContainer(themeResId = R.style.Theme_MaterialComponents) {
-            ConfirmationFragment()
+            ConfirmationFragment(mockVerificationResultCallback)
         }.onFragment {
-
-            it.callback = mockVerificationResultCallback
 
             val navController = TestNavHostController(ApplicationProvider.getApplicationContext())
 
