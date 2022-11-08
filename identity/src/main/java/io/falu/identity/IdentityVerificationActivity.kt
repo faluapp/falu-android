@@ -40,6 +40,7 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         apiClient =
             IdentityVerificationApiClient(this, contractArgs.temporaryKey, BuildConfig.DEBUG)
+        supportFragmentManager.fragmentFactory = IdentityVerificationFragmentFactory(this)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         setNavigationController()
