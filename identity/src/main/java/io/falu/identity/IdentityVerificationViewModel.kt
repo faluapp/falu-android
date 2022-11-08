@@ -31,8 +31,8 @@ import kotlin.coroutines.CoroutineContext
  * View model that is shared across all fragments
  */
 internal class IdentityVerificationViewModel(
-    private val apiClient: IdentityVerificationApiClient,
-    private val contractArgs: ContractArgs,
+    internal val apiClient: IdentityVerificationApiClient,
+    internal val contractArgs: ContractArgs,
     private val fileUtils: FileUtils
 ) : ViewModel(), CoroutineScope {
 

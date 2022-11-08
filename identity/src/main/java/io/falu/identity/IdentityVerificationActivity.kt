@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import io.falu.identity.api.IdentityVerificationApiClient
@@ -17,30 +18,42 @@ import software.tingle.api.HttpApiResponseProblem
 internal class IdentityVerificationActivity : AppCompatActivity(),
     IdentityVerificationResultCallback {
 
+    @VisibleForTesting
+    internal val factory =
+        IdentityVerificationViewModel.factoryProvider(
+            this,
+            apiClient,
+            fileUtils,
+            contractArgs
+        )
+
     private val verificationViewModel: IdentityVerificationViewModel by viewModels {
-        IdentityVerificationViewModel.factoryProvider(this, apiClient, fileUtils, contractArgs)
+        factory
     }
 
-    private val contractArgs by lazy {
-        requireNotNull(ContractArgs.getFromIntent(intent)) {
-            "Arguments are required."
-        }
-    }
 
     private val binding by lazy {
         ActivityIdentityVerificationBinding.inflate(layoutInflater)
     }
 
-    private val fileUtils by lazy {
-        FileUtils(this)
-    }
+    private lateinit var contractArgs: ContractArgs
+
+    private lateinit var fileUtils: FileUtils
 
     private lateinit var apiClient: IdentityVerificationApiClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        contractArgs = requireNotNull(ContractArgs.getFromIntent(intent)) {
+            "Arguments are required."
+        }
+
         apiClient =
             IdentityVerificationApiClient(this, contractArgs.temporaryKey, BuildConfig.DEBUG)
-        supportFragmentManager.fragmentFactory = IdentityVerificationFragmentFactory(this)
+
+        fileUtils = FileUtils(this)
+
+        supportFragmentManager.fragmentFactory = IdentityVerificationFragmentFactory(this, factory)
+
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         setNavigationController()
