@@ -1,10 +1,13 @@
 package io.falu.identity.documents
 
 import android.os.Build
+import android.view.View
+import android.widget.ProgressBar
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.navigation.Navigation
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
+import com.google.android.material.button.MaterialButton
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.models.IdentityDocumentType
@@ -82,6 +85,30 @@ class DocumentSelectionFragmentTest {
             assertEquals(binding.chipDrivingLicense.isEnabled, true)
             assertEquals(binding.chipIdentityCard.isEnabled, true)
             assertEquals(binding.chipPassport.isEnabled, true)
+        }
+    }
+
+    @Test
+    fun `test if identity card document selected and continue`() {
+        launchDocumentSelectionFragment { binding, _ ->
+            getSupportedCountries()
+
+            successfulVerification()
+
+            binding.chipIdentityCard.isChecked = true
+
+            binding.buttonContinue.findViewById<MaterialButton>(R.id.button_loading).callOnClick()
+
+            verify(mockIdentityVerificationViewModel).updateVerification(any(), any(), any(), any())
+
+            assertEquals(
+                binding.buttonContinue.findViewById<MaterialButton>(R.id.button_loading).isEnabled,
+                false
+            )
+            assertEquals(
+                binding.buttonContinue.findViewById<ProgressBar>(R.id.progress_view).visibility,
+                View.VISIBLE
+            )
         }
     }
 
