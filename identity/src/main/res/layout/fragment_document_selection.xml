@@ -38,7 +38,7 @@
                     android:layout_height="wrap_content">
 
                     <AutoCompleteTextView
-                        android:id="@+id/input_asset_issuing_country"
+                        android:id="@+id/input_issuing_country"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:focusable="false"

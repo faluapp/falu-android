@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
@@ -19,9 +20,9 @@ import io.falu.identity.utils.navigateToApiResponseProblemFragment
 import io.falu.identity.utils.updateVerification
 import software.tingle.api.patch.JsonPatchDocument
 
-class DocumentSelectionFragment : Fragment() {
+class DocumentSelectionFragment(private val factory: ViewModelProvider.Factory) : Fragment() {
 
-    private val viewModel: IdentityVerificationViewModel by activityViewModels()
+    private val viewModel: IdentityVerificationViewModel by activityViewModels { factory }
 
     private var _binding: FragmentDocumentSelectionBinding? = null
     private val binding get() = _binding!!
@@ -94,13 +95,13 @@ class DocumentSelectionFragment : Fragment() {
             R.layout.dropdown_menu_popup_item,
             countries.map { it.country.name })
 
-        binding.inputAssetIssuingCountry.setAdapter(countriesAdapter)
-        binding.inputAssetIssuingCountry.setText(countriesAdapter.getItem(0), false)
+        binding.inputIssuingCountry.setAdapter(countriesAdapter)
+        binding.inputIssuingCountry.setText(countriesAdapter.getItem(0), false)
 
         val country = getSupportedCountry(countries)
         getVerificationResults(country)
 
-        binding.inputAssetIssuingCountry.setOnItemClickListener { _, _, _, _ ->
+        binding.inputIssuingCountry.setOnItemClickListener { _, _, _, _ ->
             getVerificationResults(country)
         }
     }
@@ -109,7 +110,7 @@ class DocumentSelectionFragment : Fragment() {
      *
      */
     private fun getSupportedCountry(countries: List<SupportedCountry>): SupportedCountry {
-        val country = binding.inputAssetIssuingCountry.text.toString()
+        val country = binding.inputIssuingCountry.text.toString()
         return countries.first { it.country.name == country }
     }
 
