@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.annotation.IdRes
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
@@ -16,11 +17,13 @@ import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.camera.CameraPermissionsFragment
 import io.falu.identity.databinding.FragmentDocumentCaptureMethodsBinding
 
-internal class DocumentCaptureMethodsFragment : CameraPermissionsFragment() {
+internal class DocumentCaptureMethodsFragment(private val factory: ViewModelProvider.Factory) :
+    CameraPermissionsFragment() {
+
     private var _binding: FragmentDocumentCaptureMethodsBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: IdentityVerificationViewModel by activityViewModels()
+    private val viewModel: IdentityVerificationViewModel by activityViewModels { factory }
     private lateinit var identityDocumentType: IdentityDocumentType
 
     override fun onCreateView(
@@ -44,7 +47,7 @@ internal class DocumentCaptureMethodsFragment : CameraPermissionsFragment() {
             )
 
         binding.viewCaptureMethodScan.setOnClickListener {
-             checkCameraPermissions(identityDocumentType.toScanCaptureDestination())
+            checkCameraPermissions(identityDocumentType.toScanCaptureDestination())
         }
 
         binding.viewCaptureMethodPhoto.setOnClickListener {
