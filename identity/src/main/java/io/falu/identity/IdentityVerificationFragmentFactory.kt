@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import io.falu.identity.confirmation.ConfirmationFragment
 import io.falu.identity.documents.DocumentCaptureMethodsFragment
 import io.falu.identity.documents.DocumentSelectionFragment
+import io.falu.identity.support.SupportFragment
 import io.falu.identity.welcome.WelcomeFragment
 
 internal class IdentityVerificationFragmentFactory(
@@ -21,6 +22,7 @@ internal class IdentityVerificationFragmentFactory(
             DocumentCaptureMethodsFragment::class.java.name ->
                 DocumentCaptureMethodsFragment(factory)
             ConfirmationFragment::class.java.name -> ConfirmationFragment(callback)
+            SupportFragment::class.java.name -> SupportFragment(factory)
             else -> super.instantiate(classLoader, className)
         }
     }

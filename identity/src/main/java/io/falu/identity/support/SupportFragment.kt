@@ -8,17 +8,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.api.models.Support
 import io.falu.identity.databinding.FragmentSupportBinding
 import io.falu.identity.utils.navigateToApiResponseProblemFragment
 
 
-class SupportFragment : Fragment() {
+class SupportFragment(
+    private val factory: ViewModelProvider.Factory,
+) : Fragment() {
     private var _binding: FragmentSupportBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: IdentityVerificationViewModel by activityViewModels()
+    private val viewModel: IdentityVerificationViewModel by activityViewModels { factory }
 
     override fun onCreateView(
         inflater: LayoutInflater,
