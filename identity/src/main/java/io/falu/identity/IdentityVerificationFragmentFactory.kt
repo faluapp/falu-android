@@ -3,6 +3,9 @@ package io.falu.identity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
+import io.falu.identity.capture.manual.ManualCaptureFragment
+import io.falu.identity.capture.scan.ScanCaptureFragment
+import io.falu.identity.capture.upload.UploadCaptureFragment
 import io.falu.identity.confirmation.ConfirmationFragment
 import io.falu.identity.documents.DocumentCaptureMethodsFragment
 import io.falu.identity.documents.DocumentSelectionFragment
@@ -21,6 +24,9 @@ internal class IdentityVerificationFragmentFactory(
             DocumentSelectionFragment::class.java.name -> DocumentSelectionFragment(factory)
             DocumentCaptureMethodsFragment::class.java.name ->
                 DocumentCaptureMethodsFragment(factory)
+            ManualCaptureFragment::class.java.name -> ManualCaptureFragment(factory)
+            ScanCaptureFragment::class.java.name -> ScanCaptureFragment(factory)
+            UploadCaptureFragment::class.java.name -> UploadCaptureFragment(factory)
             ConfirmationFragment::class.java.name -> ConfirmationFragment(callback)
             SupportFragment::class.java.name -> SupportFragment(factory)
             else -> super.instantiate(classLoader, className)

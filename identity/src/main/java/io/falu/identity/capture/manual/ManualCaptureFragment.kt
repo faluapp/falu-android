@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import io.falu.identity.R
 import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.models.DocumentSide
@@ -13,7 +14,9 @@ import io.falu.identity.capture.AbstractCaptureFragment
 import io.falu.identity.databinding.FragmentManualCaptureBinding
 import io.falu.identity.utils.FileUtils
 
-internal class ManualCaptureFragment : AbstractCaptureFragment() {
+internal class ManualCaptureFragment(identityViewModelFactory: ViewModelProvider.Factory) :
+    AbstractCaptureFragment(identityViewModelFactory) {
+
     private var _binding: FragmentManualCaptureBinding? = null
     private val binding get() = _binding!!
 

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.camera.core.CameraSelector
+import androidx.lifecycle.ViewModelProvider
 import io.falu.identity.R
 import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.models.DocumentSide
@@ -13,7 +14,8 @@ import io.falu.identity.camera.CameraView
 import io.falu.identity.capture.AbstractCaptureFragment
 import io.falu.identity.databinding.FragmentScanCaptureBinding
 
-internal class ScanCaptureFragment : AbstractCaptureFragment() {
+internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.Factory) :
+    AbstractCaptureFragment(identityViewModelFactory) {
     private var _binding: FragmentScanCaptureBinding? = null
     private val binding get() = _binding!!
 
@@ -43,7 +45,7 @@ internal class ScanCaptureFragment : AbstractCaptureFragment() {
         binding.viewCamera.lensFacing = CameraSelector.LENS_FACING_BACK
         binding.viewCamera.cameraViewType =
             if (identityDocumentType != IdentityDocumentType.PASSPORT) CameraView.CameraViewType.ID else CameraView.CameraViewType.PASSPORT
-        
+
         binding.buttonContinue.text = getString(R.string.button_continue)
 
         binding.buttonContinue.isEnabled = false
