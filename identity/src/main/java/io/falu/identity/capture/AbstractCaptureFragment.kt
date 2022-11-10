@@ -24,8 +24,10 @@ import io.falu.identity.utils.submitVerificationData
 import io.falu.identity.utils.updateVerification
 import software.tingle.api.patch.JsonPatchDocument
 
-internal abstract class AbstractCaptureFragment : CameraPermissionsFragment() {
-    protected val identityViewModel: IdentityVerificationViewModel by activityViewModels()
+internal abstract class AbstractCaptureFragment(identityViewModelFactory: ViewModelProvider.Factory) :
+    CameraPermissionsFragment() {
+
+    protected val identityViewModel: IdentityVerificationViewModel by activityViewModels { identityViewModelFactory }
 
     private var captureDocumentViewModelFactory: ViewModelProvider.Factory =
         CaptureDocumentViewModel.CaptureDocumentViewModelFactory { this }
