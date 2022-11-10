@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.IdRes
+import androidx.annotation.VisibleForTesting
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -29,7 +30,8 @@ internal abstract class AbstractCaptureFragment(identityViewModelFactory: ViewMo
 
     protected val identityViewModel: IdentityVerificationViewModel by activityViewModels { identityViewModelFactory }
 
-    private var captureDocumentViewModelFactory: ViewModelProvider.Factory =
+    @VisibleForTesting
+    internal var captureDocumentViewModelFactory: ViewModelProvider.Factory =
         CaptureDocumentViewModel.CaptureDocumentViewModelFactory { this }
 
     protected val captureDocumentViewModel: CaptureDocumentViewModel by viewModels {
