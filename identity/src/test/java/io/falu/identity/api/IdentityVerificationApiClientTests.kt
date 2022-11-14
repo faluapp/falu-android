@@ -90,3 +90,20 @@ class IdentityVerificationApiClientTests {
         assertNotNull(response.resource)
         assertEquals(response.resource!!.id, verification.id)
     }
+
+    @Test
+    fun `test if updating verification works`() {
+        mockWebServer.url("$baseUrl/v1/identity/verifications/${verification.id}/workflow")
+
+        val document = JsonPatchDocument().replace("/test", "test")
+
+        val resourceResponse = getResponse(tResponse = verification)
+        whenever(apiClient.updateVerification(verification.id, document))
+            .thenReturn(resourceResponse)
+
+        mockWebServer.enqueue(getMockedResponse(tResponse = verification))
+
+        val response = apiClient.updateVerification(verification.id, document)
+        assertNotNull(response.resource)
+        assertEquals(response.resource!!.id, verification.id)
+    }
