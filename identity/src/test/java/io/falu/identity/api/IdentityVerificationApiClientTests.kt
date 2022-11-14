@@ -26,6 +26,7 @@ import kotlin.test.assertNotNull
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O_MR1])
 class IdentityVerificationApiClientTests {
+
     private val gson = Gson()
 
     private val file = mock<File>()

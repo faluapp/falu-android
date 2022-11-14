@@ -1,13 +1,13 @@
 package io.falu.android
 
 import android.content.Context
-import io.falu.core.models.FaluFile
 import io.falu.android.models.files.UploadRequest
 import io.falu.android.models.payments.Payment
 import io.falu.android.models.payments.PaymentRequest
 import io.falu.android.networking.FaluRepository
 import io.falu.core.ApiKeyValidator
 import io.falu.core.ApiResultCallback
+import io.falu.core.models.FaluFile
 
 /**
  * Entry-point to the Falu SDK
@@ -16,10 +16,8 @@ import io.falu.core.ApiResultCallback
  *
  */
 class Falu internal constructor(
-    publishableKey: String,
     private val faluRepository: FaluRepository
 ) {
-    private val publishableKey = ApiKeyValidator().requireValid(publishableKey)
 
     /**
      * Constructor with publishable key.
@@ -34,8 +32,11 @@ class Falu internal constructor(
         publishableKey: String,
         enableLogging: Boolean = false
     ) : this(
-        ApiKeyValidator.get().requireValid(publishableKey),
-        FaluRepository(context, publishableKey, enableLogging)
+        FaluRepository(
+            context,
+            ApiKeyValidator.get().requireValid(publishableKey),
+            enableLogging
+        )
     )
 
 

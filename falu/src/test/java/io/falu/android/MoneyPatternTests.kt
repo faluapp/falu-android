@@ -11,7 +11,7 @@ class MoneyPatternTests {
     fun testAmountConversions() {
         val money = Money(
             amount = 20000,
-            currency = Currency.getInstance("kes".toUpperCase())
+            currency = Currency.getInstance("kes".uppercase())
         )
         assertEquals(2000000, money.amountInMinorUnits)
     }
