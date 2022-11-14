@@ -77,3 +77,16 @@ class IdentityVerificationApiClientTests {
         mockWebServer.start()
     }
     companion object {        private const val baseUrl = "https://api.falu.io"        private const val filePurpose = "identity.private"    }}
+    @Test
+    fun `test if fetching verification works`() {
+        mockWebServer.url("$baseUrl/v1/identity/verifications/${verification.id}/workflow")
+
+        val resourceResponse = getResponse(tResponse = verification)
+        whenever(apiClient.getVerification(verification.id)).thenReturn(resourceResponse)
+
+        mockWebServer.enqueue(getMockedResponse(tResponse = verification))
+
+        val response = apiClient.getVerification(verification.id)
+        assertNotNull(response.resource)
+        assertEquals(response.resource!!.id, verification.id)
+    }
