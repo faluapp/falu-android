@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
  * Makes network requests to the Falu API.
  */
 internal class FaluRepository internal constructor(
-    private val context: Context,
+    context: Context,
     publishableKey: String,
     enableLogging: Boolean
 ) :
@@ -31,7 +31,7 @@ internal class FaluRepository internal constructor(
      */
     fun createPaymentAsync(
         request: PaymentRequest,
-        callbacks: io.falu.core.ApiResultCallback<Payment>
+        callbacks: ApiResultCallback<Payment>
     ) {
         launch(Dispatchers.IO) {
             runCatching {
