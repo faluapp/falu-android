@@ -47,12 +47,13 @@ dependencies {
     testImplementation "org.mockito:mockito-core:$mockito_core_version"
     testImplementation "org.mockito.kotlin:mockito-kotlin:$mockito_kotlin_version"
     testImplementation "org.mockito:mockito-inline:$mockito_core_version"
-    testImplementation 'org.robolectric:robolectric:4.8.2'
+    testImplementation "org.robolectric:robolectric:$robo_version"
     testImplementation "org.mockito:mockito-core:4.8.0"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test-annotations-common:$kotlin_version"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
+    testImplementation "com.squareup.okhttp3:mockwebserver:$mock_server_version"
 }
 
 ext {
