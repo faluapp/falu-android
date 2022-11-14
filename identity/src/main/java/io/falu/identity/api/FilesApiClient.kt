@@ -14,7 +14,7 @@ import software.tingle.api.authentication.EmptyAuthenticationProvider
 import java.io.File
 import java.util.concurrent.TimeUnit
 
-internal class CountriesApiClient : AbstractHttpApiClient(EmptyAuthenticationProvider()) {
+internal class FilesApiClient : AbstractHttpApiClient(EmptyAuthenticationProvider()) {
 
     @Throws(
         AuthenticationException::class,
