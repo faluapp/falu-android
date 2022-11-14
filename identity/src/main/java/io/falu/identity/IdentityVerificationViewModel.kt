@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistryOwner
 import io.falu.core.models.FaluFile
-import io.falu.identity.api.CountriesApiClient
+import io.falu.identity.api.FilesApiClient
 import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.IdentityVerificationApiClient
 import io.falu.identity.api.models.DocumentSide
@@ -39,7 +39,7 @@ internal class IdentityVerificationViewModel(
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO
 
-    private val countriesApiClient = CountriesApiClient()
+    private val filesApiClient = FilesApiClient()
 
     /**
      *
@@ -226,7 +226,7 @@ internal class IdentityVerificationViewModel(
     internal fun fetchSupportedCountries() {
         launch(Dispatchers.IO) {
             runCatching {
-                countriesApiClient.getSupportedCountries()
+                filesApiClient.getSupportedCountries()
             }.fold(
                 onSuccess = {
                     _supportedCountries.postValue(it)
@@ -241,7 +241,7 @@ internal class IdentityVerificationViewModel(
     private fun downloadAIModel(url: String, liveData: MutableLiveData<ResourceResponse<File>?>) {
         launch(Dispatchers.IO) {
             runCatching {
-                countriesApiClient.downloadModelFile(url)
+                filesApiClient.downloadModelFile(url)
             }.fold(
                 onSuccess = {
                     liveData.postValue(it)
