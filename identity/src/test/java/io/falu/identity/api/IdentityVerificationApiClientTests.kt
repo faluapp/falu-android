@@ -76,7 +76,7 @@ class IdentityVerificationApiClientTests {
         mockWebServer = MockWebServer()
         mockWebServer.start()
     }
-    companion object {        private const val baseUrl = "https://api.falu.io"        private const val filePurpose = "identity.private"    }}
+
     @Test
     fun `test if fetching verification works`() {
         mockWebServer.url("$baseUrl/v1/identity/verifications/${verification.id}/workflow")
@@ -107,3 +107,63 @@ class IdentityVerificationApiClientTests {
         assertNotNull(response.resource)
         assertEquals(response.resource!!.id, verification.id)
     }
+
+    @Test
+    fun `test if identity document upload works`() {
+        mockWebServer.url("${baseUrl}/v1/files")
+
+        val resourceResponse = getResponse(tResponse = faluFile)
+        whenever(apiClient.uploadIdentityDocuments(eq(verification.id), eq(filePurpose), eq(file)))
+            .thenReturn(resourceResponse)
+
+        mockWebServer.enqueue(getMockedResponse(tResponse = faluFile))
+
+        val response = apiClient.uploadIdentityDocuments(verification.id, filePurpose, file)
+        assertNotNull(response.resource)
+        assertEquals(response.resource!!.id, faluFile.id)
+    }
+
+    @Test
+    fun `test  if verification submission works`() {
+        mockWebServer.url("$baseUrl/v1/identity/verifications/$verification/workflow/submit")
+
+        val request = VerificationUploadRequest(
+            consent = true,
+            country = "ken",
+            document = VerificationDocumentUpload(
+                IdentityDocumentType.IDENTITY_CARD,
+                back = VerificationDocumentSide(file = "file_123", method = UploadMethod.MANUAL),
+                front = VerificationDocumentSide(file = "file_456", method = UploadMethod.MANUAL)
+            )
+        )
+
+        val resourceResponse = getResponse(tResponse = verification)
+
+        whenever(apiClient.submitVerificationDocuments(eq(verification.id), eq(request)))
+            .thenReturn(resourceResponse)
+
+        mockWebServer.enqueue(getMockedResponse(tResponse = verification))
+
+        val response = apiClient.submitVerificationDocuments(verification.id, request)
+        assertNotNull(response.resource)
+        assertEquals(response.resource!!.id, verification.id)
+    }
+
+    private fun <T> getMockedResponse(statusCode: Int = 200, tResponse: T?): MockResponse {
+        val responseBody = gson.toJson(tResponse)
+
+        return MockResponse()
+            .setResponseCode(statusCode)
+            .setBody(responseBody)
+    }
+
+    private fun <T> getResponse(statusCode: Int = 200, tResponse: T?): ResourceResponse<T> {
+        val mockedResponse = getMockedResponse(statusCode, tResponse)
+        return ResourceResponse(statusCode, mockedResponse.headers, tResponse, null)
+    }
+
+    companion object {
+        private const val baseUrl = "https://api.falu.io"
+        private const val filePurpose = "identity.private"
+    }
+}
