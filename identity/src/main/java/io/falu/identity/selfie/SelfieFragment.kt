@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.camera.core.CameraSelector
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import io.falu.core.models.FaluFile
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
@@ -21,8 +22,9 @@ import io.falu.identity.utils.submitVerificationData
 import io.falu.identity.utils.updateVerification
 import software.tingle.api.patch.JsonPatchDocument
 
-class SelfieFragment : Fragment() {
-    private val identityViewModel: IdentityVerificationViewModel by activityViewModels()
+class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factory) : Fragment() {
+
+    private val identityViewModel: IdentityVerificationViewModel by activityViewModels { identityViewModelFactory }
 
     private var _binding: FragmentSelfieBinding? = null
     private val binding get() = _binding!!
