@@ -5,8 +5,8 @@ import android.util.Log
 import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistryOwner
 import io.falu.core.models.FaluFile
-import io.falu.identity.api.FilesApiClient
 import io.falu.identity.api.DocumentUploadDisposition
+import io.falu.identity.api.FilesApiClient
 import io.falu.identity.api.IdentityVerificationApiClient
 import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.UploadMethod
@@ -307,9 +307,9 @@ internal class IdentityVerificationViewModel(
 
         fun factoryProvider(
             savedStateRegistryOwner: SavedStateRegistryOwner,
-            apiClient: IdentityVerificationApiClient,
-            fileUtils: FileUtils,
-            contractArgs: ContractArgs,
+            apiClient: () -> IdentityVerificationApiClient,
+            fileUtils: () -> FileUtils,
+            contractArgs: () -> ContractArgs,
         ): AbstractSavedStateViewModelFactory =
             object : AbstractSavedStateViewModelFactory(savedStateRegistryOwner, null) {
                 override fun <T : ViewModel> create(
@@ -317,7 +317,11 @@ internal class IdentityVerificationViewModel(
                     modelClass: Class<T>,
                     handle: SavedStateHandle
                 ): T {
-                    return IdentityVerificationViewModel(apiClient, contractArgs, fileUtils) as T
+                    return IdentityVerificationViewModel(
+                        apiClient(),
+                        contractArgs(),
+                        fileUtils()
+                    ) as T
                 }
             }
     }

@@ -22,9 +22,9 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
     internal val factory =
         IdentityVerificationViewModel.factoryProvider(
             this,
-            apiClient,
-            fileUtils,
-            contractArgs
+            { apiClient },
+            { fileUtils },
+            { contractArgs }
         )
 
     private val verificationViewModel: IdentityVerificationViewModel by viewModels {
@@ -36,23 +36,24 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
         ActivityIdentityVerificationBinding.inflate(layoutInflater)
     }
 
-    private lateinit var contractArgs: ContractArgs
-
-    private lateinit var fileUtils: FileUtils
-
-    private lateinit var apiClient: IdentityVerificationApiClient
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        contractArgs = requireNotNull(ContractArgs.getFromIntent(intent)) {
+    private val contractArgs: ContractArgs by lazy {
+        requireNotNull(ContractArgs.getFromIntent(intent)) {
             "Arguments are required."
         }
+    }
 
-        apiClient =
-            IdentityVerificationApiClient(this, contractArgs.temporaryKey, BuildConfig.DEBUG)
+    private val fileUtils: FileUtils by lazy {
+        FileUtils(this)
+    }
 
-        fileUtils = FileUtils(this)
+    private val apiClient: IdentityVerificationApiClient by lazy {
+        IdentityVerificationApiClient(this, contractArgs.temporaryKey, BuildConfig.DEBUG)
+    }
 
-        supportFragmentManager.fragmentFactory = IdentityVerificationFragmentFactory(this, factory)
+    override fun onCreate(savedInstanceState: Bundle?) {
+
+        supportFragmentManager.fragmentFactory =
+            IdentityVerificationFragmentFactory(this, factory)
 
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
