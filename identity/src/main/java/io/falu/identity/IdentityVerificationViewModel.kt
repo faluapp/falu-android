@@ -25,6 +25,7 @@ import software.tingle.api.HttpApiResponseProblem
 import software.tingle.api.ResourceResponse
 import software.tingle.api.patch.JsonPatchDocument
 import java.io.File
+import java.io.InputStream
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -293,6 +294,10 @@ internal class IdentityVerificationViewModel(
             return@withContext
         }
         onError(response)
+    }
+
+    fun getModel(stream: InputStream, fileName: String): File {
+        return fileUtils.createFileFromInputStream(stream, fileName)
     }
 
     private suspend fun handleFailureResponse(

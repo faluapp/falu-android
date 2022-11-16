@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.camera.core.CameraSelector
 import androidx.lifecycle.ViewModelProvider
 import io.falu.identity.R
+import io.falu.identity.ai.DocumentDetectionAnalyzer
 import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.IdentityDocumentType
@@ -31,6 +32,10 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val inputStream = resources.openRawResource(R.raw.model)
+        val file = identityViewModel.getModel(inputStream, "model.tflite")
+        val analyzer = DocumentDetectionAnalyzer(file)
+
         binding.tvScanDocumentSide.text = getString(
             R.string.scan_capture_text_document_side,
             identityDocumentType?.getIdentityDocumentName(requireContext())
@@ -43,6 +48,9 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
 
         binding.viewCamera.lifecycleOwner = viewLifecycleOwner
         binding.viewCamera.lensFacing = CameraSelector.LENS_FACING_BACK
+
+        binding.viewCamera.analyzers.add(analyzer)
+
         binding.viewCamera.cameraViewType =
             if (identityDocumentType != IdentityDocumentType.PASSPORT) CameraView.CameraViewType.ID else CameraView.CameraViewType.PASSPORT
 

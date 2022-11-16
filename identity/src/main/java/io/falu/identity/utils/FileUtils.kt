@@ -6,6 +6,7 @@ import android.net.Uri
 import androidx.core.content.FileProvider
 import java.io.File
 import java.io.FileOutputStream
+import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -26,6 +27,18 @@ internal class FileUtils internal constructor(private val context: Context) {
                         )
                     }
 
+                    return outputFile
+                }
+        }
+    }
+
+    fun createFileFromInputStream(stream: InputStream, fileName: String): File {
+        stream.use { inputStream ->
+            File(context.filesDir, fileName)
+                .let { outputFile ->
+                    FileOutputStream(outputFile, false).use { outputStream ->
+                        inputStream.copyTo(outputStream)
+                    }
                     return outputFile
                 }
         }
