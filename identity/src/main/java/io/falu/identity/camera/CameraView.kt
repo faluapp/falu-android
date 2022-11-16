@@ -95,6 +95,8 @@ internal class CameraView @JvmOverloads constructor(
             _cameraViewType = value
         }
 
+    val analyzers: MutableList<ImageAnalysis.Analyzer> = mutableListOf()
+
     init {
         context.withStyledAttributes(attrs, R.styleable.CameraView) {
             if (attrs != null) {
@@ -172,9 +174,13 @@ internal class CameraView @JvmOverloads constructor(
             .setTargetRotation(rotation)
             .build()
             .also {
-                it.setAnalyzer(ContextCompat.getMainExecutor(context), LumaAnalyzer {
-                    brightness = it
+                it.setAnalyzer(ContextCompat.getMainExecutor(context), LumaAnalyzer { luma ->
+                    brightness = luma
                 })
+
+                analyzers.forEach { analyzer ->
+                    it.setAnalyzer(ContextCompat.getMainExecutor(context), analyzer)
+                }
             }
 
         cameraProvider.unbindAll()

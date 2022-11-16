@@ -2,6 +2,7 @@ package io.falu.identity.camera
 
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import io.falu.identity.utils.toByteArray
 import java.nio.ByteBuffer
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -18,19 +19,9 @@ internal class LumaAnalyzer(val listener: LumaListener) : ImageAnalysis.Analyzer
     private val frameRateWindow = 8
     private val frameTimestamps = ArrayDeque<Long>(5)
     private var lastAnalyzedTimestamp = 0L
+
     var framesPerSecond: Double = -1.0
         private set
-
-    /**
-     * Helper extension function used to extract a byte array from an
-     * image plane buffer
-     */
-    private fun ByteBuffer.toByteArray(): ByteArray {
-        rewind() // Rewind the buffer to zero
-        val data = ByteArray(remaining())
-        get(data) // Copy the buffer into a byte array
-        return data // Return the byte array
-    }
 
     override fun analyze(image: ImageProxy) {
         // Keep track of frames analyzed
