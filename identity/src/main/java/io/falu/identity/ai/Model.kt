@@ -3,7 +3,7 @@ package io.falu.identity.ai
 /**
  *
  */
-internal enum class DocumentCategory {
+internal enum class DocumentOption {
     HUDAMA_BACK,
     HUDAMA_FRONT,
     KENYA_DL_BACK,
@@ -32,7 +32,7 @@ internal interface DetectionOutput
 /***/
 
 internal data class DocumentDetectionOutput(
-    var box: BoundingBox,
     var score: Float,
+    var option: DocumentOption,
     var scores: MutableList<Float>
 ): DetectionOutput
