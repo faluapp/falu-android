@@ -1,7 +1,6 @@
 package io.falu.identity.ai
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import io.falu.identity.utils.toBitmap
@@ -21,14 +20,14 @@ internal class DocumentDetectionAnalyzer internal constructor(model: File) :
 
     @SuppressLint("UnsafeOptInUsageError")
     override fun analyze(image: ImageProxy) {
-        if ( isFrameProcessing ) {
+        if (isFrameProcessing) {
             image.close()
             return
         }
 
         isFrameProcessing = true
 
-        // Input
+        // Input:- [1,1,1,3]
         val bitmap = image.image?.toBitmap()
         var tensorImage = TensorImage(TENSOR_DATA_TYPE)
         tensorImage.load(bitmap)
@@ -38,72 +37,59 @@ internal class DocumentDetectionAnalyzer internal constructor(model: File) :
             .add(ResizeOp(IMAGE_HEIGHT, IMAGE_WIDTH, ResizeOp.ResizeMethod.BILINEAR))
             .build()
         tensorImage = processor.process(tensorImage)
-        
-        // run
-        val boundingBoxes = Array(200) { FloatArray(BOUNDING_BOX_TENSOR_SIZE) }
-        val documentOptions = Array(200) { FloatArray(DOCUMENT_CATEGORY_TENSOR_SIZE) }
 
-        interpreter.runForMultipleInputsOutputs(
-            arrayOf(tensorImage.buffer), mapOf(
-                BOUNDING_BOX_TENSOR_INDEX to boundingBoxes,
-                CATEGORY_TENSOR_INDEX to documentOptions
-            )
-        )
+        // run:- input: [1,1,1,3], output: (1,6)
+        // The output is an array representing the probability scores of the various document types
+        val documentOptionScores = Array(OUTPUT_SIZE) { FloatArray(DOCUMENT_OPTION_TENSOR_SIZE) }
+
+        interpreter.run(tensorImage.buffer, documentOptionScores)
 
         // Process results:
         // Find the highest score and return the corresponding box and document option
-
         var bestIndex = 0
-        var bestScore = Float.MIN_VALUE
-        var bestDocumentOptionIndex = 0
+        var bestScore = 0F
+        var bestOptionIndex = INVALID
 
-        for (score in 0 until 200) {
-            val currentScores = documentOptions[score]
-            val currentBestDocumentOptionIndex = currentScores.indices.maxBy { currentScores[it] }
+        for (score in 0 until OUTPUT_SIZE) {
+            val currentDocumentScores = documentOptionScores[score]
+            val currentBestDocumentOptionIndex =
+                currentDocumentScores.indices.maxBy { currentDocumentScores[it] }
 
-            val best = currentScores[bestDocumentOptionIndex]
+            val currentBestOptionScore = currentDocumentScores[currentBestDocumentOptionIndex]
 
-            // TODO : Set the threshold score
-            if (bestScore < best) {
-                bestScore = best
+            if (bestScore < currentBestOptionScore && currentBestOptionScore > 0.5) {
+                bestScore = currentBestOptionScore
                 bestIndex = score
-                bestDocumentOptionIndex = currentBestDocumentOptionIndex
+                bestOptionIndex = currentBestDocumentOptionIndex
             }
         }
 
-        val bestBoundingBox = boundingBoxes[bestIndex]
+        val bestOption = DOCUMENT_OPTIONS_MAP[bestOptionIndex] ?: DocumentOption.INVALID
 
         val output = DocumentDetectionOutput(
-            box = BoundingBox(
-                bestBoundingBox[0],
-                bestBoundingBox[1],
-                bestBoundingBox[2],
-                bestBoundingBox[3]
-            ),
             score = bestScore,
-            scores = mutableListOf()
+            option = bestOption,
+            scores = DOCUMENT_OPTIONS.map { documentOptionScores[bestIndex][it] }.toMutableList()
         )
 
-        print(output)
+        // TODO: 2022-11-17 Return result.
     }
 
     internal companion object {
         private val TENSOR_DATA_TYPE = DataType.FLOAT32
-        private val DOCUMENT_CATEGORY_TENSOR_SIZE = DocumentCategory.values().size
+        private val DOCUMENT_OPTION_TENSOR_SIZE = DocumentOption.values().size - 1
 
-        private const val IMAGE_WIDTH = 224
-        private const val IMAGE_HEIGHT = 224
-        private const val BOUNDING_BOX_TENSOR_SIZE = 4
-        private const val BOUNDING_BOX_TENSOR_INDEX = 0
-        private const val CATEGORY_TENSOR_INDEX = 1
+        private const val IMAGE_WIDTH = 1
+        private const val IMAGE_HEIGHT = 1
+        private const val OUTPUT_SIZE = 1
 
-        private const val HUDUMA_BACK = "huduma_back"
-        private const val HUDUMA_FRONT = "huduma_front"
-        private const val KENYA_DL_BACK = "kenya_dl_back"
-        private const val KENYA_DL_FRONT = "kenya_dl_front"
-        private const val KENYA_ID_BACK = "kenya_id_back"
-        private const val KENYA_ID_FRONT = "kenya_id_front"
-        private const val DOCUMENT_OPTION_INVALID = "invalid"
+        private const val HUDUMA_BACK = 0
+        private const val HUDUMA_FRONT = 1
+        private const val KENYA_DL_BACK = 2
+        private const val KENYA_DL_FRONT = 3
+        private const val KENYA_ID_BACK = 4
+        private const val KENYA_ID_FRONT = 5
+        private const val INVALID = -1
 
         private val DOCUMENT_OPTIONS = listOf(
             HUDUMA_BACK,
@@ -112,17 +98,15 @@ internal class DocumentDetectionAnalyzer internal constructor(model: File) :
             KENYA_DL_FRONT,
             KENYA_ID_BACK,
             KENYA_ID_FRONT,
-            DOCUMENT_OPTION_INVALID
         )
 
-        private val DOCUMENT_CATEGORY_MAP = mapOf(
-            HUDUMA_BACK to DocumentCategory.HUDAMA_BACK,
-            HUDUMA_FRONT to DocumentCategory.HUDAMA_FRONT,
-            KENYA_DL_BACK to DocumentCategory.KENYA_DL_BACK,
-            KENYA_DL_FRONT to DocumentCategory.KENYA_DL_FRONT,
-            KENYA_ID_BACK to DocumentCategory.KENYA_ID_BACK,
-            KENYA_ID_FRONT to DocumentCategory.KENYA_DL_FRONT,
-            DOCUMENT_OPTION_INVALID to DocumentCategory.INVALID
+        private val DOCUMENT_OPTIONS_MAP = mapOf(
+            HUDUMA_BACK to DocumentOption.HUDAMA_BACK,
+            HUDUMA_FRONT to DocumentOption.HUDAMA_FRONT,
+            KENYA_DL_BACK to DocumentOption.KENYA_DL_BACK,
+            KENYA_DL_FRONT to DocumentOption.KENYA_DL_FRONT,
+            KENYA_ID_BACK to DocumentOption.KENYA_ID_BACK,
+            KENYA_ID_FRONT to DocumentOption.KENYA_DL_FRONT,
         )
     }
 }
