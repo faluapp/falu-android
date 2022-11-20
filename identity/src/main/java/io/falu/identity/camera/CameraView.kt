@@ -172,6 +172,7 @@ internal class CameraView @JvmOverloads constructor(
 
         imageAnalysis = ImageAnalysis.Builder()
             .setTargetRotation(rotation)
+            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
             .build()
             .also {
                 it.setAnalyzer(ContextCompat.getMainExecutor(context), LumaAnalyzer { luma ->
