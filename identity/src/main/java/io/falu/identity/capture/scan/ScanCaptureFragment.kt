@@ -32,8 +32,8 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val inputStream = resources.openRawResource(R.raw.model)
-        val file = identityViewModel.getModel(inputStream, "model.tflite")
+        val inputStream = resources.openRawResource(R.raw.converted_model3)
+        val file = identityViewModel.getModel(inputStream, "converted_model3.tflite")
         val analyzer = DocumentDetectionAnalyzer(file)
 
         binding.tvScanDocumentSide.text = getString(

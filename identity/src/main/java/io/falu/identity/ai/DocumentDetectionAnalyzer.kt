@@ -1,6 +1,7 @@
 package io.falu.identity.ai
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import io.falu.identity.utils.toBitmap
@@ -16,17 +17,8 @@ internal class DocumentDetectionAnalyzer internal constructor(model: File) :
 
     private val interpreter = Interpreter(model)
 
-    private var isFrameProcessing = false
-
     @SuppressLint("UnsafeOptInUsageError")
     override fun analyze(image: ImageProxy) {
-        if (isFrameProcessing) {
-            image.close()
-            return
-        }
-
-        isFrameProcessing = true
-
         // Input:- [1,1,1,3]
         val bitmap = image.image?.toBitmap()
         var tensorImage = TensorImage(TENSOR_DATA_TYPE)
@@ -57,7 +49,7 @@ internal class DocumentDetectionAnalyzer internal constructor(model: File) :
 
             val currentBestOptionScore = currentDocumentScores[currentBestDocumentOptionIndex]
 
-            if (bestScore < currentBestOptionScore && currentBestOptionScore > 0.5) {
+            if (bestScore < currentBestOptionScore && currentBestOptionScore > 0.8) {
                 bestScore = currentBestOptionScore
                 bestIndex = score
                 bestOptionIndex = currentBestDocumentOptionIndex
@@ -72,15 +64,17 @@ internal class DocumentDetectionAnalyzer internal constructor(model: File) :
             scores = DOCUMENT_OPTIONS.map { documentOptionScores[bestIndex][it] }.toMutableList()
         )
 
+
         // TODO: 2022-11-17 Return result.
+        image.close()
     }
 
     internal companion object {
         private val TENSOR_DATA_TYPE = DataType.FLOAT32
         private val DOCUMENT_OPTION_TENSOR_SIZE = DocumentOption.values().size - 1
 
-        private const val IMAGE_WIDTH = 1
-        private const val IMAGE_HEIGHT = 1
+        private const val IMAGE_WIDTH = 224
+        private const val IMAGE_HEIGHT = 224
         private const val OUTPUT_SIZE = 1
 
         private const val HUDUMA_BACK = 0
