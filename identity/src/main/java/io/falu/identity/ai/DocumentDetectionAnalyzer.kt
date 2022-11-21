@@ -1,9 +1,11 @@
 package io.falu.identity.ai
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import io.falu.identity.camera.AnalyzerBuilder
+import io.falu.identity.camera.AnalyzerOutputListener
+import io.falu.identity.capture.scan.utils.DocumentScanDisposition
 import io.falu.identity.utils.toBitmap
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
@@ -12,7 +14,11 @@ import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
 import java.io.File
 
-internal class DocumentDetectionAnalyzer internal constructor(model: File) :
+internal class DocumentDetectionAnalyzer internal constructor(
+    model: File,
+    private val threshold: Float,
+    private val listener: AnalyzerOutputListener
+) :
     ImageAnalysis.Analyzer {
 
     private val interpreter = Interpreter(model)
@@ -49,7 +55,7 @@ internal class DocumentDetectionAnalyzer internal constructor(model: File) :
 
             val currentBestOptionScore = currentDocumentScores[currentBestDocumentOptionIndex]
 
-            if (bestScore < currentBestOptionScore && currentBestOptionScore > 0.8) {
+            if (bestScore < currentBestOptionScore && currentBestOptionScore > threshold) {
                 bestScore = currentBestOptionScore
                 bestIndex = score
                 bestOptionIndex = currentBestDocumentOptionIndex
@@ -64,9 +70,17 @@ internal class DocumentDetectionAnalyzer internal constructor(model: File) :
             scores = DOCUMENT_OPTIONS.map { documentOptionScores[bestIndex][it] }.toMutableList()
         )
 
+        listener(output)
 
-        // TODO: 2022-11-17 Return result.
         image.close()
+    }
+
+    internal class Builder(private val model: File, private val threshold: Float) :
+        AnalyzerBuilder<DocumentScanDisposition, DetectionOutput, ImageAnalysis.Analyzer> {
+
+        override fun instance(result: (DetectionOutput) -> Unit): ImageAnalysis.Analyzer {
+            return DocumentDetectionAnalyzer(model, threshold, result)
+        }
     }
 
     internal companion object {
