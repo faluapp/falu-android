@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.camera.core.CameraSelector
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import io.falu.identity.R
 import io.falu.identity.ai.DocumentDetectionAnalyzer
@@ -20,6 +21,8 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
     private var _binding: FragmentScanCaptureBinding? = null
     private val binding get() = _binding!!
 
+    private val documentScanViewModel: DocumentScanViewModel by activityViewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,23 +37,10 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
 
         val inputStream = resources.openRawResource(R.raw.converted_model3)
         val file = identityViewModel.getModel(inputStream, "converted_model3.tflite")
-        val analyzer = DocumentDetectionAnalyzer(file)
-
-        binding.tvScanDocumentSide.text = getString(
-            R.string.scan_capture_text_document_side,
-            identityDocumentType?.getIdentityDocumentName(requireContext())
-        )
-
-        binding.tvScanMessage.text = getString(
-            R.string.scan_capture_text_scan_message,
-            identityDocumentType?.getIdentityDocumentName(requireContext())
-        )
 
         binding.viewCamera.lifecycleOwner = viewLifecycleOwner
         binding.viewCamera.lensFacing = CameraSelector.LENS_FACING_BACK
-
-        binding.viewCamera.analyzers.add(analyzer)
-
+        
         binding.viewCamera.cameraViewType =
             if (identityDocumentType != IdentityDocumentType.PASSPORT) CameraView.CameraViewType.ID else CameraView.CameraViewType.PASSPORT
 
@@ -83,5 +73,9 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
     }
 
     override fun resetViews(documentSide: DocumentSide) {
+    }
+
+    internal companion object {
+        private val TAG = ScanCaptureFragment::class.java.simpleName
     }
 }

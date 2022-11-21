@@ -28,9 +28,7 @@ internal data class BoundingBox(
  */
 internal interface DetectionOutput
 
-
 /***/
-
 internal data class DocumentDetectionOutput(
     var score: Float,
     var option: DocumentOption,
