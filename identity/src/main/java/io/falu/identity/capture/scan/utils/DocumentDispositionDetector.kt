@@ -12,4 +12,14 @@ internal interface DocumentDispositionDetector {
         state: DocumentScanDisposition.Detected,
         output: DetectionOutput
     ): DocumentScanDisposition
+
+    fun fromDesired(
+        state: DocumentScanDisposition.Desired,
+        output: DetectionOutput
+    ): DocumentScanDisposition
+
+    fun fromUndesired(
+        state: DocumentScanDisposition.Undesired,
+        output: DetectionOutput
+    ): DocumentScanDisposition
 }
