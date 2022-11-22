@@ -75,7 +75,35 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
     override fun resetViews(documentSide: DocumentSide) {
     }
 
+    private fun startScan(scanType: DocumentScanDisposition.DocumentScanType) {
+        val analyzers = binding.viewCamera.analyzers
+        documentScanViewModel.scanner?.scan(analyzers, scanType)
+    }
+
     internal companion object {
         private val TAG = ScanCaptureFragment::class.java.simpleName
+
+        private fun IdentityDocumentType.getScanType(): Pair<DocumentScanDisposition.DocumentScanType, DocumentScanDisposition.DocumentScanType?> {
+            return when (this) {
+                IdentityDocumentType.IDENTITY_CARD -> {
+                    Pair(
+                        DocumentScanDisposition.DocumentScanType.IDENTITY_DOCUMENT_FRONT,
+                        DocumentScanDisposition.DocumentScanType.IDENTITY_DOCUMENT_BACK
+                    )
+                }
+                IdentityDocumentType.PASSPORT -> {
+                    Pair(
+                        DocumentScanDisposition.DocumentScanType.PASSPORT,
+                        null
+                    )
+                }
+                IdentityDocumentType.DRIVING_LICENSE -> {
+                    Pair(
+                        DocumentScanDisposition.DocumentScanType.DL_FRONT,
+                        DocumentScanDisposition.DocumentScanType.DL_BACK
+                    )
+                }
+            }
+        }
     }
 }
