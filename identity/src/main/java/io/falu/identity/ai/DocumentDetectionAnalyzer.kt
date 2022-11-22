@@ -7,6 +7,7 @@ import io.falu.identity.camera.AnalyzerBuilder
 import io.falu.identity.camera.AnalyzerOutputListener
 import io.falu.identity.capture.scan.utils.DocumentScanDisposition
 import io.falu.identity.utils.toBitmap
+import io.falu.identity.utils.toJpegBitmap
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.support.image.ImageProcessor
@@ -67,6 +68,7 @@ internal class DocumentDetectionAnalyzer internal constructor(
         val output = DocumentDetectionOutput(
             score = bestScore,
             option = bestOption,
+            bitmap = image.image!!.toJpegBitmap(),
             scores = DOCUMENT_OPTIONS.map { documentOptionScores[bestIndex][it] }.toMutableList()
         )
 
