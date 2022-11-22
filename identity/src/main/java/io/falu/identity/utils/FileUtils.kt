@@ -1,6 +1,7 @@
 package io.falu.identity.utils
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.core.content.FileProvider
@@ -41,6 +42,18 @@ internal class FileUtils internal constructor(private val context: Context) {
                     }
                     return outputFile
                 }
+        }
+    }
+
+
+    fun createFileFromBitmap(bitmap: Bitmap, verification: String, imageSide: String): File {
+        File(context.filesDir, generateFileName(verification, imageSide)).let { outputFile ->
+            FileOutputStream(outputFile, false).use { outputStream ->
+                outputStream.write(
+                    bitmap.toJpgByteArray()
+                )
+            }
+            return outputFile
         }
     }
 

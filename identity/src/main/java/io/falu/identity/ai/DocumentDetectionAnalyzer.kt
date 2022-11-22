@@ -68,7 +68,7 @@ internal class DocumentDetectionAnalyzer internal constructor(
         val output = DocumentDetectionOutput(
             score = bestScore,
             option = bestOption,
-            bitmap = image.image!!.toJpegBitmap(),
+            bitmap = bitmap!!,
             scores = DOCUMENT_OPTIONS.map { documentOptionScores[bestIndex][it] }.toMutableList()
         )
 

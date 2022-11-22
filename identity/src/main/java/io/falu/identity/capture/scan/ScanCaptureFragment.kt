@@ -8,9 +8,11 @@ import androidx.camera.core.CameraSelector
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import io.falu.identity.R
+import io.falu.identity.ai.DocumentDetectionOutput
 import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.IdentityDocumentType
+import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.camera.CameraView
 import io.falu.identity.capture.AbstractCaptureFragment
 import io.falu.identity.capture.scan.utils.DocumentScanDisposition
@@ -57,6 +59,12 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
 
         binding.buttonContinue.text = getString(R.string.button_continue)
         binding.buttonContinue.isEnabled = false
+
+        identityViewModel.observeForVerificationResults(
+            viewLifecycleOwner,
+            onSuccess = { onVerificationPage(it) },
+            onError = {}
+        )
 
         documentScanViewModel.documentScanDisposition.observe(viewLifecycleOwner) {
             updateUI(it)
@@ -110,6 +118,23 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
 
             }
             is DocumentScanDisposition.Timeout, null -> { //noOP
+            }
+        }
+    }
+
+    private fun onVerificationPage(verification: Verification) {
+        documentScanViewModel.documentScanDisposition.observe(viewLifecycleOwner) {
+            if (it.disposition is DocumentScanDisposition.Completed) {
+                val output = it.output as DocumentDetectionOutput
+                identityViewModel.uploadScannedDocument(
+                    output.bitmap,
+                    verification = verification.id,
+                    scanType = it.disposition!!.type,
+                    onError = {},
+                    onFailure = {}
+                )
+            } else {
+                // something else.
             }
         }
     }

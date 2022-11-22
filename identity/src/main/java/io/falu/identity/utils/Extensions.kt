@@ -39,6 +39,9 @@ internal fun Bitmap.restrictToSize(maxHeight: Int, maxWidth: Int, filter: Boolea
     return this
 }
 
+/**
+ *
+ */
 @CheckResult
 internal fun Image.toBitmap(): Bitmap {
     val yBuffer = planes[0].buffer // Y
