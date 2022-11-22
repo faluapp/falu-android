@@ -1,5 +1,7 @@
 package io.falu.identity.ai
 
+import android.graphics.Bitmap
+
 /**
  *
  */
@@ -32,5 +34,6 @@ internal interface DetectionOutput
 internal data class DocumentDetectionOutput(
     var score: Float,
     var option: DocumentOption,
+    var bitmap: Bitmap,
     var scores: MutableList<Float>
 ): DetectionOutput
