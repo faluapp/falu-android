@@ -48,8 +48,8 @@
     <string name="upload_document_capture_document_back">Back of %1$s</string>
 
     <!--Scan Capture -->
-    <string name="scan_capture_text_document_side_front">%1$s document front scan</string>
-    <string name="scan_capture_text_document_side_back">%1$s document back scan</string>
+    <string name="scan_capture_text_document_side_front">%1$s front scan</string>
+    <string name="scan_capture_text_document_side_back">%1$s back scan</string>
     <string name="scan_capture_text_scan_message">Position your %1$s in the center.</string>
 
     <!-- Confirmation -->
