@@ -114,11 +114,14 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
             is DocumentScanDisposition.Detected -> {
 
             }
+            is DocumentScanDisposition.Desired -> {}
+            is DocumentScanDisposition.Undesired -> {}
             is DocumentScanDisposition.Completed -> {
 
             }
             is DocumentScanDisposition.Timeout, null -> { //noOP
             }
+
         }
     }
 

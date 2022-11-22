@@ -6,7 +6,9 @@ import io.falu.identity.ai.DocumentDetectionOutput
 import io.falu.identity.ai.DocumentOption
 
 
-internal class DocumentDispositionChanger : DocumentDispositionDetector {
+internal class DocumentDispositionChanger(
+    private val threshold: Float = THRESHOLD,
+) : DocumentDispositionDetector {
     override fun fromStart(
         state: DocumentScanDisposition.Start,
         output: DetectionOutput
@@ -30,9 +32,36 @@ internal class DocumentDispositionChanger : DocumentDispositionDetector {
         state: DocumentScanDisposition.Detected,
         output: DetectionOutput
     ): DocumentScanDisposition {
-        return DocumentScanDisposition.Completed(state.type, this)
+        require(output is DocumentDetectionOutput) {
+            "Unexpected output type: $output"
+        }
+
+        return when {
+            output.score < THRESHOLD -> DocumentScanDisposition.Undesired(
+                state.type, state.dispositionDetector
+            )
+            else -> {
+                DocumentScanDisposition.Desired(state.type, state.dispositionDetector)
+            }
+        }
     }
 
+    override fun fromDesired(
+        state: DocumentScanDisposition.Desired,
+        output: DetectionOutput
+    ): DocumentScanDisposition {
+        require(output is DocumentDetectionOutput) {
+            "Unexpected output type: $output"
+        }
+        return DocumentScanDisposition.Completed(state.type, state.dispositionDetector)
+    }
+
+    override fun fromUndesired(
+        state: DocumentScanDisposition.Undesired,
+        output: DetectionOutput
+    ): DocumentScanDisposition {
+        return DocumentScanDisposition.Start(state.type, state.dispositionDetector)
+    }
 
     private fun DocumentOption.matches(
         type: DocumentScanDisposition.DocumentScanType
@@ -62,5 +91,6 @@ internal class DocumentDispositionChanger : DocumentDispositionDetector {
 
     internal companion object {
         private val TAG = DocumentDispositionChanger::class.java.simpleName
+        private const val THRESHOLD = 0.8f
     }
 }

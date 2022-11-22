@@ -37,7 +37,23 @@ internal sealed class DocumentScanDisposition(
      */
     internal class Detected(type: DocumentScanType, detector: DocumentDispositionDetector) :
         DocumentScanDisposition(type, detector) {
-        override fun next(output: DetectionOutput) = this
+        override fun next(output: DetectionOutput) = dispositionDetector.fromDetected(this, output)
+    }
+
+    /**
+     *
+     */
+    internal class Desired(type: DocumentScanType, detector: DocumentDispositionDetector) :
+        DocumentScanDisposition(type, detector) {
+        override fun next(output: DetectionOutput): DocumentScanDisposition = this
+    }
+
+    /**
+     *
+     */
+    internal class Undesired(type: DocumentScanType, detector: DocumentDispositionDetector) :
+        DocumentScanDisposition(type, detector) {
+        override fun next(output: DetectionOutput): DocumentScanDisposition = this
     }
 
     /**
