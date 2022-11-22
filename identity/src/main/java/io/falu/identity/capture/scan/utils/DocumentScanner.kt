@@ -1,15 +1,16 @@
 import androidx.camera.core.ImageAnalysis
 import io.falu.identity.ai.DetectionOutput
 import io.falu.identity.ai.DocumentDetectionAnalyzer
-import io.falu.identity.capture.scan.DocumentScanResultCallback
 import io.falu.identity.capture.scan.utils.DocumentDispositionChanger
 import io.falu.identity.capture.scan.utils.DocumentScanDisposition
+import io.falu.identity.capture.scan.utils.DocumentScanResultCallback
+import io.falu.identity.capture.scan.utils.ScanResult
 import java.io.File
 
 internal class DocumentScanner(
     private val model: File,
     private val threshold: Float,
-    private val callback: DocumentScanResultCallback<DocumentScanDisposition, DetectionOutput>
+    private val callback: DocumentScanResultCallback<ScanResult, DetectionOutput>
 ) {
     private var disposition: DocumentScanDisposition? = null
     private var isFirstOutput = false
@@ -30,6 +31,8 @@ internal class DocumentScanner(
     private fun handleResult(output: DetectionOutput) {
         requireNotNull(disposition) { "Initial Disposition cannot be null" }
 
+        val result = ScanResult(output, disposition)
+
         if (isFirstOutput) {
             val previousDisposition = disposition!!
             disposition = previousDisposition.next(output)
@@ -37,11 +40,11 @@ internal class DocumentScanner(
             if (disposition is DocumentScanDisposition.Completed) {
                 callback.onScanComplete(output)
             } else {
-                callback.onProgress(disposition!!)
+                callback.onProgress(result)
             }
         } else {
             isFirstOutput = true
-            callback.onProgress(disposition!!)
+            callback.onProgress(result)
         }
     }
 }
