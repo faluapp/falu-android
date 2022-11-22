@@ -1,5 +1,6 @@
 package io.falu.identity
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.*
@@ -14,6 +15,7 @@ import io.falu.identity.api.models.country.SupportedCountry
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.api.models.verification.VerificationUploadResult
+import io.falu.identity.capture.scan.utils.DocumentScanDisposition
 import io.falu.identity.utils.FileUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -118,34 +120,18 @@ internal class IdentityVerificationViewModel(
         onError: (HttpApiResponseProblem?) -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
-        launch(Dispatchers.IO) {
-            runCatching {
-                apiClient.uploadIdentityDocuments(
-                    verification = contractArgs.verificationId,
-                    purpose = "identity.private",
-                    file = fileUtils.createFileFromUri(
-                        fileUri = uri,
-                        contractArgs.verificationId,
-                        documentSide.code
-                    )
-                )
-            }.fold(
-                onSuccess = { response ->
-                    if (response.successful() && response.resource != null) {
-                        val result = VerificationUploadResult(response.resource!!, type)
-                        _documentUploadDisposition.update { current ->
-                            current.modify(documentSide, result)
-                        }
-                    } else {
-                        handleResponse(response, onError = { onError(it?.error) })
-                    }
-                },
-                onFailure = {
-                    Log.e(TAG, "Error uploading verification document", it)
-                    handleFailureResponse(it, onFailure = onFailure)
-                }
-            )
-        }
+        uploadFile(
+            file = fileUtils.createFileFromUri(
+                fileUri = uri,
+                contractArgs.verificationId,
+                documentSide.code
+            ),
+            documentSide = documentSide,
+            type = type,
+            verification = contractArgs.verificationId,
+            onError = onError,
+            onFailure = onFailure
+        )
     }
 
     internal fun uploadSelfieImage(
@@ -170,6 +156,72 @@ internal class IdentityVerificationViewModel(
                 },
                 onFailure = {
                     Log.e(TAG, "Error uploading selfie image", it)
+                    handleFailureResponse(it, onFailure = onFailure)
+                }
+            )
+        }
+    }
+
+    /**
+     * Upload image from the scan.
+     */
+    internal fun uploadScannedDocument(
+        bitmap: Bitmap,
+        verification: String,
+        scanType: DocumentScanDisposition.DocumentScanType,
+        onError: (HttpApiResponseProblem?) -> Unit,
+        onFailure: (Throwable) -> Unit
+    ) {
+        val documentSide = when (scanType) {
+            DocumentScanDisposition.DocumentScanType.IDENTITY_DOCUMENT_FRONT,
+            DocumentScanDisposition.DocumentScanType.DL_FRONT,
+            DocumentScanDisposition.DocumentScanType.PASSPORT -> DocumentSide.FRONT
+            DocumentScanDisposition.DocumentScanType.IDENTITY_DOCUMENT_BACK,
+            DocumentScanDisposition.DocumentScanType.DL_BACK -> DocumentSide.BACK
+        }
+
+        uploadFile(
+            file = fileUtils.createFileFromBitmap(
+                bitmap = bitmap,
+                verification,
+                documentSide.code
+            ),
+            documentSide = documentSide,
+            type = UploadMethod.AUTO,
+            verification = contractArgs.verificationId,
+            onError = onError,
+            onFailure = onFailure
+        )
+    }
+
+    private fun uploadFile(
+        file: File,
+        documentSide: DocumentSide,
+        type: UploadMethod,
+        verification: String,
+        onError: (HttpApiResponseProblem?) -> Unit,
+        onFailure: (Throwable) -> Unit
+    ) {
+        launch(Dispatchers.IO) {
+            runCatching {
+                apiClient.uploadIdentityDocuments(
+                    verification = verification,
+                    purpose = "identity.private",
+                    file = file
+                )
+            }.fold(
+                onSuccess = { response ->
+                    if (response.successful() && response.resource != null) {
+                        val result = VerificationUploadResult(response.resource!!, type)
+                        _documentUploadDisposition.update { current ->
+                            current.modify(documentSide, result)
+                        }
+                    } else {
+                        handleResponse(response, onError = { onError(it?.error) })
+                    }
+                },
+                onFailure = {
+                    Log.e(TAG, "Error uploading verification document", it)
                     handleFailureResponse(it, onFailure = onFailure)
                 }
             )
