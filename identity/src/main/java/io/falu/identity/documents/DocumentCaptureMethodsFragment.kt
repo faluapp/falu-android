@@ -128,7 +128,7 @@ internal class DocumentCaptureMethodsFragment(private val factory: ViewModelProv
             when (this) {
                 IdentityDocumentType.IDENTITY_CARD,
                 IdentityDocumentType.PASSPORT,
-                IdentityDocumentType.DRIVING_LICENSE -> R.id.action_fragment_document_capture_methods_to_fragment_scan_capture
+                IdentityDocumentType.DRIVING_LICENSE -> R.id.action_fragment_document_capture_methods_to_fragment_scan_capture_side
             }
 
         fun IdentityDocumentType.getIdentityDocumentName(context: Context) =

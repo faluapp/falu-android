@@ -4,6 +4,7 @@
     <string name="button_finish">Complete</string>
     <string name="button_select">Select</string>
     <string name="button_take_photo">Take Photo</string>
+    <string name="button_scan">Scan</string>
     <string name="button_take_again">Take Again</string>
     <string name="button_rectify">Resolve Error</string>
     <string name="button_cancel">Cancel</string>
@@ -48,6 +49,7 @@
     <string name="upload_document_capture_document_back">Back of %1$s</string>
 
     <!--Scan Capture -->
+    <string name="scan_capture_title_scan">%1$s scan</string>
     <string name="scan_capture_text_document_side_front">%1$s front scan</string>
     <string name="scan_capture_text_document_side_back">%1$s back scan</string>
     <string name="scan_capture_text_scan_message">Position your %1$s in the center.</string>

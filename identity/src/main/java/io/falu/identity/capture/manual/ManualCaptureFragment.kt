@@ -54,17 +54,17 @@ internal class ManualCaptureFragment(identityViewModelFactory: ViewModelProvider
         binding.tvUploadTitle.text =
             getString(
                 R.string.upload_document_capture_title,
-                identityDocumentType?.getIdentityDocumentName(requireContext())
+                identityDocumentType.getIdentityDocumentName(requireContext())
             )
         binding.tvCardFront.text =
             getString(
                 R.string.upload_document_capture_document_font,
-                identityDocumentType?.getIdentityDocumentName(requireContext())
+                identityDocumentType.getIdentityDocumentName(requireContext())
             )
         binding.tvCardBack.text =
             getString(
                 R.string.upload_document_capture_document_back,
-                identityDocumentType?.getIdentityDocumentName(requireContext())
+                identityDocumentType.getIdentityDocumentName(requireContext())
             )
 
         binding.buttonSelectFront.setOnClickListener {
@@ -82,7 +82,7 @@ internal class ManualCaptureFragment(identityViewModelFactory: ViewModelProvider
 
             updateVerificationAndAttemptDocumentSubmission(
                 source = R.id.action_fragment_document_capture_methods_to_fragment_manual_capture,
-                disposition.generateVerificationUploadRequest(identityDocumentType!!)
+                disposition.generateVerificationUploadRequest(identityDocumentType)
             )
         }
     }

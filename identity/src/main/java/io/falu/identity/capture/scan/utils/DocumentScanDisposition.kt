@@ -19,7 +19,20 @@ internal sealed class DocumentScanDisposition(
         KENYA_DL_FRONT,
         KENYA_ID_BACK,
         KENYA_ID_FRONT,
-        PASSPORT
+        PASSPORT;
+
+        val isFront: Boolean
+            get() {
+                return this == KENYA_DL_FRONT ||
+                        this == KENYA_ID_FRONT ||
+                        this == PASSPORT
+            }
+
+        val isBack: Boolean
+            get() {
+                return this == KENYA_DL_BACK ||
+                        this == KENYA_ID_BACK
+            }
     }
 
     /**
