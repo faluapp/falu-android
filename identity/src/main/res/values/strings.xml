@@ -51,6 +51,8 @@
     <string name="scan_capture_text_document_side_front">%1$s front scan</string>
     <string name="scan_capture_text_document_side_back">%1$s back scan</string>
     <string name="scan_capture_text_scan_message">Position your %1$s in the center.</string>
+    <string name="scan_capture_text_document_detected">Document detected, stay still!</string>
+    <string name="scan_capture_text_document_scan_completed">Document scanned</string>
 
     <!-- Confirmation -->
     <string name="confirmation_title_verification_processing">Verification Processing</string>
