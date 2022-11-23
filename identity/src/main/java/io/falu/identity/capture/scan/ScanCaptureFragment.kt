@@ -112,16 +112,18 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
                 resetUI()
             }
             is DocumentScanDisposition.Detected -> {
-
+                binding.tvScanMessage.text = getString(R.string.scan_capture_text_document_detected)
             }
-            is DocumentScanDisposition.Desired -> {}
+            is DocumentScanDisposition.Desired -> {
+                binding.tvScanMessage.text =
+                    getString(R.string.scan_capture_text_document_scan_completed)
+            }
             is DocumentScanDisposition.Undesired -> {}
             is DocumentScanDisposition.Completed -> {
 
             }
             is DocumentScanDisposition.Timeout, null -> { //noOP
             }
-
         }
     }
 
@@ -147,8 +149,8 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
             return when (this) {
                 IdentityDocumentType.IDENTITY_CARD -> {
                     Pair(
-                        DocumentScanDisposition.DocumentScanType.IDENTITY_DOCUMENT_FRONT,
-                        DocumentScanDisposition.DocumentScanType.IDENTITY_DOCUMENT_BACK
+                        DocumentScanDisposition.DocumentScanType.KENYA_DL_FRONT,
+                        DocumentScanDisposition.DocumentScanType.KENYA_ID_BACK
                     )
                 }
                 IdentityDocumentType.PASSPORT -> {
@@ -159,8 +161,8 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
                 }
                 IdentityDocumentType.DRIVING_LICENSE -> {
                     Pair(
-                        DocumentScanDisposition.DocumentScanType.DL_FRONT,
-                        DocumentScanDisposition.DocumentScanType.DL_BACK
+                        DocumentScanDisposition.DocumentScanType.KENYA_DL_FRONT,
+                        DocumentScanDisposition.DocumentScanType.KENYA_DL_BACK
                     )
                 }
             }
