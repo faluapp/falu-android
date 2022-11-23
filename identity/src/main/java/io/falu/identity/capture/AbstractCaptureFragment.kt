@@ -38,13 +38,12 @@ internal abstract class AbstractCaptureFragment(identityViewModelFactory: ViewMo
         captureDocumentViewModelFactory
     }
 
-    protected var identityDocumentType: IdentityDocumentType? = null
-
+    protected lateinit var identityDocumentType: IdentityDocumentType
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         identityDocumentType =
-            requireArguments().getSerializable(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE) as? IdentityDocumentType
+            requireArguments().getSerializable(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE) as IdentityDocumentType
 
         uploadStateObservations()
     }

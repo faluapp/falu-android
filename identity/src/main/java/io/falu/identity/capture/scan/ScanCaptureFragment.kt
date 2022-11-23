@@ -21,6 +21,8 @@ import io.falu.identity.databinding.FragmentScanCaptureBinding
 
 internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.Factory) :
     AbstractCaptureFragment(identityViewModelFactory) {
+    private var scanType: DocumentScanDisposition.DocumentScanType? = null
+
     private var _binding: FragmentScanCaptureBinding? = null
     private val binding get() = _binding!!
 
@@ -37,19 +39,21 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        scanType = identityDocumentType.getScanType().first
 
         resetUI()
 
         binding.tvScanMessage.text = getString(
             R.string.scan_capture_text_scan_message,
-            identityDocumentType?.getIdentityDocumentName(requireContext())
+            identityDocumentType.getIdentityDocumentName(requireContext())
         )
 
         val inputStream = resources.openRawResource(R.raw.converted_model3)
         val file = identityViewModel.getModel(inputStream, "converted_model3.tflite")
 
         documentScanViewModel.initialize(file, 0.5f)
-        startScan(identityDocumentType!!.getScanType().first)
+
+        startScan(scanType!!)
 
         binding.viewCamera.lifecycleOwner = viewLifecycleOwner
         binding.viewCamera.lensFacing = CameraSelector.LENS_FACING_BACK
@@ -100,10 +104,22 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
     }
 
     private fun resetUI() {
-        binding.tvScanDocumentSide.text = getString(
-            R.string.scan_capture_text_document_side_front,
-            identityDocumentType?.getIdentityDocumentName(requireContext())
-        )
+
+        when {
+            scanType!!.isFront -> {
+                binding.tvScanDocumentSide.text = getString(
+                    R.string.scan_capture_text_document_side_front,
+                    identityDocumentType.getIdentityDocumentName(requireContext())
+                )
+            }
+            scanType!!.isBack -> {
+                binding.tvScanDocumentSide.text = getString(
+                    R.string.scan_capture_text_document_side_back,
+                    identityDocumentType.getIdentityDocumentName(requireContext())
+                )
+            }
+        }
+
     }
 
     private fun updateUI(result: ScanResult) {
@@ -128,7 +144,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
     }
 
     private fun onVerificationPage(verification: Verification) {
-        documentScanViewModel.documentScanDisposition.observe(viewLifecycleOwner) {
+        documentScanViewModel.documentScanCompleteDisposition.observe(viewLifecycleOwner) {
             if (it.disposition is DocumentScanDisposition.Completed) {
                 val output = it.output as DocumentDetectionOutput
                 identityViewModel.uploadScannedDocument(

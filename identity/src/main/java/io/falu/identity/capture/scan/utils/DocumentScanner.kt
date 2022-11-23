@@ -10,7 +10,7 @@ import java.io.File
 internal class DocumentScanner(
     private val model: File,
     private val threshold: Float,
-    private val callback: DocumentScanResultCallback<ScanResult, DetectionOutput>
+    private val callback: DocumentScanResultCallback<ScanResult>
 ) {
     private var disposition: DocumentScanDisposition? = null
     private var isFirstOutput = false
@@ -31,18 +31,20 @@ internal class DocumentScanner(
     private fun handleResult(output: DetectionOutput) {
         requireNotNull(disposition) { "Initial Disposition cannot be null" }
 
-        val result = ScanResult(output, disposition)
-
         if (isFirstOutput) {
             val previousDisposition = disposition!!
             disposition = previousDisposition.next(output)
 
+            val result = ScanResult(output, disposition)
+
             if (disposition is DocumentScanDisposition.Completed) {
-                callback.onScanComplete(output)
+                callback.onScanComplete(result)
             } else {
                 callback.onProgress(result)
             }
         } else {
+            val result = ScanResult(output, disposition)
+
             isFirstOutput = true
             callback.onProgress(result)
         }

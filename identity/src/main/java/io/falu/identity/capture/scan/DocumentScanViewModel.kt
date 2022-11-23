@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import io.falu.identity.ai.DetectionOutput
 import io.falu.identity.ai.DocumentDetectionOutput
 import io.falu.identity.capture.scan.utils.DocumentScanResultCallback
 import io.falu.identity.capture.scan.utils.ScanResult
@@ -16,13 +15,20 @@ import java.io.File
 
 internal class DocumentScanViewModel :
     ViewModel(),
-    DocumentScanResultCallback<ScanResult, DetectionOutput> {
+    DocumentScanResultCallback<ScanResult> {
 
     /**
      *
      */
     private val _documentScanDisposition = MutableStateFlow(ScanResult())
     val documentScanDisposition: LiveData<ScanResult>
+        get() = _documentScanDisposition.asLiveData(Dispatchers.Main)
+
+    /**
+     *
+     */
+    private val _documentScanCompleteDisposition = MutableStateFlow(ScanResult())
+    val documentScanCompleteDisposition: LiveData<ScanResult>
         get() = _documentScanDisposition.asLiveData(Dispatchers.Main)
 
     /**
@@ -37,8 +43,13 @@ internal class DocumentScanViewModel :
         return scanner!!
     }
 
-    override fun onScanComplete(output: DetectionOutput) {
-        Log.d(TAG, "Scan completed: $output")
+    override fun onScanComplete(result: ScanResult) {
+        Log.d(TAG, "Scan completed: $result")
+        val documentDetectionOutput = result.output as DocumentDetectionOutput
+
+        _documentScanCompleteDisposition.update { current ->
+            current.modify(output = documentDetectionOutput, disposition = result.disposition!!)
+        }
     }
 
     override fun onProgress(result: ScanResult) {

@@ -51,8 +51,9 @@
             android:id="@+id/action_fragment_document_capture_methods_to_fragment_manual_capture"
             app:destination="@id/fragment_manual_capture" />
         <action
-            android:id="@+id/action_fragment_document_capture_methods_to_fragment_scan_capture"
-            app:destination="@id/fragment_scan_capture" />
+            android:id="@+id/action_fragment_document_capture_methods_to_fragment_scan_capture_side"
+            app:destination="@id/fragment_scan_capture_side" />
+
     </fragment>
     <fragment
         android:id="@+id/fragment_upload_capture"
@@ -82,11 +83,20 @@
     <fragment
         android:id="@+id/fragment_selfie"
         android:name="io.falu.identity.selfie.SelfieFragment"
-        tool:layout="@layout/fragment_selfie"
-        android:label="SelfieFragment" />
+        android:label="SelfieFragment"
+        tool:layout="@layout/fragment_selfie" />
     <fragment
         android:id="@+id/fragment_scan_capture"
         android:name="io.falu.identity.capture.scan.ScanCaptureFragment"
         android:label="ScanCaptureFragment"
-        tool:layout="@layout/fragment_scan_capture"/>
+        tool:layout="@layout/fragment_scan_capture" />
+    <fragment
+        android:id="@+id/fragment_scan_capture_side"
+        android:name="io.falu.identity.capture.scan.ScanCaptureSideFragment"
+        android:label="ScanCaptureSideFragment"
+        tool:layout="@layout/fragment_capture_side">
+        <action
+            android:id="@+id/action_fragment_scan_capture_side_to_fragment_scan_capture"
+            app:destination="@id/fragment_scan_capture" />
+    </fragment>
 </navigation>
