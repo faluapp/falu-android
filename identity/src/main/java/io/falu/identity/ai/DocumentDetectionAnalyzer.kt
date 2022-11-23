@@ -26,6 +26,7 @@ internal class DocumentDetectionAnalyzer internal constructor(
 
     @SuppressLint("UnsafeOptInUsageError")
     override fun analyze(image: ImageProxy) {
+        interpreter.resetVariableTensors()
         // Input:- [1,1,1,3]
         val bitmap = image.image?.toBitmap()
         var tensorImage = TensorImage(TENSOR_DATA_TYPE)

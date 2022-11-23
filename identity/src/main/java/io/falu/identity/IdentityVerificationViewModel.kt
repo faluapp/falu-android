@@ -173,11 +173,11 @@ internal class IdentityVerificationViewModel(
         onFailure: (Throwable) -> Unit
     ) {
         val documentSide = when (scanType) {
-            DocumentScanDisposition.DocumentScanType.IDENTITY_DOCUMENT_FRONT,
-            DocumentScanDisposition.DocumentScanType.DL_FRONT,
+            DocumentScanDisposition.DocumentScanType.KENYA_DL_FRONT,
+            DocumentScanDisposition.DocumentScanType.KENYA_ID_FRONT,
             DocumentScanDisposition.DocumentScanType.PASSPORT -> DocumentSide.FRONT
-            DocumentScanDisposition.DocumentScanType.IDENTITY_DOCUMENT_BACK,
-            DocumentScanDisposition.DocumentScanType.DL_BACK -> DocumentSide.BACK
+            DocumentScanDisposition.DocumentScanType.KENYA_ID_BACK,
+            DocumentScanDisposition.DocumentScanType.KENYA_DL_BACK -> DocumentSide.BACK
         }
 
         uploadFile(

@@ -15,10 +15,10 @@ internal sealed class DocumentScanDisposition(
      *
      */
     internal enum class DocumentScanType {
-        IDENTITY_DOCUMENT_FRONT,
-        IDENTITY_DOCUMENT_BACK,
-        DL_FRONT,
-        DL_BACK,
+        KENYA_DL_BACK,
+        KENYA_DL_FRONT,
+        KENYA_ID_BACK,
+        KENYA_ID_FRONT,
         PASSPORT
     }
 
@@ -45,7 +45,8 @@ internal sealed class DocumentScanDisposition(
      */
     internal class Desired(type: DocumentScanType, detector: DocumentDispositionDetector) :
         DocumentScanDisposition(type, detector) {
-        override fun next(output: DetectionOutput): DocumentScanDisposition = this
+        override fun next(output: DetectionOutput): DocumentScanDisposition =
+            dispositionDetector.fromDesired(this, output)
     }
 
     /**
@@ -53,7 +54,8 @@ internal sealed class DocumentScanDisposition(
      */
     internal class Undesired(type: DocumentScanType, detector: DocumentDispositionDetector) :
         DocumentScanDisposition(type, detector) {
-        override fun next(output: DetectionOutput): DocumentScanDisposition = this
+        override fun next(output: DetectionOutput): DocumentScanDisposition =
+            dispositionDetector.fromUndesired(this, output)
     }
 
     /**
