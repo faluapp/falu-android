@@ -5,20 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import io.falu.identity.R
+import io.falu.identity.ai.DocumentDetectionOutput
 import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.capture.AbstractCaptureFragment
 import io.falu.identity.capture.scan.ScanCaptureFragment.Companion.getScanType
 import io.falu.identity.capture.scan.utils.DocumentScanDisposition
-import io.falu.identity.capture.scan.utils.ScanResult
 import io.falu.identity.databinding.FragmentCaptureSideBinding
 import io.falu.identity.documents.DocumentSelectionFragment
-import io.falu.identity.utils.getNavigationResult
 
 internal class ScanCaptureSideFragment(identityViewModelFactory: ViewModelProvider.Factory) :
     AbstractCaptureFragment(identityViewModelFactory) {
@@ -74,16 +74,19 @@ internal class ScanCaptureSideFragment(identityViewModelFactory: ViewModelProvid
             )
         }
 
-        getNavigationResult<ScanResult>(ScanCaptureFragment.KEY_SCAN_TYE_FRONT)?.observe(
-            viewLifecycleOwner
-        ) {
-            uploadScannedDocument(it, DocumentSide.FRONT)
-        }
+        setFragmentResultListener(ScanCaptureFragment.REQUEST_KEY_DOCUMENT_SCAN) { _, bundle ->
+            if (bundle.containsKey(ScanCaptureFragment.KEY_SCAN_TYPE_FRONT)) {
+                val frontResult =
+                    bundle.getParcelable<DocumentDetectionOutput>(ScanCaptureFragment.KEY_SCAN_TYPE_FRONT)!!
+                uploadScannedDocument(frontResult, DocumentSide.FRONT)
+                return@setFragmentResultListener
+            }
 
-        getNavigationResult<ScanResult>(ScanCaptureFragment.KEY_SCAN_TYE_BACK)?.observe(
-            viewLifecycleOwner
-        ) {
-            uploadScannedDocument(it, DocumentSide.BACK)
+            if (bundle.containsKey(ScanCaptureFragment.KEY_SCAN_TYPE_BACK)) {
+                val backResult =
+                    bundle.getParcelable<DocumentDetectionOutput>(ScanCaptureFragment.KEY_SCAN_TYPE_BACK)!!
+                uploadScannedDocument(backResult, DocumentSide.BACK)
+            }
         }
     }
 
