@@ -17,10 +17,8 @@ import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.capture.AbstractCaptureFragment
 import io.falu.identity.capture.scan.ScanCaptureFragment.Companion.getScanType
 import io.falu.identity.capture.scan.utils.DocumentScanDisposition
-import io.falu.identity.capture.scan.utils.ScanResult
 import io.falu.identity.databinding.FragmentCaptureSideBinding
 import io.falu.identity.documents.DocumentSelectionFragment
-import io.falu.identity.utils.getNavigationResult
 
 internal class ScanCaptureSideFragment(identityViewModelFactory: ViewModelProvider.Factory) :
     AbstractCaptureFragment(identityViewModelFactory) {
@@ -89,6 +87,17 @@ internal class ScanCaptureSideFragment(identityViewModelFactory: ViewModelProvid
                     bundle.getParcelable<DocumentDetectionOutput>(ScanCaptureFragment.KEY_SCAN_TYPE_BACK)!!
                 uploadScannedDocument(backResult, DocumentSide.BACK)
             }
+        }
+
+        binding.buttonContinue.text = getString(R.string.button_continue)
+        binding.buttonContinue.setOnClickListener {
+            binding.buttonContinue.showProgress()
+            val disposition = binding.buttonContinue.tag as DocumentUploadDisposition
+
+            updateVerificationAndAttemptDocumentSubmission(
+                source = R.id.fragment_scan_capture_side,
+                disposition.generateVerificationUploadRequest(identityDocumentType)
+            )
         }
     }
 
