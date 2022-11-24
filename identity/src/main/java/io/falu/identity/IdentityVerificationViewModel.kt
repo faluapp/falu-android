@@ -15,7 +15,6 @@ import io.falu.identity.api.models.country.SupportedCountry
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.api.models.verification.VerificationUploadResult
-import io.falu.identity.capture.scan.utils.DocumentScanDisposition
 import io.falu.identity.utils.FileUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -168,6 +167,7 @@ internal class IdentityVerificationViewModel(
     internal fun uploadScannedDocument(
         bitmap: Bitmap,
         documentSide: DocumentSide,
+        score: Float,
         onError: (HttpApiResponseProblem?) -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
@@ -180,6 +180,7 @@ internal class IdentityVerificationViewModel(
             documentSide = documentSide,
             type = UploadMethod.AUTO,
             verification = contractArgs.verificationId,
+            score = score,
             onError = onError,
             onFailure = onFailure
         )
@@ -190,6 +191,7 @@ internal class IdentityVerificationViewModel(
         documentSide: DocumentSide,
         type: UploadMethod,
         verification: String,
+        score: Float? = null,
         onError: (HttpApiResponseProblem?) -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
@@ -203,7 +205,7 @@ internal class IdentityVerificationViewModel(
             }.fold(
                 onSuccess = { response ->
                     if (response.successful() && response.resource != null) {
-                        val result = VerificationUploadResult(response.resource!!, type)
+                        val result = VerificationUploadResult(response.resource!!, score, type)
                         _documentUploadDisposition.update { current ->
                             current.modify(documentSide, result)
                         }
@@ -295,6 +297,10 @@ internal class IdentityVerificationViewModel(
                 }
             )
         }
+    }
+
+    internal fun resetDocumentUploadDisposition() {
+        _documentUploadDisposition.update { DocumentUploadDisposition() }
     }
 
     fun observeForVerificationResults(

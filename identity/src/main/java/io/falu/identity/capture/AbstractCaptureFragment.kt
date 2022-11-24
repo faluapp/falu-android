@@ -88,6 +88,7 @@ internal abstract class AbstractCaptureFragment(identityViewModelFactory: ViewMo
         identityViewModel.uploadScannedDocument(
             output.bitmap,
             documentSide,
+            output.score,
             onError = {
                 resetViews(documentSide)
                 navigateToApiResponseProblemFragment(it)
