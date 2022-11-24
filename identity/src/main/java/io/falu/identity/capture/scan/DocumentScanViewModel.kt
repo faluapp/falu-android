@@ -29,7 +29,7 @@ internal class DocumentScanViewModel :
      */
     private val _documentScanCompleteDisposition = MutableStateFlow(ScanResult())
     val documentScanCompleteDisposition: LiveData<ScanResult>
-        get() = _documentScanDisposition.asLiveData(Dispatchers.Main)
+        get() = _documentScanCompleteDisposition.asLiveData(Dispatchers.Main)
 
     /**
      *

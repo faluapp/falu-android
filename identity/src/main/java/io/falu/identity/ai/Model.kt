@@ -1,6 +1,8 @@
 package io.falu.identity.ai
 
 import android.graphics.Bitmap
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
 /**
  *
@@ -31,9 +33,10 @@ internal data class BoundingBox(
 internal interface DetectionOutput
 
 /***/
+@Parcelize
 internal data class DocumentDetectionOutput(
     var score: Float,
     var option: DocumentOption,
     var bitmap: Bitmap,
     var scores: MutableList<Float>
-): DetectionOutput
+): DetectionOutput, Parcelable
