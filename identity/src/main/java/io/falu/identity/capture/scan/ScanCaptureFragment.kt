@@ -5,9 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.camera.core.CameraSelector
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.models.IdentityDocumentType
@@ -19,6 +22,7 @@ import io.falu.identity.capture.scan.utils.ScanResult
 import io.falu.identity.databinding.FragmentScanCaptureBinding
 import io.falu.identity.documents.DocumentSelectionFragment
 import io.falu.identity.utils.setNavigationResult
+
 
 internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.Factory) :
     Fragment() {
@@ -131,11 +135,23 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
             if (it.disposition is DocumentScanDisposition.Completed) {
                 when {
                     scanType!!.isFront -> {
-                        setNavigationResult(KEY_SCAN_TYE_FRONT, it)
+                        setFragmentResult(
+                            REQUEST_KEY_DOCUMENT_SCAN,
+                            bundleOf(KEY_SCAN_TYPE_FRONT to it)
+                        )
+                        setFragmentResult(
+                            REQUEST_KEY_DOCUMENT_SCAN,
+                            bundleOf(KEY_SCAN_TYPE_FRONT to it.output)
+                        )
+                        findNavController().navigateUp()
                     }
 
                     scanType!!.isBack -> {
-                        setNavigationResult(KEY_SCAN_TYE_BACK, it)
+                        setFragmentResult(
+                            REQUEST_KEY_DOCUMENT_SCAN,
+                            bundleOf(KEY_SCAN_TYPE_BACK to it.output)
+                        )
+                        findNavController().navigateUp()
                     }
                 }
             } else {
@@ -146,8 +162,9 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
 
     internal companion object {
         internal const val KEY_DOCUMENT_SCAN_TYPE = ":scan-type"
-        internal const val KEY_SCAN_TYE_FRONT = ":front"
-        internal const val KEY_SCAN_TYE_BACK = ":back"
+        internal const val KEY_SCAN_TYPE_FRONT = ":front"
+        internal const val KEY_SCAN_TYPE_BACK = ":back"
+        internal const val REQUEST_KEY_DOCUMENT_SCAN = ":scan"
 
         internal fun IdentityDocumentType.getScanType(): Pair<DocumentScanDisposition.DocumentScanType, DocumentScanDisposition.DocumentScanType?> {
             return when (this) {
