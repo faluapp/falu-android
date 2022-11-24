@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingHorizontal="@dimen/content_padding_normal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -26,35 +27,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:paddingTop="@dimen/element_spacing_normal"
-            android:paddingBottom="@dimen/content_padding_normal"
+            android:paddingVertical="@dimen/element_spacing_normal"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
         <io.falu.identity.camera.CameraView
             android:id="@+id/view_camera"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/content_padding_normal"
             app:cameraBorder="@drawable/ic_document_border" />
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/view_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/content_padding_normal"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/element_spacing_normal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_scan">
-
-        <io.falu.identity.ui.LoadingButton
-            android:id="@+id/button_continue"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:enabled="false"
-            android:text="@string/button_continue" />
-    </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
