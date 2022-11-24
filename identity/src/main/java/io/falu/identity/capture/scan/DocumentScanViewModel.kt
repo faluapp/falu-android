@@ -64,6 +64,11 @@ internal class DocumentScanViewModel :
         }
     }
 
+    internal fun resetScanDispositions() {
+        _documentScanDisposition.update { ScanResult() }
+        _documentScanCompleteDisposition.update { ScanResult() }
+    }
+
     internal companion object {
         private val TAG = DocumentScanViewModel::class.java.simpleName
     }
