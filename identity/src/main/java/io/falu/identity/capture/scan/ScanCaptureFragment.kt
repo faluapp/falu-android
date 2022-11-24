@@ -10,7 +10,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
-import io.falu.identity.ai.DocumentDetectionOutput
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.camera.CameraView
@@ -19,6 +18,7 @@ import io.falu.identity.capture.scan.utils.DocumentScanDisposition
 import io.falu.identity.capture.scan.utils.ScanResult
 import io.falu.identity.databinding.FragmentScanCaptureBinding
 import io.falu.identity.documents.DocumentSelectionFragment
+import io.falu.identity.utils.setNavigationResult
 
 internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.Factory) :
     Fragment() {
@@ -120,9 +120,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
                     getString(R.string.scan_capture_text_document_scan_completed)
             }
             is DocumentScanDisposition.Undesired -> {}
-            is DocumentScanDisposition.Completed -> {
-
-            }
+            is DocumentScanDisposition.Completed -> {}
             is DocumentScanDisposition.Timeout, null -> { //noOP
             }
         }
@@ -131,14 +129,15 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
     private fun onVerificationPage(verification: Verification) {
         documentScanViewModel.documentScanCompleteDisposition.observe(viewLifecycleOwner) {
             if (it.disposition is DocumentScanDisposition.Completed) {
-                val output = it.output as DocumentDetectionOutput
-                identityViewModel.uploadScannedDocument(
-                    output.bitmap,
-                    verification = verification.id,
-                    scanType = it.disposition!!.type,
-                    onError = {},
-                    onFailure = {}
-                )
+                when {
+                    scanType!!.isFront -> {
+                        setNavigationResult(KEY_SCAN_TYE_FRONT, it)
+                    }
+
+                    scanType!!.isBack -> {
+                        setNavigationResult(KEY_SCAN_TYE_BACK, it)
+                    }
+                }
             } else {
                 // something else.
             }
@@ -147,6 +146,8 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
 
     internal companion object {
         internal const val KEY_DOCUMENT_SCAN_TYPE = ":scan-type"
+        internal const val KEY_SCAN_TYE_FRONT = ":front"
+        internal const val KEY_SCAN_TYE_BACK = ":back"
 
         internal fun IdentityDocumentType.getScanType(): Pair<DocumentScanDisposition.DocumentScanType, DocumentScanDisposition.DocumentScanType?> {
             return when (this) {
