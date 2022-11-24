@@ -42,6 +42,7 @@ internal data class DocumentUploadDisposition(
         val front = VerificationDocumentSide(
             method = front!!.method!!,
             file = front!!.file.id,
+            score = front!!.score
         )
         val back = if (identityDocumentType == IdentityDocumentType.PASSPORT) {
             null
@@ -49,6 +50,7 @@ internal data class DocumentUploadDisposition(
             VerificationDocumentSide(
                 method = back!!.method!!,
                 file = back!!.file.id,
+                score = back!!.score
             )
         }
 

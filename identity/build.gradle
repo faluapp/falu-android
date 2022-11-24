@@ -2,6 +2,7 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlin.plugin.parcelize'
+    id 'kotlin-android'
 }
 
 android {
@@ -54,6 +55,7 @@ dependencies {
     implementation project(":falu-core")
     implementation "androidx.activity:activity-ktx:1.6.1"
     implementation "androidx.fragment:fragment-ktx:1.5.4"
+    implementation "androidx.constraintlayout:constraintlayout:$constraint_layout_version"
 
     implementation "org.tensorflow:tensorflow-lite:2.9.0"
     implementation 'org.tensorflow:tensorflow-lite-support:0.4.2'

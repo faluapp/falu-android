@@ -36,17 +36,17 @@ internal class UploadCaptureFragment(identityViewModelFactory: ViewModelProvider
         binding.tvUploadTitle.text =
             getString(
                 R.string.upload_document_capture_title,
-                identityDocumentType?.getIdentityDocumentName(requireContext())
+                identityDocumentType.getIdentityDocumentName(requireContext())
             )
         binding.tvCardFront.text =
             getString(
                 R.string.upload_document_capture_document_font,
-                identityDocumentType?.getIdentityDocumentName(requireContext())
+                identityDocumentType.getIdentityDocumentName(requireContext())
             )
         binding.tvCardBack.text =
             getString(
                 R.string.upload_document_capture_document_back,
-                identityDocumentType?.getIdentityDocumentName(requireContext())
+                identityDocumentType.getIdentityDocumentName(requireContext())
             )
 
         captureDocumentViewModel.pickDocumentImages(
