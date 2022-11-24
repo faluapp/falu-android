@@ -12,12 +12,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
+import io.falu.identity.ai.DocumentDetectionOutput
 import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.UploadMethod
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.camera.CameraPermissionsFragment
+import io.falu.identity.capture.scan.utils.ScanResult
 import io.falu.identity.documents.DocumentSelectionFragment
 import io.falu.identity.utils.navigateToApiResponseProblemFragment
 import io.falu.identity.utils.navigateToErrorFragment
@@ -73,6 +75,24 @@ internal abstract class AbstractCaptureFragment(identityViewModelFactory: ViewMo
             })
     }
 
+    protected fun uploadScannedDocument(
+        result: ScanResult,
+        documentSide: DocumentSide,
+    ){
+        val output = result.output as DocumentDetectionOutput
+
+        identityViewModel.uploadScannedDocument(
+            output.bitmap,
+            documentSide,
+            onError = {
+                resetViews(documentSide)
+                navigateToApiResponseProblemFragment(it)
+            },
+            onFailure = {
+                resetViews(documentSide)
+                navigateToErrorFragment(it)
+            })
+    }
     protected abstract fun showDocumentFrontUploading()
 
     protected abstract fun showDocumentBackUploading()
