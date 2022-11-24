@@ -53,6 +53,8 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
         scanType =
             requireArguments().getSerializable(KEY_DOCUMENT_SCAN_TYPE) as? DocumentScanDisposition.DocumentScanType
 
+        documentScanViewModel.resetScanDispositions()
+
         resetUI()
 
         binding.tvScanMessage.text = getString(
@@ -135,10 +137,6 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
             if (it.disposition is DocumentScanDisposition.Completed) {
                 when {
                     scanType!!.isFront -> {
-                        setFragmentResult(
-                            REQUEST_KEY_DOCUMENT_SCAN,
-                            bundleOf(KEY_SCAN_TYPE_FRONT to it)
-                        )
                         setFragmentResult(
                             REQUEST_KEY_DOCUMENT_SCAN,
                             bundleOf(KEY_SCAN_TYPE_FRONT to it.output)

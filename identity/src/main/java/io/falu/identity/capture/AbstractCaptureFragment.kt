@@ -79,6 +79,12 @@ internal abstract class AbstractCaptureFragment(identityViewModelFactory: ViewMo
         output: DocumentDetectionOutput,
         documentSide: DocumentSide,
     ){
+        if (documentSide == DocumentSide.FRONT) {
+            showDocumentFrontUploading()
+        } else {
+            showDocumentBackUploading()
+        }
+
         identityViewModel.uploadScannedDocument(
             output.bitmap,
             documentSide,
