@@ -5,28 +5,32 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.camera.core.CameraSelector
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.ai.DocumentDetectionOutput
-import io.falu.identity.api.DocumentUploadDisposition
-import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.camera.CameraView
-import io.falu.identity.capture.AbstractCaptureFragment
+import io.falu.identity.capture.AbstractCaptureFragment.Companion.getIdentityDocumentName
 import io.falu.identity.capture.scan.utils.DocumentScanDisposition
 import io.falu.identity.capture.scan.utils.ScanResult
 import io.falu.identity.databinding.FragmentScanCaptureBinding
+import io.falu.identity.documents.DocumentSelectionFragment
 
 internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.Factory) :
-    AbstractCaptureFragment(identityViewModelFactory) {
-    private var scanType: DocumentScanDisposition.DocumentScanType? = null
+    Fragment() {
+
+    private val identityViewModel: IdentityVerificationViewModel by activityViewModels { identityViewModelFactory }
+    private val documentScanViewModel: DocumentScanViewModel by activityViewModels()
 
     private var _binding: FragmentScanCaptureBinding? = null
     private val binding get() = _binding!!
 
-    private val documentScanViewModel: DocumentScanViewModel by activityViewModels()
+    private var scanType: DocumentScanDisposition.DocumentScanType? = null
+    private lateinit var identityDocumentType: IdentityDocumentType
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,7 +43,11 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        scanType = identityDocumentType.getScanType().first
+        identityDocumentType =
+            requireArguments().getSerializable(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE) as IdentityDocumentType
+
+        scanType =
+            requireArguments().getSerializable(KEY_DOCUMENT_SCAN_TYPE) as? DocumentScanDisposition.DocumentScanType
 
         resetUI()
 
@@ -61,8 +69,6 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
         binding.viewCamera.cameraViewType =
             if (identityDocumentType != IdentityDocumentType.PASSPORT) CameraView.CameraViewType.ID else CameraView.CameraViewType.PASSPORT
 
-        binding.buttonContinue.text = getString(R.string.button_continue)
-        binding.buttonContinue.isEnabled = false
 
         identityViewModel.observeForVerificationResults(
             viewLifecycleOwner,
@@ -80,31 +86,11 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
         _binding = null
     }
 
-    override fun showDocumentFrontUploading() {
-    }
-
-    override fun showDocumentBackUploading() {
-    }
-
-    override fun showDocumentFrontDoneUploading(disposition: DocumentUploadDisposition) {
-    }
-
-    override fun showDocumentBackDoneUploading() {
-    }
-
-    override fun showBothSidesUploaded(disposition: DocumentUploadDisposition) {
-    }
-
-    override fun resetViews(documentSide: DocumentSide) {
-        // noOp
-    }
-
     private fun startScan(scanType: DocumentScanDisposition.DocumentScanType) {
         documentScanViewModel.scanner?.scan(binding.viewCamera.analyzers, scanType)
     }
 
     private fun resetUI() {
-
         when {
             scanType!!.isFront -> {
                 binding.tvScanDocumentSide.text = getString(
@@ -119,7 +105,6 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
                 )
             }
         }
-
     }
 
     private fun updateUI(result: ScanResult) {
@@ -161,7 +146,9 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
     }
 
     internal companion object {
-        private fun IdentityDocumentType.getScanType(): Pair<DocumentScanDisposition.DocumentScanType, DocumentScanDisposition.DocumentScanType?> {
+        internal const val KEY_DOCUMENT_SCAN_TYPE = ":scan-type"
+
+        internal fun IdentityDocumentType.getScanType(): Pair<DocumentScanDisposition.DocumentScanType, DocumentScanDisposition.DocumentScanType?> {
             return when (this) {
                 IdentityDocumentType.IDENTITY_CARD -> {
                     Pair(
