@@ -76,11 +76,9 @@ internal abstract class AbstractCaptureFragment(identityViewModelFactory: ViewMo
     }
 
     protected fun uploadScannedDocument(
-        result: ScanResult,
+        output: DocumentDetectionOutput,
         documentSide: DocumentSide,
     ){
-        val output = result.output as DocumentDetectionOutput
-
         identityViewModel.uploadScannedDocument(
             output.bitmap,
             documentSide,
