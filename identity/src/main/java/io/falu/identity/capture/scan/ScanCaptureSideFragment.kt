@@ -15,8 +15,10 @@ import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.capture.AbstractCaptureFragment
 import io.falu.identity.capture.scan.ScanCaptureFragment.Companion.getScanType
 import io.falu.identity.capture.scan.utils.DocumentScanDisposition
+import io.falu.identity.capture.scan.utils.ScanResult
 import io.falu.identity.databinding.FragmentCaptureSideBinding
 import io.falu.identity.documents.DocumentSelectionFragment
+import io.falu.identity.utils.getNavigationResult
 
 internal class ScanCaptureSideFragment(identityViewModelFactory: ViewModelProvider.Factory) :
     AbstractCaptureFragment(identityViewModelFactory) {
@@ -71,6 +73,18 @@ internal class ScanCaptureSideFragment(identityViewModelFactory: ViewModelProvid
                 identityDocumentType.getScanType().second
             )
         }
+
+        getNavigationResult<ScanResult>(ScanCaptureFragment.KEY_SCAN_TYE_FRONT)?.observe(
+            viewLifecycleOwner
+        ) {
+            uploadScannedDocument(it, DocumentSide.FRONT)
+        }
+
+        getNavigationResult<ScanResult>(ScanCaptureFragment.KEY_SCAN_TYE_BACK)?.observe(
+            viewLifecycleOwner
+        ) {
+            uploadScannedDocument(it, DocumentSide.BACK)
+        }
     }
 
     override fun onDestroyView() {
@@ -79,21 +93,49 @@ internal class ScanCaptureSideFragment(identityViewModelFactory: ViewModelProvid
     }
 
     override fun showDocumentFrontUploading() {
+        binding.buttonScanFront.visibility = View.GONE
+        binding.progressScanFront.visibility = View.VISIBLE
+        binding.ivFrontScanned.visibility = View.GONE
     }
 
     override fun showDocumentBackUploading() {
+        binding.buttonScanBack.visibility = View.GONE
+        binding.progressScanBack.visibility = View.VISIBLE
+        binding.ivBackScanned.visibility = View.GONE
     }
 
     override fun showDocumentFrontDoneUploading(disposition: DocumentUploadDisposition) {
+        binding.buttonScanFront.visibility = View.GONE
+        binding.progressScanFront.visibility = View.GONE
+        binding.ivFrontScanned.visibility = View.VISIBLE
+
+        if (identityDocumentType == IdentityDocumentType.PASSPORT) {
+            binding.buttonContinue.isEnabled = true
+            binding.buttonContinue.tag = disposition
+        }
     }
 
     override fun showDocumentBackDoneUploading() {
+        binding.buttonScanBack.visibility = View.GONE
+        binding.progressScanBack.visibility = View.GONE
+        binding.ivBackScanned.visibility = View.VISIBLE
     }
 
     override fun showBothSidesUploaded(disposition: DocumentUploadDisposition) {
+        binding.buttonContinue.isEnabled = true
+        binding.buttonContinue.tag = disposition
     }
 
     override fun resetViews(documentSide: DocumentSide) {
+        if (documentSide == DocumentSide.FRONT) {
+            binding.buttonScanFront.visibility = View.VISIBLE
+            binding.progressScanFront.visibility = View.GONE
+            binding.ivFrontScanned.visibility = View.GONE
+        } else {
+            binding.buttonScanBack.visibility = View.VISIBLE
+            binding.progressScanBack.visibility = View.GONE
+            binding.ivBackScanned.visibility = View.GONE
+        }
     }
 
 

@@ -167,23 +167,14 @@ internal class IdentityVerificationViewModel(
      */
     internal fun uploadScannedDocument(
         bitmap: Bitmap,
-        verification: String,
-        scanType: DocumentScanDisposition.DocumentScanType,
+        documentSide: DocumentSide,
         onError: (HttpApiResponseProblem?) -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
-        val documentSide = when (scanType) {
-            DocumentScanDisposition.DocumentScanType.KENYA_DL_FRONT,
-            DocumentScanDisposition.DocumentScanType.KENYA_ID_FRONT,
-            DocumentScanDisposition.DocumentScanType.PASSPORT -> DocumentSide.FRONT
-            DocumentScanDisposition.DocumentScanType.KENYA_ID_BACK,
-            DocumentScanDisposition.DocumentScanType.KENYA_DL_BACK -> DocumentSide.BACK
-        }
-
         uploadFile(
             file = fileUtils.createFileFromBitmap(
                 bitmap = bitmap,
-                verification,
+                contractArgs.verificationId,
                 documentSide.code
             ),
             documentSide = documentSide,
