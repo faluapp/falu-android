@@ -62,7 +62,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
             identityDocumentType.getIdentityDocumentName(requireContext())
         )
 
-        val inputStream = resources.openRawResource(R.raw.converted_model3)
+        val inputStream = resources.openRawResource(R.raw.model)
         val file = identityViewModel.getModel(inputStream, "converted_model3.tflite")
 
         documentScanViewModel.initialize(file, 0.5f)
