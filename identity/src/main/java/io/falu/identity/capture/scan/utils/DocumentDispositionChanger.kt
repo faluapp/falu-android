@@ -67,12 +67,6 @@ internal class DocumentDispositionChanger(
         type: DocumentScanDisposition.DocumentScanType
     ): Boolean {
         return when (this) {
-            DocumentOption.HUDAMA_BACK -> {
-                type == DocumentScanDisposition.DocumentScanType.KENYA_ID_BACK
-            }
-            DocumentOption.HUDAMA_FRONT -> {
-                type == DocumentScanDisposition.DocumentScanType.KENYA_ID_FRONT
-            }
             DocumentOption.KENYA_DL_BACK -> {
                 type == DocumentScanDisposition.DocumentScanType.KENYA_DL_BACK
             }
@@ -84,6 +78,9 @@ internal class DocumentDispositionChanger(
             }
             DocumentOption.KENYA_ID_FRONT -> {
                 type == DocumentScanDisposition.DocumentScanType.KENYA_DL_FRONT
+            }
+            DocumentOption.KENYA_PASSPORT -> {
+                type == DocumentScanDisposition.DocumentScanType.PASSPORT
             }
             DocumentOption.INVALID -> false
         }

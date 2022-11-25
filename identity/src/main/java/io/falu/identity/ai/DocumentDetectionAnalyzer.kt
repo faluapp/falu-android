@@ -7,7 +7,6 @@ import io.falu.identity.camera.AnalyzerBuilder
 import io.falu.identity.camera.AnalyzerOutputListener
 import io.falu.identity.capture.scan.utils.DocumentScanDisposition
 import io.falu.identity.utils.toBitmap
-import io.falu.identity.utils.toJpegBitmap
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.support.image.ImageProcessor
@@ -94,30 +93,27 @@ internal class DocumentDetectionAnalyzer internal constructor(
         private const val IMAGE_HEIGHT = 224
         private const val OUTPUT_SIZE = 1
 
-        private const val HUDUMA_BACK = 0
-        private const val HUDUMA_FRONT = 1
-        private const val KENYA_DL_BACK = 2
-        private const val KENYA_DL_FRONT = 3
-        private const val KENYA_ID_BACK = 4
-        private const val KENYA_ID_FRONT = 5
+        private const val KENYA_DL_BACK = 0
+        private const val KENYA_DL_FRONT = 1
+        private const val KENYA_ID_BACK = 2
+        private const val KENYA_ID_FRONT = 3
+        private const val KENYA_PASSPORT = 4
         private const val INVALID = -1
 
         private val DOCUMENT_OPTIONS = listOf(
-            HUDUMA_BACK,
-            HUDUMA_FRONT,
             KENYA_DL_BACK,
             KENYA_DL_FRONT,
             KENYA_ID_BACK,
             KENYA_ID_FRONT,
+            KENYA_PASSPORT
         )
 
         private val DOCUMENT_OPTIONS_MAP = mapOf(
-            HUDUMA_BACK to DocumentOption.HUDAMA_BACK,
-            HUDUMA_FRONT to DocumentOption.HUDAMA_FRONT,
             KENYA_DL_BACK to DocumentOption.KENYA_DL_BACK,
             KENYA_DL_FRONT to DocumentOption.KENYA_DL_FRONT,
             KENYA_ID_BACK to DocumentOption.KENYA_ID_BACK,
-            KENYA_ID_FRONT to DocumentOption.KENYA_DL_FRONT,
+            KENYA_ID_FRONT to DocumentOption.KENYA_ID_FRONT,
+            KENYA_PASSPORT to DocumentOption.KENYA_PASSPORT
         )
     }
 }

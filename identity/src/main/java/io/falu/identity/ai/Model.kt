@@ -8,12 +8,11 @@ import kotlinx.parcelize.Parcelize
  *
  */
 internal enum class DocumentOption {
-    HUDAMA_BACK,
-    HUDAMA_FRONT,
     KENYA_DL_BACK,
     KENYA_DL_FRONT,
     KENYA_ID_BACK,
     KENYA_ID_FRONT,
+    KENYA_PASSPORT,
     INVALID;
 }
 
