@@ -10,6 +10,7 @@ import io.falu.identity.capture.upload.UploadCaptureFragment
 import io.falu.identity.confirmation.ConfirmationFragment
 import io.falu.identity.documents.DocumentCaptureMethodsFragment
 import io.falu.identity.documents.DocumentSelectionFragment
+import io.falu.identity.selfie.SelfieFragment
 import io.falu.identity.support.SupportFragment
 import io.falu.identity.welcome.WelcomeFragment
 
@@ -31,6 +32,7 @@ internal class IdentityVerificationFragmentFactory(
             UploadCaptureFragment::class.java.name -> UploadCaptureFragment(factory)
             ConfirmationFragment::class.java.name -> ConfirmationFragment(callback)
             SupportFragment::class.java.name -> SupportFragment(factory)
+            SelfieFragment::class.java.name -> SelfieFragment(factory)
             else -> super.instantiate(classLoader, className)
         }
     }
