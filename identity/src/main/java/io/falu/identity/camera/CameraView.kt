@@ -205,6 +205,10 @@ internal class CameraView @JvmOverloads constructor(
         }
     }
 
+    internal fun stopAnalyzer() {
+        imageAnalysis?.clearAnalyzer()
+    }
+
     /**
      *
      */

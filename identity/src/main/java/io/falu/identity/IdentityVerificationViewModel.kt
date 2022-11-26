@@ -91,15 +91,15 @@ internal class IdentityVerificationViewModel(
                         val verification = it.resource!!
                         if (modelRequired) {
 
-                            downloadAIModel(
-                                verification.capture.models.document.url,
-                                _documentDetectorModelFile
-                            )
-
-                            downloadAIModel(
-                                verification.capture.models.documentType.url,
-                                _documentDetectorModelFile
-                            )
+//                            downloadAIModel(
+//                                verification.capture.models.document.url,
+//                                _documentDetectorModelFile
+//                            )
+//
+//                            downloadAIModel(
+//                                verification.capture.models.documentType.url,
+//                                _documentDetectorModelFile
+//                            )
                         }
                     }
 
