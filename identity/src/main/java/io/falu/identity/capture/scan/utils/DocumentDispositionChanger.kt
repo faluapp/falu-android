@@ -4,10 +4,14 @@ import android.util.Log
 import io.falu.identity.ai.DetectionOutput
 import io.falu.identity.ai.DocumentDetectionOutput
 import io.falu.identity.ai.DocumentOption
+import org.joda.time.DateTime
+import org.joda.time.Seconds
 
 
 internal class DocumentDispositionChanger(
     private val threshold: Float = THRESHOLD,
+    private val requiredTime: Int = DEFAULT_REQUIRED_SCAN_DURATION,
+    private val currentTime: DateTime = DateTime.now()
 ) : DocumentDispositionDetector {
     override fun fromStart(
         state: DocumentScanDisposition.Start,
@@ -37,9 +41,13 @@ internal class DocumentDispositionChanger(
         }
 
         return when {
-            output.score < THRESHOLD -> DocumentScanDisposition.Undesired(
+            output.score < threshold -> DocumentScanDisposition.Undesired(
                 state.type, state.dispositionDetector
             )
+            moreScanningRequired(state) -> {
+                state.reached = DateTime.now()
+                state
+            }
             else -> {
                 DocumentScanDisposition.Desired(state.type, state.dispositionDetector)
             }
@@ -53,7 +61,14 @@ internal class DocumentDispositionChanger(
         require(output is DocumentDetectionOutput) {
             "Unexpected output type: $output"
         }
-        return DocumentScanDisposition.Completed(state.type, state.dispositionDetector)
+
+        return when {
+            elapsedTime(state.reached) > DEFAULT_DESIRED_DURATION -> {
+                Log.d(TAG, "Complete the scan. Desired scan for ${state.type} found.")
+                DocumentScanDisposition.Completed(state.type, state.dispositionDetector)
+            }
+            else -> state
+        }
     }
 
     override fun fromUndesired(
@@ -86,8 +101,19 @@ internal class DocumentDispositionChanger(
         }
     }
 
+    private fun moreScanningRequired(disposition: DocumentScanDisposition.Detected): Boolean {
+        val seconds = elapsedTime(disposition.reached)
+        return seconds < requiredTime
+    }
+
+    private fun elapsedTime(time: DateTime): Int {
+        return Seconds.secondsBetween(currentTime, time).seconds
+    }
+
     internal companion object {
         private val TAG = DocumentDispositionChanger::class.java.simpleName
         private const val THRESHOLD = 0.8f
+        private const val DEFAULT_REQUIRED_SCAN_DURATION = 10 // time in seconds
+        private const val DEFAULT_DESIRED_DURATION = 1 // time in seconds
     }
 }

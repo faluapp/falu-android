@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
+import io.falu.identity.ai.DocumentDetectionOutput
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.camera.CameraView
@@ -21,7 +22,6 @@ import io.falu.identity.capture.scan.utils.DocumentScanDisposition
 import io.falu.identity.capture.scan.utils.ScanResult
 import io.falu.identity.databinding.FragmentScanCaptureBinding
 import io.falu.identity.documents.DocumentSelectionFragment
-import io.falu.identity.utils.setNavigationResult
 
 
 internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.Factory) :
@@ -63,7 +63,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
         )
 
         val inputStream = resources.openRawResource(R.raw.model)
-        val file = identityViewModel.getModel(inputStream, "converted_model3.tflite")
+        val file = identityViewModel.getModel(inputStream, "model.tflite")
 
         documentScanViewModel.initialize(file, 0.5f)
 
@@ -135,6 +135,10 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
     private fun onVerificationPage(verification: Verification) {
         documentScanViewModel.documentScanCompleteDisposition.observe(viewLifecycleOwner) {
             if (it.disposition is DocumentScanDisposition.Completed) {
+                // stop the analyzer
+                binding.viewCamera.stopAnalyzer()
+                binding.viewCamera.analyzers.clear()
+
                 when {
                     scanType!!.isFront -> {
                         setFragmentResult(

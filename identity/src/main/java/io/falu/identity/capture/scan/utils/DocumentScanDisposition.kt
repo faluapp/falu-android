@@ -1,6 +1,7 @@
 package io.falu.identity.capture.scan.utils
 
 import io.falu.identity.ai.DetectionOutput
+import org.joda.time.DateTime
 
 /**
  * Possible states when scanning a document
@@ -48,7 +49,11 @@ internal sealed class DocumentScanDisposition(
     /**
      *
      */
-    internal class Detected(type: DocumentScanType, detector: DocumentDispositionDetector) :
+    internal class Detected(
+        type: DocumentScanType,
+        detector: DocumentDispositionDetector,
+        internal var reached: DateTime = DateTime.now()
+    ) :
         DocumentScanDisposition(type, detector) {
         override fun next(output: DetectionOutput) = dispositionDetector.fromDetected(this, output)
     }
@@ -56,7 +61,11 @@ internal sealed class DocumentScanDisposition(
     /**
      *
      */
-    internal class Desired(type: DocumentScanType, detector: DocumentDispositionDetector) :
+    internal class Desired(
+        type: DocumentScanType,
+        detector: DocumentDispositionDetector,
+        val reached: DateTime = DateTime.now()
+    ) :
         DocumentScanDisposition(type, detector) {
         override fun next(output: DetectionOutput): DocumentScanDisposition =
             dispositionDetector.fromDesired(this, output)
@@ -65,7 +74,11 @@ internal sealed class DocumentScanDisposition(
     /**
      *
      */
-    internal class Undesired(type: DocumentScanType, detector: DocumentDispositionDetector) :
+    internal class Undesired(
+        type: DocumentScanType,
+        detector: DocumentDispositionDetector,
+        val reached: DateTime = DateTime.now()
+    ) :
         DocumentScanDisposition(type, detector) {
         override fun next(output: DetectionOutput): DocumentScanDisposition =
             dispositionDetector.fromUndesired(this, output)
