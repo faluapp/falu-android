@@ -5,9 +5,11 @@ import android.graphics.*
 import android.media.Image
 import android.text.TextUtils
 import androidx.annotation.CheckResult
+import androidx.exifinterface.media.ExifInterface
 import io.falu.identity.R
 import software.tingle.api.HttpApiResponseProblem
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.nio.ByteBuffer
 
 internal fun HttpApiResponseProblem.getErrorDescription(context: Context): String {
@@ -75,6 +77,36 @@ internal fun Image.toJpegBitmap(): Bitmap {
     val buffer = planes[0].buffer
     val bytes = buffer.toByteArray()
     return BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+}
+
+/**
+ *
+ */
+@CheckResult
+internal fun Bitmap.rotate(angle: Int, filter: Boolean = false): Bitmap {
+    val matrix = Matrix()
+    matrix.postRotate(angle.toFloat())
+    return Bitmap.createBitmap(this, 0, 0, width, height, matrix, filter)
+}
+
+/**
+ *
+ */
+@CheckResult
+internal fun Bitmap.adjustRotation(file: File): Bitmap {
+    val exifInterface = ExifInterface(file)
+    val orientation = exifInterface.getAttributeInt(
+        ExifInterface.TAG_ORIENTATION,
+        ExifInterface.ORIENTATION_UNDEFINED
+    )
+
+    return when (orientation) {
+        ExifInterface.ORIENTATION_ROTATE_90 -> rotate(90)
+        ExifInterface.ORIENTATION_ROTATE_180 -> rotate(180)
+        ExifInterface.ORIENTATION_ROTATE_270 -> rotate(270)
+        ExifInterface.ORIENTATION_NORMAL -> this
+        else -> rotate(90)
+    }
 }
 
 /**

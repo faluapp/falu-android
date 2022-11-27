@@ -22,6 +22,8 @@ import io.falu.identity.capture.scan.utils.DocumentScanDisposition
 import io.falu.identity.capture.scan.utils.ScanResult
 import io.falu.identity.databinding.FragmentScanCaptureBinding
 import io.falu.identity.documents.DocumentSelectionFragment
+import io.falu.identity.utils.FileUtils
+import io.falu.identity.utils.adjustRotation
 
 
 internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.Factory) :
@@ -35,6 +37,8 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
 
     private var scanType: DocumentScanDisposition.DocumentScanType? = null
     private lateinit var identityDocumentType: IdentityDocumentType
+
+    private lateinit var fileUtils: FileUtils
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,6 +57,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
         scanType =
             requireArguments().getSerializable(KEY_DOCUMENT_SCAN_TYPE) as? DocumentScanDisposition.DocumentScanType
 
+        fileUtils = FileUtils(requireContext())
         documentScanViewModel.resetScanDispositions()
 
         resetUI()
@@ -84,6 +89,34 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
 
         documentScanViewModel.documentScanDisposition.observe(viewLifecycleOwner) {
             updateUI(it)
+        }
+
+        binding.buttonContinue.setOnClickListener {
+            val result = binding.buttonContinue.tag as ScanResult
+            when {
+                scanType!!.isFront -> {
+                    setFragmentResult(
+                        REQUEST_KEY_DOCUMENT_SCAN,
+                        bundleOf(KEY_SCAN_TYPE_FRONT to result.output)
+                    )
+                    findNavController().navigateUp()
+                }
+
+                scanType!!.isBack -> {
+                    setFragmentResult(
+                        REQUEST_KEY_DOCUMENT_SCAN,
+                        bundleOf(KEY_SCAN_TYPE_BACK to result.output)
+                    )
+                    findNavController().navigateUp()
+                }
+            }
+        }
+
+        binding.buttonReset.setOnClickListener {
+            binding.viewScanResults.visibility = View.GONE
+            binding.viewScan.visibility = View.VISIBLE
+            documentScanViewModel.resetScanDispositions()
+            startScan(scanType!!)
         }
     }
 
@@ -138,24 +171,16 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
                 // stop the analyzer
                 binding.viewCamera.stopAnalyzer()
                 binding.viewCamera.analyzers.clear()
+                binding.buttonContinue.tag = it
+                binding.buttonContinue.isEnabled = true
 
-                when {
-                    scanType!!.isFront -> {
-                        setFragmentResult(
-                            REQUEST_KEY_DOCUMENT_SCAN,
-                            bundleOf(KEY_SCAN_TYPE_FRONT to it.output)
-                        )
-                        findNavController().navigateUp()
-                    }
+                binding.viewScan.visibility = View.GONE
+                binding.viewScanResults.visibility = View.VISIBLE
+                val output = it.output as DocumentDetectionOutput
+                val bitmap = output.bitmap
 
-                    scanType!!.isBack -> {
-                        setFragmentResult(
-                            REQUEST_KEY_DOCUMENT_SCAN,
-                            bundleOf(KEY_SCAN_TYPE_BACK to it.output)
-                        )
-                        findNavController().navigateUp()
-                    }
-                }
+                val file = fileUtils.createFileFromBitmap(bitmap, verification.id, "")
+                binding.ivScan.setImageBitmap(bitmap.adjustRotation(file))
             } else {
                 // something else.
             }

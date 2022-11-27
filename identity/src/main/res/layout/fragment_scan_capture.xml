@@ -1,34 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_scan_document_side"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingHorizontal="@dimen/content_padding_normal"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    <TextView
+        android:id="@+id/tv_scan_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingVertical="@dimen/element_spacing_normal"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
     <LinearLayout
         android:id="@+id/view_scan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingHorizontal="@dimen/content_padding_normal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/tv_scan_document_side"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-        <TextView
-            android:id="@+id/tv_scan_message"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:paddingVertical="@dimen/element_spacing_normal"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+        android:paddingHorizontal="@dimen/content_padding_normal">
 
         <io.falu.identity.camera.CameraView
             android:id="@+id/view_camera"
@@ -38,4 +37,45 @@
             app:cameraBorder="@drawable/ic_document_border" />
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:id="@+id/view_scan_results"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            app:cardCornerRadius="@dimen/element_spacing_normal">
+
+            <ImageView
+                android:id="@+id/iv_scan"
+                android:layout_width="220dp"
+                android:layout_height="220dp"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="centerCrop"
+                tools:ignore="ContentDescription" />
+
+        </androidx.cardview.widget.CardView>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_continue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/content_padding_normal"
+            android:enabled="false"
+            android:text="@string/button_continue" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_reset"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/content_padding_normal"
+            android:layout_marginBottom="@dimen/element_spacing_normal"
+            android:text="@string/button_scan"
+            app:backgroundTint="@android:color/holo_red_light" />
+    </LinearLayout>
+</LinearLayout>
