@@ -75,7 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/content_padding_normal"
             android:layout_marginBottom="@dimen/element_spacing_normal"
-            android:text="@string/button_scan"
+            android:text="@string/button_scan_again"
             app:backgroundTint="@android:color/holo_red_light" />
     </LinearLayout>
 </LinearLayout>

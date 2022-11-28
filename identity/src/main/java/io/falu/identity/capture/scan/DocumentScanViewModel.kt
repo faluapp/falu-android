@@ -36,11 +36,8 @@ internal class DocumentScanViewModel :
      */
     internal var scanner: DocumentScanner? = null
 
-    internal fun initialize(model: File, threshold: Float): DocumentScanner {
-        if (scanner == null) {
-            scanner = DocumentScanner(model, threshold, this)
-        }
-        return scanner!!
+    internal fun initialize(model: File, threshold: Float) {
+        scanner = DocumentScanner(model, threshold, this)
     }
 
     override fun onScanComplete(result: ScanResult) {

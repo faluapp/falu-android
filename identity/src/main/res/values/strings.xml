@@ -6,6 +6,7 @@
     <string name="button_take_photo">Take Photo</string>
     <string name="button_scan">Scan</string>
     <string name="button_take_again">Take Again</string>
+    <string name="button_scan_again">Scan Again</string>
     <string name="button_rectify">Resolve Error</string>
     <string name="button_cancel">Cancel</string>
     <string name="identity_verification_title_identity_verification">Identity verification</string>

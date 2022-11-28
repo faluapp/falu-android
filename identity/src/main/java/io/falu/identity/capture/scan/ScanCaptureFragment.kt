@@ -62,11 +62,6 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
 
         resetUI()
 
-        binding.tvScanMessage.text = getString(
-            R.string.scan_capture_text_scan_message,
-            identityDocumentType.getIdentityDocumentName(requireContext())
-        )
-
         val inputStream = resources.openRawResource(R.raw.model)
         val file = identityViewModel.getModel(inputStream, "model.tflite")
 
@@ -113,10 +108,12 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
         }
 
         binding.buttonReset.setOnClickListener {
+            resetUI()
             binding.viewScanResults.visibility = View.GONE
             binding.viewScan.visibility = View.VISIBLE
             documentScanViewModel.resetScanDispositions()
             startScan(scanType!!)
+            binding.viewCamera.startAnalyzer()
         }
     }
 
@@ -144,6 +141,11 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
                 )
             }
         }
+
+        binding.tvScanMessage.text = getString(
+            R.string.scan_capture_text_scan_message,
+            identityDocumentType.getIdentityDocumentName(requireContext())
+        )
     }
 
     private fun updateUI(result: ScanResult) {
