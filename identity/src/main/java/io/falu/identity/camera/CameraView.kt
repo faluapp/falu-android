@@ -209,6 +209,14 @@ internal class CameraView @JvmOverloads constructor(
         imageAnalysis?.clearAnalyzer()
     }
 
+    internal fun startAnalyzer() {
+        imageAnalysis?.also {
+            analyzers.forEach { analyzer ->
+                it.setAnalyzer(ContextCompat.getMainExecutor(context), analyzer)
+            }
+        }
+    }
+
     /**
      *
      */

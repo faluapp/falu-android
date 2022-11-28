@@ -113,7 +113,7 @@ internal class DocumentDispositionChanger(
     internal companion object {
         private val TAG = DocumentDispositionChanger::class.java.simpleName
         private const val THRESHOLD = 0.8f
-        private const val DEFAULT_REQUIRED_SCAN_DURATION = 10 // time in seconds
+        private const val DEFAULT_REQUIRED_SCAN_DURATION = 5 // time in seconds
         private const val DEFAULT_DESIRED_DURATION = 1 // time in seconds
     }
 }

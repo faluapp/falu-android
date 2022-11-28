@@ -86,16 +86,3 @@ internal fun Fragment.navigateToErrorFragment(it: Throwable) {
 internal fun Fragment.navigateToApiResponseProblemFragment(it: HttpApiResponseProblem?) {
     findNavController().navigateWithApiExceptions(requireContext(), it)
 }
-
-/**
- *
- */
-fun <TResult> Fragment.getNavigationResult(key: String) =
-    findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<TResult>(key)
-
-/***
- *
- */
-fun <TResult> Fragment.setNavigationResult(key: String, result: TResult) {
-    findNavController().previousBackStackEntry?.savedStateHandle?.set(key, result)
-}
