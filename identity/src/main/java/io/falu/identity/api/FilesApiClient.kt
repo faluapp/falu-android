@@ -58,4 +58,12 @@ internal class FilesApiClient : AbstractHttpApiClient(EmptyAuthenticationProvide
     internal companion object {
         private const val baseUrl = "https://cdn.falu.io"
     }
+
+    private fun AbstractHttpApiClient.downloadFile(builder: Request.Builder): ResourceResponse<File>{
+        val request = builder.build()
+        val response = backChannel.newCall(request).execute()
+
+        val body = response.body
+        val rc = response.code
+    }
 }
