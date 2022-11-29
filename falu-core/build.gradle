@@ -41,7 +41,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    api 'software.tingle:abstractions:1.0.4'
+    api 'software.tingle:abstractions:1.0.5'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation "org.mockito:mockito-core:$mockito_core_version"
