@@ -1,5 +1,6 @@
 package io.falu.identity.api
 
+import com.google.gson.Gson
 import io.falu.core.exceptions.APIConnectionException
 import io.falu.core.exceptions.APIException
 import io.falu.core.exceptions.AuthenticationException
@@ -9,12 +10,15 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import software.tingle.api.AbstractHttpApiClient
+import software.tingle.api.HttpApiResponseProblem
 import software.tingle.api.ResourceResponse
 import software.tingle.api.authentication.EmptyAuthenticationProvider
 import java.io.File
+import java.io.FileOutputStream
 import java.util.concurrent.TimeUnit
 
 internal class FilesApiClient : AbstractHttpApiClient(EmptyAuthenticationProvider()) {
+    private val gson = Gson()
 
     @Throws(
         AuthenticationException::class,
@@ -34,18 +38,18 @@ internal class FilesApiClient : AbstractHttpApiClient(EmptyAuthenticationProvide
         APIConnectionException::class,
         APIException::class
     )
-    fun downloadModelFile(url: String): ResourceResponse<File>{
+    fun downloadModelFile(url: String, output: File): ResourceResponse<File> {
         val builder = Request.Builder()
             .url(url)
             .get()
-        return execute(builder, File::class.java)
+        return downloadFile(builder, output)
     }
 
     override fun buildBackChannel(builder: OkHttpClient.Builder): OkHttpClient {
         builder
             .followRedirects(false)
-            .connectTimeout(30, TimeUnit.SECONDS) // default is 30 seconds
-            .readTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(50, TimeUnit.SECONDS) // default is 50 seconds
+            .readTimeout(50, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
 
         if (BuildConfig.DEBUG) {
@@ -55,15 +59,38 @@ internal class FilesApiClient : AbstractHttpApiClient(EmptyAuthenticationProvide
         return super.buildBackChannel(builder)
     }
 
-    internal companion object {
-        private const val baseUrl = "https://cdn.falu.io"
-    }
 
-    private fun AbstractHttpApiClient.downloadFile(builder: Request.Builder): ResourceResponse<File>{
+    private fun downloadFile(
+        builder: Request.Builder,
+        output: File
+    ): ResourceResponse<File> {
         val request = builder.build()
         val response = backChannel.newCall(request).execute()
 
+        var errorModel: HttpApiResponseProblem? = null
+
         val body = response.body
         val rc = response.code
+
+        if (body != null) {
+            when (rc) {
+                200,
+                201,
+                204 -> {
+                    body.byteStream().use { stream ->
+                        FileOutputStream(output).use { stream.copyTo(it) }
+                    }
+                }
+                400 -> errorModel =
+                    gson.fromJson(body.charStream(), HttpApiResponseProblem::class.java)
+            }
+            body.close()
+        }
+
+        return ResourceResponse(rc, response.headers, output, errorModel)
+    }
+
+    internal companion object {
+        private const val baseUrl = "https://cdn.falu.io"
     }
 }

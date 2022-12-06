@@ -72,13 +72,6 @@ internal class IdentityVerificationViewModel(
     private val documentDetectorModelFile: LiveData<ResourceResponse<File>?>
         get() = _documentDetectorModelFile
 
-    /**
-     *
-     */
-    private val _documentTypeDetectorModelFile = MutableLiveData<ResourceResponse<File>?>()
-    private val documentTypeDetectorModelFile: LiveData<ResourceResponse<File>?>
-        get() = _documentTypeDetectorModelFile
-
     internal fun fetchVerification(modelRequired: Boolean = true, onFailure: (Throwable) -> Unit) {
         launch(Dispatchers.IO) {
             runCatching {
@@ -91,15 +84,10 @@ internal class IdentityVerificationViewModel(
                         val verification = it.resource!!
                         if (modelRequired) {
 
-//                            downloadAIModel(
-//                                verification.capture.models.document.url,
-//                                _documentDetectorModelFile
-//                            )
-//
-//                            downloadAIModel(
-//                                verification.capture.models.documentType.url,
-//                                _documentDetectorModelFile
-//                            )
+                            downloadAIModel(
+                                verification.capture.models.document.url,
+                                _documentDetectorModelFile
+                            )
                         }
                     }
 
@@ -287,7 +275,7 @@ internal class IdentityVerificationViewModel(
     private fun downloadAIModel(url: String, liveData: MutableLiveData<ResourceResponse<File>?>) {
         launch(Dispatchers.IO) {
             runCatching {
-                filesApiClient.downloadModelFile(url)
+                filesApiClient.downloadModelFile(url, fileUtils.createMLModelFile(url))
             }.fold(
                 onSuccess = {
                     liveData.postValue(it)
