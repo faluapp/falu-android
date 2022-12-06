@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.core.content.FileProvider
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -57,6 +58,10 @@ internal class FileUtils internal constructor(private val context: Context) {
         }
     }
 
+    fun createMLModelFile(url: String): File {
+        return File(context.cacheDir, generateMLModelFileName(url))
+    }
+
     private fun getFileUri(file: File): Uri =
         FileProvider.getUriForFile(
             context,
@@ -75,6 +80,11 @@ internal class FileUtils internal constructor(private val context: Context) {
 
     private fun generateFileName(verification: String, imageSide: String?): String {
         return "${verification}${imageSide.let { "_$it" }}.jpeg"
+    }
+
+    private fun generateMLModelFileName(url: String): String {
+        val httpUrl = url.toHttpUrl()
+        return httpUrl.encodedPathSegments[4]
     }
 
     private val imageFileName: String
