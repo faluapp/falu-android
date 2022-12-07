@@ -21,6 +21,7 @@ import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.camera.CameraPermissionsFragment
 import io.falu.identity.capture.scan.utils.ScanResult
 import io.falu.identity.documents.DocumentSelectionFragment
+import io.falu.identity.utils.*
 import io.falu.identity.utils.navigateToApiResponseProblemFragment
 import io.falu.identity.utils.navigateToErrorFragment
 import io.falu.identity.utils.submitVerificationData
