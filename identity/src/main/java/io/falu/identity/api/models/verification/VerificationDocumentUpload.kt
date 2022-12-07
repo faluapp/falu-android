@@ -15,6 +15,6 @@ internal data class VerificationDocumentUpload(
 @Parcelize
 internal data class VerificationDocumentSide(
     var method: UploadMethod,
-    var score: Float? = null,
+    var score: Int? = null,
     var file: String,
 ) : Parcelable

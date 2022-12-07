@@ -20,8 +20,6 @@ internal data class VerificationCapture(
 internal data class VerificationModel(
     @SerializedName("document_detector")
     var document: DocumentDetector,
-    @SerializedName("document_type_detector")
-    var documentType: DocumentDetector
 ) : Parcelable
 
 /**

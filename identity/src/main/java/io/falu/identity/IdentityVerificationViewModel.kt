@@ -16,6 +16,7 @@ import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.api.models.verification.VerificationUploadResult
 import io.falu.identity.utils.FileUtils
+import io.falu.identity.utils.toWholeNumber
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -69,7 +70,7 @@ internal class IdentityVerificationViewModel(
      *
      */
     private val _documentDetectorModelFile = MutableLiveData<ResourceResponse<File>?>()
-    private val documentDetectorModelFile: LiveData<ResourceResponse<File>?>
+    val documentDetectorModelFile: LiveData<ResourceResponse<File>?>
         get() = _documentDetectorModelFile
 
     internal fun fetchVerification(modelRequired: Boolean = true, onFailure: (Throwable) -> Unit) {
@@ -193,7 +194,11 @@ internal class IdentityVerificationViewModel(
             }.fold(
                 onSuccess = { response ->
                     if (response.successful() && response.resource != null) {
-                        val result = VerificationUploadResult(response.resource!!, score, type)
+                        val result = VerificationUploadResult(
+                            response.resource!!,
+                            score?.toWholeNumber(),
+                            type
+                        )
                         _documentUploadDisposition.update { current ->
                             current.modify(documentSide, result)
                         }
@@ -334,6 +339,7 @@ internal class IdentityVerificationViewModel(
     }
 
     fun getModel(stream: InputStream, fileName: String): File {
+        // TODO: Remove this method
         return fileUtils.createFileFromInputStream(stream, fileName)
     }
 
