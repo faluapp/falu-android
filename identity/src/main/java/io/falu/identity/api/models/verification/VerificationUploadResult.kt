@@ -8,6 +8,6 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 internal data class VerificationUploadResult(
     var file: FaluFile,
-    var score: Float? = null,
+    var score: Int? = null,
     var method: UploadMethod? = null
 ) : Parcelable

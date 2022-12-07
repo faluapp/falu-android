@@ -120,3 +120,12 @@ internal fun ByteBuffer.toByteArray(): ByteArray {
     get(data) // Copy the buffer into a byte array
     return data // Return the byte array
 }
+
+
+internal fun Int.toFraction(): Float {
+    return this.div(100F)
+}
+
+internal fun Float.toWholeNumber(): Int {
+    return this.times(100F).toInt()
+}
