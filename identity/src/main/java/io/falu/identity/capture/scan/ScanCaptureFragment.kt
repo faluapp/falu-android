@@ -24,6 +24,7 @@ import io.falu.identity.databinding.FragmentScanCaptureBinding
 import io.falu.identity.documents.DocumentSelectionFragment
 import io.falu.identity.utils.FileUtils
 import io.falu.identity.utils.adjustRotation
+import io.falu.identity.utils.toFraction
 
 
 internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.Factory) :
@@ -58,16 +59,18 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
             requireArguments().getSerializable(KEY_DOCUMENT_SCAN_TYPE) as? DocumentScanDisposition.DocumentScanType
 
         fileUtils = FileUtils(requireContext())
+
+        documentScanViewModel.resetScanDispositions()
         documentScanViewModel.resetScanDispositions()
 
         resetUI()
 
-        val inputStream = resources.openRawResource(R.raw.model)
-        val file = identityViewModel.getModel(inputStream, "model.tflite")
-
-        documentScanViewModel.initialize(file, 0.5f)
-
-        startScan(scanType!!)
+//        val inputStream = resources.openRawResource(R.raw.model)
+//        val file = identityViewModel.getModel(inputStream, "model.tflite")
+//
+//        documentScanViewModel.initialize(file, 0.5f)
+//
+//        startScan(scanType!!)
 
         binding.viewCamera.lifecycleOwner = viewLifecycleOwner
         binding.viewCamera.lensFacing = CameraSelector.LENS_FACING_BACK
@@ -115,11 +118,30 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
             startScan(scanType!!)
             binding.viewCamera.startAnalyzer()
         }
+
+        identityViewModel.observeForVerificationResults(
+            viewLifecycleOwner,
+            onError = {},
+            onSuccess = { initiateScanner(it) }
+        )
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun initiateScanner(verification: Verification) {
+        identityViewModel.documentDetectorModelFile.observe(viewLifecycleOwner) { response ->
+            if (response != null && response.successful() && response.resource != null) {
+                documentScanViewModel.initialize(
+                    response.resource!!,
+                    verification.capture.models.document.score.toFraction()
+                )
+
+                startScan(scanType!!)
+            }
+        }
     }
 
     private fun startScan(scanType: DocumentScanDisposition.DocumentScanType) {
