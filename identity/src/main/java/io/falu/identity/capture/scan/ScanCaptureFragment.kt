@@ -132,10 +132,10 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
     }
 
     private fun initiateScanner(verification: Verification) {
-        identityViewModel.documentDetectorModelFile.observe(viewLifecycleOwner) { response ->
-            if (response != null && response.successful() && response.resource != null) {
+        identityViewModel.documentDetectorModelFile.observe(viewLifecycleOwner) {
+            if (it != null) {
                 documentScanViewModel.initialize(
-                    response.resource!!,
+                    it,
                     verification.capture.models.document.score.toFraction()
                 )
 
