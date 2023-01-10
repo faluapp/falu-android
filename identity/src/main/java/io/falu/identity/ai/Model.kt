@@ -1,6 +1,7 @@
 package io.falu.identity.ai
 
 import android.graphics.Bitmap
+import android.graphics.Rect
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
@@ -19,12 +20,13 @@ internal enum class DocumentOption {
 /**
  *
  */
+@Parcelize
 internal data class BoundingBox(
     val left: Float,
     val top: Float,
     val width: Float,
     val height: Float
-)
+) : Parcelable
 
 /**
  *
@@ -37,5 +39,6 @@ internal data class DocumentDetectionOutput(
     var score: Float,
     var option: DocumentOption,
     var bitmap: Bitmap,
+    var box: BoundingBox,
     var scores: MutableList<Float>
-): DetectionOutput, Parcelable
+) : DetectionOutput, Parcelable

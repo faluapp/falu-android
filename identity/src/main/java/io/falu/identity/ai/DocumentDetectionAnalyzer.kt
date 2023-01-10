@@ -9,9 +9,11 @@ import io.falu.identity.capture.scan.utils.DocumentScanDisposition
 import io.falu.identity.utils.toBitmap
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
+import org.tensorflow.lite.support.common.ops.NormalizeOp
 import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
+import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.io.File
 
 internal class DocumentDetectionAnalyzer internal constructor(
@@ -23,10 +25,17 @@ internal class DocumentDetectionAnalyzer internal constructor(
 
     private val interpreter = Interpreter(model)
 
+    private val maxDetections = 10
+    private val boundingBoxesTensorShape = intArrayOf(1, maxDetections, 4)
+    private val scoresTensorShape = intArrayOf(1, maxDetections)
+    private val classesTensorShape = intArrayOf(1, maxDetections)
+    private val detectionsTensorShape = intArrayOf(1)
+
     @SuppressLint("UnsafeOptInUsageError")
     override fun analyze(image: ImageProxy) {
         interpreter.resetVariableTensors()
-        // Input:- [1,1,1,3]
+
+        // Input:- [1,320,320,1]
         val bitmap = image.image?.toBitmap()
         var tensorImage = TensorImage(TENSOR_DATA_TYPE)
         tensorImage.load(bitmap)
@@ -34,32 +43,50 @@ internal class DocumentDetectionAnalyzer internal constructor(
         // Preprocess: resize image to model input
         val processor = ImageProcessor.Builder()
             .add(ResizeOp(IMAGE_HEIGHT, IMAGE_WIDTH, ResizeOp.ResizeMethod.BILINEAR))
+            .add(NormalizeOp(NORMALIZE_MEAN, NORMALIZE_STD)) // normalize to [0, 1)
             .build()
         tensorImage = processor.process(tensorImage)
 
-        // run:- input: [1,1,1,3], output: (1,6)
+        // run:- input: [1,320,320,1], output: (1,10), (1, 10, 4), (1,), (1,10)
         // The output is an array representing the probability scores of the various document types
-        val documentOptionScores = Array(OUTPUT_SIZE) { FloatArray(DOCUMENT_OPTION_TENSOR_SIZE) }
+        val documentOptionScoresBuffer =
+            TensorBuffer.createFixedSize(scoresTensorShape, DataType.FLOAT32)
+        val boundingBoxesBuffer =
+            TensorBuffer.createFixedSize(boundingBoxesTensorShape, DataType.FLOAT32)
+        val classesBuffer =
+            TensorBuffer.createFixedSize(classesTensorShape, DataType.FLOAT32)
+        val detectionsBuffer = TensorBuffer.createFixedSize(detectionsTensorShape, DataType.FLOAT32)
 
-        interpreter.run(tensorImage.buffer, documentOptionScores)
+        interpreter.runForMultipleInputsOutputs(
+            arrayOf(tensorImage.buffer), mapOf(
+                0 to documentOptionScoresBuffer.buffer,
+                1 to boundingBoxesBuffer.buffer,
+                2 to detectionsBuffer.buffer,
+                3 to classesBuffer.buffer
+            )
+        )
+
+        val scores = documentOptionScoresBuffer.floatArray
+        val boxes = boundingBoxesBuffer.floatArray
+        val classes = classesBuffer.floatArray
 
         // Process results:
         // Find the highest score and return the corresponding box and document option
         var bestIndex = 0
-        var bestScore = 0F
+        var bestScore = Float.MIN_VALUE
         var bestOptionIndex = INVALID
+        var bestBox = floatArrayOf(.1f)
 
-        for (score in 0 until OUTPUT_SIZE) {
-            val currentDocumentScores = documentOptionScores[score]
-            val currentBestDocumentOptionIndex =
-                currentDocumentScores.indices.maxBy { currentDocumentScores[it] }
+        for (i in boxes.indices step 4) {
+            val currentDocumentScore = scores[i / 4]
+            val currentBestClass = classes[i / 4].toInt()
+            val currentBestBox = boxes.sliceArray(i..i + 3)
 
-            val currentBestOptionScore = currentDocumentScores[currentBestDocumentOptionIndex]
-
-            if (bestScore < currentBestOptionScore && currentBestOptionScore > threshold) {
-                bestScore = currentBestOptionScore
-                bestIndex = score
-                bestOptionIndex = currentBestDocumentOptionIndex
+            if (bestScore < currentDocumentScore && currentDocumentScore > threshold) {
+                bestScore = currentDocumentScore
+                bestIndex = i
+                bestOptionIndex = currentBestClass
+                bestBox = currentBestBox
             }
         }
 
@@ -69,7 +96,13 @@ internal class DocumentDetectionAnalyzer internal constructor(
             score = bestScore,
             option = bestOption,
             bitmap = bitmap!!,
-            scores = DOCUMENT_OPTIONS.map { documentOptionScores[bestIndex][it] }.toMutableList()
+            box = BoundingBox(
+                left = bestBox[0],
+                top = bestBox[1],
+                width = bestBox[2],
+                height = bestBox[3]
+            ),
+            scores = DOCUMENT_OPTIONS.map { scores[bestIndex] }.toMutableList()
         )
 
         listener(output)
@@ -87,18 +120,18 @@ internal class DocumentDetectionAnalyzer internal constructor(
 
     internal companion object {
         private val TENSOR_DATA_TYPE = DataType.FLOAT32
-        private val DOCUMENT_OPTION_TENSOR_SIZE = DocumentOption.values().size - 1
 
-        private const val IMAGE_WIDTH = 224
-        private const val IMAGE_HEIGHT = 224
-        private const val OUTPUT_SIZE = 1
+        private const val IMAGE_WIDTH = 320
+        private const val IMAGE_HEIGHT = 320
+        private const val NORMALIZE_MEAN = 0f
+        private const val NORMALIZE_STD = 255f
 
-        private const val KENYA_DL_BACK = 0
-        private const val KENYA_DL_FRONT = 1
-        private const val KENYA_ID_BACK = 2
-        private const val KENYA_ID_FRONT = 3
-        private const val KENYA_PASSPORT = 4
-        private const val INVALID = -1
+        private const val INVALID = 0
+        private const val KENYA_PASSPORT = 1
+        private const val KENYA_DL_BACK = 2
+        private const val KENYA_DL_FRONT = 3
+        private const val KENYA_ID_BACK = 4
+        private const val KENYA_ID_FRONT = 5
 
         private val DOCUMENT_OPTIONS = listOf(
             KENYA_DL_BACK,
