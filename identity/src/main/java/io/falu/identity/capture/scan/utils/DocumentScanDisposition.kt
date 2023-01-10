@@ -17,23 +17,23 @@ internal sealed class DocumentScanDisposition(
      *
      */
     internal enum class DocumentScanType {
-        KENYA_DL_BACK,
-        KENYA_DL_FRONT,
-        KENYA_ID_BACK,
-        KENYA_ID_FRONT,
+        DL_BACK,
+        DL_FRONT,
+        ID_BACK,
+        ID_FRONT,
         PASSPORT;
 
         val isFront: Boolean
             get() {
-                return this == KENYA_DL_FRONT ||
-                        this == KENYA_ID_FRONT ||
+                return this == DL_FRONT ||
+                        this == ID_FRONT ||
                         this == PASSPORT
             }
 
         val isBack: Boolean
             get() {
-                return this == KENYA_DL_BACK ||
-                        this == KENYA_ID_BACK
+                return this == DL_BACK ||
+                        this == ID_BACK
             }
     }
 

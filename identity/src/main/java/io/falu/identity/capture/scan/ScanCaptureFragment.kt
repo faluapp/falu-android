@@ -61,16 +61,15 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
         fileUtils = FileUtils(requireContext())
 
         documentScanViewModel.resetScanDispositions()
-        documentScanViewModel.resetScanDispositions()
 
         resetUI()
 
-//        val inputStream = resources.openRawResource(R.raw.model)
-//        val file = identityViewModel.getModel(inputStream, "model.tflite")
-//
-//        documentScanViewModel.initialize(file, 0.5f)
-//
-//        startScan(scanType!!)
+        val inputStream = resources.openRawResource(R.raw.model)
+        val file = identityViewModel.getModel(inputStream, "model.tflite")
+
+        documentScanViewModel.initialize(file, 0.5f)
+
+        startScan(scanType!!)
 
         binding.viewCamera.lifecycleOwner = viewLifecycleOwner
         binding.viewCamera.lensFacing = CameraSelector.LENS_FACING_BACK
@@ -119,11 +118,11 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
             binding.viewCamera.startAnalyzer()
         }
 
-        identityViewModel.observeForVerificationResults(
-            viewLifecycleOwner,
-            onError = {},
-            onSuccess = { initiateScanner(it) }
-        )
+//        identityViewModel.observeForVerificationResults(
+//            viewLifecycleOwner,
+//            onError = {},
+//            onSuccess = { initiateScanner(it) }
+//        )
     }
 
     override fun onDestroyView() {
@@ -184,7 +183,8 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
             }
             is DocumentScanDisposition.Undesired -> {}
             is DocumentScanDisposition.Completed -> {}
-            is DocumentScanDisposition.Timeout, null -> { //noOP
+            is DocumentScanDisposition.Timeout, null -> {
+                //noOP
             }
         }
     }
@@ -206,7 +206,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
                 val file = fileUtils.createFileFromBitmap(bitmap, verification.id, "")
                 binding.ivScan.setImageBitmap(bitmap.adjustRotation(file))
             } else {
-                // something else.
+                // something else. stop scanning d
             }
         }
     }
@@ -221,8 +221,8 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
             return when (this) {
                 IdentityDocumentType.IDENTITY_CARD -> {
                     Pair(
-                        DocumentScanDisposition.DocumentScanType.KENYA_DL_FRONT,
-                        DocumentScanDisposition.DocumentScanType.KENYA_ID_BACK
+                        DocumentScanDisposition.DocumentScanType.DL_FRONT,
+                        DocumentScanDisposition.DocumentScanType.ID_BACK
                     )
                 }
                 IdentityDocumentType.PASSPORT -> {
@@ -233,8 +233,8 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
                 }
                 IdentityDocumentType.DRIVING_LICENSE -> {
                     Pair(
-                        DocumentScanDisposition.DocumentScanType.KENYA_DL_FRONT,
-                        DocumentScanDisposition.DocumentScanType.KENYA_DL_BACK
+                        DocumentScanDisposition.DocumentScanType.DL_FRONT,
+                        DocumentScanDisposition.DocumentScanType.DL_BACK
                     )
                 }
             }
