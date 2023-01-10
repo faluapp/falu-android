@@ -75,22 +75,20 @@ internal class DocumentDetectionAnalyzer internal constructor(
         var bestIndex = 0
         var bestScore = Float.MIN_VALUE
         var bestOptionIndex = INVALID
-        var bestBox = floatArrayOf(.1f)
 
         for (i in boxes.indices step 4) {
             val currentDocumentScore = scores[i / 4]
             val currentBestClass = classes[i / 4].toInt()
-            val currentBestBox = boxes.sliceArray(i..i + 3)
 
             if (bestScore < currentDocumentScore && currentDocumentScore > threshold) {
                 bestScore = currentDocumentScore
                 bestIndex = i
                 bestOptionIndex = currentBestClass
-                bestBox = currentBestBox
             }
         }
 
         val bestOption = DOCUMENT_OPTIONS_MAP[bestOptionIndex] ?: DocumentOption.INVALID
+        val bestBox = boxes.sliceArray(bestIndex..bestIndex + 3)
 
         val output = DocumentDetectionOutput(
             score = bestScore,

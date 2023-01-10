@@ -8,7 +8,8 @@ import org.joda.time.DateTime
  */
 internal sealed class DocumentScanDisposition(
     val type: DocumentScanType,
-    val dispositionDetector: DocumentDispositionDetector
+    val dispositionDetector: DocumentDispositionDetector,
+    val terminate: Boolean
 ) {
     abstract fun next(output: DetectionOutput): DocumentScanDisposition
 
@@ -40,7 +41,7 @@ internal sealed class DocumentScanDisposition(
      *
      */
     internal class Start(type: DocumentScanType, detector: DocumentDispositionDetector) :
-        DocumentScanDisposition(type, detector) {
+        DocumentScanDisposition(type, detector, false) {
         override fun next(output: DetectionOutput): DocumentScanDisposition {
             return dispositionDetector.fromStart(this, output)
         }
@@ -54,7 +55,7 @@ internal sealed class DocumentScanDisposition(
         detector: DocumentDispositionDetector,
         internal var reached: DateTime = DateTime.now()
     ) :
-        DocumentScanDisposition(type, detector) {
+        DocumentScanDisposition(type, detector, false) {
         override fun next(output: DetectionOutput) = dispositionDetector.fromDetected(this, output)
     }
 
@@ -66,7 +67,7 @@ internal sealed class DocumentScanDisposition(
         detector: DocumentDispositionDetector,
         val reached: DateTime = DateTime.now()
     ) :
-        DocumentScanDisposition(type, detector) {
+        DocumentScanDisposition(type, detector, false) {
         override fun next(output: DetectionOutput): DocumentScanDisposition =
             dispositionDetector.fromDesired(this, output)
     }
@@ -79,7 +80,7 @@ internal sealed class DocumentScanDisposition(
         detector: DocumentDispositionDetector,
         val reached: DateTime = DateTime.now()
     ) :
-        DocumentScanDisposition(type, detector) {
+        DocumentScanDisposition(type, detector, false) {
         override fun next(output: DetectionOutput): DocumentScanDisposition =
             dispositionDetector.fromUndesired(this, output)
     }
@@ -88,7 +89,7 @@ internal sealed class DocumentScanDisposition(
      *
      */
     internal class Completed(type: DocumentScanType, detector: DocumentDispositionDetector) :
-        DocumentScanDisposition(type, detector) {
+        DocumentScanDisposition(type, detector, true) {
         override fun next(output: DetectionOutput): DocumentScanDisposition = this
     }
 
@@ -96,7 +97,7 @@ internal sealed class DocumentScanDisposition(
      *
      */
     internal class Timeout(type: DocumentScanType, detector: DocumentDispositionDetector) :
-        DocumentScanDisposition(type, detector) {
+        DocumentScanDisposition(type, detector, true) {
         override fun next(output: DetectionOutput) = this
     }
 }

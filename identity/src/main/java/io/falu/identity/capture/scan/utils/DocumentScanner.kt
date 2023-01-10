@@ -1,7 +1,7 @@
 import androidx.camera.core.ImageAnalysis
 import io.falu.identity.ai.DetectionOutput
 import io.falu.identity.ai.DocumentDetectionAnalyzer
-import io.falu.identity.capture.scan.utils.DocumentDispositionChanger
+import io.falu.identity.capture.scan.utils.DocumentDispositionMachine
 import io.falu.identity.capture.scan.utils.DocumentScanDisposition
 import io.falu.identity.capture.scan.utils.DocumentScanResultCallback
 import io.falu.identity.capture.scan.utils.ScanResult
@@ -19,7 +19,7 @@ internal class DocumentScanner(
         analyzers: MutableList<ImageAnalysis.Analyzer>,
         scanType: DocumentScanDisposition.DocumentScanType
     ) {
-        disposition = DocumentScanDisposition.Start(scanType, DocumentDispositionChanger())
+        disposition = DocumentScanDisposition.Start(scanType, DocumentDispositionMachine())
 
         analyzers.add(
             DocumentDetectionAnalyzer
@@ -37,11 +37,12 @@ internal class DocumentScanner(
 
             val result = ScanResult(output, disposition)
 
-            if (disposition is DocumentScanDisposition.Completed) {
+            if (disposition!!.terminate) {
                 callback.onScanComplete(result)
             } else {
                 callback.onProgress(result)
             }
+
         } else {
             val result = ScanResult(output, disposition)
 

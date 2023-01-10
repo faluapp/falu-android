@@ -1,18 +1,25 @@
 package io.falu.identity.capture.scan.utils
 
 import android.util.Log
+import io.falu.identity.ai.BoundingBox
 import io.falu.identity.ai.DetectionOutput
 import io.falu.identity.ai.DocumentDetectionOutput
 import io.falu.identity.ai.DocumentOption
 import org.joda.time.DateTime
 import org.joda.time.Seconds
+import kotlin.math.max
+import kotlin.math.min
 
 
-internal class DocumentDispositionChanger(
-    private val threshold: Float = THRESHOLD,
+internal class DocumentDispositionMachine(
+    private val timeout: DateTime = DateTime.now().plusSeconds(10),
+    private val iou: Float = IOU_THRESHOLD,
     private val requiredTime: Int = DEFAULT_REQUIRED_SCAN_DURATION,
     private val currentTime: DateTime = DateTime.now()
 ) : DocumentDispositionDetector {
+
+    private var previousBoundingBox: BoundingBox? = null
+
     override fun fromStart(
         state: DocumentScanDisposition.Start,
         output: DetectionOutput
@@ -21,6 +28,9 @@ internal class DocumentDispositionChanger(
             "Unexpected output type: $output"
         }
         return when {
+            hasTimedOut -> {
+                DocumentScanDisposition.Timeout(state.type, this)
+            }
             output.option.matches(state.type) -> {
                 Log.d(TAG, "Model output detected with score ${output.score}, moving to Detected.")
                 DocumentScanDisposition.Detected(state.type, this)
@@ -41,9 +51,14 @@ internal class DocumentDispositionChanger(
         }
 
         return when {
-            output.score < threshold -> DocumentScanDisposition.Undesired(
-                state.type, state.dispositionDetector
-            )
+            hasTimedOut -> {
+                DocumentScanDisposition.Timeout(state.type, this)
+            }
+            !iouCheckSatisfied(output.box) -> {
+                // reset the time
+                state.reached = DateTime.now()
+                state
+            }
             moreScanningRequired(state) -> {
                 state.reached = DateTime.now()
                 state
@@ -63,7 +78,7 @@ internal class DocumentDispositionChanger(
         }
 
         return when {
-            elapsedTime(state.reached) > DEFAULT_DESIRED_DURATION -> {
+            elapsedTime(time = state.reached) > DEFAULT_DESIRED_DURATION -> {
                 Log.d(TAG, "Complete the scan. Desired scan for ${state.type} found.")
                 DocumentScanDisposition.Completed(state.type, state.dispositionDetector)
             }
@@ -102,18 +117,74 @@ internal class DocumentDispositionChanger(
     }
 
     private fun moreScanningRequired(disposition: DocumentScanDisposition.Detected): Boolean {
-        val seconds = elapsedTime(disposition.reached)
+        val seconds = elapsedTime(time = disposition.reached)
         return seconds < requiredTime
     }
 
-    private fun elapsedTime(time: DateTime): Int {
-        return Seconds.secondsBetween(currentTime, time).seconds
+    private fun iouCheckSatisfied(currentBox: BoundingBox): Boolean {
+        return previousBoundingBox?.let {
+            val accuracy = calculateIOU(currentBox, it)
+            return accuracy >= iou
+        } ?: run {
+            previousBoundingBox = currentBox
+            true
+        }
+    }
+
+    private fun elapsedTime(now: DateTime = currentTime, time: DateTime): Int {
+        return Seconds.secondsBetween(now, time).seconds
+    }
+
+    private val hasTimedOut: Boolean
+        get() {
+            val elapsed = elapsedTime(now = timeout, time = DateTime.now())
+            return elapsed > 0
+        }
+
+    /**
+     * Measure the accuracy of detection
+     *
+     */
+    private fun calculateIOU(currentBox: BoundingBox, previousBox: BoundingBox): Float {
+        val currentLeft = currentBox.left
+        val currentRight = currentBox.left + currentBox.width
+        val currentTop = currentBox.top
+        val currentBottom = currentBox.top + currentBox.height
+
+        val previousLeft = previousBox.left
+        val previousRight = previousBox.left + previousBox.width
+        val previousTop = previousBox.top
+        val previousBottom = previousBox.top + previousBox.height
+
+        // determine the (x, y)-coordinates of the intersection rectangle
+        val xA = max(currentLeft, previousLeft)
+        val yA = max(currentTop, previousTop)
+        val xB = min(currentRight, previousRight)
+        val yB = min(currentBottom, previousBottom)
+
+        // compute the area of intersection rectangle
+
+        // compute the area of intersection rectangle
+        val intersectionArea = (xB - xA) * (yB - yA)
+
+        // compute the area of both the prediction and ground-truth
+        // rectangles
+        val currentBoxArea = (currentRight - currentLeft) * (currentBottom - currentTop)
+        val previousBoxArea = (previousRight - previousLeft) * (previousBottom - previousTop)
+
+        // compute the intersection over union by taking the intersection
+        // area and dividing it by the sum of prediction + ground-truth
+        // areas - the intersection area
+        val iou = intersectionArea / (currentBoxArea + previousBoxArea - intersectionArea)
+
+        Log.d(TAG, "Calculate box accuracy: $iou")
+        return iou
     }
 
     internal companion object {
-        private val TAG = DocumentDispositionChanger::class.java.simpleName
-        private const val THRESHOLD = 0.8f
-        private const val DEFAULT_REQUIRED_SCAN_DURATION = 5 // time in seconds
+        private val TAG = DocumentDispositionMachine::class.java.simpleName
+        private const val IOU_THRESHOLD = 0.8f
+        private const val DEFAULT_REQUIRED_SCAN_DURATION = 2 // time in seconds
         private const val DEFAULT_DESIRED_DURATION = 1 // time in seconds
     }
 }
