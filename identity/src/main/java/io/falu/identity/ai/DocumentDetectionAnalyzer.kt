@@ -124,27 +124,27 @@ internal class DocumentDetectionAnalyzer internal constructor(
         private const val NORMALIZE_MEAN = 0f
         private const val NORMALIZE_STD = 255f
 
-        private const val INVALID = 0
-        private const val KENYA_PASSPORT = 1
-        private const val KENYA_DL_BACK = 2
-        private const val KENYA_DL_FRONT = 3
-        private const val KENYA_ID_BACK = 4
-        private const val KENYA_ID_FRONT = 5
+        private const val INVALID = -1
+        private const val PASSPORT = 0
+        private const val DL_BACK = 1
+        private const val DL_FRONT = 2
+        private const val ID_BACK = 3
+        private const val ID_FRONT = 4
 
         private val DOCUMENT_OPTIONS = listOf(
-            KENYA_DL_BACK,
-            KENYA_DL_FRONT,
-            KENYA_ID_BACK,
-            KENYA_ID_FRONT,
-            KENYA_PASSPORT
+            DL_BACK,
+            DL_FRONT,
+            ID_BACK,
+            ID_FRONT,
+            PASSPORT,
         )
 
         private val DOCUMENT_OPTIONS_MAP = mapOf(
-            KENYA_DL_BACK to DocumentOption.KENYA_DL_BACK,
-            KENYA_DL_FRONT to DocumentOption.KENYA_DL_FRONT,
-            KENYA_ID_BACK to DocumentOption.KENYA_ID_BACK,
-            KENYA_ID_FRONT to DocumentOption.KENYA_ID_FRONT,
-            KENYA_PASSPORT to DocumentOption.KENYA_PASSPORT
+            DL_BACK to DocumentOption.DL_BACK,
+            DL_FRONT to DocumentOption.DL_FRONT,
+            ID_BACK to DocumentOption.ID_BACK,
+            ID_FRONT to DocumentOption.ID_FRONT,
+            PASSPORT to DocumentOption.PASSPORT
         )
     }
 }

@@ -12,7 +12,7 @@ import kotlin.math.min
 
 
 internal class DocumentDispositionMachine(
-    private val timeout: DateTime = DateTime.now().plusSeconds(10),
+    private val timeout: DateTime = DateTime.now().plusSeconds(15),
     private val iou: Float = IOU_THRESHOLD,
     private val requiredTime: Int = DEFAULT_REQUIRED_SCAN_DURATION,
     private val currentTime: DateTime = DateTime.now()
@@ -97,19 +97,19 @@ internal class DocumentDispositionMachine(
         type: DocumentScanDisposition.DocumentScanType
     ): Boolean {
         return when (this) {
-            DocumentOption.KENYA_DL_BACK -> {
-                type == DocumentScanDisposition.DocumentScanType.KENYA_DL_BACK
+            DocumentOption.DL_BACK -> {
+                type == DocumentScanDisposition.DocumentScanType.DL_BACK
             }
-            DocumentOption.KENYA_DL_FRONT -> {
-                type == DocumentScanDisposition.DocumentScanType.KENYA_DL_FRONT
+            DocumentOption.DL_FRONT -> {
+                type == DocumentScanDisposition.DocumentScanType.DL_FRONT
             }
-            DocumentOption.KENYA_ID_BACK -> {
-                type == DocumentScanDisposition.DocumentScanType.KENYA_ID_BACK
+            DocumentOption.ID_BACK -> {
+                type == DocumentScanDisposition.DocumentScanType.ID_BACK
             }
-            DocumentOption.KENYA_ID_FRONT -> {
-                type == DocumentScanDisposition.DocumentScanType.KENYA_DL_FRONT
+            DocumentOption.ID_FRONT -> {
+                type == DocumentScanDisposition.DocumentScanType.DL_FRONT
             }
-            DocumentOption.KENYA_PASSPORT -> {
+            DocumentOption.PASSPORT -> {
                 type == DocumentScanDisposition.DocumentScanType.PASSPORT
             }
             DocumentOption.INVALID -> false
@@ -177,14 +177,14 @@ internal class DocumentDispositionMachine(
         // areas - the intersection area
         val iou = intersectionArea / (currentBoxArea + previousBoxArea - intersectionArea)
 
-        Log.d(TAG, "Calculate box accuracy: $iou")
+        Log.d(TAG, "Calculated box accuracy: $iou")
         return iou
     }
 
     internal companion object {
         private val TAG = DocumentDispositionMachine::class.java.simpleName
         private const val IOU_THRESHOLD = 0.8f
-        private const val DEFAULT_REQUIRED_SCAN_DURATION = 2 // time in seconds
+        private const val DEFAULT_REQUIRED_SCAN_DURATION = 3 // time in seconds
         private const val DEFAULT_DESIRED_DURATION = 1 // time in seconds
     }
 }
