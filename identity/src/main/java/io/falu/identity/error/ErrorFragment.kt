@@ -28,15 +28,15 @@ internal class ErrorFragment : AbstractErrorFragment() {
         binding.tvErrorTitle.text = title
         binding.tvErrorDescription.text = desc
         binding.tvErrorMessage.visibility = View.GONE
-        binding.buttonErrorAction.text = back
+        binding.buttonErrorActionPrimary.text = back
 
         // If cancel is `true` then terminate the workflow with an Exception
         if (cancel) {
-            binding.buttonErrorAction.setOnClickListener {
+            binding.buttonErrorActionPrimary.setOnClickListener {
                 callback.onFinishWithResult(IdentityVerificationResult.Failed(throwable))
             }
         } else {
-            binding.buttonErrorAction.setOnClickListener {
+            binding.buttonErrorActionPrimary.setOnClickListener {
                 val destination = requireArguments().getInt(KEY_BACK_BUTTON_DESTINATION)
                 if (destination == UNKNOWN_DESTINATION) {
                     findNavController().navigate(DESTINATION_WELCOME_FRAGMENT)

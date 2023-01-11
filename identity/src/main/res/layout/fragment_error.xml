@@ -58,9 +58,17 @@
         app:layout_constraintTop_toBottomOf="@+id/scrollView">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_error_action"
+            android:id="@+id/button_error_action_primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/button_finish" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_error_action_secondary"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_finish"
+            android:visibility="gone" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

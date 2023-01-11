@@ -9,6 +9,8 @@
     <string name="button_scan_again">Scan Again</string>
     <string name="button_rectify">Resolve Error</string>
     <string name="button_cancel">Cancel</string>
+    <string name="button_try_again">Try Again</string>
+    <string name="button_change_method">Change Method</string>
     <string name="identity_verification_title_identity_verification">Identity verification</string>
     <string name="identity_verification_text_mode_sandbox">Sandbox/Test</string>
     <string name="identity_verification_text_help_and_support">Help And Support</string>
@@ -23,6 +25,9 @@
     <string name="error_title_verification_data_incomplete">Missing Verification Data!</string>
     <string name="error_title_unexpected_error">An unexpected error occurred. Please try again later.</string>
     <string name="error_description_http_error">The following unexpected errors occurred:\n\n<b>%1$s</b>.\n\nPlease try again later!</string>
+    <string name="error_title_scan_capture">Couldn\'t scan document!</string>
+    <string name="error_description_scan_capture">Scanning a high quality image failed.</string>
+    <string name="error_message_scan_capture">You can try scanning your document again or change the method of capturing the document.</string>
 
     <!--Welcome-->
     <string name="welcome_button_accept">Accept</string>

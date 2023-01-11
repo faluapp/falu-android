@@ -205,8 +205,11 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
 
                 val file = fileUtils.createFileFromBitmap(bitmap, verification.id, "")
                 binding.ivScan.setImageBitmap(bitmap.adjustRotation(file))
-            } else {
-                // something else. stop scanning d
+            } else if (it.disposition is DocumentScanDisposition.Timeout) {
+                binding.viewCamera.stopAnalyzer()
+                binding.viewCamera.analyzers.clear()
+
+                findNavController().navigate(R.id.action_global_fragment_scan_capture_error)
             }
         }
     }
