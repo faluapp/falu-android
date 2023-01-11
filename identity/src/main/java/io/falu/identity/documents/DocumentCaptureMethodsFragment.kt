@@ -47,14 +47,17 @@ internal class DocumentCaptureMethodsFragment(private val factory: ViewModelProv
             )
 
         binding.viewCaptureMethodScan.setOnClickListener {
+            viewModel.resetDocumentUploadDisposition()
             checkCameraPermissions(identityDocumentType.toScanCaptureDestination())
         }
 
         binding.viewCaptureMethodPhoto.setOnClickListener {
+            viewModel.resetDocumentUploadDisposition()
             checkCameraPermissions(identityDocumentType.toManualCaptureDestination())
         }
 
         binding.viewCaptureMethodUpload.setOnClickListener {
+            viewModel.resetDocumentUploadDisposition()
             navigateToDestination(identityDocumentType.toUploadCaptureDestination())
         }
 
