@@ -75,7 +75,7 @@ class VerificationViewModel(application: Application) : AndroidViewModel(applica
 class ApiClient : AbstractHttpApiClient(EmptyAuthenticationProvider()) {
     suspend fun createIdentityVerification(request: IdentityVerificationCreationRequest): ResourceResponse<IdentityVerification> {
         val builder = Request.Builder()
-            .url("https://falu-sample.herokuapp.com/identity/create-verification/")
+            .url("https://falu-samples-python.azurewebsites.net/api/IdentityVerification")
             .post(makeJson(request).toRequestBody(MEDIA_TYPE_JSON))
 
         return executeAsync(builder, IdentityVerification::class.java)

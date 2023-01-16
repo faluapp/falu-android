@@ -15,10 +15,13 @@ internal class DocumentDispositionMachine(
     private val timeout: DateTime = DateTime.now().plusSeconds(15),
     private val iou: Float = IOU_THRESHOLD,
     private val requiredTime: Int = DEFAULT_REQUIRED_SCAN_DURATION,
-    private val currentTime: DateTime = DateTime.now()
+    private val currentTime: DateTime = DateTime.now(),
+    private val undesiredDuration: Int = DEFAULT_UNDESIRED_DURATION,
+    private val desiredDuration: Int = DEFAULT_DESIRED_DURATION
 ) : DocumentDispositionDetector {
 
     private var previousBoundingBox: BoundingBox? = null
+    private var matcherCounter = 0
 
     override fun fromStart(
         state: DocumentScanDisposition.Start,
@@ -54,6 +57,10 @@ internal class DocumentDispositionMachine(
             hasTimedOut -> {
                 DocumentScanDisposition.Timeout(state.type, this)
             }
+            !targetTypeMatches(output.option, state.type) -> {
+                Log.d(TAG, "Option (${output.option}) doesn't match ${state.type}")
+                DocumentScanDisposition.Undesired(state.type, state.dispositionDetector)
+            }
             !iouCheckSatisfied(output.box) -> {
                 // reset the time
                 state.reached = DateTime.now()
@@ -78,7 +85,7 @@ internal class DocumentDispositionMachine(
         }
 
         return when {
-            elapsedTime(time = state.reached) > DEFAULT_DESIRED_DURATION -> {
+            elapsedTime(time = state.reached) > desiredDuration -> {
                 Log.d(TAG, "Complete the scan. Desired scan for ${state.type} found.")
                 DocumentScanDisposition.Completed(state.type, state.dispositionDetector)
             }
@@ -90,7 +97,16 @@ internal class DocumentDispositionMachine(
         state: DocumentScanDisposition.Undesired,
         output: DetectionOutput
     ): DocumentScanDisposition {
-        return DocumentScanDisposition.Start(state.type, state.dispositionDetector)
+        return when {
+            hasTimedOut -> {
+                DocumentScanDisposition.Timeout(state.type, this)
+            }
+            elapsedTime(time = state.reached) > undesiredDuration -> {
+                Log.d(TAG, "Scan for ${state.type} undesired, restarting the process.")
+                DocumentScanDisposition.Start(state.type, state.dispositionDetector)
+            }
+            else -> state
+        }
     }
 
     private fun DocumentOption.matches(
@@ -113,6 +129,20 @@ internal class DocumentDispositionMachine(
                 type == DocumentScanDisposition.DocumentScanType.PASSPORT
             }
             DocumentOption.INVALID -> false
+        }
+    }
+
+    private fun targetTypeMatches(
+        option: DocumentOption,
+        type: DocumentScanDisposition.DocumentScanType
+    ): Boolean {
+        return if (option.matches(type)) {
+            // reset counter
+            matcherCounter = 0
+            true
+        } else {
+            matcherCounter++
+            matcherCounter <= DEFAULT_MATCH_COUNTER
         }
     }
 
@@ -184,7 +214,9 @@ internal class DocumentDispositionMachine(
     internal companion object {
         private val TAG = DocumentDispositionMachine::class.java.simpleName
         private const val IOU_THRESHOLD = 0.8f
+        private const val DEFAULT_MATCH_COUNTER = 1
         private const val DEFAULT_REQUIRED_SCAN_DURATION = 3 // time in seconds
-        private const val DEFAULT_DESIRED_DURATION = 1 // time in seconds
+        private const val DEFAULT_DESIRED_DURATION = 0 // time in seconds
+        private const val DEFAULT_UNDESIRED_DURATION = 0 // time in seconds
     }
 }
