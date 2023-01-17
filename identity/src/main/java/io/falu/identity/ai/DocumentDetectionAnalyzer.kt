@@ -6,6 +6,8 @@ import androidx.camera.core.ImageProxy
 import io.falu.identity.camera.AnalyzerBuilder
 import io.falu.identity.camera.AnalyzerOutputListener
 import io.falu.identity.capture.scan.utils.DocumentScanDisposition
+import io.falu.identity.utils.*
+import io.falu.identity.utils.centerCrop
 import io.falu.identity.utils.toBitmap
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
@@ -36,9 +38,13 @@ internal class DocumentDetectionAnalyzer internal constructor(
         interpreter.resetVariableTensors()
 
         // Input:- [1,320,320,1]
-        val bitmap = image.image?.toBitmap()
+
+        val bitmap = image.image!!.toBitmap()
+        val size = bitmap.toSize()
+        val cropped = bitmap.centerCrop(maxAspectRatioOf(size, 0.5f))
+
         var tensorImage = TensorImage(TENSOR_DATA_TYPE)
-        tensorImage.load(bitmap)
+        tensorImage.load(cropped)
 
         // Preprocess: resize image to model input
         val processor = ImageProcessor.Builder()
@@ -93,7 +99,7 @@ internal class DocumentDetectionAnalyzer internal constructor(
         val output = DocumentDetectionOutput(
             score = bestScore,
             option = bestOption,
-            bitmap = bitmap!!,
+            bitmap = cropped,
             box = BoundingBox(
                 left = bestBox[0],
                 top = bestBox[1],

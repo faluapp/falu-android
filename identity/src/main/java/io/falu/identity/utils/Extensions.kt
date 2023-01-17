@@ -4,13 +4,18 @@ import android.content.Context
 import android.graphics.*
 import android.media.Image
 import android.text.TextUtils
+import android.util.Size
 import androidx.annotation.CheckResult
+import androidx.annotation.RestrictTo
+import androidx.camera.core.AspectRatio
 import androidx.exifinterface.media.ExifInterface
 import io.falu.identity.R
 import software.tingle.api.HttpApiResponseProblem
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.nio.ByteBuffer
+import kotlin.math.min
+import kotlin.math.roundToInt
 
 internal fun HttpApiResponseProblem.getErrorDescription(context: Context): String {
     if (errors.isNullOrEmpty()) {
@@ -66,6 +71,86 @@ internal fun Image.toBitmap(): Bitmap {
     val imageBytes = out.toByteArray()
     return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
 }
+
+/**
+ * Crop a given [Bitmap] given a the [Rect] size.
+ *
+ * The crop must be within the bounds of the [Bitmap]
+ */
+@CheckResult
+@RestrictTo(RestrictTo.Scope.LIBRARY)
+internal fun Bitmap.crop(rect: Rect): Bitmap {
+    require(rect.left < rect.right && rect.top < rect.bottom) { "The rect size cannot be negative" }
+    require(
+        rect.left >= 0 &&
+                rect.top >= 0 &&
+                rect.bottom <= this.height &&
+                rect.right <= this.width
+    ) {
+        "The defined size is greater than source image"
+    }
+    return Bitmap.createBitmap(this, rect.left, rect.top, rect.width(), rect.height())
+}
+
+@CheckResult
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun Bitmap.toSize() = Size(this.width, this.height)
+
+@CheckResult
+@RestrictTo(RestrictTo.Scope.LIBRARY)
+internal fun Bitmap.centerCrop(size: Size): Bitmap {
+    return if (size.width > width || size.height > height) {
+        val region = size.centerScaleWithin(Size(width, height))
+        crop(region)
+    } else {
+        val cake = toSize()
+        crop(size.center(cake.toRect()))
+    }
+}
+
+@CheckResult
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun Size.center(rect: Rect) = Rect(
+    rect.centerX() - this.width / 2, // left
+    rect.centerY() - this.height / 2, // top
+    rect.centerX() + this.width / 2, // right
+    rect.centerY() + this.height / 2 // bottom
+)
+
+@CheckResult
+fun Size.centerScaleWithin(bounds: Size): Rect {
+    val aspectRatio = width.toFloat().div(height)
+
+    val scaledSize = maxAspectRatioOf(bounds, aspectRatio)
+    val left = (bounds.width - scaledSize.width) / 2
+    val top = (bounds.height - scaledSize.height) / 2
+    return Rect(
+        left,
+        top,
+        left + scaledSize.width,
+        top + scaledSize.height
+    )
+}
+
+fun maxAspectRatioOf(area: Size, ratio: Float): Size {
+    var w = area.width
+    var h = (w / ratio).roundToInt()
+
+    return if (h <= area.height) {
+        Size(area.width, h)
+    } else {
+        h = area.height
+        w = (h * ratio).roundToInt()
+        Size(min(w, area.width), h)
+    }
+}
+
+/**
+ * Converts a size to rectangle with the top left corner at 0,0
+ */
+@CheckResult
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun Size.toRect() = Rect(0, 0, this.width, this.height)
 
 /**
  *
