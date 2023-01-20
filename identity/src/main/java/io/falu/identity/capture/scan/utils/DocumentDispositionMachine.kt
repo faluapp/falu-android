@@ -154,6 +154,7 @@ internal class DocumentDispositionMachine(
     private fun iouCheckSatisfied(currentBox: BoundingBox): Boolean {
         return previousBoundingBox?.let {
             val accuracy = calculateIOU(currentBox, it)
+            previousBoundingBox = currentBox
             return accuracy >= iou
         } ?: run {
             previousBoundingBox = currentBox
@@ -173,7 +174,6 @@ internal class DocumentDispositionMachine(
 
     /**
      * Measure the accuracy of detection
-     *
      */
     private fun calculateIOU(currentBox: BoundingBox, previousBox: BoundingBox): Float {
         val currentLeft = currentBox.left
@@ -213,7 +213,7 @@ internal class DocumentDispositionMachine(
 
     internal companion object {
         private val TAG = DocumentDispositionMachine::class.java.simpleName
-        private const val IOU_THRESHOLD = 0.8f
+        private const val IOU_THRESHOLD = 0.95f
         private const val DEFAULT_MATCH_COUNTER = 1
         private const val DEFAULT_REQUIRED_SCAN_DURATION = 3 // time in seconds
         private const val DEFAULT_DESIRED_DURATION = 0 // time in seconds
