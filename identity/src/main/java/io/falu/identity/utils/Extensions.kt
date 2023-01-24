@@ -134,3 +134,35 @@ internal fun Int.toFraction(): Float {
 internal fun Float.toWholeNumber(): Int {
     return this.times(100F).toInt()
 }
+
+/**
+ * Create a [Bitmap] from [Rect] coordinates
+ */
+internal fun Bitmap.crop(rect: Rect): Bitmap {
+    return Bitmap.createBitmap(this, rect.left, rect.top, rect.width(), rect.height())
+}
+
+/**
+ * Get [Bitmap] [Size]*/
+internal fun Bitmap.toSize() = Size(this.width, this.height)
+
+/**
+ * Crop a [Bitmap] at the from the center given the [Size]*/
+internal fun Bitmap.centerCrop(size: Size): Bitmap {
+    return crop(size.center(size.toRect()))
+}
+
+/**
+ * Determine points from the the center of a [Rect]
+ */
+fun Size.center(rect: Rect) = Rect(
+    rect.centerX() - this.width / 2, // left
+    rect.centerY() - this.height / 2, // top
+    rect.centerX() + this.width / 2,  // right
+    rect.centerY() + this.height / 2 // bottom
+)
+
+/**
+ * Get a rectangle [Rect], with top let corner at (0,0)
+ */
+fun Size.toRect() = Rect(0, 0, this.width, this.height)
