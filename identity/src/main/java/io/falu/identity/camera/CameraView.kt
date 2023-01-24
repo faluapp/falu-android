@@ -162,17 +162,22 @@ internal class CameraView @JvmOverloads constructor(
 
         val cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
 
+        val aspectRatio = cameraViewType.ratio.second
+
         preview = Preview.Builder()
+            .setTargetAspectRatio(aspectRatio)
             .setTargetRotation(rotation)
             .build()
 
         imageCapture = ImageCapture.Builder()
-            .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+            .setTargetAspectRatio(aspectRatio)
+            .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
             .setTargetRotation(rotation)
             .build()
 
         imageAnalysis = ImageAnalysis.Builder()
             .setTargetRotation(rotation)
+            .setTargetAspectRatio(aspectRatio)
             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
             .build()
             .also {
@@ -293,9 +298,9 @@ internal class CameraView @JvmOverloads constructor(
 
     internal companion object {
         private val TAG = CameraView::class.java.simpleName
-        private val ASPECT_RATIO_ID_CARD = Pair("3:2", AspectRatio.RATIO_4_3)
-        private val ASPECT_RATIO_PASSPORT = Pair("3:2", AspectRatio.RATIO_4_3)
-        private val ASPECT_RATIO_DEFAULT = Pair("16:9", AspectRatio.RATIO_16_9)
+        private val ASPECT_RATIO_ID_CARD = Pair("3:2", 3 / 2)
+        private val ASPECT_RATIO_PASSPORT = Pair("3:2", 3 / 2)
+        private val ASPECT_RATIO_DEFAULT = Pair("16:9", 16 / 9)
         private const val BORDERLESS = -1
     }
 }
