@@ -1,6 +1,7 @@
 package io.falu.identity.ai
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import io.falu.identity.camera.AnalyzerBuilder
@@ -39,8 +40,10 @@ internal class DocumentDetectionAnalyzer internal constructor(
         // Input:- [1,320,320,1]
 
         val bitmap = image.image!!.toBitmap()
+        val cropped = bitmap.centerCrop(bitmap.toSize())
+
         var tensorImage = TensorImage(TENSOR_DATA_TYPE)
-        tensorImage.load(bitmap)
+        tensorImage.load(cropped)
 
         // Preprocess: resize image to model input
         val processor = ImageProcessor.Builder()
@@ -95,7 +98,7 @@ internal class DocumentDetectionAnalyzer internal constructor(
         val output = DocumentDetectionOutput(
             score = bestScore,
             option = bestOption,
-            bitmap = bitmap,
+            bitmap = cropped,
             box = BoundingBox(
                 left = bestBox[0],
                 top = bestBox[1],
