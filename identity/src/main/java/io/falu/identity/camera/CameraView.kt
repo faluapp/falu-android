@@ -6,6 +6,7 @@ import android.hardware.camera2.CameraManager
 import android.net.Uri
 import android.util.AttributeSet
 import android.util.Log
+import android.util.Size
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
@@ -124,7 +125,7 @@ internal class CameraView @JvmOverloads constructor(
      */
     private fun configureDimensions() {
         listOf(viewCameraPreview, ivCameraBorder).forEach { view ->
-            (view.layoutParams as LayoutParams).dimensionRatio = cameraViewType.ratio
+            (view.layoutParams as LayoutParams).dimensionRatio = cameraViewType.ratio.first
         }
     }
 
@@ -273,7 +274,7 @@ internal class CameraView @JvmOverloads constructor(
     private val cameraId: String
         get() = cameraManager.cameraIdList.first()
 
-    internal enum class CameraViewType(val ratio: String) {
+    internal enum class CameraViewType(val ratio: Pair<String, Int>) {
         /**
          *
          */
@@ -292,9 +293,9 @@ internal class CameraView @JvmOverloads constructor(
 
     internal companion object {
         private val TAG = CameraView::class.java.simpleName
-        private const val ASPECT_RATIO_ID_CARD = "3:2"
-        private const val ASPECT_RATIO_PASSPORT = "3:2"
-        private const val ASPECT_RATIO_DEFAULT = "2:2"
+        private val ASPECT_RATIO_ID_CARD = Pair("3:2", AspectRatio.RATIO_4_3)
+        private val ASPECT_RATIO_PASSPORT = Pair("3:2", AspectRatio.RATIO_4_3)
+        private val ASPECT_RATIO_DEFAULT = Pair("16:9", AspectRatio.RATIO_16_9)
         private const val BORDERLESS = -1
     }
 }
