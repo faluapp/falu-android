@@ -1,6 +1,8 @@
 package io.falu.identity.capture.scan
 
+import android.graphics.Rect
 import android.os.Bundle
+import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +27,7 @@ import io.falu.identity.documents.DocumentSelectionFragment
 import io.falu.identity.utils.FileUtils
 import io.falu.identity.utils.adjustRotation
 import io.falu.identity.utils.toFraction
+import io.falu.identity.utils.withBoundingBox
 
 
 internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.Factory) :
@@ -64,8 +67,8 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
 
         resetUI()
 
-        val inputStream = resources.openRawResource(R.raw.model)
-        val file = identityViewModel.getModel(inputStream, "model.tflite")
+        val inputStream = resources.openRawResource(R.raw.detect_quant)
+        val file = identityViewModel.getModel(inputStream, "detect_quant.tflite")
 
         documentScanViewModel.initialize(file, 0.5f)
 
@@ -76,7 +79,6 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
 
         binding.viewCamera.cameraViewType =
             if (identityDocumentType != IdentityDocumentType.PASSPORT) CameraView.CameraViewType.ID else CameraView.CameraViewType.PASSPORT
-
 
         identityViewModel.observeForVerificationResults(
             viewLifecycleOwner,
@@ -204,7 +206,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
                 val bitmap = output.bitmap
 
                 val file = fileUtils.createFileFromBitmap(bitmap, verification.id, "")
-                binding.ivScan.setImageBitmap(bitmap.adjustRotation(file))
+                binding.ivScan.setImageBitmap(bitmap.withBoundingBox(output.rect))
             } else if (it.disposition is DocumentScanDisposition.Timeout) {
                 binding.viewCamera.stopAnalyzer()
                 binding.viewCamera.analyzers.clear()

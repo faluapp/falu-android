@@ -1,6 +1,7 @@
 package io.falu.identity.ai
 
 import android.annotation.SuppressLint
+import android.graphics.Rect
 import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
@@ -17,6 +18,8 @@ import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.io.File
+import java.lang.StrictMath.max
+import java.lang.StrictMath.min
 
 internal class DocumentDetectionAnalyzer internal constructor(
     model: File,
@@ -40,7 +43,7 @@ internal class DocumentDetectionAnalyzer internal constructor(
         // Input:- [1,320,320,1]
 
         val bitmap = image.image!!.toBitmap()
-        val cropped = bitmap.centerCrop(bitmap.toSize())
+        val cropped = bitmap
 
         var tensorImage = TensorImage(TENSOR_DATA_TYPE)
         tensorImage.load(cropped)
@@ -94,23 +97,34 @@ internal class DocumentDetectionAnalyzer internal constructor(
 
         val bestOption = DOCUMENT_OPTIONS_MAP[bestOptionIndex] ?: DocumentOption.INVALID
         val bestBox = boxes.sliceArray(bestIndex..bestIndex + 3)
+        val box = BoundingBox(
+            left = bestBox[0],// x-min
+            top = bestBox[1], // y-min
+            width = bestBox[2] - bestBox[0], // x-max - x-min
+            height = bestBox[3] - bestBox[1] // y-max - y-min
+        )
 
         val output = DocumentDetectionOutput(
             score = bestScore,
             option = bestOption,
             bitmap = cropped,
-            box = BoundingBox(
-                left = bestBox[0],
-                top = bestBox[1],
-                width = bestBox[2],
-                height = bestBox[3]
-            ),
+            box = box,
+            rect = getRect(box, cropped.width, cropped.height),
             scores = DOCUMENT_OPTIONS.map { scores[bestIndex] }.toMutableList()
         )
 
         listener(output)
 
         image.close()
+    }
+
+    private fun getRect(box: BoundingBox, width: Int, height: Int): Rect {
+        return Rect(
+            max((box.top * width).toInt(), 1),
+            max((box.left * height).toInt(), 1),
+            min((box.height * width).toInt(), width),
+            min((box.width * height).toInt(), height)
+        )
     }
 
     internal class Builder(private val model: File, private val threshold: Float) :
