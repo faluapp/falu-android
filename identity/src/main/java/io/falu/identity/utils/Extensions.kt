@@ -166,3 +166,17 @@ fun Size.center(rect: Rect) = Rect(
  * Get a rectangle [Rect], with top let corner at (0,0)
  */
 fun Size.toRect() = Rect(0, 0, this.width, this.height)
+
+fun Bitmap.withBoundingBox(bounds: Rect): Bitmap {
+    val bitmap = copy(config, true)
+    val canvas = Canvas(bitmap)
+
+    Paint().apply {
+        color = Color.RED
+        style = Paint.Style.STROKE
+        strokeWidth = 4.0f
+        canvas.drawRect(bounds, this)
+    }
+
+    return bitmap
+}
