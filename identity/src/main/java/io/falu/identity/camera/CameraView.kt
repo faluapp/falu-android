@@ -3,10 +3,10 @@ package io.falu.identity.camera
 import android.content.Context
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
+import android.hardware.display.DisplayManager
 import android.net.Uri
 import android.util.AttributeSet
 import android.util.Log
-import android.util.Size
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
@@ -165,19 +165,19 @@ internal class CameraView @JvmOverloads constructor(
         val aspectRatio = cameraViewType.ratio.second
 
         preview = Preview.Builder()
-            .setTargetAspectRatio(aspectRatio)
             .setTargetRotation(rotation)
             .build()
+            .also {
+                it.setSurfaceProvider(viewCameraPreview.surfaceProvider)
+            }
 
         imageCapture = ImageCapture.Builder()
-            .setTargetAspectRatio(aspectRatio)
             .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
             .setTargetRotation(rotation)
             .build()
 
         imageAnalysis = ImageAnalysis.Builder()
             .setTargetRotation(rotation)
-            .setTargetAspectRatio(aspectRatio)
             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
             .build()
             .also {
@@ -298,9 +298,9 @@ internal class CameraView @JvmOverloads constructor(
 
     internal companion object {
         private val TAG = CameraView::class.java.simpleName
-        private val ASPECT_RATIO_ID_CARD = Pair("3:2", 3 / 2)
-        private val ASPECT_RATIO_PASSPORT = Pair("3:2", 3 / 2)
-        private val ASPECT_RATIO_DEFAULT = Pair("16:9", 16 / 9)
+        private val ASPECT_RATIO_ID_CARD = Pair("4:3", AspectRatio.RATIO_4_3)
+        private val ASPECT_RATIO_PASSPORT = Pair("4:3", AspectRatio.RATIO_4_3)
+        private val ASPECT_RATIO_DEFAULT = Pair("16:9", AspectRatio.RATIO_16_9)
         private const val BORDERLESS = -1
     }
 }
