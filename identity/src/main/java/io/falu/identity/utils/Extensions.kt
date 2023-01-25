@@ -139,6 +139,15 @@ internal fun Float.toWholeNumber(): Int {
  * Create a [Bitmap] from [Rect] coordinates
  */
 internal fun Bitmap.crop(rect: Rect): Bitmap {
+    require(rect.left < rect.right && rect.top < rect.bottom) { "Cannot crop negative values" }
+    require(
+        rect.left >= 0 &&
+                rect.top >= 0 &&
+                rect.bottom <= this.height &&
+                rect.right <= this.width
+    ) {
+        "Invalid dimensions for crop"
+    }
     return Bitmap.createBitmap(this, rect.left, rect.top, rect.width(), rect.height())
 }
 
@@ -179,4 +188,9 @@ fun Bitmap.withBoundingBox(bounds: Rect): Bitmap {
     }
 
     return bitmap
+}
+
+fun Bitmap.rotate(degrees: Float = 90f): Bitmap {
+    val matrix = Matrix().apply { postRotate(degrees) }
+    return Bitmap.createBitmap(this, 0, 0, width, height, matrix, true)
 }

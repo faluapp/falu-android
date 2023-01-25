@@ -1,6 +1,7 @@
 package io.falu.identity.ai
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import android.graphics.Rect
 import android.util.Log
 import androidx.camera.core.ImageAnalysis
@@ -18,8 +19,8 @@ import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.io.File
-import java.lang.StrictMath.max
-import java.lang.StrictMath.min
+import kotlin.math.max
+import kotlin.math.min
 
 internal class DocumentDetectionAnalyzer internal constructor(
     model: File,
@@ -41,9 +42,8 @@ internal class DocumentDetectionAnalyzer internal constructor(
         interpreter.resetVariableTensors()
 
         // Input:- [1,320,320,1]
-
-        val bitmap = image.image!!.toBitmap()
-        val cropped = bitmap
+        val bitmap = image.image!!.toBitmap().rotate()
+        val cropped = bitmap.centerCrop(bitmap.toSize())
 
         var tensorImage = TensorImage(TENSOR_DATA_TYPE)
         tensorImage.load(cropped)
@@ -109,7 +109,7 @@ internal class DocumentDetectionAnalyzer internal constructor(
             option = bestOption,
             bitmap = cropped,
             box = box,
-            rect = getRect(box, cropped.width, cropped.height),
+            rect = getRect(bestBox, cropped),
             scores = DOCUMENT_OPTIONS.map { scores[bestIndex] }.toMutableList()
         )
 
@@ -118,12 +118,20 @@ internal class DocumentDetectionAnalyzer internal constructor(
         image.close()
     }
 
-    private fun getRect(box: BoundingBox, width: Int, height: Int): Rect {
+    private fun getRect(coordinates: FloatArray, bitmap: Bitmap): Rect {
+        val xMin = coordinates[0] * bitmap.width
+        val yMin = coordinates[1] * bitmap.height
+        val xMax = coordinates[2] * bitmap.width
+        val yMax = coordinates[3] * bitmap.height
+
+        val width = xMax - xMin
+        val height = yMax - yMin
+
         return Rect(
-            max((box.top * width).toInt(), 1),
-            max((box.left * height).toInt(), 1),
-            min((box.height * width).toInt(), width),
-            min((box.width * height).toInt(), height)
+            max(xMin.toInt(), 1),
+            max(yMin.toInt(), 1),
+            min(width.toInt(), bitmap.width),
+            min(height.toInt(), bitmap.height)
         )
     }
 
