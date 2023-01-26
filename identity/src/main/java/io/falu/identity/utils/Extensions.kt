@@ -6,16 +6,11 @@ import android.media.Image
 import android.text.TextUtils
 import android.util.Size
 import androidx.annotation.CheckResult
-import androidx.annotation.RestrictTo
-import androidx.camera.core.AspectRatio
-import androidx.exifinterface.media.ExifInterface
 import io.falu.identity.R
 import software.tingle.api.HttpApiResponseProblem
 import java.io.ByteArrayOutputStream
-import java.io.File
 import java.nio.ByteBuffer
-import kotlin.math.min
-import kotlin.math.roundToInt
+import kotlin.math.max
 
 internal fun HttpApiResponseProblem.getErrorDescription(context: Context): String {
     if (errors.isNullOrEmpty()) {
@@ -91,27 +86,9 @@ internal fun Image.toJpegBitmap(): Bitmap {
 internal fun Bitmap.rotate(angle: Int, filter: Boolean = false): Bitmap {
     val matrix = Matrix()
     matrix.postRotate(angle.toFloat())
+    matrix.postScale(1f, 1f)
+
     return Bitmap.createBitmap(this, 0, 0, width, height, matrix, filter)
-}
-
-/**
- *
- */
-@CheckResult
-internal fun Bitmap.adjustRotation(file: File): Bitmap {
-    val exifInterface = ExifInterface(file)
-    val orientation = exifInterface.getAttributeInt(
-        ExifInterface.TAG_ORIENTATION,
-        ExifInterface.ORIENTATION_UNDEFINED
-    )
-
-    return when (orientation) {
-        ExifInterface.ORIENTATION_ROTATE_90 -> rotate(90)
-        ExifInterface.ORIENTATION_ROTATE_180 -> rotate(180)
-        ExifInterface.ORIENTATION_ROTATE_270 -> rotate(270)
-        ExifInterface.ORIENTATION_NORMAL -> this
-        else -> rotate(90)
-    }
 }
 
 /**
@@ -188,9 +165,4 @@ fun Bitmap.withBoundingBox(bounds: Rect): Bitmap {
     }
 
     return bitmap
-}
-
-fun Bitmap.rotate(degrees: Float = 90f): Bitmap {
-    val matrix = Matrix().apply { postRotate(degrees) }
-    return Bitmap.createBitmap(this, 0, 0, width, height, matrix, true)
 }

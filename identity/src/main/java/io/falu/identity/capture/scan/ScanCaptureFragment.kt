@@ -24,10 +24,9 @@ import io.falu.identity.capture.scan.utils.DocumentScanDisposition
 import io.falu.identity.capture.scan.utils.ScanResult
 import io.falu.identity.databinding.FragmentScanCaptureBinding
 import io.falu.identity.documents.DocumentSelectionFragment
+import io.falu.identity.utils.*
 import io.falu.identity.utils.FileUtils
-import io.falu.identity.utils.adjustRotation
 import io.falu.identity.utils.toFraction
-import io.falu.identity.utils.withBoundingBox
 
 
 internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.Factory) :
@@ -205,7 +204,6 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
                 val output = it.output as DocumentDetectionOutput
                 val bitmap = output.bitmap
 
-                val file = fileUtils.createFileFromBitmap(bitmap, verification.id, "")
                 binding.ivScan.setImageBitmap(bitmap.withBoundingBox(output.rect))
             } else if (it.disposition is DocumentScanDisposition.Timeout) {
                 binding.viewCamera.stopAnalyzer()

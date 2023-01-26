@@ -2,8 +2,10 @@ package io.falu.identity.ai
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
+import android.graphics.Matrix
 import android.graphics.Rect
 import android.util.Log
+import android.util.Size
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import io.falu.identity.camera.AnalyzerBuilder
@@ -42,8 +44,8 @@ internal class DocumentDetectionAnalyzer internal constructor(
         interpreter.resetVariableTensors()
 
         // Input:- [1,320,320,1]
-        val bitmap = image.image!!.toBitmap().rotate()
-        val cropped = bitmap.centerCrop(bitmap.toSize())
+        val bitmap = image.image!!.toBitmap()
+        val cropped = bitmap.rotate(image.imageInfo.rotationDegrees)
 
         var tensorImage = TensorImage(TENSOR_DATA_TYPE)
         tensorImage.load(cropped)
@@ -119,19 +121,16 @@ internal class DocumentDetectionAnalyzer internal constructor(
     }
 
     private fun getRect(coordinates: FloatArray, bitmap: Bitmap): Rect {
-        val xMin = coordinates[0] * bitmap.width
-        val yMin = coordinates[1] * bitmap.height
-        val xMax = coordinates[2] * bitmap.width
-        val yMax = coordinates[3] * bitmap.height
-
-        val width = xMax - xMin
-        val height = yMax - yMin
+        val xMin = coordinates[0] * bitmap.height
+        val yMin = coordinates[1] * bitmap.width
+        val xMax = coordinates[2] * bitmap.height
+        val yMax = coordinates[3] * bitmap.width
 
         return Rect(
-            max(xMin.toInt(), 1),
             max(yMin.toInt(), 1),
-            min(width.toInt(), bitmap.width),
-            min(height.toInt(), bitmap.height)
+            max(xMin.toInt(), 1),
+            min(yMax.toInt(), bitmap.width),
+            min(xMax.toInt(), bitmap.height)
         )
     }
 

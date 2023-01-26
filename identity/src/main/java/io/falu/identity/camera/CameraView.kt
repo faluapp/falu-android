@@ -3,7 +3,6 @@ package io.falu.identity.camera
 import android.content.Context
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
-import android.hardware.display.DisplayManager
 import android.net.Uri
 import android.util.AttributeSet
 import android.util.Log
@@ -161,8 +160,6 @@ internal class CameraView @JvmOverloads constructor(
             ?: throw IllegalStateException("Camera initialization failed.")
 
         val cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
-
-        val aspectRatio = cameraViewType.ratio.second
 
         preview = Preview.Builder()
             .setTargetRotation(rotation)
