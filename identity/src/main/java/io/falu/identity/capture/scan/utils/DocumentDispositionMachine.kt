@@ -12,7 +12,7 @@ import kotlin.math.min
 
 
 internal class DocumentDispositionMachine(
-    private val timeout: DateTime = DateTime.now().plusSeconds(15),
+    private val timeout: DateTime = DateTime.now().plusSeconds(8),
     private val iou: Float = IOU_THRESHOLD,
     private val requiredTime: Int = DEFAULT_REQUIRED_SCAN_DURATION,
     private val currentTime: DateTime = DateTime.now(),
@@ -215,8 +215,8 @@ internal class DocumentDispositionMachine(
         private val TAG = DocumentDispositionMachine::class.java.simpleName
         private const val IOU_THRESHOLD = 0.95f
         private const val DEFAULT_MATCH_COUNTER = 1
-        private const val DEFAULT_REQUIRED_SCAN_DURATION = 3 // time in seconds
-        private const val DEFAULT_DESIRED_DURATION = 0 // time in seconds
+        private const val DEFAULT_REQUIRED_SCAN_DURATION = 5 // time in seconds
+        private const val DEFAULT_DESIRED_DURATION = 3 // time in seconds
         private const val DEFAULT_UNDESIRED_DURATION = 0 // time in seconds
     }
 }
