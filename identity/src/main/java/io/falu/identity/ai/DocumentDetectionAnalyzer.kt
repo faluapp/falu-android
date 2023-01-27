@@ -44,8 +44,10 @@ internal class DocumentDetectionAnalyzer internal constructor(
         interpreter.resetVariableTensors()
 
         // Input:- [1,320,320,1]
-        val bitmap = image.image!!.toBitmap()
-        val cropped = bitmap.rotate(image.imageInfo.rotationDegrees)
+        val bitmap = image.image!!.toBitmap().rotate(image.imageInfo.rotationDegrees)
+
+        val size = Size(bitmap.width, bitmap.height).maxAspectRatio(0.5f)
+        val cropped = bitmap.centerCrop(size)
 
         var tensorImage = TensorImage(TENSOR_DATA_TYPE)
         tensorImage.load(cropped)

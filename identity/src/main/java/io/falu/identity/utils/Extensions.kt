@@ -11,6 +11,8 @@ import software.tingle.api.HttpApiResponseProblem
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.roundToInt
 
 internal fun HttpApiResponseProblem.getErrorDescription(context: Context): String {
     if (errors.isNullOrEmpty()) {
@@ -84,10 +86,9 @@ internal fun Image.toJpegBitmap(): Bitmap {
  */
 @CheckResult
 internal fun Bitmap.rotate(angle: Int, filter: Boolean = false): Bitmap {
-    val matrix = Matrix()
-    matrix.postRotate(angle.toFloat())
-    matrix.postScale(1f, 1f)
-
+    val matrix = Matrix().apply {
+        postRotate(angle.toFloat())
+    }
     return Bitmap.createBitmap(this, 0, 0, width, height, matrix, filter)
 }
 
@@ -165,4 +166,20 @@ fun Bitmap.withBoundingBox(bounds: Rect): Bitmap {
     }
 
     return bitmap
+}
+
+/**
+ * Calculate the max size of a rect with given aspect ratio that can fit a specified a area.
+ */
+fun Size.maxAspectRatio(ratio: Float): Size {
+    var w = width
+    var h = (w / ratio).roundToInt()
+
+    if (h <= height) {
+        return Size(width, height)
+    }
+
+    h = height
+    w = (h * ratio).roundToInt()
+    return Size(min(w, width), h)
 }
