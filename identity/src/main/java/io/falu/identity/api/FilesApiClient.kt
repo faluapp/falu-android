@@ -38,7 +38,7 @@ internal class FilesApiClient : AbstractHttpApiClient(EmptyAuthenticationProvide
         APIConnectionException::class,
         APIException::class
     )
-    fun downloadModelFile(url: String, output: File): ResourceResponse<File> {
+    fun downloadFile(url: String, output: File): ResourceResponse<File> {
         val builder = Request.Builder()
             .url(url)
 
