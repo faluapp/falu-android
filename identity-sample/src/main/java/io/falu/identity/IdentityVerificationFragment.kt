@@ -30,9 +30,9 @@ class IdentityVerificationFragment : Fragment(), IdentityVerificationCallback {
     private val logoUri: Uri
         get() = Uri.Builder()
             .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
-            .authority(resources.getResourcePackageName(R.mipmap.ic_launcher))
-            .appendPath(resources.getResourceTypeName(R.mipmap.ic_launcher))
-            .appendPath(resources.getResourceEntryName(R.mipmap.ic_launcher))
+            .authority(resources.getResourcePackageName(R.drawable.logo_no_text))
+            .appendPath(resources.getResourceTypeName(R.drawable.logo_no_text))
+            .appendPath(resources.getResourceEntryName(R.drawable.logo_no_text))
             .build()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -41,8 +41,10 @@ class IdentityVerificationFragment : Fragment(), IdentityVerificationCallback {
         verificationView = FaluIdentityVerificationView.create(
             fragment = this,
             logo = logoUri,
+            // logo = Uri.parse("https://path/to/logo-no-text.jpg") // Or use a remote image
             callback = this
         )
+
         binding.buttonStartVerification.setOnClickListener {
             startVerification(
                 allowDrivingLicense = binding.swAllowedTypeDl.isChecked,

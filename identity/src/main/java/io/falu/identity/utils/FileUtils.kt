@@ -62,7 +62,7 @@ internal class FileUtils internal constructor(private val context: Context) {
         return File(context.cacheDir, generateMLModelFileName(url))
     }
 
-    private fun getFileUri(file: File): Uri =
+    internal fun getFileUri(file: File): Uri =
         FileProvider.getUriForFile(
             context,
             "${context.packageName}.FaluIdentityFileProvider",

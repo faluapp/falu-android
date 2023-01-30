@@ -3,6 +3,8 @@ package io.falu.identity
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
+import android.widget.ImageView
+import androidx.core.net.toFile
 import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistryOwner
 import io.falu.core.models.FaluFile
@@ -72,6 +74,8 @@ internal class IdentityVerificationViewModel(
     private val _documentDetectorModelFile = MutableLiveData<File?>()
     val documentDetectorModelFile: LiveData<File?>
         get() = _documentDetectorModelFile
+
+    private fun Uri.isHttp() = this.scheme!!.startsWith("http")
 
     internal fun fetchVerification(modelRequired: Boolean = true, onFailure: (Throwable) -> Unit) {
         launch(Dispatchers.IO) {
@@ -277,6 +281,36 @@ internal class IdentityVerificationViewModel(
         }
     }
 
+    internal fun loadUriToImageView(uri: Uri, view: ImageView) {
+        if (uri.isHttp()) {
+            downloadFile(uri) {
+                view.setImageURI(fileUtils.getFileUri(it))
+            }
+        } else {
+            view.setImageURI(uri)
+        }
+    }
+
+    private fun downloadFile(
+        uri: Uri,
+        success: ((File) -> Unit),
+    ) {
+        launch(Dispatchers.IO) {
+            runCatching {
+                fileUtils.imageFile.let {
+                    filesApiClient.downloadFile(uri.toString(), it)
+                }
+            }.fold(
+                onSuccess = {
+                    handleResponse(it, onSuccess = { file -> success(file) }, onError = {})
+                },
+                onFailure = {
+                    Log.e(TAG, "Error downloading file", it)
+                }
+            )
+        }
+    }
+
     private fun downloadAIModel(url: String, liveData: MutableLiveData<File?>) {
         fileUtils.createMLModelFile(url).let { file ->
             if (file.exists()) {
@@ -290,7 +324,7 @@ internal class IdentityVerificationViewModel(
     private fun downloadAIModel(url: String, file: File, liveData: MutableLiveData<File?>) {
         launch(Dispatchers.IO) {
             runCatching {
-                filesApiClient.downloadModelFile(url, file)
+                filesApiClient.downloadFile(url, file)
             }.fold(
                 onSuccess = {
                     if (it.successful() && it.resource != null) {
@@ -351,7 +385,6 @@ internal class IdentityVerificationViewModel(
     }
 
     fun getModel(stream: InputStream, fileName: String): File {
-        // TODO: Remove this method
         return fileUtils.createFileFromInputStream(stream, fileName)
     }
 

@@ -59,7 +59,8 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
         setContentView(binding.root)
         setNavigationController()
 
-        binding.ivIdentityVerification.setImageURI(contractArgs.workspaceLogo)
+        verificationViewModel.loadUriToImageView(contractArgs.workspaceLogo, binding.ivIdentityVerification)
+
         verificationViewModel.fetchVerification(onFailure = {
             finishWithVerificationResult(IdentityVerificationResult.Failed(it))
         })
