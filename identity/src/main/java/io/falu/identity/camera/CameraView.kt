@@ -268,8 +268,10 @@ internal class CameraView @JvmOverloads constructor(
             val focalLength =
                 extensions.get(CameraCharacteristics.LENS_INFO_AVAILABLE_FOCAL_LENGTHS)?.first()
             val duration =
-                extensions.get(CameraCharacteristics.SENSOR_INFO_EXPOSURE_TIME_RANGE)!!.lower
-            val iso = extensions.get(CameraCharacteristics.SENSOR_INFO_SENSITIVITY_RANGE)!!.upper
+                extensions.get(CameraCharacteristics.SENSOR_INFO_EXPOSURE_TIME_RANGE)?.lower
+                    ?: Float.MIN_VALUE
+            val iso = extensions.get(CameraCharacteristics.SENSOR_INFO_SENSITIVITY_RANGE)?.upper
+                ?: Float.MIN_VALUE
 
             return CameraSettings(
                 lens = CameraLens(model = "Camera-X", focalLength = focalLength!!),
@@ -295,14 +297,20 @@ internal class CameraView @JvmOverloads constructor(
         /**
          *
          */
-        PASSPORT(ASPECT_RATIO_PASSPORT)
+        PASSPORT(ASPECT_RATIO_PASSPORT),
+
+        /**
+         *
+         */
+        FACE(ASPECT_RATIO_FACE)
     }
 
     internal companion object {
         private val TAG = CameraView::class.java.simpleName
         private val ASPECT_RATIO_ID_CARD = Pair("3:2", 3 / 2)
-        private val ASPECT_RATIO_PASSPORT = Pair("3:2",  3 / 2)
-        private val ASPECT_RATIO_DEFAULT = Pair("16:9",  3 / 2)
+        private val ASPECT_RATIO_PASSPORT = Pair("3:2", 3 / 2)
+        private val ASPECT_RATIO_FACE = Pair("2:3", 2 / 3)
+        private val ASPECT_RATIO_DEFAULT = Pair("16:9", 16 / 9)
         private const val BORDERLESS = -1
     }
 }
