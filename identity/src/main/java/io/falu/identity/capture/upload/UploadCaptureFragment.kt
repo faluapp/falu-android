@@ -73,7 +73,7 @@ internal class UploadCaptureFragment(identityViewModelFactory: ViewModelProvider
             val disposition = binding.buttonContinue.tag as DocumentUploadDisposition
             updateVerificationAndAttemptDocumentSubmission(
                 source = R.id.action_fragment_document_capture_methods_to_fragment_upload_capture,
-                disposition.generateVerificationUploadRequest(identityDocumentType!!)
+                disposition.generateVerificationUploadRequest(identityDocumentType)
             )
         }
     }

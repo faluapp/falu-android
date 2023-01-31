@@ -12,9 +12,11 @@ import androidx.lifecycle.ViewModelProvider
 import io.falu.core.models.FaluFile
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
+import io.falu.identity.ai.FaceDetectionAnalyzer
 import io.falu.identity.api.models.UploadMethod
 import io.falu.identity.api.models.verification.VerificationSelfieUpload
 import io.falu.identity.api.models.verification.VerificationUploadRequest
+import io.falu.identity.camera.CameraView
 import io.falu.identity.databinding.FragmentSelfieBinding
 import io.falu.identity.utils.navigateToApiResponseProblemFragment
 import io.falu.identity.utils.navigateToErrorFragment
@@ -30,6 +32,7 @@ class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factory) : Frag
     private val binding get() = _binding!!
 
     private lateinit var verificationRequest: VerificationUploadRequest
+    private lateinit var analyzer: FaceDetectionAnalyzer
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,13 +50,16 @@ class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factory) : Frag
                 "Verification upload request is null"
             }
 
+        analyzer = FaceDetectionAnalyzer(requireContext())
+
         binding.viewCamera.lifecycleOwner = viewLifecycleOwner
         binding.viewCamera.lensFacing = CameraSelector.LENS_FACING_FRONT
+        binding.viewCamera.cameraViewType = CameraView.CameraViewType.FACE
         binding.buttonContinue.text = getString(R.string.button_continue)
 
         binding.buttonTakeSelfie.setOnClickListener {
             binding.viewCamera.takePhoto(
-                onCaptured = { bindToUI(it) },
+                onCaptured = { analyzeImage(it) },
                 onCaptureError = { navigateToErrorFragment(it) }
             )
         }
@@ -64,18 +70,27 @@ class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factory) : Frag
         }
     }
 
-    private fun bindToUI(uri: Uri?) {
-        val selfieUri = requireNotNull(uri) {
-            "Selfie uri is null"
-        }
+    private fun bindToUI(uri: Uri) {
         binding.viewSelfieCamera.visibility = View.GONE
         binding.viewSelfieResult.visibility = View.VISIBLE
-        binding.ivSelfie.setImageURI(selfieUri)
+        binding.viewSelfieError.visibility = View.GONE
+        binding.buttonContinue.visibility = View.VISIBLE
+        binding.cvSelfie.visibility = View.VISIBLE
+
+        binding.ivSelfie.setImageURI(uri)
 
         binding.buttonContinue.setOnClickListener {
             binding.buttonContinue.showProgress()
-            uploadSelfie(selfieUri)
+            uploadSelfie(uri)
         }
+    }
+
+    private fun bindToUIWithError() {
+        binding.viewSelfieCamera.visibility = View.GONE
+        binding.viewSelfieResult.visibility = View.VISIBLE
+        binding.viewSelfieError.visibility = View.VISIBLE
+        binding.cvSelfie.visibility = View.GONE
+        binding.buttonContinue.visibility = View.GONE
     }
 
     private fun uploadSelfie(uri: Uri) {
@@ -102,6 +117,26 @@ class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factory) : Frag
             verificationRequest.selfie = selfie
             submitVerificationData(identityViewModel, R.id.fragment_selfie, verificationRequest)
         })
+    }
+
+    private fun analyzeImage(uri: Uri?) {
+        val selfieUri = requireNotNull(uri) {
+            "Selfie uri is null"
+        }
+
+        analyzer.analyze(
+            selfieUri,
+            success = {
+                if (it.isNotEmpty()) {
+                    bindToUI(selfieUri)
+                } else {
+                    bindToUIWithError()
+                }
+            },
+            error = {
+                navigateToErrorFragment(it)
+            }
+        )
     }
 
     override fun onDestroyView() {

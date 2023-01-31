@@ -46,7 +46,6 @@ internal class FileUtils internal constructor(private val context: Context) {
         }
     }
 
-
     fun createFileFromBitmap(bitmap: Bitmap, verification: String, imageSide: String): File {
         File(context.filesDir, generateFileName(verification, imageSide)).let { outputFile ->
             FileOutputStream(outputFile, false).use { outputStream ->
