@@ -7,7 +7,7 @@ android {
     compileSdk Integer.parseInt("${compile_sdk_version}")
 
     defaultConfig {
-        applicationId "io.falu.identity"
+        applicationId "io.falu.identity.sample"
         minSdk Integer.parseInt("${min_sdk_version}")
         targetSdk Integer.parseInt("${target_sdk_version}")
 
