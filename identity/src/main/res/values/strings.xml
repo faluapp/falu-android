@@ -1,0 +1,78 @@
+<resources>
+    <!--General-->
+    <string name="button_continue">Continue</string>
+    <string name="button_finish">Complete</string>
+    <string name="button_select">Select</string>
+    <string name="button_take_photo">Take Photo</string>
+    <string name="button_scan">Scan</string>
+    <string name="button_take_again">Take Again</string>
+    <string name="button_scan_again">Scan Again</string>
+    <string name="button_rectify">Resolve Error</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_try_again">Try Again</string>
+    <string name="button_change_method">Change Method</string>
+    <string name="identity_verification_title_identity_verification">Identity verification</string>
+    <string name="identity_verification_text_mode_sandbox">Sandbox/Test</string>
+    <string name="identity_verification_text_help_and_support">Help And Support</string>
+
+    <!--Permission Explanation-->
+    <string name="permission_explanation_title">Permission Required!</string>
+    <string name="permission_explanation_camera">The camera permission is required take photos of your verification documents. Choose OK to authorize.</string>
+
+    <!--Errors-->
+    <string name="error_title">Something went wrong!</string>
+    <string name="error_description_server">The connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. Retry later.</string>
+    <string name="error_title_verification_data_incomplete">Missing Verification Data!</string>
+    <string name="error_title_unexpected_error">An unexpected error occurred. Please try again later.</string>
+    <string name="error_description_http_error">The following unexpected errors occurred:\n\n<b>%1$s</b>.\n\nPlease try again later!</string>
+    <string name="error_title_scan_capture">Couldn\'t scan document!</string>
+    <string name="error_description_scan_capture">Scanning a high quality image failed.</string>
+    <string name="error_message_scan_capture">You can try scanning your document again or change the method of capturing the document.</string>
+    <string name="error_title_selfie_capture">Couldn\'t detect a face in the capture</string>
+    <string name="error_description_selfie_capture">We could not detect your face in the capture. You can try to take the selfie again.</string>
+
+    <!--Welcome-->
+    <string name="welcome_button_accept">Accept</string>
+    <string name="welcome_button_decline">Decline</string>
+    <string name="welcome_subtitle">%1$s partners with Falu for secure identity verification.</string>
+    <string name="welcome_body">Falu identity was built with the global privacy regulations in mind.\nData security &amp; privacy are important to us. You are about to begin the identity verification process.\nData collected will be handled according to the Falu <b><a href='https://tingle.software/legal/privacy-policy'>Privacy Policy</a></b>.\n\nKindly have your identification document close by and get started with the process!</string>
+
+    <!--Document Selection-->
+    <string name="document_selection_subtitle">Select issuing country to which see which identity documents are acceptable.</string>
+    <string name="document_selection_accepted_documents">Accepted Documents</string>
+    <string name="document_selection_document_driver_license">Driver License</string>
+    <string name="document_selection_document_passport">Passport</string>
+    <string name="document_selection_document_identity_card">Identity Card</string>
+    <string name="document_selection_hint_issuing_country">Issuing Country</string>
+
+    <!--Document Capture Methods-->
+    <string name="document_capture_method_subtitle">Select how you will provide your %1$s for verification</string>
+    <string name="document_capture_method_scan">Scan document</string>
+    <string name="document_capture_method_photo">Take picture of the document</string>
+    <string name="document_capture_method_upload">Upload the document</string>
+
+    <!--Upload Document -->
+    <string name="upload_document_capture_title">%1$s upload</string>
+    <string name="upload_document_capture_document_font">Front of %1$s</string>
+    <string name="upload_document_capture_document_back">Back of %1$s</string>
+
+    <!--Scan Capture -->
+    <string name="scan_capture_title_scan">%1$s scan</string>
+    <string name="scan_capture_text_document_side_front">%1$s front scan</string>
+    <string name="scan_capture_text_document_side_back">%1$s back scan</string>
+    <string name="scan_capture_text_scan_message">Position your %1$s in the center.</string>
+    <string name="scan_capture_text_document_detected">Document scanning, stay still!</string>
+    <string name="scan_capture_text_document_scan_completed">Document scanned</string>
+
+    <!-- Confirmation -->
+    <string name="confirmation_title_verification_processing">Verification Processing</string>
+    <string name="confirmation_text_gratitude">Thank you for submitting your documents.</string>
+
+    <!-- Support -->
+    <string name="support_title_help_needed">Do you need help?</string>
+    <string name="support_text_call">Call Us</string>
+    <string name="support_text_email">Email Us</string>
+
+    <!--Selfie-->
+    <string name="selfie_text_take_selfie">Take a selfie</string>
+</resources>

@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -11,7 +12,14 @@ android {
         targetSdk Integer.parseInt("${target_sdk_version}")
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments clearPackageData: 'true'
         consumerProguardFiles "consumer-rules.pro"
+    }
+
+    sourceSets {
+        main {
+            res.srcDirs = ['res']
+        }
     }
 
     buildTypes {
@@ -27,6 +35,9 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
@@ -36,15 +47,16 @@ dependencies {
     api 'software.tingle:abstractions:1.0.5'
 
     testImplementation 'junit:junit:4.13.2'
-    testImplementation "org.mockito:mockito-core:5.1.1"
-    testImplementation 'org.robolectric:robolectric:4.9.2'
-    testImplementation 'androidx.test:core-ktx:1.5.0'
+    testImplementation "org.mockito:mockito-core:$mockito_core_version"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:$mockito_kotlin_version"
+    testImplementation "org.mockito:mockito-inline:$mockito_core_version"
+    testImplementation "org.robolectric:robolectric:$robo_version"
+    testImplementation "org.mockito:mockito-core:4.8.0"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test-annotations-common:$kotlin_version"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    testImplementation "com.squareup.okhttp3:mockwebserver:$mock_server_version"
 }
 
 ext {
