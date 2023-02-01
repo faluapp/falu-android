@@ -1,7 +1,7 @@
 # Falu Android Identity Verification
 
 Falu's Android Identity Verification SDK provides a simple and easy-to-use PreBuild UI to help you
-identity users on your android application.
+verify identity documents on your android application.
 The PreBuild UI enables you to collect a user's identity documents (ID, Passport, Driving Licence)
 and
 ensure their validity.
