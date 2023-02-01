@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_loading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="@dimen/element_spacing_normal" />
+
+    <ProgressBar
+        android:id="@+id/progress_view"
+        android:layout_width="@dimen/content_padding_normal"
+        android:layout_height="@dimen/content_padding_normal"
+        android:layout_alignEnd="@+id/button_loading"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginHorizontal="@dimen/content_padding_normal"
+        android:gravity="center"
+        android:visibility="gone" />
+</merge>

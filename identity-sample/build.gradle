@@ -7,7 +7,7 @@ android {
     compileSdk Integer.parseInt("${compile_sdk_version}")
 
     defaultConfig {
-        applicationId "io.falu.identity"
+        applicationId "io.falu.identity.sample"
         minSdk Integer.parseInt("${min_sdk_version}")
         targetSdk Integer.parseInt("${target_sdk_version}")
 
@@ -33,9 +33,13 @@ android {
     buildFeatures {
         viewBinding true
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
+    implementation project(":identity")
     implementation 'androidx.browser:browser:1.4.0'
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.0'

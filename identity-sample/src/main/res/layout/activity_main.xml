@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context="io.falu.identity-sample.MainActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_identity_verification"
-        android:name="io.falu.identity.IdentityVerificationFragment"
+        android:name="io.falu.identity-sample.IdentityVerificationFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="Hello World!"
