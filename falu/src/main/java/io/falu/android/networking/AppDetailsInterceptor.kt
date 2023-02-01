@@ -2,7 +2,9 @@ package io.falu.android.networking
 
 import android.content.Context
 import android.os.Build
+import androidx.annotation.RestrictTo
 import io.falu.android.BuildConfig
+import io.falu.core.AbstractAppDetails
 import okhttp3.Interceptor
 import okhttp3.Response
 
@@ -10,32 +12,23 @@ import okhttp3.Response
  * An @[Interceptor] that adds headers for package id, version name and version code to a request before sending
  * @param appKind the type of app making the request, android or iOS. Default is android.
  */
-
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 internal class AppDetailsInterceptor internal constructor(
     context: Context,
     private val appKind: String = "android"
-) : AbstractAppDetails(context), Interceptor {
-
-    private val userAgent: String by lazy {
-        buildUserAgent(context)
-    }
+) : AbstractAppDetails(context) {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain
             .request()
             .newBuilder()
-            .header("X-App-Package-Id", packageName)
-            .header("X-App-Version-Name", appVersionName)
-            .header("X-App-Version-Code", appVersionCode)
             .header("X-App-Kind", appKind)
-            .header("User-Agent", userAgent)
             .build()
 
         return chain.proceed(request)
     }
 
-    @Suppress("DEPRECATION")
-    internal fun buildUserAgent(context: Context): String {
+    override fun buildUserAgent(context: Context): String {
         with(context.packageManager) {
 
             val manufacturer = Build.MANUFACTURER
