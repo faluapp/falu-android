@@ -18,6 +18,7 @@ import io.falu.identity.api.models.verification.VerificationSelfieUpload
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.camera.CameraView
 import io.falu.identity.databinding.FragmentSelfieBinding
+import io.falu.identity.utils.*
 import io.falu.identity.utils.navigateToApiResponseProblemFragment
 import io.falu.identity.utils.navigateToErrorFragment
 import io.falu.identity.utils.submitVerificationData
@@ -50,7 +51,10 @@ class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factory) : Frag
                 "Verification upload request is null"
             }
 
-        analyzer = FaceDetectionAnalyzer(requireContext())
+        val inputStream = resources.openRawResource(R.raw.face_model)
+        val file = identityViewModel.getModel(inputStream, "face_model.tflite")
+
+        analyzer = FaceDetectionAnalyzer(file)
 
         binding.viewCamera.lifecycleOwner = viewLifecycleOwner
         binding.viewCamera.lensFacing = CameraSelector.LENS_FACING_FRONT
@@ -124,23 +128,25 @@ class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factory) : Frag
             "Selfie uri is null"
         }
 
-        analyzer.analyze(
-            selfieUri,
-            success = {
-                if (it.isNotEmpty()) {
-                    bindToUI(selfieUri)
-                } else {
-                    bindToUIWithError()
-                }
-            },
-            error = {
-                navigateToErrorFragment(it)
-            }
+        val output = analyzer.analyze(
+            selfieUri.toBitmap(requireContext().contentResolver)
         )
+
+        if (output.score >= threshold) {
+            bindToUI(selfieUri)
+            return
+        }
+
+        // show selfie capture error results.
+        bindToUIWithError()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val threshold = 0.85f
     }
 }
