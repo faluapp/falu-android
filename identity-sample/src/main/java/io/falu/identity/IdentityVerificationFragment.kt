@@ -1,4 +1,4 @@
-package io.falu.`identity-sample`
+package io.falu.identity
 
 import android.content.ContentResolver
 import android.net.Uri
@@ -9,9 +9,6 @@ import android.view.ViewGroup
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import io.falu.identity.FaluIdentityVerificationView
-import io.falu.identity.IdentityVerificationCallback
-import io.falu.identity.IdentityVerificationResult
 import io.falu.identity.sample.R
 import io.falu.identity.sample.databinding.FragmentIdentityVerificationBinding
 

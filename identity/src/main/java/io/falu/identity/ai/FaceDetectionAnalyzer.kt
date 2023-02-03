@@ -24,8 +24,8 @@ internal class FaceDetectionAnalyzer internal constructor(model: File) {
             .build()
         tensorImage = processor.process(tensorImage)
 
-        val boxes = Array(1) { FloatArray(BOUNDING_BOX_TENSOR_SIZE) }
-        val score = FloatArray(SCORE_TENSOR_SIZE)
+        val boxes = Array(392) { FloatArray(BOUNDING_BOX_TENSOR_SIZE) }
+        val score = Array(392) { FloatArray(SCORE_TENSOR_SIZE) }
 
         interpreter.runForMultipleInputsOutputs(
             arrayOf(tensorImage.buffer),
@@ -35,14 +35,14 @@ internal class FaceDetectionAnalyzer internal constructor(model: File) {
             )
         )
 
-        return FaceDetectionOutput(score = score[0])
+        return FaceDetectionOutput(score = score[0][0])
     }
 
     companion object {
         private val TENSOR_DATA_TYPE = DataType.FLOAT32
 
-        private const val IMAGE_WIDTH = 128
-        private const val IMAGE_HEIGHT = 128
+        private const val IMAGE_WIDTH = 224
+        private const val IMAGE_HEIGHT = 224
         private const val NORMALIZE_MEAN = 0f
         private const val NORMALIZE_STD = 255f
 
