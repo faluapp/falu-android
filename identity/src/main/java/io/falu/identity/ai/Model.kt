@@ -43,3 +43,7 @@ internal data class DocumentDetectionOutput(
     val rect: Rect,
     var scores: MutableList<Float>
 ) : DetectionOutput, Parcelable
+
+internal data class FaceDetectionOutput(
+    var score: Float
+) : DetectionOutput

@@ -1,8 +1,10 @@
 package io.falu.identity.utils
 
+import android.content.ContentResolver
 import android.content.Context
 import android.graphics.*
 import android.media.Image
+import android.net.Uri
 import android.text.TextUtils
 import android.util.Size
 import androidx.annotation.CheckResult
@@ -182,4 +184,10 @@ fun Size.maxAspectRatio(ratio: Float): Size {
     h = height
     w = (h * ratio).roundToInt()
     return Size(min(w, width), h)
+}
+
+fun Uri.toBitmap(resolver: ContentResolver): Bitmap {
+    return resolver.openInputStream(this).use {
+        BitmapFactory.decodeStream(it)
+    }
 }
