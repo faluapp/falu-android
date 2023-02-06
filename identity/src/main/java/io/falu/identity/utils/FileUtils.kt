@@ -83,7 +83,7 @@ internal class FileUtils internal constructor(private val context: Context) {
 
     private fun generateMLModelFileName(url: String): String {
         val httpUrl = url.toHttpUrl()
-        return httpUrl.encodedPathSegments[4]
+        return "${httpUrl.pathSegments[1]}_${httpUrl.pathSegments[3]}_${httpUrl.pathSegments[4]}"
     }
 
     private val imageFileName: String

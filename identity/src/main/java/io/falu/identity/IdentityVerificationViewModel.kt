@@ -75,6 +75,13 @@ internal class IdentityVerificationViewModel(
     val documentDetectorModelFile: LiveData<File?>
         get() = _documentDetectorModelFile
 
+    /**
+     *
+     */
+    private val _faceDetectorModelFile = MutableLiveData<File?>()
+    val faceDetectorModelFile: LiveData<File?>
+        get() = _faceDetectorModelFile
+
     private fun Uri.isHttp() = this.scheme!!.startsWith("http")
 
     internal fun fetchVerification(modelRequired: Boolean = true, onFailure: (Throwable) -> Unit) {
@@ -93,6 +100,9 @@ internal class IdentityVerificationViewModel(
                                 verification.capture.models.document.url,
                                 _documentDetectorModelFile
                             )
+                            verification.capture.models.face?.let { face ->
+                                downloadAIModel(face.url, _faceDetectorModelFile)
+                            }
                         }
                     }
 

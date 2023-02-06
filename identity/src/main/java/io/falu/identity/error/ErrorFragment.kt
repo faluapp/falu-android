@@ -58,7 +58,7 @@ internal class ErrorFragment : AbstractErrorFragment() {
 
         private const val UNKNOWN_DESTINATION = -1
         private val DESTINATION_WELCOME_FRAGMENT =
-            R.id.action_fragment_welcome_to_fragment_document_selection
+            R.id.fragment_welcome
 
         internal fun NavController.navigateWithRequirementErrors(
             context: Context,

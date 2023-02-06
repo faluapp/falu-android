@@ -56,6 +56,7 @@ class IdentityVerificationApiClientTests {
             blur = null,
             models = VerificationModel(
                 document = DocumentDetector("", 80),
+                face = DocumentDetector("", 80)
             )
         )
     )
