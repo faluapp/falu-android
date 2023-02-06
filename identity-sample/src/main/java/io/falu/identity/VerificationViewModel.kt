@@ -1,9 +1,9 @@
-package io.falu.`identity-sample`
+package io.falu.identity
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.liveData
-import io.falu.`identity-sample`.models.*
+import io.falu.identity.models.*
 import io.falu.identity.sample.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.Request

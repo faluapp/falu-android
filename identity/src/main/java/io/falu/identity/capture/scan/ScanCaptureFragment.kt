@@ -66,11 +66,6 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
 
         resetUI()
 
-        val inputStream = resources.openRawResource(R.raw.detect_model)
-        val file = identityViewModel.getModel(inputStream, "detect_model.tflite")
-
-        documentScanViewModel.initialize(file, 0.8f)
-
         startScan(scanType!!)
 
         binding.viewCamera.lifecycleOwner = viewLifecycleOwner
@@ -119,11 +114,11 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
             binding.viewCamera.startAnalyzer()
         }
 
-//        identityViewModel.observeForVerificationResults(
-//            viewLifecycleOwner,
-//            onError = {},
-//            onSuccess = { initiateScanner(it) }
-//        )
+        identityViewModel.observeForVerificationResults(
+            viewLifecycleOwner,
+            onError = {},
+            onSuccess = { initiateScanner(it) }
+        )
     }
 
     override fun onDestroyView() {

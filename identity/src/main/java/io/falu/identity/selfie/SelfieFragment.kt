@@ -14,6 +14,7 @@ import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.ai.FaceDetectionAnalyzer
 import io.falu.identity.api.models.UploadMethod
+import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationSelfieUpload
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.camera.CameraView
@@ -51,15 +52,16 @@ class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factory) : Frag
                 "Verification upload request is null"
             }
 
-        val inputStream = resources.openRawResource(R.raw.face_model)
-        val file = identityViewModel.getModel(inputStream, "face_model.tflite")
-
-        analyzer = FaceDetectionAnalyzer(file)
-
         binding.viewCamera.lifecycleOwner = viewLifecycleOwner
         binding.viewCamera.lensFacing = CameraSelector.LENS_FACING_FRONT
         binding.viewCamera.cameraViewType = CameraView.CameraViewType.FACE
         binding.buttonContinue.text = getString(R.string.button_continue)
+
+        identityViewModel.observeForVerificationResults(
+            viewLifecycleOwner,
+            onError = {},
+            onSuccess = { initiateAnalyzer(it) }
+        )
 
         binding.buttonTakeSelfie.setOnClickListener {
             binding.viewCamera.takePhoto(
@@ -71,6 +73,17 @@ class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factory) : Frag
         binding.buttonReset.setOnClickListener {
             binding.viewSelfieCamera.visibility = View.VISIBLE
             binding.viewSelfieResult.visibility = View.GONE
+        }
+    }
+
+    private fun initiateAnalyzer(verification: Verification) {
+        identityViewModel.faceDetectorModelFile.observe(viewLifecycleOwner) {
+            if (it != null) {
+                analyzer = FaceDetectionAnalyzer(
+                    it,
+                    verification.capture.models.face?.score?.toFraction() ?: threshold
+                )
+            }
         }
     }
 

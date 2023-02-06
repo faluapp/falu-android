@@ -1,4 +1,4 @@
-package io.falu.`identity-sample`.models
+package io.falu.identity.models
 
 class IdentityVerificationOptionsForIdNumber {
     // intentionally left blank

@@ -1,4 +1,4 @@
-package io.falu.`identity-sample`
+package io.falu.identity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

@@ -4,7 +4,7 @@ import androidx.annotation.IdRes
 import io.falu.identity.R
 
 internal data class RequirementError(
-    var requirement: RequirementType,
+    var requirement: RequirementType?,
     var code: String,
     var description: String,
 ) {
@@ -32,6 +32,7 @@ internal data class RequirementError(
                 }
                 RequirementType.SELFIE -> TODO()
                 RequirementType.VIDEO -> TODO()
+                else -> false
             }
     }
 }
