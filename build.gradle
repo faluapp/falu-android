@@ -72,7 +72,7 @@ ext {
     robo_version = "4.9.2"
     mock_server_version = "4.10.0"
     expresso_version = "3.4.0"
-    junit_ext_version = "1.1.4"
+    junit_ext_version = "1.1.5"
     junit_version = "4.13.2"
     coroutines_version = "1.6.4"
     constraint_layout_version = '2.1.4'
