@@ -71,7 +71,7 @@ ext {
     mockito_core_version = "4.8.0"
     robo_version = "4.9.2"
     mock_server_version = "4.10.0"
-    expresso_version = "3.4.0"
+    expresso_version = "3.5.1"
     junit_ext_version = "1.1.5"
     junit_version = "4.13.2"
     coroutines_version = "1.6.4"
