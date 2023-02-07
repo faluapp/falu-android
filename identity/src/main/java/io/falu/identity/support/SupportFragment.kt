@@ -15,7 +15,7 @@ import io.falu.identity.databinding.FragmentSupportBinding
 import io.falu.identity.utils.navigateToApiResponseProblemFragment
 
 
-class SupportFragment(
+internal class SupportFragment(
     private val factory: ViewModelProvider.Factory,
 ) : Fragment() {
     private var _binding: FragmentSupportBinding? = null

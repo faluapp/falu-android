@@ -26,7 +26,7 @@ import io.falu.identity.utils.submitVerificationData
 import io.falu.identity.utils.updateVerification
 import software.tingle.api.patch.JsonPatchDocument
 
-class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factory) : Fragment() {
+internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factory) : Fragment() {
 
     private val identityViewModel: IdentityVerificationViewModel by activityViewModels { identityViewModelFactory }
 
