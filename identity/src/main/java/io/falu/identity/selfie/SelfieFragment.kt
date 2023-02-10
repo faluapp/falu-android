@@ -20,10 +20,6 @@ import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.camera.CameraView
 import io.falu.identity.databinding.FragmentSelfieBinding
 import io.falu.identity.utils.*
-import io.falu.identity.utils.navigateToApiResponseProblemFragment
-import io.falu.identity.utils.navigateToErrorFragment
-import io.falu.identity.utils.submitVerificationData
-import io.falu.identity.utils.updateVerification
 import software.tingle.api.patch.JsonPatchDocument
 
 internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factory) : Fragment() {
@@ -60,12 +56,16 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
         identityViewModel.observeForVerificationResults(
             viewLifecycleOwner,
             onError = {},
-            onSuccess = { initiateAnalyzer(it) }
+            onSuccess = {
+                binding.buttonTakeSelfie.tag = it
+                initiateAnalyzer(it)
+            }
         )
 
         binding.buttonTakeSelfie.setOnClickListener {
+            val verification = binding.buttonTakeSelfie.tag as Verification
             binding.viewCamera.takePhoto(
-                onCaptured = { analyzeImage(it) },
+                onCaptured = { analyzeImage(it, verification) },
                 onCaptureError = { navigateToErrorFragment(it) }
             )
         }
@@ -81,7 +81,7 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
             if (it != null) {
                 analyzer = FaceDetectionAnalyzer(
                     it,
-                    verification.capture.models.face?.score?.toFraction() ?: threshold
+                    verification.capture.models.face?.threshold ?: THRESHOLD
                 )
             }
         }
@@ -136,7 +136,7 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
         })
     }
 
-    private fun analyzeImage(uri: Uri?) {
+    private fun analyzeImage(uri: Uri?, verification: Verification) {
         val selfieUri = requireNotNull(uri) {
             "Selfie uri is null"
         }
@@ -144,6 +144,8 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
         val output = analyzer.analyze(
             selfieUri.toBitmap(requireContext().contentResolver)
         )
+
+        val threshold = verification.capture.models.face?.threshold ?: THRESHOLD
 
         if (output.score >= threshold) {
             bindToUI(selfieUri)
@@ -160,6 +162,6 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
     }
 
     companion object {
-        private const val threshold = 0.85f
+        private const val THRESHOLD = 0.75f
     }
 }

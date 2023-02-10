@@ -1,8 +1,6 @@
 package io.falu.identity.capture.scan
 
-import android.graphics.Rect
 import android.os.Bundle
-import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,15 +16,15 @@ import io.falu.identity.R
 import io.falu.identity.ai.DocumentDetectionOutput
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.verification.Verification
+import io.falu.identity.api.models.verification.VerificationCapture
 import io.falu.identity.camera.CameraView
 import io.falu.identity.capture.AbstractCaptureFragment.Companion.getIdentityDocumentName
 import io.falu.identity.capture.scan.utils.DocumentScanDisposition
 import io.falu.identity.capture.scan.utils.ScanResult
 import io.falu.identity.databinding.FragmentScanCaptureBinding
 import io.falu.identity.documents.DocumentSelectionFragment
-import io.falu.identity.utils.*
 import io.falu.identity.utils.FileUtils
-import io.falu.identity.utils.toFraction
+import io.falu.identity.utils.withBoundingBox
 
 
 internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.Factory) :
@@ -65,8 +63,6 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
         documentScanViewModel.resetScanDispositions()
 
         resetUI()
-
-        startScan(scanType!!)
 
         binding.viewCamera.lifecycleOwner = viewLifecycleOwner
         binding.viewCamera.lensFacing = CameraSelector.LENS_FACING_BACK
@@ -110,14 +106,18 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
             binding.viewScanResults.visibility = View.GONE
             binding.viewScan.visibility = View.VISIBLE
             documentScanViewModel.resetScanDispositions()
-            startScan(scanType!!)
+            val verification = binding.buttonReset.tag as Verification
+            startScan(scanType!!, verification.capture)
             binding.viewCamera.startAnalyzer()
         }
 
         identityViewModel.observeForVerificationResults(
             viewLifecycleOwner,
             onError = {},
-            onSuccess = { initiateScanner(it) }
+            onSuccess = {
+                binding.buttonReset.tag = it
+                initiateScanner(it)
+            }
         )
     }
 
@@ -131,16 +131,19 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
             if (it != null) {
                 documentScanViewModel.initialize(
                     it,
-                    verification.capture.models.document.score.toFraction()
+                    verification.capture.models.document.threshold
                 )
 
-                startScan(scanType!!)
+                startScan(scanType!!, verification.capture)
             }
         }
     }
 
-    private fun startScan(scanType: DocumentScanDisposition.DocumentScanType) {
-        documentScanViewModel.scanner?.scan(binding.viewCamera.analyzers, scanType)
+    private fun startScan(
+        scanType: DocumentScanDisposition.DocumentScanType,
+        capture: VerificationCapture
+    ) {
+        documentScanViewModel.scanner?.scan(binding.viewCamera.analyzers, scanType, capture)
     }
 
     private fun resetUI() {

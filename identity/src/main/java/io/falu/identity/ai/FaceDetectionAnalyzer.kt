@@ -53,7 +53,8 @@ internal class FaceDetectionAnalyzer internal constructor(
 
         for (currentBoxOutputIndex in 0 until OUTPUT_SIZE) {
             for (scoreIndex in 0..NUMBER_OF_CLASSES) {
-                var currentScore = scores[currentBoxOutputIndex * NUMBER_OF_CLASSES + scoreIndex].toDouble()
+                var currentScore =
+                    scores[currentBoxOutputIndex * NUMBER_OF_CLASSES + scoreIndex].toDouble()
 
                 if (currentScore < -SCORE_CLIPPING_THRESHOLD) {
                     currentScore = -SCORE_CLIPPING_THRESHOLD

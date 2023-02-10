@@ -1,10 +1,13 @@
 import androidx.camera.core.ImageAnalysis
 import io.falu.identity.ai.DetectionOutput
 import io.falu.identity.ai.DocumentDetectionAnalyzer
+import io.falu.identity.api.models.verification.VerificationCapture
 import io.falu.identity.capture.scan.utils.DocumentDispositionMachine
 import io.falu.identity.capture.scan.utils.DocumentScanDisposition
 import io.falu.identity.capture.scan.utils.DocumentScanResultCallback
 import io.falu.identity.capture.scan.utils.ScanResult
+import io.falu.identity.utils.toFraction
+import org.joda.time.DateTime
 import java.io.File
 
 internal class DocumentScanner(
@@ -17,9 +20,16 @@ internal class DocumentScanner(
 
     internal fun scan(
         analyzers: MutableList<ImageAnalysis.Analyzer>,
-        scanType: DocumentScanDisposition.DocumentScanType
+        scanType: DocumentScanDisposition.DocumentScanType,
+        capture: VerificationCapture
     ) {
-        disposition = DocumentScanDisposition.Start(scanType, DocumentDispositionMachine())
+        val machine = DocumentDispositionMachine(
+            timeout = DateTime.now().plusMillis(capture.timeout),
+            iou = capture.blur?.iou?.toFraction() ?: 0.95f,
+            requiredTime = capture.blur?.duration?.div(1000) ?: 5
+        )
+
+        disposition = DocumentScanDisposition.Start(scanType, machine)
 
         analyzers.add(
             DocumentDetectionAnalyzer
