@@ -2,9 +2,7 @@ package io.falu.identity.ai
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.graphics.Matrix
 import android.graphics.Rect
-import android.util.Log
 import android.util.Size
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
@@ -12,7 +10,6 @@ import io.falu.identity.camera.AnalyzerBuilder
 import io.falu.identity.camera.AnalyzerOutputListener
 import io.falu.identity.capture.scan.utils.DocumentScanDisposition
 import io.falu.identity.utils.*
-import io.falu.identity.utils.toBitmap
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.support.common.ops.NormalizeOp
@@ -46,7 +43,7 @@ internal class DocumentDetectionAnalyzer internal constructor(
         // Input:- [1,320,320,1]
         val bitmap = image.image!!.toBitmap().rotate(image.imageInfo.rotationDegrees)
 
-        val size = Size(bitmap.width, bitmap.height).maxAspectRatio(0.5f)
+        val size = Size(bitmap.width, bitmap.height).maxAspectRatio(0.70f)
         val cropped = bitmap.centerCrop(size)
 
         var tensorImage = TensorImage(TENSOR_DATA_TYPE)
