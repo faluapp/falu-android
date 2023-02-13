@@ -137,7 +137,7 @@ internal class IdentityVerificationViewModel(
     }
 
     internal fun uploadSelfieImage(
-        uri: Uri,
+        bitmap: Bitmap,
         onSuccess: (FaluFile) -> Unit,
         onError: (HttpApiResponseProblem?) -> Unit,
         onFailure: (Throwable) -> Unit
@@ -147,7 +147,11 @@ internal class IdentityVerificationViewModel(
                 apiClient.uploadIdentityDocuments(
                     verification = contractArgs.verificationId,
                     purpose = "identity_private",
-                    file = fileUtils.createFileFromUri(uri, contractArgs.verificationId)
+                    file = fileUtils.createFileFromBitmap(
+                        bitmap,
+                        contractArgs.verificationId,
+                        "face"
+                    )
                 )
             }.fold(
                 onSuccess = { response ->

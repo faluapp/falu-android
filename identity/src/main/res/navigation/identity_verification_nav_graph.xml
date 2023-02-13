@@ -25,6 +25,10 @@
         android:id="@+id/action_global_fragment_scan_capture_error"
         app:destination="@id/fragment_scan_capture_error" />
 
+    <action
+        android:id="@+id/action_global_fragment_selfie_capture_error"
+        app:destination="@id/fragment_selfie_capture_error_fragment" />
+
     <fragment
         android:id="@+id/fragment_welcome"
         android:name="io.falu.identity.welcome.WelcomeFragment"
@@ -108,4 +112,9 @@
         android:name="io.falu.identity.error.ScanCaptureErrorFragment"
         android:label="ScanCaptureErrorFragment"
         tool:layout="@layout/fragment_error" />
+    <fragment
+        android:id="@+id/fragment_selfie_capture_error_fragment"
+        android:name="io.falu.identity.error.SelfieCaptureErrorFragment"
+        tool:layout="@layout/fragment_error"
+        android:label="SelfieCaptureErrorFragment" />
 </navigation>

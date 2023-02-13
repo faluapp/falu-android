@@ -1,6 +1,14 @@
 package io.falu.identity.ai
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
+import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.ImageProxy
+import io.falu.identity.camera.AnalyzerBuilder
+import io.falu.identity.camera.AnalyzerOutputListener
+import io.falu.identity.capture.scan.utils.DocumentScanDisposition
+import io.falu.identity.utils.rotate
+import io.falu.identity.utils.toBitmap
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.support.common.ops.NormalizeOp
@@ -14,22 +22,28 @@ import kotlin.math.exp
 
 internal class FaceDetectionAnalyzer internal constructor(
     model: File,
-    private val threshold: Float
-) {
+    private val threshold: Float,
+    private val listener: AnalyzerOutputListener
+) : ImageAnalysis.Analyzer {
 
     private val interpreter = Interpreter(model)
 
     private val regressTensorShape = intArrayOf(1, OUTPUT_SIZE, 16)
     private val classifiersTensorShape = intArrayOf(1, OUTPUT_SIZE, 3)
 
-    fun analyze(bitmap: Bitmap): FaceDetectionOutput {
+    @SuppressLint("UnsafeOptInUsageError")
+    override fun analyze(image: ImageProxy) {
+
+        // Input:- [1,128,128,3]
+        val bitmap = image.image!!.toBitmap().rotate(image.imageInfo.rotationDegrees)
+
         var tensorImage = TensorImage(TENSOR_DATA_TYPE)
         tensorImage.load(bitmap)
 
         // Preprocess: resize image to model input
         val processor = ImageProcessor.Builder()
             .add(ResizeOp(IMAGE_HEIGHT, IMAGE_WIDTH, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR))
-            .add(NormalizeOp(NORMALIZE_MEAN, NORMALIZE_STD)) // normalize to [0, 1)
+            .add(NormalizeOp(NORMALIZE_MEAN, NORMALIZE_STD)) // normalize to [-1, 1)
             .build()
         tensorImage = processor.process(tensorImage)
 
@@ -71,7 +85,20 @@ internal class FaceDetectionAnalyzer internal constructor(
             }
         }
 
-        return FaceDetectionOutput(score = bestScore.toFloat())
+        val output = FaceDetectionOutput(score = bestScore.toFloat(), bitmap = bitmap)
+
+        listener(output)
+
+        image.close()
+    }
+
+
+    internal class Builder(private val model: File, private val threshold: Float) :
+        AnalyzerBuilder<DocumentScanDisposition, DetectionOutput, ImageAnalysis.Analyzer> {
+
+        override fun instance(result: (DetectionOutput) -> Unit): ImageAnalysis.Analyzer {
+            return FaceDetectionAnalyzer(model, threshold, result)
+        }
     }
 
     companion object {
@@ -79,8 +106,8 @@ internal class FaceDetectionAnalyzer internal constructor(
 
         private const val IMAGE_WIDTH = 128
         private const val IMAGE_HEIGHT = 128
-        private const val NORMALIZE_MEAN = 0f
-        private const val NORMALIZE_STD = 255f
+        private const val NORMALIZE_MEAN = 127.5f
+        private const val NORMALIZE_STD = 127.5f
 
         private const val SCORE_CLIPPING_THRESHOLD = 100.0
         private const val OUTPUT_SIZE = 896

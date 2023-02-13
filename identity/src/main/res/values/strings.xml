@@ -75,4 +75,8 @@
 
     <!--Selfie-->
     <string name="selfie_text_take_selfie">Take a selfie</string>
+    <string name="selfie_text_scan_message">Position your face in the center.</string>
+    <string name="selfie_text_face_detected">Face detected, stay still scan in progress!</string>
+    <string name="selfie_text_selfie_scan_completed">Scan Complete!</string>
+
 </resources>
