@@ -4,6 +4,7 @@ import android.util.Log
 import io.falu.identity.ai.DetectionOutput
 import io.falu.identity.ai.FaceDetectionOutput
 import io.falu.identity.capture.scan.utils.DocumentDispositionDetector
+import io.falu.identity.capture.scan.utils.DocumentDispositionMachine
 import io.falu.identity.capture.scan.utils.DocumentScanDisposition
 import org.joda.time.DateTime
 import org.joda.time.Seconds
@@ -11,6 +12,7 @@ import org.joda.time.Seconds
 internal class FaceDispositionMachine(
     private val timeout: DateTime = DateTime.now().plusSeconds(8),
     private val currentTime: DateTime = DateTime.now(),
+    private val requiredTime: Int = DEFAULT_REQUIRED_SCAN_DURATION,
 ) : DocumentDispositionDetector {
 
     override fun fromStart(
@@ -46,6 +48,10 @@ internal class FaceDispositionMachine(
             hasTimedOut -> {
                 DocumentScanDisposition.Timeout(state.type, this)
             }
+            moreScanningRequired(state) -> {
+                state.reached = DateTime.now()
+                state
+            }
             else -> {
                 DocumentScanDisposition.Desired(state.type, state.dispositionDetector)
             }
@@ -67,6 +73,11 @@ internal class FaceDispositionMachine(
         return DocumentScanDisposition.Start(state.type, this)
     }
 
+    private fun moreScanningRequired(disposition: DocumentScanDisposition.Detected): Boolean {
+        val seconds = elapsedTime(time = disposition.reached)
+        return seconds < requiredTime
+    }
+
     private fun elapsedTime(now: DateTime = currentTime, time: DateTime): Int {
         return Seconds.secondsBetween(now, time).seconds
     }
@@ -81,5 +92,6 @@ internal class FaceDispositionMachine(
         private val TAG = FaceDispositionMachine::class.java.simpleName
 
         private const val threshold = 0.75
+        private const val DEFAULT_REQUIRED_SCAN_DURATION = 5 // time in seconds
     }
 }
