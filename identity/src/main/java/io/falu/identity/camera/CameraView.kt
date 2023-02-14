@@ -309,7 +309,7 @@ internal class CameraView @JvmOverloads constructor(
         private val TAG = CameraView::class.java.simpleName
         private val ASPECT_RATIO_ID_CARD = Pair("3:2", 3 / 2)
         private val ASPECT_RATIO_PASSPORT = Pair("3:2", 3 / 2)
-        private val ASPECT_RATIO_FACE = Pair("2:3", 2 / 3)
+        private val ASPECT_RATIO_FACE = Pair("2:2", 2 / 2)
         private val ASPECT_RATIO_DEFAULT = Pair("16:9", 16 / 9)
         private const val BORDERLESS = -1
     }

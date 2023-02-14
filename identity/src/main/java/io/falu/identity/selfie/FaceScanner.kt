@@ -1,16 +1,16 @@
+package io.falu.identity.selfie
+
 import androidx.camera.core.ImageAnalysis
 import io.falu.identity.ai.DetectionOutput
-import io.falu.identity.ai.DocumentDetectionAnalyzer
+import io.falu.identity.ai.FaceDetectionAnalyzer
 import io.falu.identity.api.models.verification.VerificationCapture
-import io.falu.identity.capture.scan.utils.DocumentDispositionMachine
 import io.falu.identity.capture.scan.utils.DocumentScanDisposition
 import io.falu.identity.capture.scan.utils.DocumentScanResultCallback
 import io.falu.identity.capture.scan.utils.ScanResult
-import io.falu.identity.utils.toFraction
 import org.joda.time.DateTime
 import java.io.File
 
-internal class DocumentScanner(
+internal class FaceScanner(
     private val model: File,
     private val threshold: Float,
     private val callback: DocumentScanResultCallback<ScanResult>
@@ -20,19 +20,17 @@ internal class DocumentScanner(
 
     internal fun scan(
         analyzers: MutableList<ImageAnalysis.Analyzer>,
-        scanType: DocumentScanDisposition.DocumentScanType,
         capture: VerificationCapture
     ) {
-        val machine = DocumentDispositionMachine(
-            timeout = DateTime.now().plusMillis(capture.timeout),
-            iou = capture.blur?.iou?.toFraction() ?: 0.95f,
-            requiredTime = capture.blur?.duration?.div(1000) ?: 5
+        val machine = FaceDispositionMachine(
+            timeout = DateTime.now().plusMillis(capture.timeout)
         )
 
-        disposition = DocumentScanDisposition.Start(scanType, machine)
+        disposition =
+            DocumentScanDisposition.Start(DocumentScanDisposition.DocumentScanType.SELFIE, machine)
 
         analyzers.add(
-            DocumentDetectionAnalyzer
+            FaceDetectionAnalyzer
                 .Builder(model = model, threshold)
                 .instance { handleResult(it) }
         )

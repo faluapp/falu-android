@@ -10,9 +10,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:padding="@dimen/content_padding_normal"
+        android:paddingHorizontal="@dimen/content_padding_normal"
         android:text="@string/selfie_text_take_selfie"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    <TextView
+        android:id="@+id/tv_scan_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingVertical="@dimen/element_spacing_normal"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
 
     <FrameLayout
         android:id="@+id/view_selfie_camera"
@@ -26,14 +35,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/button_take_selfie"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="@dimen/content_padding_normal"
-            android:src="@drawable/ic_camera"
-            tools:ignore="ContentDescription" />
     </FrameLayout>
 
     <LinearLayout
@@ -44,7 +45,6 @@
         android:visibility="gone">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cv_selfie"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -59,29 +59,6 @@
                 tools:ignore="ContentDescription" />
 
         </androidx.cardview.widget.CardView>
-
-        <LinearLayout
-            android:id="@+id/view_selfie_error"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/content_padding_normal"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/error_title_selfie_capture"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/element_spacing_normal"
-                android:text="@string/error_description_selfie_capture"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
-        </LinearLayout>
 
         <io.falu.identity.ui.LoadingButton
             android:id="@+id/button_continue"

@@ -106,11 +106,12 @@ internal fun ByteBuffer.toByteArray(): ByteArray {
     return data // Return the byte array
 }
 
-
+@CheckResult
 internal fun Int.toFraction(): Float {
     return this.div(100F)
 }
 
+@CheckResult
 internal fun Float.toWholeNumber(): Int {
     return this.times(100F).toInt()
 }
@@ -132,11 +133,15 @@ internal fun Bitmap.crop(rect: Rect): Bitmap {
 }
 
 /**
- * Get [Bitmap] [Size]*/
+ * Get [Bitmap] [Size]
+ */
+@CheckResult
 internal fun Bitmap.toSize() = Size(this.width, this.height)
 
 /**
- * Crop a [Bitmap] at the from the center given the [Size]*/
+ * Crop a [Bitmap] at the from the center given the [Size]
+ */
+@CheckResult
 internal fun Bitmap.centerCrop(size: Size): Bitmap {
     return crop(size.center(size.toRect()))
 }
@@ -144,7 +149,8 @@ internal fun Bitmap.centerCrop(size: Size): Bitmap {
 /**
  * Determine points from the the center of a [Rect]
  */
-fun Size.center(rect: Rect) = Rect(
+@CheckResult
+internal fun Size.center(rect: Rect) = Rect(
     rect.centerX() - this.width / 2, // left
     rect.centerY() - this.height / 2, // top
     rect.centerX() + this.width / 2,  // right
@@ -154,9 +160,11 @@ fun Size.center(rect: Rect) = Rect(
 /**
  * Get a rectangle [Rect], with top let corner at (0,0)
  */
-fun Size.toRect() = Rect(0, 0, this.width, this.height)
+@CheckResult
+internal fun Size.toRect() = Rect(0, 0, this.width, this.height)
 
-fun Bitmap.withBoundingBox(bounds: Rect): Bitmap {
+@CheckResult
+internal fun Bitmap.withBoundingBox(bounds: Rect): Bitmap {
     val bitmap = copy(config, true)
     val canvas = Canvas(bitmap)
 
@@ -173,7 +181,8 @@ fun Bitmap.withBoundingBox(bounds: Rect): Bitmap {
 /**
  * Calculate the max size of a rect with given aspect ratio that can fit a specified a area.
  */
-fun Size.maxAspectRatio(ratio: Float): Size {
+@CheckResult
+internal fun Size.maxAspectRatio(ratio: Float): Size {
     var w = width
     var h = (w / ratio).roundToInt()
 
@@ -186,7 +195,8 @@ fun Size.maxAspectRatio(ratio: Float): Size {
     return Size(min(w, width), h)
 }
 
-fun Uri.toBitmap(resolver: ContentResolver): Bitmap {
+@CheckResult
+internal fun Uri.toBitmap(resolver: ContentResolver): Bitmap {
     return resolver.openInputStream(this).use {
         BitmapFactory.decodeStream(it)
     }

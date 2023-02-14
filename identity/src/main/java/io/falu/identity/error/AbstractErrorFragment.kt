@@ -12,8 +12,6 @@ import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.databinding.FragmentErrorBinding
 
 internal abstract class AbstractErrorFragment : Fragment() {
-    protected val identityVerificationViewModel: IdentityVerificationViewModel by activityViewModels()
-
     private var _binding: FragmentErrorBinding? = null
     protected val binding get() = _binding!!
 

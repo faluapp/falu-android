@@ -45,5 +45,6 @@ internal data class DocumentDetectionOutput(
 ) : DetectionOutput, Parcelable
 
 internal data class FaceDetectionOutput(
-    var score: Float
+    var score: Float,
+    var bitmap: Bitmap,
 ) : DetectionOutput

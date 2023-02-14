@@ -1,5 +1,6 @@
 package io.falu.identity.selfie
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,15 +10,20 @@ import androidx.camera.core.CameraSelector
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import io.falu.core.models.FaluFile
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
-import io.falu.identity.ai.FaceDetectionAnalyzer
+import io.falu.identity.ai.DocumentDetectionOutput
+import io.falu.identity.ai.FaceDetectionOutput
 import io.falu.identity.api.models.UploadMethod
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationSelfieUpload
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.camera.CameraView
+import io.falu.identity.capture.AbstractCaptureFragment.Companion.getIdentityDocumentName
+import io.falu.identity.capture.scan.utils.DocumentScanDisposition
+import io.falu.identity.capture.scan.utils.ScanResult
 import io.falu.identity.databinding.FragmentSelfieBinding
 import io.falu.identity.utils.*
 import io.falu.identity.utils.navigateToApiResponseProblemFragment
@@ -29,12 +35,12 @@ import software.tingle.api.patch.JsonPatchDocument
 internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factory) : Fragment() {
 
     private val identityViewModel: IdentityVerificationViewModel by activityViewModels { identityViewModelFactory }
+    private val faceScanViewModel: FaceScanViewModel by activityViewModels()
 
     private var _binding: FragmentSelfieBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var verificationRequest: VerificationUploadRequest
-    private lateinit var analyzer: FaceDetectionAnalyzer
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,6 +58,9 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
                 "Verification upload request is null"
             }
 
+        faceScanViewModel.resetScanDispositions()
+        resetUI()
+
         binding.viewCamera.lifecycleOwner = viewLifecycleOwner
         binding.viewCamera.lensFacing = CameraSelector.LENS_FACING_FRONT
         binding.viewCamera.cameraViewType = CameraView.CameraViewType.FACE
@@ -60,59 +69,88 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
         identityViewModel.observeForVerificationResults(
             viewLifecycleOwner,
             onError = {},
-            onSuccess = { initiateAnalyzer(it) }
+            onSuccess = {
+                binding.buttonReset.tag = it
+                initiateAnalyzer(it)
+            }
         )
 
-        binding.buttonTakeSelfie.setOnClickListener {
-            binding.viewCamera.takePhoto(
-                onCaptured = { analyzeImage(it) },
-                onCaptureError = { navigateToErrorFragment(it) }
-            )
-        }
+        identityViewModel.observeForVerificationResults(
+            viewLifecycleOwner,
+            onSuccess = { onVerificationPage(it) },
+            onError = {}
+        )
 
         binding.buttonReset.setOnClickListener {
             binding.viewSelfieCamera.visibility = View.VISIBLE
             binding.viewSelfieResult.visibility = View.GONE
+            resetUI()
+            faceScanViewModel.resetScanDispositions()
+            val verification = binding.buttonReset.tag as Verification
+            scan(verification)
+            binding.viewCamera.startAnalyzer()
+        }
+
+        faceScanViewModel.faceScanDisposition.observe(viewLifecycleOwner) {
+            updateUI(it)
         }
     }
 
     private fun initiateAnalyzer(verification: Verification) {
         identityViewModel.faceDetectorModelFile.observe(viewLifecycleOwner) {
             if (it != null) {
-                analyzer = FaceDetectionAnalyzer(
-                    it,
-                    verification.capture.models.face?.score?.toFraction() ?: threshold
-                )
+                faceScanViewModel
+                    .initialize(it, verification.capture.models.face?.threshold ?: THRESHOLD)
+            }
+
+            scan(verification)
+        }
+    }
+
+    private fun scan(verification: Verification) {
+        faceScanViewModel.scanner?.scan(binding.viewCamera.analyzers, verification.capture)
+    }
+
+    private fun bindToUI(bitmap: Bitmap) {
+        binding.viewSelfieCamera.visibility = View.GONE
+        binding.viewSelfieResult.visibility = View.VISIBLE
+        binding.buttonContinue.visibility = View.VISIBLE
+
+        binding.ivSelfie.setImageBitmap(bitmap)
+
+        binding.buttonContinue.setOnClickListener {
+            binding.buttonContinue.showProgress()
+            uploadSelfie(bitmap)
+        }
+    }
+
+    private fun updateUI(result: ScanResult) {
+        when (result.disposition) {
+            is DocumentScanDisposition.Start -> {
+                resetUI()
+            }
+            is DocumentScanDisposition.Detected -> {
+                binding.tvScanMessage.text = getString(R.string.selfie_text_face_detected)
+            }
+            is DocumentScanDisposition.Desired -> {
+                binding.tvScanMessage.text =
+                    getString(R.string.selfie_text_selfie_scan_completed)
+            }
+            is DocumentScanDisposition.Undesired -> {}
+            is DocumentScanDisposition.Completed -> {}
+            is DocumentScanDisposition.Timeout, null -> {
+                //noOP
             }
         }
     }
 
-    private fun bindToUI(uri: Uri) {
-        binding.viewSelfieCamera.visibility = View.GONE
-        binding.viewSelfieResult.visibility = View.VISIBLE
-        binding.viewSelfieError.visibility = View.GONE
-        binding.buttonContinue.visibility = View.VISIBLE
-        binding.cvSelfie.visibility = View.VISIBLE
-
-        binding.ivSelfie.setImageURI(uri)
-
-        binding.buttonContinue.setOnClickListener {
-            binding.buttonContinue.showProgress()
-            uploadSelfie(uri)
-        }
+    private fun resetUI() {
+        binding.tvScanMessage.text = getString(R.string.selfie_text_scan_message)
     }
 
-    private fun bindToUIWithError() {
-        binding.viewSelfieCamera.visibility = View.GONE
-        binding.viewSelfieResult.visibility = View.VISIBLE
-        binding.viewSelfieError.visibility = View.VISIBLE
-        binding.cvSelfie.visibility = View.GONE
-        binding.buttonContinue.visibility = View.GONE
-    }
-
-    private fun uploadSelfie(uri: Uri) {
+    private fun uploadSelfie(bitmap: Bitmap) {
         identityViewModel.uploadSelfieImage(
-            uri,
+            bitmap,
             onSuccess = { submitSelfieAndUploadedDocuments(it) },
             onFailure = { navigateToErrorFragment(it) },
             onError = { navigateToApiResponseProblemFragment(it) },
@@ -136,22 +174,20 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
         })
     }
 
-    private fun analyzeImage(uri: Uri?) {
-        val selfieUri = requireNotNull(uri) {
-            "Selfie uri is null"
+    private fun onVerificationPage(verification: Verification) {
+        faceScanViewModel.faceScanCompleteDisposition.observe(viewLifecycleOwner) {
+            if (it.disposition is DocumentScanDisposition.Completed) {
+                // stop the analyzer
+                binding.viewCamera.stopAnalyzer()
+                binding.viewCamera.analyzers.clear()
+                bindToUI((it.output as FaceDetectionOutput).bitmap)
+            } else if (it.disposition is DocumentScanDisposition.Timeout) {
+                binding.viewCamera.stopAnalyzer()
+                binding.viewCamera.analyzers.clear()
+
+                findNavController().navigate(R.id.action_global_fragment_selfie_capture_error)
+            }
         }
-
-        val output = analyzer.analyze(
-            selfieUri.toBitmap(requireContext().contentResolver)
-        )
-
-        if (output.score >= threshold) {
-            bindToUI(selfieUri)
-            return
-        }
-
-        // show selfie capture error results.
-        bindToUIWithError()
     }
 
     override fun onDestroyView() {
@@ -160,6 +196,6 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
     }
 
     companion object {
-        private const val threshold = 0.85f
+        private const val THRESHOLD = 0.75f
     }
 }

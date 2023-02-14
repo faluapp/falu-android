@@ -2,6 +2,7 @@ package io.falu.identity.api.models.verification
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import io.falu.identity.utils.toFraction
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -32,7 +33,11 @@ internal data class DocumentDetector(
     var url: String,
     @SerializedName("min_score")
     var score: Int
-) : Parcelable
+) : Parcelable {
+
+    val threshold: Float
+        get() = score.toFraction()
+}
 
 /**
  *

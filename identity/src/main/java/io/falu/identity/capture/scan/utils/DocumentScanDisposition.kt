@@ -21,7 +21,8 @@ internal sealed class DocumentScanDisposition(
         DL_FRONT,
         ID_BACK,
         ID_FRONT,
-        PASSPORT;
+        PASSPORT,
+        SELFIE;
 
         val isFront: Boolean
             get() {
