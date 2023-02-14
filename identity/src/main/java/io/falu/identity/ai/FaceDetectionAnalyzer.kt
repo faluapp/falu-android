@@ -2,11 +2,14 @@ package io.falu.identity.ai
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
+import android.util.Size
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import io.falu.identity.camera.AnalyzerBuilder
 import io.falu.identity.camera.AnalyzerOutputListener
 import io.falu.identity.capture.scan.utils.DocumentScanDisposition
+import io.falu.identity.utils.centerCrop
+import io.falu.identity.utils.maxAspectRatio
 import io.falu.identity.utils.rotate
 import io.falu.identity.utils.toBitmap
 import org.tensorflow.lite.DataType
@@ -33,12 +36,16 @@ internal class FaceDetectionAnalyzer internal constructor(
 
     @SuppressLint("UnsafeOptInUsageError")
     override fun analyze(image: ImageProxy) {
+        interpreter.resetVariableTensors()
 
         // Input:- [1,128,128,3]
         val bitmap = image.image!!.toBitmap().rotate(image.imageInfo.rotationDegrees)
 
+        val size = Size(bitmap.width, bitmap.height).maxAspectRatio(0.70f)
+        val cropped = bitmap.centerCrop(size)
+
         var tensorImage = TensorImage(TENSOR_DATA_TYPE)
-        tensorImage.load(bitmap)
+        tensorImage.load(cropped)
 
         // Preprocess: resize image to model input
         val processor = ImageProcessor.Builder()
@@ -85,7 +92,7 @@ internal class FaceDetectionAnalyzer internal constructor(
             }
         }
 
-        val output = FaceDetectionOutput(score = bestScore.toFloat(), bitmap = bitmap)
+        val output = FaceDetectionOutput(score = bestScore.toFloat(), bitmap = cropped)
 
         listener(output)
 
