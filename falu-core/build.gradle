@@ -51,7 +51,7 @@ dependencies {
     testImplementation "org.mockito.kotlin:mockito-kotlin:$mockito_kotlin_version"
     testImplementation "org.mockito:mockito-inline:$mockito_core_version"
     testImplementation "org.robolectric:robolectric:$robo_version"
-    testImplementation "org.mockito:mockito-core:4.8.0"
+    testImplementation "org.mockito:mockito-core:5.1.1"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test-annotations-common:$kotlin_version"
