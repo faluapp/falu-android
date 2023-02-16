@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import android.widget.ImageView
-import androidx.core.net.toFile
 import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistryOwner
 import io.falu.core.models.FaluFile

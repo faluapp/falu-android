@@ -112,24 +112,11 @@ internal class DocumentDispositionMachine(
     private fun DocumentOption.matches(
         type: DocumentScanDisposition.DocumentScanType
     ): Boolean {
-        return when (this) {
-            DocumentOption.DL_BACK -> {
-                type == DocumentScanDisposition.DocumentScanType.DL_BACK
-            }
-            DocumentOption.DL_FRONT -> {
-                type == DocumentScanDisposition.DocumentScanType.DL_FRONT
-            }
-            DocumentOption.ID_BACK -> {
-                type == DocumentScanDisposition.DocumentScanType.ID_BACK
-            }
-            DocumentOption.ID_FRONT -> {
-                type == DocumentScanDisposition.DocumentScanType.DL_FRONT
-            }
-            DocumentOption.PASSPORT -> {
-                type == DocumentScanDisposition.DocumentScanType.PASSPORT
-            }
-            DocumentOption.INVALID -> false
-        }
+        return this == DocumentOption.DL_BACK && type == DocumentScanDisposition.DocumentScanType.DL_BACK ||
+                this == DocumentOption.DL_FRONT && type == DocumentScanDisposition.DocumentScanType.DL_FRONT ||
+                this == DocumentOption.ID_BACK && type == DocumentScanDisposition.DocumentScanType.ID_BACK ||
+                this == DocumentOption.ID_FRONT && type == DocumentScanDisposition.DocumentScanType.ID_FRONT ||
+                this == DocumentOption.PASSPORT && type == DocumentScanDisposition.DocumentScanType.PASSPORT
     }
 
     private fun targetTypeMatches(
