@@ -143,7 +143,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
         scanType: DocumentScanDisposition.DocumentScanType,
         capture: VerificationCapture
     ) {
-        documentScanViewModel.scanner?.scan(binding.viewCamera.analyzers, scanType, capture)
+        documentScanViewModel.scanner?.scan(binding.viewCamera, scanType, capture)
     }
 
     private fun resetUI() {
@@ -192,8 +192,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
         documentScanViewModel.documentScanCompleteDisposition.observe(viewLifecycleOwner) {
             if (it.disposition is DocumentScanDisposition.Completed) {
                 // stop the analyzer
-                binding.viewCamera.stopAnalyzer()
-                binding.viewCamera.analyzers.clear()
+                documentScanViewModel.scanner?.stopScan(binding.viewCamera)
                 binding.buttonContinue.tag = it
                 binding.buttonContinue.isEnabled = true
 
@@ -204,8 +203,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
 
                 binding.ivScan.setImageBitmap(bitmap.withBoundingBox(output.rect))
             } else if (it.disposition is DocumentScanDisposition.Timeout) {
-                binding.viewCamera.stopAnalyzer()
-                binding.viewCamera.analyzers.clear()
+                documentScanViewModel.scanner?.stopScan(binding.viewCamera)
 
                 findNavController().navigate(R.id.action_global_fragment_scan_capture_error)
             }
@@ -222,7 +220,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
             return when (this) {
                 IdentityDocumentType.IDENTITY_CARD -> {
                     Pair(
-                        DocumentScanDisposition.DocumentScanType.DL_FRONT,
+                        DocumentScanDisposition.DocumentScanType.ID_FRONT,
                         DocumentScanDisposition.DocumentScanType.ID_BACK
                     )
                 }

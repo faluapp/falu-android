@@ -1,7 +1,10 @@
 import androidx.camera.core.ImageAnalysis
 import io.falu.identity.ai.DetectionOutput
 import io.falu.identity.ai.DocumentDetectionAnalyzer
+import io.falu.identity.ai.DocumentDetectionOutput
+import io.falu.identity.ai.DocumentOption
 import io.falu.identity.api.models.verification.VerificationCapture
+import io.falu.identity.camera.CameraView
 import io.falu.identity.capture.scan.utils.DocumentDispositionMachine
 import io.falu.identity.capture.scan.utils.DocumentScanDisposition
 import io.falu.identity.capture.scan.utils.DocumentScanResultCallback
@@ -19,7 +22,7 @@ internal class DocumentScanner(
     private var isFirstOutput = false
 
     internal fun scan(
-        analyzers: MutableList<ImageAnalysis.Analyzer>,
+        view: CameraView,
         scanType: DocumentScanDisposition.DocumentScanType,
         capture: VerificationCapture
     ) {
@@ -31,14 +34,19 @@ internal class DocumentScanner(
 
         disposition = DocumentScanDisposition.Start(scanType, machine)
 
-        analyzers.add(
+        view.analyzers.add(
             DocumentDetectionAnalyzer
                 .Builder(model = model, threshold)
-                .instance { handleResult(it) }
+                .instance { handleResult(it, view) }
         )
     }
 
-    private fun handleResult(output: DetectionOutput) {
+    fun stopScan(view: CameraView) {
+        view.analyzers.clear()
+        view.stopAnalyzer()
+    }
+
+    private fun handleResult(output: DetectionOutput, view: CameraView) {
         requireNotNull(disposition) { "Initial Disposition cannot be null" }
 
         if (isFirstOutput) {
@@ -48,6 +56,7 @@ internal class DocumentScanner(
             val result = ScanResult(output, disposition)
 
             if (disposition!!.terminate) {
+                stopScan(view)
                 callback.onScanComplete(result)
             } else {
                 callback.onProgress(result)
