@@ -15,6 +15,7 @@ internal class DocumentDispositionMachine(
     private val timeout: DateTime = DateTime.now().plusSeconds(8),
     private val iou: Float = IOU_THRESHOLD,
     private val requiredTime: Int = DEFAULT_REQUIRED_SCAN_DURATION,
+    private val requireThreshold: Float = DEFUALT_REQUIRED_THRESHOLD,
     private val currentTime: DateTime = DateTime.now(),
     private val undesiredDuration: Int = DEFAULT_UNDESIRED_DURATION,
     private val desiredDuration: Int = DEFAULT_DESIRED_DURATION
@@ -61,7 +62,16 @@ internal class DocumentDispositionMachine(
                 Log.d(TAG, "Option (${output.option}) doesn't match ${state.type}")
                 DocumentScanDisposition.Undesired(state.type, state.dispositionDetector)
             }
+            output.score < requireThreshold -> {
+                Log.d(
+                    TAG,
+                    "Score (${output.score}) for (${output.option}) doesn't meet the required threshold."
+                )
+                state.reached = DateTime.now()
+                state
+            }
             !iouCheckSatisfied(output.box) -> {
+                Log.d(TAG, "IOU check not satisfied")
                 // reset the time
                 state.reached = DateTime.now()
                 state
@@ -201,6 +211,7 @@ internal class DocumentDispositionMachine(
     internal companion object {
         private val TAG = DocumentDispositionMachine::class.java.simpleName
         private const val IOU_THRESHOLD = 0.95f
+        private const val DEFUALT_REQUIRED_THRESHOLD = 0.75f
         private const val DEFAULT_MATCH_COUNTER = 1
         private const val DEFAULT_REQUIRED_SCAN_DURATION = 5 // time in seconds
         private const val DEFAULT_DESIRED_DURATION = 3 // time in seconds

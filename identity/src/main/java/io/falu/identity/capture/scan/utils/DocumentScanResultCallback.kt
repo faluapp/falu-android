@@ -1,6 +1,12 @@
 package io.falu.identity.capture.scan.utils
 
-internal interface DocumentScanResultCallback<Result> {
-    fun onScanComplete(result: Result)
-    fun onProgress(result: Result)
+import io.falu.identity.ai.DetectionOutput
+
+internal interface DocumentScanResultCallback<ProvisionalResult, IdentityResult> {
+    fun onScanComplete(result: IdentityResult)
+    fun onProgress(result: ProvisionalResult)
+
+    fun collectResults(output: DetectionOutput){
+
+    }
 }

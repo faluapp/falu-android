@@ -1,5 +1,6 @@
 package io.falu.identity.capture.scan
 
+import DocumentScanner
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -168,8 +169,8 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
         )
     }
 
-    private fun updateUI(result: ScanResult) {
-        when (result.disposition) {
+    private fun updateUI(result: DocumentScanner.ProvisionalResult?) {
+        when (result?.disposition) {
             is DocumentScanDisposition.Start -> {
                 resetUI()
             }

@@ -1,3 +1,4 @@
+import android.content.Context
 import androidx.camera.core.ImageAnalysis
 import io.falu.identity.ai.DetectionOutput
 import io.falu.identity.ai.DocumentDetectionAnalyzer
@@ -16,10 +17,23 @@ import java.io.File
 internal class DocumentScanner(
     private val model: File,
     private val threshold: Float,
-    private val callback: DocumentScanResultCallback<ScanResult>
+    private val callbacks: DocumentScanResultCallback<ProvisionalResult, IdentityResult>
 ) {
     private var disposition: DocumentScanDisposition? = null
     private var isFirstOutput = false
+
+    /**
+     *
+     */
+    internal data class ProvisionalResult(val disposition: DocumentScanDisposition)
+
+    /**
+     *
+     */
+    internal data class IdentityResult(
+        val output: DetectionOutput,
+        val disposition: DocumentScanDisposition
+    )
 
     internal fun scan(
         view: CameraView,
@@ -49,24 +63,30 @@ internal class DocumentScanner(
     private fun handleResult(output: DetectionOutput, view: CameraView) {
         requireNotNull(disposition) { "Initial Disposition cannot be null" }
 
-        if (isFirstOutput) {
+        val (provisionalResult, identityResult) = collectResults(output)
+
+        callbacks.onProgress(provisionalResult)
+
+        identityResult?.also {
+            callbacks.onScanComplete(it)
+        }
+    }
+
+    private fun collectResults(output: DetectionOutput): Pair<ProvisionalResult, IdentityResult?> {
+        return if (isFirstOutput) {
             val previousDisposition = disposition!!
             disposition = previousDisposition.next(output)
+            val provisionalResult = ProvisionalResult(disposition!!)
 
-            val result = ScanResult(output, disposition)
-
-            if (disposition!!.terminate) {
-                stopScan(view)
-                callback.onScanComplete(result)
-            } else {
-                callback.onProgress(result)
-            }
-
+            provisionalResult to
+                    if (disposition!!.terminate) {
+                        IdentityResult(output, disposition!!)
+                    } else {
+                        null
+                    }
         } else {
-            val result = ScanResult(output, disposition)
-
             isFirstOutput = true
-            callback.onProgress(result)
+            ProvisionalResult(disposition!!) to null
         }
     }
 }
