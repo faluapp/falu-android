@@ -1,7 +1,6 @@
 package io.falu.identity.selfie
 
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,18 +13,15 @@ import androidx.navigation.fragment.findNavController
 import io.falu.core.models.FaluFile
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
-import io.falu.identity.ai.DocumentDetectionOutput
 import io.falu.identity.ai.FaceDetectionOutput
 import io.falu.identity.api.models.UploadMethod
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationSelfieUpload
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.camera.CameraView
-import io.falu.identity.capture.AbstractCaptureFragment.Companion.getIdentityDocumentName
-import io.falu.identity.capture.scan.utils.DocumentScanDisposition
-import io.falu.identity.capture.scan.utils.ScanResult
+import io.falu.identity.scan.ScanDisposition
+import io.falu.identity.scan.ScanResult
 import io.falu.identity.databinding.FragmentSelfieBinding
-import io.falu.identity.utils.*
 import io.falu.identity.utils.navigateToApiResponseProblemFragment
 import io.falu.identity.utils.navigateToErrorFragment
 import io.falu.identity.utils.submitVerificationData
@@ -77,7 +73,7 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
 
         identityViewModel.observeForVerificationResults(
             viewLifecycleOwner,
-            onSuccess = { onVerificationPage(it) },
+            onSuccess = { onVerificationPage() },
             onError = {}
         )
 
@@ -108,7 +104,11 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
     }
 
     private fun scan(verification: Verification) {
-        faceScanViewModel.scanner?.scan(binding.viewCamera.analyzers, verification.capture)
+        faceScanViewModel.scanner?.scan(
+            binding.viewCamera,
+            ScanDisposition.DocumentScanType.SELFIE,
+            verification.capture
+        )
     }
 
     private fun bindToUI(bitmap: Bitmap) {
@@ -126,19 +126,19 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
 
     private fun updateUI(result: ScanResult) {
         when (result.disposition) {
-            is DocumentScanDisposition.Start -> {
+            is ScanDisposition.Start -> {
                 resetUI()
             }
-            is DocumentScanDisposition.Detected -> {
+            is ScanDisposition.Detected -> {
                 binding.tvScanMessage.text = getString(R.string.selfie_text_face_detected)
             }
-            is DocumentScanDisposition.Desired -> {
+            is ScanDisposition.Desired -> {
                 binding.tvScanMessage.text =
                     getString(R.string.selfie_text_selfie_scan_completed)
             }
-            is DocumentScanDisposition.Undesired -> {}
-            is DocumentScanDisposition.Completed -> {}
-            is DocumentScanDisposition.Timeout, null -> {
+            is ScanDisposition.Undesired -> {}
+            is ScanDisposition.Completed -> {}
+            is ScanDisposition.Timeout, null -> {
                 //noOP
             }
         }
@@ -174,14 +174,14 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
         })
     }
 
-    private fun onVerificationPage(verification: Verification) {
+    private fun onVerificationPage() {
         faceScanViewModel.faceScanCompleteDisposition.observe(viewLifecycleOwner) {
-            if (it.disposition is DocumentScanDisposition.Completed) {
+            if (it.disposition is ScanDisposition.Completed) {
                 // stop the analyzer
                 binding.viewCamera.stopAnalyzer()
                 binding.viewCamera.analyzers.clear()
                 bindToUI((it.output as FaceDetectionOutput).bitmap)
-            } else if (it.disposition is DocumentScanDisposition.Timeout) {
+            } else if (it.disposition is ScanDisposition.Timeout) {
                 binding.viewCamera.stopAnalyzer()
                 binding.viewCamera.analyzers.clear()
 

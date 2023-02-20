@@ -16,7 +16,7 @@ import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.capture.AbstractCaptureFragment
 import io.falu.identity.capture.scan.ScanCaptureFragment.Companion.getScanType
-import io.falu.identity.capture.scan.utils.DocumentScanDisposition
+import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.databinding.FragmentCaptureSideBinding
 import io.falu.identity.documents.DocumentSelectionFragment
 
@@ -156,7 +156,7 @@ internal class ScanCaptureSideFragment(identityViewModelFactory: ViewModelProvid
     internal companion object {
         private fun NavController.navigateWithDocumentAndScanType(
             identityDocumentType: IdentityDocumentType,
-            scanType: DocumentScanDisposition.DocumentScanType?
+            scanType: ScanDisposition.DocumentScanType?
         ) {
             val bundle = bundleOf(
                 DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE to identityDocumentType,

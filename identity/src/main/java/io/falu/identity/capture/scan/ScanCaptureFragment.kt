@@ -1,6 +1,5 @@
 package io.falu.identity.capture.scan
 
-import DocumentScanner
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,10 +19,11 @@ import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationCapture
 import io.falu.identity.camera.CameraView
 import io.falu.identity.capture.AbstractCaptureFragment.Companion.getIdentityDocumentName
-import io.falu.identity.capture.scan.utils.DocumentScanDisposition
-import io.falu.identity.capture.scan.utils.ScanResult
+import io.falu.identity.scan.ScanResult
 import io.falu.identity.databinding.FragmentScanCaptureBinding
 import io.falu.identity.documents.DocumentSelectionFragment
+import io.falu.identity.scan.ProvisionalResult
+import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.utils.FileUtils
 import io.falu.identity.utils.withBoundingBox
 
@@ -37,7 +37,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
     private var _binding: FragmentScanCaptureBinding? = null
     private val binding get() = _binding!!
 
-    private var scanType: DocumentScanDisposition.DocumentScanType? = null
+    private var scanType: ScanDisposition.DocumentScanType? = null
     private lateinit var identityDocumentType: IdentityDocumentType
 
     private lateinit var fileUtils: FileUtils
@@ -57,7 +57,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
             requireArguments().getSerializable(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE) as IdentityDocumentType
 
         scanType =
-            requireArguments().getSerializable(KEY_DOCUMENT_SCAN_TYPE) as? DocumentScanDisposition.DocumentScanType
+            requireArguments().getSerializable(KEY_DOCUMENT_SCAN_TYPE) as? ScanDisposition.DocumentScanType
 
         fileUtils = FileUtils(requireContext())
 
@@ -141,7 +141,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
     }
 
     private fun startScan(
-        scanType: DocumentScanDisposition.DocumentScanType,
+        scanType: ScanDisposition.DocumentScanType,
         capture: VerificationCapture
     ) {
         documentScanViewModel.scanner?.scan(binding.viewCamera, scanType, capture)
@@ -169,21 +169,21 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
         )
     }
 
-    private fun updateUI(result: DocumentScanner.ProvisionalResult?) {
+    private fun updateUI(result: ScanResult?) {
         when (result?.disposition) {
-            is DocumentScanDisposition.Start -> {
+            is ScanDisposition.Start -> {
                 resetUI()
             }
-            is DocumentScanDisposition.Detected -> {
+            is ScanDisposition.Detected -> {
                 binding.tvScanMessage.text = getString(R.string.scan_capture_text_document_detected)
             }
-            is DocumentScanDisposition.Desired -> {
+            is ScanDisposition.Desired -> {
                 binding.tvScanMessage.text =
                     getString(R.string.scan_capture_text_document_scan_completed)
             }
-            is DocumentScanDisposition.Undesired -> {}
-            is DocumentScanDisposition.Completed -> {}
-            is DocumentScanDisposition.Timeout, null -> {
+            is ScanDisposition.Undesired -> {}
+            is ScanDisposition.Completed -> {}
+            is ScanDisposition.Timeout, null -> {
                 //noOP
             }
         }
@@ -191,7 +191,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
 
     private fun onVerificationPage(verification: Verification) {
         documentScanViewModel.documentScanCompleteDisposition.observe(viewLifecycleOwner) {
-            if (it.disposition is DocumentScanDisposition.Completed) {
+            if (it.disposition is ScanDisposition.Completed) {
                 // stop the analyzer
                 documentScanViewModel.scanner?.stopScan(binding.viewCamera)
                 binding.buttonContinue.tag = it
@@ -203,7 +203,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
                 val bitmap = output.bitmap
 
                 binding.ivScan.setImageBitmap(bitmap.withBoundingBox(output.rect))
-            } else if (it.disposition is DocumentScanDisposition.Timeout) {
+            } else if (it.disposition is ScanDisposition.Timeout) {
                 documentScanViewModel.scanner?.stopScan(binding.viewCamera)
 
                 findNavController().navigate(R.id.action_global_fragment_scan_capture_error)
@@ -217,24 +217,24 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
         internal const val KEY_SCAN_TYPE_BACK = ":back"
         internal const val REQUEST_KEY_DOCUMENT_SCAN = ":scan"
 
-        internal fun IdentityDocumentType.getScanType(): Pair<DocumentScanDisposition.DocumentScanType, DocumentScanDisposition.DocumentScanType?> {
+        internal fun IdentityDocumentType.getScanType(): Pair<ScanDisposition.DocumentScanType, ScanDisposition.DocumentScanType?> {
             return when (this) {
                 IdentityDocumentType.IDENTITY_CARD -> {
                     Pair(
-                        DocumentScanDisposition.DocumentScanType.ID_FRONT,
-                        DocumentScanDisposition.DocumentScanType.ID_BACK
+                        ScanDisposition.DocumentScanType.ID_FRONT,
+                        ScanDisposition.DocumentScanType.ID_BACK
                     )
                 }
                 IdentityDocumentType.PASSPORT -> {
                     Pair(
-                        DocumentScanDisposition.DocumentScanType.PASSPORT,
+                        ScanDisposition.DocumentScanType.PASSPORT,
                         null
                     )
                 }
                 IdentityDocumentType.DRIVING_LICENSE -> {
                     Pair(
-                        DocumentScanDisposition.DocumentScanType.DL_FRONT,
-                        DocumentScanDisposition.DocumentScanType.DL_BACK
+                        ScanDisposition.DocumentScanType.DL_FRONT,
+                        ScanDisposition.DocumentScanType.DL_BACK
                     )
                 }
             }

@@ -4,17 +4,18 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import io.falu.identity.ai.DocumentDetectionOutput
 import io.falu.identity.ai.FaceDetectionOutput
-import io.falu.identity.capture.scan.DocumentScanViewModel
-import io.falu.identity.capture.scan.utils.DocumentScanResultCallback
-import io.falu.identity.capture.scan.utils.ScanResult
+import io.falu.identity.scan.ScanResultCallback
+import io.falu.identity.scan.ScanResult
+import io.falu.identity.scan.IdentityResult
+import io.falu.identity.scan.ProvisionalResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import java.io.File
 
-internal class FaceScanViewModel : ViewModel(), DocumentScanResultCallback<ScanResult> {
+internal class FaceScanViewModel : ViewModel(),
+    ScanResultCallback<ProvisionalResult, IdentityResult> {
 
     /**
      *
@@ -38,24 +39,20 @@ internal class FaceScanViewModel : ViewModel(), DocumentScanResultCallback<ScanR
         scanner = FaceScanner(model, threshold, this)
     }
 
-    override fun onScanComplete(result: ScanResult) {
+    override fun onScanComplete(result: IdentityResult) {
         Log.d(TAG, "Scan completed: $result")
         val faceDetectionOutput = result.output as FaceDetectionOutput
 
         _faceScanCompleteDisposition.update { current ->
-            current.modify(output = faceDetectionOutput, disposition = result.disposition!!)
+            current.modify(output = faceDetectionOutput, disposition = result.disposition)
         }
     }
 
-    override fun onProgress(result: ScanResult) {
-        val faceDetectionOutput = result.output as FaceDetectionOutput
-        Log.d(
-            TAG,
-            "Scan in progress: ${result.disposition}; score: ${faceDetectionOutput.score}"
-        )
+    override fun onProgress(result: ProvisionalResult) {
+        Log.d(TAG, "Scan in progress: ${result.disposition}")
 
         _faceScanDisposition.update { current ->
-            current.modify(output = faceDetectionOutput, disposition = result.disposition!!)
+            current.modify(disposition = result.disposition)
         }
     }
 

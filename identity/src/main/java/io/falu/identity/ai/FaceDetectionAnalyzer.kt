@@ -1,13 +1,12 @@
 package io.falu.identity.ai
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
 import android.util.Size
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import io.falu.identity.camera.AnalyzerBuilder
 import io.falu.identity.camera.AnalyzerOutputListener
-import io.falu.identity.capture.scan.utils.DocumentScanDisposition
+import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.utils.centerCrop
 import io.falu.identity.utils.maxAspectRatio
 import io.falu.identity.utils.rotate
@@ -20,7 +19,6 @@ import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.io.File
-import java.util.concurrent.Flow
 import kotlin.math.exp
 
 internal class FaceDetectionAnalyzer internal constructor(
@@ -101,7 +99,7 @@ internal class FaceDetectionAnalyzer internal constructor(
 
 
     internal class Builder(private val model: File, private val threshold: Float) :
-        AnalyzerBuilder<DocumentScanDisposition, DetectionOutput, ImageAnalysis.Analyzer> {
+        AnalyzerBuilder<ScanDisposition, DetectionOutput, ImageAnalysis.Analyzer> {
 
         override fun instance(result: (DetectionOutput) -> Unit): ImageAnalysis.Analyzer {
             return FaceDetectionAnalyzer(model, threshold, result)

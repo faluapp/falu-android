@@ -8,7 +8,7 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import io.falu.identity.camera.AnalyzerBuilder
 import io.falu.identity.camera.AnalyzerOutputListener
-import io.falu.identity.capture.scan.utils.DocumentScanDisposition
+import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.utils.*
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
@@ -134,7 +134,7 @@ internal class DocumentDetectionAnalyzer internal constructor(
     }
 
     internal class Builder(private val model: File, private val threshold: Float) :
-        AnalyzerBuilder<DocumentScanDisposition, DetectionOutput, ImageAnalysis.Analyzer> {
+        AnalyzerBuilder<ScanDisposition, DetectionOutput, ImageAnalysis.Analyzer> {
 
         override fun instance(result: (DetectionOutput) -> Unit): ImageAnalysis.Analyzer {
             return DocumentDetectionAnalyzer(model, threshold, result)

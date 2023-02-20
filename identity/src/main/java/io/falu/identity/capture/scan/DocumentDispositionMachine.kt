@@ -1,10 +1,12 @@
-package io.falu.identity.capture.scan.utils
+package io.falu.identity.capture.scan
 
 import android.util.Log
 import io.falu.identity.ai.BoundingBox
 import io.falu.identity.ai.DetectionOutput
 import io.falu.identity.ai.DocumentDetectionOutput
 import io.falu.identity.ai.DocumentOption
+import io.falu.identity.scan.ScanDispositionDetector
+import io.falu.identity.scan.ScanDisposition
 import org.joda.time.DateTime
 import org.joda.time.Seconds
 import kotlin.math.max
@@ -19,25 +21,25 @@ internal class DocumentDispositionMachine(
     private val currentTime: DateTime = DateTime.now(),
     private val undesiredDuration: Int = DEFAULT_UNDESIRED_DURATION,
     private val desiredDuration: Int = DEFAULT_DESIRED_DURATION
-) : DocumentDispositionDetector {
+) : ScanDispositionDetector {
 
     private var previousBoundingBox: BoundingBox? = null
     private var matcherCounter = 0
 
     override fun fromStart(
-        state: DocumentScanDisposition.Start,
+        state: ScanDisposition.Start,
         output: DetectionOutput
-    ): DocumentScanDisposition {
+    ): ScanDisposition {
         require(output is DocumentDetectionOutput) {
             "Unexpected output type: $output"
         }
         return when {
             hasTimedOut -> {
-                DocumentScanDisposition.Timeout(state.type, this)
+                ScanDisposition.Timeout(state.type, this)
             }
             output.option.matches(state.type) -> {
                 Log.d(TAG, "Model output detected with score ${output.score}, moving to Detected.")
-                DocumentScanDisposition.Detected(state.type, this)
+                ScanDisposition.Detected(state.type, this)
             }
             else -> {
                 Log.d(TAG, "Model output mismatch (${output.option}), start disposition retained.")
@@ -47,20 +49,20 @@ internal class DocumentDispositionMachine(
     }
 
     override fun fromDetected(
-        state: DocumentScanDisposition.Detected,
+        state: ScanDisposition.Detected,
         output: DetectionOutput
-    ): DocumentScanDisposition {
+    ): ScanDisposition {
         require(output is DocumentDetectionOutput) {
             "Unexpected output type: $output"
         }
 
         return when {
             hasTimedOut -> {
-                DocumentScanDisposition.Timeout(state.type, this)
+                ScanDisposition.Timeout(state.type, this)
             }
             !targetTypeMatches(output.option, state.type) -> {
                 Log.d(TAG, "Option (${output.option}) doesn't match ${state.type}")
-                DocumentScanDisposition.Undesired(state.type, state.dispositionDetector)
+                ScanDisposition.Undesired(state.type, state.dispositionDetector)
             }
             output.score < requireThreshold -> {
                 Log.d(
@@ -81,15 +83,15 @@ internal class DocumentDispositionMachine(
                 state
             }
             else -> {
-                DocumentScanDisposition.Desired(state.type, state.dispositionDetector)
+                ScanDisposition.Desired(state.type, state.dispositionDetector)
             }
         }
     }
 
     override fun fromDesired(
-        state: DocumentScanDisposition.Desired,
+        state: ScanDisposition.Desired,
         output: DetectionOutput
-    ): DocumentScanDisposition {
+    ): ScanDisposition {
         require(output is DocumentDetectionOutput) {
             "Unexpected output type: $output"
         }
@@ -97,41 +99,41 @@ internal class DocumentDispositionMachine(
         return when {
             elapsedTime(time = state.reached) > desiredDuration -> {
                 Log.d(TAG, "Complete the scan. Desired scan for ${state.type} found.")
-                DocumentScanDisposition.Completed(state.type, state.dispositionDetector)
+                ScanDisposition.Completed(state.type, state.dispositionDetector)
             }
             else -> state
         }
     }
 
     override fun fromUndesired(
-        state: DocumentScanDisposition.Undesired,
+        state: ScanDisposition.Undesired,
         output: DetectionOutput
-    ): DocumentScanDisposition {
+    ): ScanDisposition {
         return when {
             hasTimedOut -> {
-                DocumentScanDisposition.Timeout(state.type, this)
+                ScanDisposition.Timeout(state.type, this)
             }
             elapsedTime(time = state.reached) > undesiredDuration -> {
                 Log.d(TAG, "Scan for ${state.type} undesired, restarting the process.")
-                DocumentScanDisposition.Start(state.type, state.dispositionDetector)
+                ScanDisposition.Start(state.type, state.dispositionDetector)
             }
             else -> state
         }
     }
 
     private fun DocumentOption.matches(
-        type: DocumentScanDisposition.DocumentScanType
+        type: ScanDisposition.DocumentScanType
     ): Boolean {
-        return this == DocumentOption.DL_BACK && type == DocumentScanDisposition.DocumentScanType.DL_BACK ||
-                this == DocumentOption.DL_FRONT && type == DocumentScanDisposition.DocumentScanType.DL_FRONT ||
-                this == DocumentOption.ID_BACK && type == DocumentScanDisposition.DocumentScanType.ID_BACK ||
-                this == DocumentOption.ID_FRONT && type == DocumentScanDisposition.DocumentScanType.ID_FRONT ||
-                this == DocumentOption.PASSPORT && type == DocumentScanDisposition.DocumentScanType.PASSPORT
+        return this == DocumentOption.DL_BACK && type == ScanDisposition.DocumentScanType.DL_BACK ||
+                this == DocumentOption.DL_FRONT && type == ScanDisposition.DocumentScanType.DL_FRONT ||
+                this == DocumentOption.ID_BACK && type == ScanDisposition.DocumentScanType.ID_BACK ||
+                this == DocumentOption.ID_FRONT && type == ScanDisposition.DocumentScanType.ID_FRONT ||
+                this == DocumentOption.PASSPORT && type == ScanDisposition.DocumentScanType.PASSPORT
     }
 
     private fun targetTypeMatches(
         option: DocumentOption,
-        type: DocumentScanDisposition.DocumentScanType
+        type: ScanDisposition.DocumentScanType
     ): Boolean {
         return if (option.matches(type)) {
             // reset counter
@@ -143,7 +145,7 @@ internal class DocumentDispositionMachine(
         }
     }
 
-    private fun moreScanningRequired(disposition: DocumentScanDisposition.Detected): Boolean {
+    private fun moreScanningRequired(disposition: ScanDisposition.Detected): Boolean {
         val seconds = elapsedTime(time = disposition.reached)
         return seconds < requiredTime
     }
