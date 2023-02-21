@@ -54,7 +54,8 @@ internal class WelcomeFragment(
         }
 
         binding.buttonDecline.setOnClickListener {
-            callback.onFinishWithResult(IdentityVerificationResult.Canceled)
+            findNavController().navigate(R.id.action_global_fragment_selfie)
+            //callback.onFinishWithResult(IdentityVerificationResult.Canceled)
         }
     }
 
