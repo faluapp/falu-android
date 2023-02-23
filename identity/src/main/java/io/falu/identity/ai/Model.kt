@@ -50,10 +50,3 @@ internal data class FaceDetectionOutput(
     var box: BoundingBox,
     val rect: Rect,
 ) : DetectionOutput
-
-internal data class Anchor(
-    var height: Float,
-    var width: Float,
-    var xCenter: Float,
-    var yCenter: Float
-)
