@@ -1,8 +1,11 @@
 package io.falu.identity.selfie
 
 import android.util.Log
+import io.falu.identity.ai.BoundingBox
 import io.falu.identity.ai.DetectionOutput
 import io.falu.identity.ai.FaceDetectionOutput
+import io.falu.identity.ai.calculateIOU
+import io.falu.identity.capture.scan.DocumentDispositionMachine
 import io.falu.identity.scan.ScanDispositionDetector
 import io.falu.identity.scan.ScanDisposition
 import org.joda.time.DateTime
@@ -11,8 +14,12 @@ import org.joda.time.Seconds
 internal class FaceDispositionMachine(
     private val timeout: DateTime = DateTime.now().plusSeconds(8),
     private val currentTime: DateTime = DateTime.now(),
+    private val iou: Float = IOU_THRESHOLD,
     private val requiredTime: Int = DEFAULT_REQUIRED_SCAN_DURATION,
+    private val desiredDuration: Int = DEFAULT_DESIRED_DURATION
 ) : ScanDispositionDetector {
+
+    private var previousBoundingBox: BoundingBox? = null
 
     override fun fromStart(
         state: ScanDisposition.Start,
@@ -47,6 +54,12 @@ internal class FaceDispositionMachine(
             hasTimedOut -> {
                 ScanDisposition.Timeout(state.type, this)
             }
+            !iouCheckSatisfied(output.box) -> {
+                Log.d(TAG, "IOU check not satisfied")
+                // reset the time
+                state.reached = DateTime.now()
+                state
+            }
             moreScanningRequired(state) -> {
                 state.reached = DateTime.now()
                 state
@@ -62,7 +75,13 @@ internal class FaceDispositionMachine(
         state: ScanDisposition.Desired,
         output: DetectionOutput
     ): ScanDisposition {
-        return ScanDisposition.Completed(state.type, this)
+        return when {
+            elapsedTime(time = state.reached) > desiredDuration -> {
+                Log.d(TAG, "Complete the scan. Desired scan for ${state.type} found.")
+                ScanDisposition.Completed(state.type, state.dispositionDetector)
+            }
+            else -> state
+        }
     }
 
     override fun fromUndesired(
@@ -87,10 +106,23 @@ internal class FaceDispositionMachine(
             return elapsed > 0
         }
 
+    private fun iouCheckSatisfied(currentBox: BoundingBox): Boolean {
+        return previousBoundingBox?.let {
+            val accuracy = calculateIOU(currentBox, it)
+            previousBoundingBox = currentBox
+            return accuracy >= iou
+        } ?: run {
+            previousBoundingBox = currentBox
+            true
+        }
+    }
+
     internal companion object {
         private val TAG = FaceDispositionMachine::class.java.simpleName
 
         private const val threshold = 0.75
+        private const val IOU_THRESHOLD = 0.95f
         private const val DEFAULT_REQUIRED_SCAN_DURATION = 5 // time in seconds
+        private const val DEFAULT_DESIRED_DURATION = 0 // time in seconds
     }
 }

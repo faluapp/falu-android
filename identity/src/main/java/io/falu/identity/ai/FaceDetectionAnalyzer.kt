@@ -37,9 +37,11 @@ internal class FaceDetectionAnalyzer internal constructor(
 
         // Input:- [1,128,128,3]
         val bitmap = image.image!!.toBitmap().rotate(image.imageInfo.rotationDegrees)
+        val size = Size(bitmap.width, bitmap.height).maxAspectRatio(0.70f)
+        val cropped = bitmap.centerCrop(size)
 
         var tensorImage = TensorImage(TENSOR_DATA_TYPE)
-        tensorImage.load(bitmap)
+        tensorImage.load(cropped)
 
         // Preprocess: resize image to model input
         val processor = ImageProcessor.Builder()
@@ -94,9 +96,9 @@ internal class FaceDetectionAnalyzer internal constructor(
 
         val output = FaceDetectionOutput(
             score = bestScore,
-            bitmap = bitmap,
+            bitmap = cropped,
             box = box,
-            rect = getRect(boxes, bitmap)
+            rect = getRect(boxes, cropped)
         )
 
         listener(output)
