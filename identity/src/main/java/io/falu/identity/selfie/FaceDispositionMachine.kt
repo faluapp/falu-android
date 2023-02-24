@@ -1,34 +1,40 @@
 package io.falu.identity.selfie
 
 import android.util.Log
+import io.falu.identity.ai.BoundingBox
 import io.falu.identity.ai.DetectionOutput
 import io.falu.identity.ai.FaceDetectionOutput
-import io.falu.identity.capture.scan.utils.DocumentDispositionDetector
-import io.falu.identity.capture.scan.utils.DocumentDispositionMachine
-import io.falu.identity.capture.scan.utils.DocumentScanDisposition
+import io.falu.identity.ai.calculateIOU
+import io.falu.identity.capture.scan.DocumentDispositionMachine
+import io.falu.identity.scan.ScanDispositionDetector
+import io.falu.identity.scan.ScanDisposition
 import org.joda.time.DateTime
 import org.joda.time.Seconds
 
 internal class FaceDispositionMachine(
     private val timeout: DateTime = DateTime.now().plusSeconds(8),
     private val currentTime: DateTime = DateTime.now(),
+    private val iou: Float = IOU_THRESHOLD,
     private val requiredTime: Int = DEFAULT_REQUIRED_SCAN_DURATION,
-) : DocumentDispositionDetector {
+    private val desiredDuration: Int = DEFAULT_DESIRED_DURATION
+) : ScanDispositionDetector {
+
+    private var previousBoundingBox: BoundingBox? = null
 
     override fun fromStart(
-        state: DocumentScanDisposition.Start,
+        state: ScanDisposition.Start,
         output: DetectionOutput
-    ): DocumentScanDisposition {
+    ): ScanDisposition {
         require(output is FaceDetectionOutput) {
             "Unexpected output type: $output"
         }
         return when {
             hasTimedOut -> {
-                DocumentScanDisposition.Timeout(state.type, this)
+                ScanDisposition.Timeout(state.type, this)
             }
-            output.score >= threshold -> {
+            isRequiredScore(output) -> {
                 Log.d(TAG, "Face detected, move to detected")
-                DocumentScanDisposition.Detected(state.type, this)
+                ScanDisposition.Detected(state.type, this)
             }
             else -> {
                 Log.d(TAG, "Face not detected, start disposition retained.")
@@ -38,45 +44,63 @@ internal class FaceDispositionMachine(
     }
 
     override fun fromDetected(
-        state: DocumentScanDisposition.Detected,
+        state: ScanDisposition.Detected,
         output: DetectionOutput
-    ): DocumentScanDisposition {
+    ): ScanDisposition {
         require(output is FaceDetectionOutput) {
             "Unexpected output type: $output"
         }
         return when {
             hasTimedOut -> {
-                DocumentScanDisposition.Timeout(state.type, this)
+                ScanDisposition.Timeout(state.type, this)
+            }
+            !isRequiredScore(output) -> {
+                Log.d(TAG, "Face not detected, score: ${output.score}; moving to undesired")
+                ScanDisposition.Undesired(state.type, state.dispositionDetector)
+            }
+            !iouCheckSatisfied(output.box) -> {
+                Log.d(TAG, "IOU check not satisfied")
+                // reset the time
+                state.reached = DateTime.now()
+                state
             }
             moreScanningRequired(state) -> {
                 state.reached = DateTime.now()
                 state
             }
             else -> {
-                DocumentScanDisposition.Desired(state.type, state.dispositionDetector)
+                ScanDisposition.Desired(state.type, state.dispositionDetector)
             }
         }
 
     }
 
     override fun fromDesired(
-        state: DocumentScanDisposition.Desired,
+        state: ScanDisposition.Desired,
         output: DetectionOutput
-    ): DocumentScanDisposition {
-        return DocumentScanDisposition.Completed(state.type, this)
+    ): ScanDisposition {
+        return when {
+            elapsedTime(time = state.reached) > desiredDuration -> {
+                Log.d(TAG, "Complete the scan. Desired scan for ${state.type} found.")
+                ScanDisposition.Completed(state.type, state.dispositionDetector)
+            }
+            else -> state
+        }
     }
 
     override fun fromUndesired(
-        state: DocumentScanDisposition.Undesired,
+        state: ScanDisposition.Undesired,
         output: DetectionOutput
-    ): DocumentScanDisposition {
-        return DocumentScanDisposition.Start(state.type, this)
+    ): ScanDisposition {
+        return ScanDisposition.Start(state.type, this)
     }
 
-    private fun moreScanningRequired(disposition: DocumentScanDisposition.Detected): Boolean {
+    private fun moreScanningRequired(disposition: ScanDisposition.Detected): Boolean {
         val seconds = elapsedTime(time = disposition.reached)
         return seconds < requiredTime
     }
+
+    private fun isRequiredScore(output: FaceDetectionOutput): Boolean = output.score >= threshold
 
     private fun elapsedTime(now: DateTime = currentTime, time: DateTime): Int {
         return Seconds.secondsBetween(now, time).seconds
@@ -88,10 +112,23 @@ internal class FaceDispositionMachine(
             return elapsed > 0
         }
 
+    private fun iouCheckSatisfied(currentBox: BoundingBox): Boolean {
+        return previousBoundingBox?.let {
+            val accuracy = calculateIOU(currentBox, it)
+            previousBoundingBox = currentBox
+            return accuracy >= iou
+        } ?: run {
+            previousBoundingBox = currentBox
+            true
+        }
+    }
+
     internal companion object {
         private val TAG = FaceDispositionMachine::class.java.simpleName
 
         private const val threshold = 0.75
+        private const val IOU_THRESHOLD = 0.95f
         private const val DEFAULT_REQUIRED_SCAN_DURATION = 5 // time in seconds
+        private const val DEFAULT_DESIRED_DURATION = 0 // time in seconds
     }
 }

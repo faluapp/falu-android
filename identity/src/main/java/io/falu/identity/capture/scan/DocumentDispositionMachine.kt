@@ -1,10 +1,13 @@
-package io.falu.identity.capture.scan.utils
+package io.falu.identity.capture.scan
 
 import android.util.Log
+import io.falu.identity.ai.*
 import io.falu.identity.ai.BoundingBox
 import io.falu.identity.ai.DetectionOutput
 import io.falu.identity.ai.DocumentDetectionOutput
 import io.falu.identity.ai.DocumentOption
+import io.falu.identity.scan.ScanDispositionDetector
+import io.falu.identity.scan.ScanDisposition
 import org.joda.time.DateTime
 import org.joda.time.Seconds
 import kotlin.math.max
@@ -15,28 +18,29 @@ internal class DocumentDispositionMachine(
     private val timeout: DateTime = DateTime.now().plusSeconds(8),
     private val iou: Float = IOU_THRESHOLD,
     private val requiredTime: Int = DEFAULT_REQUIRED_SCAN_DURATION,
+    private val requireThreshold: Float = DEFUALT_REQUIRED_THRESHOLD,
     private val currentTime: DateTime = DateTime.now(),
     private val undesiredDuration: Int = DEFAULT_UNDESIRED_DURATION,
     private val desiredDuration: Int = DEFAULT_DESIRED_DURATION
-) : DocumentDispositionDetector {
+) : ScanDispositionDetector {
 
     private var previousBoundingBox: BoundingBox? = null
     private var matcherCounter = 0
 
     override fun fromStart(
-        state: DocumentScanDisposition.Start,
+        state: ScanDisposition.Start,
         output: DetectionOutput
-    ): DocumentScanDisposition {
+    ): ScanDisposition {
         require(output is DocumentDetectionOutput) {
             "Unexpected output type: $output"
         }
         return when {
             hasTimedOut -> {
-                DocumentScanDisposition.Timeout(state.type, this)
+                ScanDisposition.Timeout(state.type, this)
             }
             output.option.matches(state.type) -> {
                 Log.d(TAG, "Model output detected with score ${output.score}, moving to Detected.")
-                DocumentScanDisposition.Detected(state.type, this)
+                ScanDisposition.Detected(state.type, this)
             }
             else -> {
                 Log.d(TAG, "Model output mismatch (${output.option}), start disposition retained.")
@@ -46,22 +50,31 @@ internal class DocumentDispositionMachine(
     }
 
     override fun fromDetected(
-        state: DocumentScanDisposition.Detected,
+        state: ScanDisposition.Detected,
         output: DetectionOutput
-    ): DocumentScanDisposition {
+    ): ScanDisposition {
         require(output is DocumentDetectionOutput) {
             "Unexpected output type: $output"
         }
 
         return when {
             hasTimedOut -> {
-                DocumentScanDisposition.Timeout(state.type, this)
+                ScanDisposition.Timeout(state.type, this)
             }
             !targetTypeMatches(output.option, state.type) -> {
                 Log.d(TAG, "Option (${output.option}) doesn't match ${state.type}")
-                DocumentScanDisposition.Undesired(state.type, state.dispositionDetector)
+                ScanDisposition.Undesired(state.type, state.dispositionDetector)
+            }
+            output.score < requireThreshold -> {
+                Log.d(
+                    TAG,
+                    "Score (${output.score}) for (${output.option}) doesn't meet the required threshold."
+                )
+                state.reached = DateTime.now()
+                state
             }
             !iouCheckSatisfied(output.box) -> {
+                Log.d(TAG, "IOU check not satisfied")
                 // reset the time
                 state.reached = DateTime.now()
                 state
@@ -71,15 +84,15 @@ internal class DocumentDispositionMachine(
                 state
             }
             else -> {
-                DocumentScanDisposition.Desired(state.type, state.dispositionDetector)
+                ScanDisposition.Desired(state.type, state.dispositionDetector)
             }
         }
     }
 
     override fun fromDesired(
-        state: DocumentScanDisposition.Desired,
+        state: ScanDisposition.Desired,
         output: DetectionOutput
-    ): DocumentScanDisposition {
+    ): ScanDisposition {
         require(output is DocumentDetectionOutput) {
             "Unexpected output type: $output"
         }
@@ -87,41 +100,41 @@ internal class DocumentDispositionMachine(
         return when {
             elapsedTime(time = state.reached) > desiredDuration -> {
                 Log.d(TAG, "Complete the scan. Desired scan for ${state.type} found.")
-                DocumentScanDisposition.Completed(state.type, state.dispositionDetector)
+                ScanDisposition.Completed(state.type, state.dispositionDetector)
             }
             else -> state
         }
     }
 
     override fun fromUndesired(
-        state: DocumentScanDisposition.Undesired,
+        state: ScanDisposition.Undesired,
         output: DetectionOutput
-    ): DocumentScanDisposition {
+    ): ScanDisposition {
         return when {
             hasTimedOut -> {
-                DocumentScanDisposition.Timeout(state.type, this)
+                ScanDisposition.Timeout(state.type, this)
             }
             elapsedTime(time = state.reached) > undesiredDuration -> {
                 Log.d(TAG, "Scan for ${state.type} undesired, restarting the process.")
-                DocumentScanDisposition.Start(state.type, state.dispositionDetector)
+                ScanDisposition.Start(state.type, state.dispositionDetector)
             }
             else -> state
         }
     }
 
     private fun DocumentOption.matches(
-        type: DocumentScanDisposition.DocumentScanType
+        type: ScanDisposition.DocumentScanType
     ): Boolean {
-        return this == DocumentOption.DL_BACK && type == DocumentScanDisposition.DocumentScanType.DL_BACK ||
-                this == DocumentOption.DL_FRONT && type == DocumentScanDisposition.DocumentScanType.DL_FRONT ||
-                this == DocumentOption.ID_BACK && type == DocumentScanDisposition.DocumentScanType.ID_BACK ||
-                this == DocumentOption.ID_FRONT && type == DocumentScanDisposition.DocumentScanType.ID_FRONT ||
-                this == DocumentOption.PASSPORT && type == DocumentScanDisposition.DocumentScanType.PASSPORT
+        return this == DocumentOption.DL_BACK && type == ScanDisposition.DocumentScanType.DL_BACK ||
+                this == DocumentOption.DL_FRONT && type == ScanDisposition.DocumentScanType.DL_FRONT ||
+                this == DocumentOption.ID_BACK && type == ScanDisposition.DocumentScanType.ID_BACK ||
+                this == DocumentOption.ID_FRONT && type == ScanDisposition.DocumentScanType.ID_FRONT ||
+                this == DocumentOption.PASSPORT && type == ScanDisposition.DocumentScanType.PASSPORT
     }
 
     private fun targetTypeMatches(
         option: DocumentOption,
-        type: DocumentScanDisposition.DocumentScanType
+        type: ScanDisposition.DocumentScanType
     ): Boolean {
         return if (option.matches(type)) {
             // reset counter
@@ -133,7 +146,7 @@ internal class DocumentDispositionMachine(
         }
     }
 
-    private fun moreScanningRequired(disposition: DocumentScanDisposition.Detected): Boolean {
+    private fun moreScanningRequired(disposition: ScanDisposition.Detected): Boolean {
         val seconds = elapsedTime(time = disposition.reached)
         return seconds < requiredTime
     }
@@ -159,48 +172,10 @@ internal class DocumentDispositionMachine(
             return elapsed > 0
         }
 
-    /**
-     * Measure the accuracy of detection
-     */
-    private fun calculateIOU(currentBox: BoundingBox, previousBox: BoundingBox): Float {
-        val currentLeft = currentBox.left
-        val currentRight = currentBox.left + currentBox.width
-        val currentTop = currentBox.top
-        val currentBottom = currentBox.top + currentBox.height
-
-        val previousLeft = previousBox.left
-        val previousRight = previousBox.left + previousBox.width
-        val previousTop = previousBox.top
-        val previousBottom = previousBox.top + previousBox.height
-
-        // determine the (x, y)-coordinates of the intersection rectangle
-        val xA = max(currentLeft, previousLeft)
-        val yA = max(currentTop, previousTop)
-        val xB = min(currentRight, previousRight)
-        val yB = min(currentBottom, previousBottom)
-
-        // compute the area of intersection rectangle
-
-        // compute the area of intersection rectangle
-        val intersectionArea = (xB - xA) * (yB - yA)
-
-        // compute the area of both the prediction and ground-truth
-        // rectangles
-        val currentBoxArea = (currentRight - currentLeft) * (currentBottom - currentTop)
-        val previousBoxArea = (previousRight - previousLeft) * (previousBottom - previousTop)
-
-        // compute the intersection over union by taking the intersection
-        // area and dividing it by the sum of prediction + ground-truth
-        // areas - the intersection area
-        val iou = intersectionArea / (currentBoxArea + previousBoxArea - intersectionArea)
-
-        Log.d(TAG, "Calculated box accuracy: $iou")
-        return iou
-    }
-
     internal companion object {
         private val TAG = DocumentDispositionMachine::class.java.simpleName
         private const val IOU_THRESHOLD = 0.95f
+        private const val DEFUALT_REQUIRED_THRESHOLD = 0.75f
         private const val DEFAULT_MATCH_COUNTER = 1
         private const val DEFAULT_REQUIRED_SCAN_DURATION = 5 // time in seconds
         private const val DEFAULT_DESIRED_DURATION = 3 // time in seconds

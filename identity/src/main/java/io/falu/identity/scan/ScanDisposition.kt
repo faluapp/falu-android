@@ -1,4 +1,4 @@
-package io.falu.identity.capture.scan.utils
+package io.falu.identity.scan
 
 import io.falu.identity.ai.DetectionOutput
 import org.joda.time.DateTime
@@ -6,12 +6,12 @@ import org.joda.time.DateTime
 /**
  * Possible states when scanning a document
  */
-internal sealed class DocumentScanDisposition(
+internal sealed class ScanDisposition(
     val type: DocumentScanType,
-    val dispositionDetector: DocumentDispositionDetector,
+    val dispositionDetector: ScanDispositionDetector,
     val terminate: Boolean
 ) {
-    abstract fun next(output: DetectionOutput): DocumentScanDisposition
+    abstract fun next(output: DetectionOutput): ScanDisposition
 
     /**
      *
@@ -41,9 +41,9 @@ internal sealed class DocumentScanDisposition(
     /**
      *
      */
-    internal class Start(type: DocumentScanType, detector: DocumentDispositionDetector) :
-        DocumentScanDisposition(type, detector, false) {
-        override fun next(output: DetectionOutput): DocumentScanDisposition {
+    internal class Start(type: DocumentScanType, detector: ScanDispositionDetector) :
+        ScanDisposition(type, detector, false) {
+        override fun next(output: DetectionOutput): ScanDisposition {
             return dispositionDetector.fromStart(this, output)
         }
     }
@@ -53,10 +53,10 @@ internal sealed class DocumentScanDisposition(
      */
     internal class Detected(
         type: DocumentScanType,
-        detector: DocumentDispositionDetector,
+        detector: ScanDispositionDetector,
         internal var reached: DateTime = DateTime.now()
     ) :
-        DocumentScanDisposition(type, detector, false) {
+        ScanDisposition(type, detector, false) {
         override fun next(output: DetectionOutput) = dispositionDetector.fromDetected(this, output)
     }
 
@@ -65,11 +65,11 @@ internal sealed class DocumentScanDisposition(
      */
     internal class Desired(
         type: DocumentScanType,
-        detector: DocumentDispositionDetector,
+        detector: ScanDispositionDetector,
         val reached: DateTime = DateTime.now()
     ) :
-        DocumentScanDisposition(type, detector, false) {
-        override fun next(output: DetectionOutput): DocumentScanDisposition =
+        ScanDisposition(type, detector, false) {
+        override fun next(output: DetectionOutput): ScanDisposition =
             dispositionDetector.fromDesired(this, output)
     }
 
@@ -78,27 +78,27 @@ internal sealed class DocumentScanDisposition(
      */
     internal class Undesired(
         type: DocumentScanType,
-        detector: DocumentDispositionDetector,
+        detector: ScanDispositionDetector,
         val reached: DateTime = DateTime.now()
     ) :
-        DocumentScanDisposition(type, detector, false) {
-        override fun next(output: DetectionOutput): DocumentScanDisposition =
+        ScanDisposition(type, detector, false) {
+        override fun next(output: DetectionOutput): ScanDisposition =
             dispositionDetector.fromUndesired(this, output)
     }
 
     /**
      *
      */
-    internal class Completed(type: DocumentScanType, detector: DocumentDispositionDetector) :
-        DocumentScanDisposition(type, detector, true) {
-        override fun next(output: DetectionOutput): DocumentScanDisposition = this
+    internal class Completed(type: DocumentScanType, detector: ScanDispositionDetector) :
+        ScanDisposition(type, detector, true) {
+        override fun next(output: DetectionOutput): ScanDisposition = this
     }
 
     /**
      *
      */
-    internal class Timeout(type: DocumentScanType, detector: DocumentDispositionDetector) :
-        DocumentScanDisposition(type, detector, true) {
+    internal class Timeout(type: DocumentScanType, detector: ScanDispositionDetector) :
+        ScanDisposition(type, detector, true) {
         override fun next(output: DetectionOutput) = this
     }
 }

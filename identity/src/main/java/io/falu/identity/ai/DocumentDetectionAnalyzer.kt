@@ -8,7 +8,7 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import io.falu.identity.camera.AnalyzerBuilder
 import io.falu.identity.camera.AnalyzerOutputListener
-import io.falu.identity.capture.scan.utils.DocumentScanDisposition
+import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.utils.*
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
@@ -97,20 +97,23 @@ internal class DocumentDetectionAnalyzer internal constructor(
         }
 
         val bestOption = DOCUMENT_OPTIONS_MAP[bestOptionIndex] ?: DocumentOption.INVALID
+
         val bestBox = boxes.sliceArray(bestIndex..bestIndex + 3)
+
         val box = BoundingBox(
             left = bestBox[0],// x-min
             top = bestBox[1], // y-min
             width = bestBox[2] - bestBox[0], // x-max - x-min
             height = bestBox[3] - bestBox[1] // y-max - y-min
         )
+        val rect = getRect(bestBox, cropped)
 
         val output = DocumentDetectionOutput(
             score = bestScore,
             option = bestOption,
-            bitmap = cropped,
+            bitmap = cropped.crop(rect),
             box = box,
-            rect = getRect(bestBox, cropped),
+            rect = rect,
             scores = DOCUMENT_OPTIONS.map { scores[bestIndex] }.toMutableList()
         )
 
@@ -134,7 +137,7 @@ internal class DocumentDetectionAnalyzer internal constructor(
     }
 
     internal class Builder(private val model: File, private val threshold: Float) :
-        AnalyzerBuilder<DocumentScanDisposition, DetectionOutput, ImageAnalysis.Analyzer> {
+        AnalyzerBuilder<ScanDisposition, DetectionOutput, ImageAnalysis.Analyzer> {
 
         override fun instance(result: (DetectionOutput) -> Unit): ImageAnalysis.Analyzer {
             return DocumentDetectionAnalyzer(model, threshold, result)

@@ -1,21 +1,22 @@
 package io.falu.identity.capture.scan
 
-import DocumentScanner
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import io.falu.identity.ai.DocumentDetectionOutput
-import io.falu.identity.capture.scan.utils.DocumentScanResultCallback
-import io.falu.identity.capture.scan.utils.ScanResult
+import io.falu.identity.scan.ScanResultCallback
+import io.falu.identity.scan.ScanResult
+import io.falu.identity.scan.IdentityResult
+import io.falu.identity.scan.ProvisionalResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import java.io.File
 
-internal class DocumentScanViewModel :
-    ViewModel(),
-    DocumentScanResultCallback<ScanResult> {
+internal class DocumentScanViewModel : ViewModel(),
+    ScanResultCallback<ProvisionalResult, IdentityResult> {
 
     /**
      *
@@ -40,24 +41,24 @@ internal class DocumentScanViewModel :
         scanner = DocumentScanner(model, threshold, this)
     }
 
-    override fun onScanComplete(result: ScanResult) {
+    override fun onScanComplete(result: IdentityResult) {
         Log.d(TAG, "Scan completed: $result")
         val documentDetectionOutput = result.output as DocumentDetectionOutput
 
         _documentScanCompleteDisposition.update { current ->
-            current.modify(output = documentDetectionOutput, disposition = result.disposition!!)
+            current.modify(output = documentDetectionOutput, disposition = result.disposition)
         }
     }
 
-    override fun onProgress(result: ScanResult) {
-        val documentDetectionOutput = result.output as DocumentDetectionOutput
-        Log.d(
-            TAG,
-            "Scan in progress: ${result.disposition}, option: ${documentDetectionOutput.option}; score: ${documentDetectionOutput.score}"
-        )
+    override fun onProgress(result: ProvisionalResult) {
+        Log.d(TAG, "Scan in progress: ${result.disposition}")
 
-        _documentScanDisposition.update { current ->
-            current.modify(output = documentDetectionOutput, disposition = result.disposition!!)
+        scanner?.changeDisposition(result.disposition) {
+            if (it) {
+                _documentScanDisposition.update { current ->
+                    current.modify(disposition = result.disposition)
+                }
+            }
         }
     }
 
