@@ -97,20 +97,23 @@ internal class DocumentDetectionAnalyzer internal constructor(
         }
 
         val bestOption = DOCUMENT_OPTIONS_MAP[bestOptionIndex] ?: DocumentOption.INVALID
+
         val bestBox = boxes.sliceArray(bestIndex..bestIndex + 3)
+
         val box = BoundingBox(
             left = bestBox[0],// x-min
             top = bestBox[1], // y-min
             width = bestBox[2] - bestBox[0], // x-max - x-min
             height = bestBox[3] - bestBox[1] // y-max - y-min
         )
+        val rect = getRect(bestBox, cropped)
 
         val output = DocumentDetectionOutput(
             score = bestScore,
             option = bestOption,
-            bitmap = cropped,
+            bitmap = cropped.crop(rect),
             box = box,
-            rect = getRect(bestBox, cropped),
+            rect = rect,
             scores = DOCUMENT_OPTIONS.map { scores[bestIndex] }.toMutableList()
         )
 

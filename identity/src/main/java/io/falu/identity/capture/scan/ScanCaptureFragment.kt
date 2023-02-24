@@ -25,6 +25,7 @@ import io.falu.identity.documents.DocumentSelectionFragment
 import io.falu.identity.scan.ProvisionalResult
 import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.utils.FileUtils
+import io.falu.identity.utils.crop
 import io.falu.identity.utils.withBoundingBox
 
 
@@ -73,7 +74,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
 
         identityViewModel.observeForVerificationResults(
             viewLifecycleOwner,
-            onSuccess = { onVerificationPage(it) },
+            onSuccess = { onVerificationPage() },
             onError = {}
         )
 
@@ -189,7 +190,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
         }
     }
 
-    private fun onVerificationPage(verification: Verification) {
+    private fun onVerificationPage() {
         documentScanViewModel.documentScanCompleteDisposition.observe(viewLifecycleOwner) {
             if (it.disposition is ScanDisposition.Completed) {
                 // stop the analyzer
@@ -202,7 +203,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
                 val output = it.output as DocumentDetectionOutput
                 val bitmap = output.bitmap
 
-                binding.ivScan.setImageBitmap(bitmap.withBoundingBox(output.rect))
+                binding.ivScan.setImageBitmap(bitmap)
             } else if (it.disposition is ScanDisposition.Timeout) {
                 documentScanViewModel.scanner?.stopScan(binding.viewCamera)
 
