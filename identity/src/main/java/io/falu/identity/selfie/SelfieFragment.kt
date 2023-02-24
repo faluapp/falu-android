@@ -22,6 +22,7 @@ import io.falu.identity.camera.CameraView
 import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.scan.ScanResult
 import io.falu.identity.databinding.FragmentSelfieBinding
+import io.falu.identity.utils.*
 import io.falu.identity.utils.navigateToApiResponseProblemFragment
 import io.falu.identity.utils.navigateToErrorFragment
 import io.falu.identity.utils.submitVerificationData
@@ -111,16 +112,16 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
         )
     }
 
-    private fun bindToUI(bitmap: Bitmap) {
+    private fun bindToUI(output: FaceDetectionOutput) {
         binding.viewSelfieCamera.visibility = View.GONE
         binding.viewSelfieResult.visibility = View.VISIBLE
         binding.buttonContinue.visibility = View.VISIBLE
 
-        binding.ivSelfie.setImageBitmap(bitmap)
+        binding.ivSelfie.setImageBitmap(output.bitmap)
 
         binding.buttonContinue.setOnClickListener {
             binding.buttonContinue.showProgress()
-            uploadSelfie(bitmap)
+            uploadSelfie(output.bitmap)
         }
     }
 
@@ -180,7 +181,7 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
                 // stop the analyzer
                 binding.viewCamera.stopAnalyzer()
                 binding.viewCamera.analyzers.clear()
-                bindToUI((it.output as FaceDetectionOutput).bitmap)
+                bindToUI((it.output as FaceDetectionOutput))
             } else if (it.disposition is ScanDisposition.Timeout) {
                 binding.viewCamera.stopAnalyzer()
                 binding.viewCamera.analyzers.clear()
