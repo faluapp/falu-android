@@ -50,10 +50,10 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        verificationRequest =
-//            requireNotNull(VerificationUploadRequest.getFromBundle(requireArguments())) {
-//                "Verification upload request is null"
-//            }
+        verificationRequest =
+            requireNotNull(VerificationUploadRequest.getFromBundle(requireArguments())) {
+                "Verification upload request is null"
+            }
 
         faceScanViewModel.resetScanDispositions()
         resetUI()
@@ -117,7 +117,7 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
         binding.viewSelfieResult.visibility = View.VISIBLE
         binding.buttonContinue.visibility = View.VISIBLE
 
-        binding.ivSelfie.setImageBitmap(output.bitmap.withBoundingBox(output.rect))
+        binding.ivSelfie.setImageBitmap(output.bitmap)
 
         binding.buttonContinue.setOnClickListener {
             binding.buttonContinue.showProgress()

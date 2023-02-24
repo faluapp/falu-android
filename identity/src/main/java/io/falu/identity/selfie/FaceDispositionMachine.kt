@@ -32,7 +32,7 @@ internal class FaceDispositionMachine(
             hasTimedOut -> {
                 ScanDisposition.Timeout(state.type, this)
             }
-            output.score >= threshold -> {
+            isRequiredScore(output) -> {
                 Log.d(TAG, "Face detected, move to detected")
                 ScanDisposition.Detected(state.type, this)
             }
@@ -53,6 +53,10 @@ internal class FaceDispositionMachine(
         return when {
             hasTimedOut -> {
                 ScanDisposition.Timeout(state.type, this)
+            }
+            !isRequiredScore(output) -> {
+                Log.d(TAG, "Face not detected, score: ${output.score}; moving to undesired")
+                ScanDisposition.Undesired(state.type, state.dispositionDetector)
             }
             !iouCheckSatisfied(output.box) -> {
                 Log.d(TAG, "IOU check not satisfied")
@@ -95,6 +99,8 @@ internal class FaceDispositionMachine(
         val seconds = elapsedTime(time = disposition.reached)
         return seconds < requiredTime
     }
+
+    private fun isRequiredScore(output: FaceDetectionOutput): Boolean = output.score >= threshold
 
     private fun elapsedTime(now: DateTime = currentTime, time: DateTime): Int {
         return Seconds.secondsBetween(now, time).seconds
