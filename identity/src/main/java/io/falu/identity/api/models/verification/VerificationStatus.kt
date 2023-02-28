@@ -9,8 +9,8 @@ internal enum class VerificationStatus {
     @SerializedName("processing")
     PROCESSING,
 
-    @SerializedName("completed")
-    COMPLETED,
+    @SerializedName("verified")
+    VERIFIED,
 
     @SerializedName("cancelled")
     CANCELLED
