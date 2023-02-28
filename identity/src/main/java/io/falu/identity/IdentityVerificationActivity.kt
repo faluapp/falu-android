@@ -82,7 +82,7 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
             VerificationStatus.INPUT_REQUIRED -> {
             }
             VerificationStatus.PROCESSING,
-            VerificationStatus.COMPLETED -> onFinishWithResult(
+            VerificationStatus.VERIFIED -> onFinishWithResult(
                 IdentityVerificationResult.Succeeded
             )
             VerificationStatus.CANCELLED -> onFinishWithResult(IdentityVerificationResult.Canceled)
