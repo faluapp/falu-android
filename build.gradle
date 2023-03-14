@@ -68,7 +68,7 @@ ext {
     camerax_version = '1.2.1'
     nav_version = "2.5.3"
     mockito_kotlin_version = "4.1.0"
-    mockito_core_version = "5.1.1"
+    mockito_core_version = "5.2.0"
     robo_version = "4.9.2"
     mock_server_version = "4.10.0"
     expresso_version = "3.5.1"
