@@ -27,6 +27,7 @@ import org.mockito.kotlin.*
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import kotlin.test.assertEquals
+import com.google.android.material.R as MatR
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O_MR1])
@@ -111,7 +112,7 @@ class WelcomeFragmentTest {
     }
 
     private fun launchWelcomeFragment(block: (binding: FragmentWelcomeBinding, navController: TestNavHostController) -> Unit) {
-        launchFragmentInContainer(themeResId = R.style.Theme_MaterialComponents) {
+        launchFragmentInContainer(themeResId = MatR.style.Theme_MaterialComponents) {
             WelcomeFragment(
                 createFactoryFor(mockIdentityVerificationViewModel),
                 mockVerificationResultCallback

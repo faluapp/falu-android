@@ -23,6 +23,7 @@ import org.mockito.kotlin.*
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import kotlin.test.assertEquals
+import com.google.android.material.R as MatR
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O_MR1])
@@ -115,7 +116,7 @@ class UploadCaptureFragmentTest {
     ) {
         launchFragmentInContainer(
             bundleOf(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE to documentType),
-            themeResId = R.style.Theme_MaterialComponents
+            themeResId = MatR.style.Theme_MaterialComponents
         ) {
             UploadCaptureFragment(createFactoryFor(mockIdentityVerificationViewModel)).also {
                 it.captureDocumentViewModelFactory = createFactoryFor(mockCaptureDocumentViewModel)

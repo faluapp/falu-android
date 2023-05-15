@@ -21,6 +21,7 @@ import org.mockito.kotlin.*
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import kotlin.test.assertEquals
+import com.google.android.material.R as MatR
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O_MR1])
@@ -66,7 +67,7 @@ class DocumentsCaptureMethodsFragmentTest {
     private fun launchFragment(block: (binding: FragmentDocumentCaptureMethodsBinding, navController: TestNavHostController) -> Unit) {
         launchFragmentInContainer(
             fragmentArgs = bundleOf(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE to IdentityDocumentType.IDENTITY_CARD),
-            themeResId = R.style.Theme_MaterialComponents
+            themeResId = MatR.style.Theme_MaterialComponents
         ) {
             DocumentCaptureMethodsFragment(createFactoryFor(mockIdentityVerificationViewModel))
         }.onFragment {
