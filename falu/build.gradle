@@ -7,6 +7,7 @@ plugins {
 android {
     compileSdkVersion Integer.parseInt("${compile_sdk_version}")
     buildToolsVersion "31.0.0"
+    namespace FALU_SDK_NAMESPACE
 
     defaultConfig {
         minSdkVersion Integer.parseInt("${min_sdk_version}")

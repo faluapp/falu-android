@@ -6,6 +6,7 @@ plugins {
 
 android {
     compileSdk Integer.parseInt("${compile_sdk_version}")
+    namespace FALU_SDK_NAMESPACE
 
     defaultConfig {
         minSdk Integer.parseInt("${min_sdk_version}")
