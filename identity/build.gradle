@@ -68,7 +68,7 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:1.5.5"
     implementation "androidx.constraintlayout:constraintlayout:$constraint_layout_version"
 
-    implementation "org.tensorflow:tensorflow-lite:2.11.0"
+    implementation "org.tensorflow:tensorflow-lite:2.12.0"
     implementation 'org.tensorflow:tensorflow-lite-support:0.4.3'
 
     implementation "androidx.navigation:navigation-fragment-ktx:${nav_version}"

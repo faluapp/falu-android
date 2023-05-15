@@ -16,6 +16,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import com.google.android.material.R as MatR
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O_MR1])
@@ -34,7 +35,7 @@ class ConfirmationFragmentTest {
     }
 
     private fun launchConfirmationFragment(block: (binding: FragmentConfirmationBinding, navController: TestNavHostController) -> Unit) =
-        launchFragmentInContainer(themeResId = R.style.Theme_MaterialComponents) {
+        launchFragmentInContainer(themeResId = MatR.style.Theme_MaterialComponents) {
             ConfirmationFragment(mockVerificationResultCallback)
         }.onFragment {
 
