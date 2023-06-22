@@ -66,7 +66,7 @@ ext {
     group_id = GROUP
 
     camerax_version = '1.2.3'
-    nav_version = "2.5.3"
+    nav_version = "2.6.0"
     mockito_kotlin_version = "4.1.0"
     mockito_core_version = "5.2.0"
     robo_version = "4.10.3"
