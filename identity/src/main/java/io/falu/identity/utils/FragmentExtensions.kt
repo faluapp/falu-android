@@ -21,13 +21,6 @@ internal fun Fragment.updateVerification(
     viewModel.updateVerification(document,
         onSuccess = {
             when {
-                it.hasRequirementErrors -> {
-                    findNavController().navigateWithRequirementErrors(
-                        requireContext(),
-                        source,
-                        it.requirements.errors.first()
-                    )
-                }
                 else -> {
                     onSuccess()
                 }
@@ -57,6 +50,7 @@ internal fun Fragment.submitVerificationData(
                         it.requirements.errors.first()
                     )
                 }
+
                 it.submitted -> {
                     findNavController()
                         .navigate(R.id.action_global_fragment_confirmation)
