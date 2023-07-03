@@ -9,16 +9,16 @@ internal enum class RequirementType {
     @SerializedName("country")
     COUNTRY,
 
-    @SerializedName(" document_type")
+    @SerializedName("document_type")
     DOCUMENT_TYPE,
 
-    @SerializedName(" document_front")
+    @SerializedName("document_front")
     DOCUMENT_FRONT,
 
     @SerializedName("document_back")
     DOCUMENT_BACK,
 
-    @SerializedName(" selfie")
+    @SerializedName("selfie")
     SELFIE,
 
     @SerializedName("video")
