@@ -22,7 +22,6 @@ import io.falu.identity.capture.AbstractCaptureFragment.Companion.getIdentityDoc
 import io.falu.identity.scan.ScanResult
 import io.falu.identity.databinding.FragmentScanCaptureBinding
 import io.falu.identity.documents.DocumentSelectionFragment
-import io.falu.identity.scan.ProvisionalResult
 import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.utils.FileUtils
 import io.falu.identity.utils.crop
