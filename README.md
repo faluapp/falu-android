@@ -4,8 +4,8 @@
 
 # Falu Android
 
-![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/tinglesoftware/falu-android?label=gradle)
-[![Falu Android](https://github.com/tinglesoftware/falu-android/actions/workflows/build-release.yml/badge.svg)](https://github.com/tinglesoftware/falu-android/actions/workflows/build-release.yml)
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/faluapp/falu-android?label=gradle)
+[![Falu Android](https://github.com/faluapp/falu-android/actions/workflows/build-release.yml/badge.svg)](https://github.com/faluapp/falu-android/actions/workflows/build-release.yml)
 ![Language](https://img.shields.io/badge/language-Kotlin%205.0-green.svg)
 
 Falu's Android SDK simplifies the process of building excellent financial services into Android

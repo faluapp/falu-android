@@ -32,27 +32,27 @@ afterEvaluate {
                     name = project.artifactName
                     packaging = "aar"
                     description = project.artifactDescription
-                    url = "https://github.com/tinglesoftware/falu-android"
+                    url = "https://github.com/faluapp/falu-android"
 
                     scm {
-                        url = "https://github.com/tinglesoftware/falu-android"
-                        connection = "scm:git:github.com/tinglesoftware/falu-android"
-                        developerConnection = "scm:git:ssh://github.com/tinglesoftware/falu-android.git"
+                        url = "https://github.com/faluapp/falu-android"
+                        connection = "scm:git:github.com/faluapp/falu-android"
+                        developerConnection = "scm:git:ssh://github.com/faluapp/falu-android.git"
                     }
 
                     licenses {
                         license {
                             name = "MIT License"
-                            url = "https://raw.githubusercontent.com/tinglesoftware/falu-android/main/LICENSE"
+                            url = "https://raw.githubusercontent.com/faluapp/falu-android/main/LICENSE"
                             distribution = "repo"
                         }
                     }
 
                     developers {
                         developer {
-                            id = "tingle-software"
-                            name = "Tingle Software"
-                            email = "info@tingle.software"
+                            id = "falu"
+                            name = "Falu"
+                            email = "support@falu.io"
                         }
                     }
                 }
