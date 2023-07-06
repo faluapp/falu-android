@@ -70,7 +70,7 @@ ext {
     mockito_kotlin_version = "5.0.0"
     mockito_core_version = "5.2.0"
     robo_version = "4.10.3"
-    mock_server_version = "4.10.0"
+    mock_server_version = "4.11.0"
     expresso_version = "3.5.1"
     junit_ext_version = "1.1.5"
     junit_version = "4.13.2"
