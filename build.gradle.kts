@@ -1,24 +1,19 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlin_version = "1.9.0"
-
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.0'
-        classpath 'io.github.gradle-nexus:publish-plugin:1.1.0'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath("com.android.tools.build:gradle:8.0.2")
+        classpath("io.github.gradle-nexus:publish-plugin:1.3.0")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0")
     }
 }
 
 plugins {
-    id "io.github.gradle-nexus.publish-plugin" version "1.3.0"
-    id 'org.jetbrains.kotlin.android' version '1.9.0' apply false
+    id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
+    kotlin("android") version "1.9.0" apply false
 }
 
 allprojects {
@@ -36,7 +31,8 @@ ext.getPublishUsername = { -> return System.getenv("PUBLISHING_USERNAME") ?: "" 
 ext.getPublishPassword = { -> return System.getenv("PUBLISHING_PASSWORD") ?: "" }
 ext.getPublishStagingProfileId = { -> return System.getenv("PUBLISHING_PROFILE_ID") ?: "" }
 ext.getPublishUrl = { ->
-    return System.getenv("PUBLISHING_URL") ?: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+    return System.getenv("PUBLISHING_URL")
+        ?: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
 }
 
 ext["signing.keyId"] = System.getenv("SIGNING_KEY_ID")
@@ -44,13 +40,13 @@ ext["signing.password"] = System.getenv("SIGNING_PASSWORD")
 
 // If the key content is in an environmental var, write it to "tmp/key.gpg" and update
 // ext['signing.secretKeyRingFile'] to point to it
-def keyContent = System.getenv("SIGNING_KEY")
+def keyContent = System . getenv ("SIGNING_KEY")
 if (keyContent != null) {
     def tempDirectory = new File("$rootProject.rootDir/tmp")
     mkdir tempDirectory
-    def keyFile = new File("$tempDirectory/key.gpg")
+            def keyFile = new File("$tempDirectory/key.gpg")
     keyFile.createNewFile()
-    def os = keyFile.newDataOutputStream()
+    def os = keyFile . newDataOutputStream ()
     os.write(keyContent.decodeBase64())
     os.close()
     keyContent = ''
@@ -59,23 +55,7 @@ if (keyContent != null) {
 }
 
 ext {
-    min_sdk_version = 21
-    compile_sdk_version = 33
-    target_sdk_version = 33
-
     group_id = GROUP
-
-    camerax_version = '1.2.3'
-    nav_version = "2.6.0"
-    mockito_kotlin_version = "5.1.0"
-    mockito_core_version = "5.2.0"
-    robo_version = "4.10.3"
-    mock_server_version = "4.11.0"
-    expresso_version = "3.5.1"
-    junit_ext_version = "1.1.5"
-    junit_version = "4.13.2"
-    coroutines_version = "1.7.3"
-    constraint_layout_version = '2.1.4'
 }
 
 nexusPublishing {
@@ -92,6 +72,6 @@ nexusPublishing {
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+tasks.register("clean", Delete::class) {
+    delete(rootProject.buildDir)
 }
