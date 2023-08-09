@@ -16,56 +16,30 @@ plugins {
     kotlin("android") version "1.9.0" apply false
 }
 
-allprojects {
-    group = GROUP
-
-    repositories {
-        google()
-        mavenCentral()
-    }
+val publishUsername: String? by extra {
+    System.getenv("PUBLISHING_USERNAME")
 }
 
-ext.getPublishVersion = { -> return System.getenv("VERSION_NAME") ?: "1.0-SNAPSHOT" }
-ext.getPublishVersionCode = { -> return 'git rev-list HEAD --count'.execute().text.trim() }
-ext.getPublishUsername = { -> return System.getenv("PUBLISHING_USERNAME") ?: "" }
-ext.getPublishPassword = { -> return System.getenv("PUBLISHING_PASSWORD") ?: "" }
-ext.getPublishStagingProfileId = { -> return System.getenv("PUBLISHING_PROFILE_ID") ?: "" }
-ext.getPublishUrl = { ->
-    return System.getenv("PUBLISHING_URL")
-        ?: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+val publishPassword: String? by extra {
+    System.getenv("PUBLISHING_PASSWORD")
 }
 
-ext["signing.keyId"] = System.getenv("SIGNING_KEY_ID")
-ext["signing.password"] = System.getenv("SIGNING_PASSWORD")
-
-// If the key content is in an environmental var, write it to "tmp/key.gpg" and update
-// ext['signing.secretKeyRingFile'] to point to it
-def keyContent = System . getenv ("SIGNING_KEY")
-if (keyContent != null) {
-    def tempDirectory = new File("$rootProject.rootDir/tmp")
-    mkdir tempDirectory
-            def keyFile = new File("$tempDirectory/key.gpg")
-    keyFile.createNewFile()
-    def os = keyFile . newDataOutputStream ()
-    os.write(keyContent.decodeBase64())
-    os.close()
-    keyContent = ''
-
-    ext['signing.secretKeyRingFile'] = keyFile.absolutePath
-}
-
-ext {
-    group_id = GROUP
+val publishStagingProfileId: String? by extra {
+    System.getenv("PUBLISHING_PROFILE_ID")
 }
 
 nexusPublishing {
-    packageGroup = GROUP
+    val publishStagingProfileId: String? by extra
+    val publishPassword: String? by extra
+    val publishUsername: String? by extra
+
+    packageGroup.set(project.properties["GROUP"].toString())
 
     repositories {
         sonatype {
-            stagingProfileId = getPublishStagingProfileId()
-            username = getPublishUsername()
-            password = getPublishPassword()
+            stagingProfileId.set(publishStagingProfileId)
+            username.set(publishUsername)
+            password.set(publishPassword)
             nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
             snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
         }
