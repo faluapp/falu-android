@@ -3,8 +3,7 @@ package io.falu.identity.camera
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import io.falu.identity.utils.toByteArray
-import java.nio.ByteBuffer
-import java.util.*
+import java.util.ArrayDeque
 import java.util.concurrent.TimeUnit
 
 /** Helper type alias used for analysis use case callbacks */

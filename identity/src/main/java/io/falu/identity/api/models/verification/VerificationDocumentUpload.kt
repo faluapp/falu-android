@@ -16,5 +16,5 @@ internal data class VerificationDocumentUpload(
 internal data class VerificationDocumentSide(
     var method: UploadMethod,
     var score: Int? = null,
-    var file: String,
+    var file: String
 ) : Parcelable

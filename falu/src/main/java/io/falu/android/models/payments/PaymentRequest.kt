@@ -1,7 +1,7 @@
 package io.falu.android.models.payments
 
 import io.falu.core.models.FaluModel
-import java.util.*
+import java.util.Currency
 
 /**
  * [The payment request object](https://falu.io)

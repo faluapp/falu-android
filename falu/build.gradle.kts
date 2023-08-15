@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.scope.ProjectInfo.Companion.getBaseName
+
 plugins {
     id("com.android.library")
     kotlin("android")
@@ -8,6 +10,8 @@ plugins {
 apply {
     from(rootProject.file("build-config/version.gradle.kts"))
 }
+
+apply(from = "${rootDir}/build-config/klint.gradle.kts")
 
 android {
     compileSdk = 33
@@ -59,6 +63,10 @@ android {
         buildConfig = true
     }
 
+    lint.enable += "Interoperability"
+    lint.disable += "CoroutineCreationDuringComposition"
+    lint.lintConfig = file("../settings/lint.xml")
+
     lint {
         abortOnError = false
     }
@@ -83,6 +91,7 @@ dependencies {
     testImplementation(libs.robo)
     testImplementation(libs.mokito.kotlin)
     testImplementation(libs.bundles.kotlin.test)
+    testImplementation(libs.androidx.core.ktx)
 }
 
 ext {

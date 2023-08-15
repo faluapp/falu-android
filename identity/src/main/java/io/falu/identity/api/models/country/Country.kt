@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 internal data class Country(
     var code: String,
-    var name: String,
+    var name: String
 ) : Parcelable
 
 @Parcelize

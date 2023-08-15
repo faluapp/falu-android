@@ -6,7 +6,7 @@ import software.tingle.api.HttpApiResponseProblem
 /**
  * An [Exception] that represents an internal problem with Falu's servers.
  */
-class APIException(
+class ApiException(
     problem: HttpApiResponseProblem? = null,
     statusCode: Int? = 0,
     errorCode: String? = problem?.code,

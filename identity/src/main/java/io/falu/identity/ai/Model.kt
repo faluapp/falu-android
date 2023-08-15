@@ -50,7 +50,7 @@ internal data class FaceDetectionOutput(
     var score: Float,
     var bitmap: Bitmap,
     var box: BoundingBox,
-    val rect: Rect,
+    val rect: Rect
 ) : DetectionOutput
 
 /**

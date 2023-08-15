@@ -2,9 +2,9 @@ package io.falu.android.models.payments
 
 import com.google.gson.annotations.JsonAdapter
 import io.falu.core.models.FaluModel
+import java.util.Date
 import kotlinx.parcelize.Parcelize
 import software.tingle.api.adapters.ISO8601DateAdapter
-import java.util.*
 
 /**
  * [The payment object](https://falu.io)

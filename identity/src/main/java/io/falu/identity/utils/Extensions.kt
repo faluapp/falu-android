@@ -2,7 +2,15 @@ package io.falu.identity.utils
 
 import android.content.ContentResolver
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.ImageFormat
+import android.graphics.Matrix
+import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.YuvImage
 import android.media.Image
 import android.net.Uri
 import android.text.TextUtils
@@ -12,7 +20,6 @@ import io.falu.identity.R
 import software.tingle.api.HttpApiResponseProblem
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
-import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 
@@ -153,7 +160,7 @@ internal fun Bitmap.centerCrop(size: Size): Bitmap {
 internal fun Size.center(rect: Rect) = Rect(
     rect.centerX() - this.width / 2, // left
     rect.centerY() - this.height / 2, // top
-    rect.centerX() + this.width / 2,  // right
+    rect.centerX() + this.width / 2, // right
     rect.centerY() + this.height / 2 // bottom
 )
 

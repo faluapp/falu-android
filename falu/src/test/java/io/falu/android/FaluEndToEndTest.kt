@@ -1,6 +1,5 @@
 package io.falu.android
 
-
 import android.content.Context
 import android.os.Build
 import androidx.test.core.app.ApplicationProvider
@@ -9,14 +8,14 @@ import io.falu.android.models.payments.Payment
 import io.falu.android.models.payments.PaymentRequest
 import io.falu.android.networking.FaluRepository
 import io.falu.core.ApiResultCallback
+import java.util.Date
+import kotlin.test.Test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import org.junit.runner.RunWith
 import org.mockito.kotlin.mock
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import java.util.*
-import kotlin.test.Test
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O_MR1])
@@ -64,6 +63,5 @@ class FaluEndToEndTest {
         )
 
         falu.createPayment(request, mockPaymentResultCallback)
-
     }
 }

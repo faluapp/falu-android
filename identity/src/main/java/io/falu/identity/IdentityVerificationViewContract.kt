@@ -25,7 +25,7 @@ internal class IdentityVerificationViewContract :
 internal data class ContractArgs(
     var temporaryKey: String,
     var verificationId: String,
-    var workspaceLogo: Uri,
+    var workspaceLogo: Uri
 ) : Parcelable {
 
     val contractArgsBundle: Bundle

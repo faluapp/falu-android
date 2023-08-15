@@ -1,11 +1,11 @@
 package io.falu.android.networking
 
 import android.content.Context
-import io.falu.android.models.files.UploadRequest
 import io.falu.android.models.payments.Payment
 import io.falu.android.models.payments.PaymentRequest
 import io.falu.core.ApiResultCallback
 import io.falu.core.models.FaluFile
+import io.falu.core.models.FaluFileUploadArgs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -58,7 +58,7 @@ internal class FaluRepository internal constructor(
      *
      */
     fun uploadFileAsync(
-        request: UploadRequest,
+        request: FaluFileUploadArgs,
         callbacks: ApiResultCallback<FaluFile>
     ) {
         launch(Dispatchers.IO) {

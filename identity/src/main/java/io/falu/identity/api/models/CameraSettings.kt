@@ -9,14 +9,14 @@ internal data class CameraSettings(
     var virtual: Boolean = false,
     var lens: CameraLens,
     var brightness: Float,
-    var exposure: Exposure,
+    var exposure: Exposure
 ) : Parcelable
 
 @Parcelize
 internal data class CameraLens(
     var model: String,
     @SerializedName("focal_length")
-    var focalLength: Float,
+    var focalLength: Float
 ) : Parcelable
 
 @Parcelize

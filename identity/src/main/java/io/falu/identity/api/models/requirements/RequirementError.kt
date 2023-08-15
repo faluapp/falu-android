@@ -6,12 +6,12 @@ import io.falu.identity.R
 internal data class RequirementError(
     var requirement: RequirementType?,
     var code: String,
-    var description: String,
+    var description: String
 ) {
     internal companion object {
         private val document_upload_ids = arrayOf(
             R.id.fragment_manual_capture,
-            R.id.fragment_upload_capture,
+            R.id.fragment_upload_capture
         )
 
         /**

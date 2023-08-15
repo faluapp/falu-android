@@ -4,8 +4,8 @@ import android.content.Context
 import io.falu.core.ApiKeyValidator
 import io.falu.core.ApiVersion
 import io.falu.core.ApiVersionInterceptor
-import io.falu.core.exceptions.APIConnectionException
-import io.falu.core.exceptions.APIException
+import io.falu.core.exceptions.ApiConnectionException
+import io.falu.core.exceptions.ApiException
 import io.falu.core.exceptions.AuthenticationException
 import io.falu.core.models.FaluFile
 import io.falu.core.utils.getMediaType
@@ -34,8 +34,8 @@ internal class IdentityVerificationApiClient(
 
     @Throws(
         AuthenticationException::class,
-        APIConnectionException::class,
-        APIException::class
+        ApiConnectionException::class,
+        ApiException::class
     )
     fun getVerification(verification: String): ResourceResponse<Verification> {
         val builder = Request.Builder()
@@ -47,8 +47,8 @@ internal class IdentityVerificationApiClient(
 
     @Throws(
         AuthenticationException::class,
-        APIConnectionException::class,
-        APIException::class
+        ApiConnectionException::class,
+        ApiException::class
     )
     fun updateVerification(
         verification: String,
@@ -63,8 +63,8 @@ internal class IdentityVerificationApiClient(
 
     @Throws(
         AuthenticationException::class,
-        APIConnectionException::class,
-        APIException::class
+        ApiConnectionException::class,
+        ApiException::class
     )
     fun uploadIdentityDocuments(
         verification: String,
@@ -86,8 +86,8 @@ internal class IdentityVerificationApiClient(
 
     @Throws(
         AuthenticationException::class,
-        APIConnectionException::class,
-        APIException::class
+        ApiConnectionException::class,
+        ApiException::class
     )
     fun submitVerificationDocuments(
         verification: String,
@@ -110,7 +110,8 @@ internal class IdentityVerificationApiClient(
             .writeTimeout(50, TimeUnit.SECONDS)
 
         if (enableLogging) {
-            builder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+            builder.addInterceptor(HttpLoggingInterceptor()
+                    .setLevel(HttpLoggingInterceptor.Level.BODY))
         }
 
         return super.buildBackChannel(builder)

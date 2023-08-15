@@ -22,7 +22,6 @@ sealed class IdentityVerificationResult : Parcelable {
     @Parcelize
     object Canceled : IdentityVerificationResult()
 
-
     /**
      * Called when the was an error with identity verification process
      *

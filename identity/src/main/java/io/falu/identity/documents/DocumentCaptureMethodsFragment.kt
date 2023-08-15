@@ -38,7 +38,8 @@ internal class DocumentCaptureMethodsFragment(private val factory: ViewModelProv
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         identityDocumentType =
-            (requireArguments().getSerializable(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE) as IdentityDocumentType?)!!
+            (requireArguments().getSerializable(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE)
+                    as IdentityDocumentType?)!!
 
         binding.tvDocumentCaptureMethod.text =
             getString(
@@ -88,7 +89,7 @@ internal class DocumentCaptureMethodsFragment(private val factory: ViewModelProv
      *
      */
     private fun onCameraPermissionDenied() {
-        //TODO: navigate to camera permissions denied view
+        // TODO: navigate to camera permissions denied view
     }
 
     /**

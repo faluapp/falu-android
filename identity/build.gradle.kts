@@ -9,6 +9,8 @@ apply {
     from(rootProject.file("build-config/version.gradle.kts"))
 }
 
+apply(from = "${rootDir}/build-config/klint.gradle.kts")
+
 android {
     compileSdk = 33
     namespace = project.properties["FALU_SDK_NAMESPACE"].toString()
@@ -29,7 +31,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -38,7 +40,6 @@ android {
     }
 
     compileOptions {
-        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -58,6 +59,10 @@ android {
         buildConfig = true
     }
 
+    lint.enable += "Interoperability"
+    lint.disable += "CoroutineCreationDuringComposition"
+    lint.lintConfig = file("../settings/lint.xml")
+
     lint {
         abortOnError = false
     }
@@ -65,6 +70,9 @@ android {
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
+            all {
+                it.maxHeapSize = "1024m"
+            }
         }
     }
 }
@@ -74,6 +82,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.fragment)
     implementation(libs.constraint)
+    implementation("androidx.appcompat:appcompat:1.6.1")
 
     implementation(libs.tensorflow.lite)
     implementation(libs.tensorflow.support)
@@ -98,6 +107,7 @@ dependencies {
     testImplementation(libs.androidx.navigation.testing)
     testImplementation(libs.androidx.espresso.core)
     testImplementation(libs.androidx.fragment.testing)
+    testImplementation(libs.androidx.core.ktx)
 }
 
 ext {

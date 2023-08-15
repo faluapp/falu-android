@@ -9,7 +9,12 @@ import androidx.camera.core.ImageProxy
 import io.falu.identity.camera.AnalyzerBuilder
 import io.falu.identity.camera.AnalyzerOutputListener
 import io.falu.identity.scan.ScanDisposition
-import io.falu.identity.utils.*
+import io.falu.identity.utils.Anchor
+import io.falu.identity.utils.centerCrop
+import io.falu.identity.utils.generateFaceAnchors
+import io.falu.identity.utils.maxAspectRatio
+import io.falu.identity.utils.rotate
+import io.falu.identity.utils.toBitmap
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.support.common.ops.NormalizeOp
@@ -18,7 +23,10 @@ import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.io.File
-import kotlin.math.*
+import kotlin.math.exp
+import kotlin.math.ln
+import kotlin.math.max
+import kotlin.math.min
 
 internal class FaceDetectionAnalyzer internal constructor(
     model: File,
@@ -58,7 +66,7 @@ internal class FaceDetectionAnalyzer internal constructor(
             arrayOf(tensorImage.buffer),
             mapOf(
                 0 to regressors,
-                1 to classifiersBuffer.buffer,
+                1 to classifiersBuffer.buffer
             )
         )
 
@@ -88,7 +96,7 @@ internal class FaceDetectionAnalyzer internal constructor(
 
         val boxes = generateBoxes(regressors.first(), bestIndex, anchors)
         val box = BoundingBox(
-            left = boxes[0],// x-min
+            left = boxes[0], // x-min
             top = boxes[1], // y-min
             width = boxes[2] - boxes[0], // x-max - x-min
             height = boxes[3] - boxes[1] // y-max - y-min

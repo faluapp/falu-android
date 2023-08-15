@@ -4,7 +4,14 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import android.widget.ImageView
-import androidx.lifecycle.*
+import androidx.lifecycle.AbstractSavedStateViewModelFactory
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.savedstate.SavedStateRegistryOwner
 import io.falu.core.models.FaluFile
 import io.falu.identity.api.DocumentUploadDisposition
@@ -104,7 +111,6 @@ internal class IdentityVerificationViewModel(
                             }
                         }
                     }
-
                 },
                 onFailure = {
                     Log.e(TAG, "Error getting verification", it)
@@ -306,7 +312,7 @@ internal class IdentityVerificationViewModel(
 
     private fun downloadFile(
         uri: Uri,
-        success: ((File) -> Unit),
+        success: ((File) -> Unit)
     ) {
         launch(Dispatchers.IO) {
             runCatching {
@@ -415,7 +421,7 @@ internal class IdentityVerificationViewModel(
             savedStateRegistryOwner: SavedStateRegistryOwner,
             apiClient: () -> IdentityVerificationApiClient,
             fileUtils: () -> FileUtils,
-            contractArgs: () -> ContractArgs,
+            contractArgs: () -> ContractArgs
         ): AbstractSavedStateViewModelFactory =
             object : AbstractSavedStateViewModelFactory(savedStateRegistryOwner, null) {
                 override fun <T : ViewModel> create(

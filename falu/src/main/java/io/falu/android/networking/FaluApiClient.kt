@@ -1,15 +1,15 @@
 package io.falu.android.networking
 
 import android.content.Context
-import io.falu.android.models.files.UploadRequest
 import io.falu.android.models.payments.Payment
 import io.falu.android.models.payments.PaymentRequest
 import io.falu.core.ApiVersion
 import io.falu.core.ApiVersionInterceptor
-import io.falu.core.exceptions.APIConnectionException
-import io.falu.core.exceptions.APIException
+import io.falu.core.exceptions.ApiConnectionException
+import io.falu.core.exceptions.ApiException
 import io.falu.core.exceptions.AuthenticationException
 import io.falu.core.models.FaluFile
+import io.falu.core.models.FaluFileUploadArgs
 import io.falu.core.utils.getMediaType
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -33,8 +33,8 @@ internal class FaluApiClient internal constructor(
 
     @Throws(
         AuthenticationException::class,
-        APIConnectionException::class,
-        APIException::class
+        ApiConnectionException::class,
+        ApiException::class
     )
     suspend fun createPayment(request: PaymentRequest): ResourceResponse<Payment> {
         val builder = Request.Builder()
@@ -46,10 +46,10 @@ internal class FaluApiClient internal constructor(
 
     @Throws(
         AuthenticationException::class,
-        APIConnectionException::class,
-        APIException::class
+        ApiConnectionException::class,
+        ApiException::class
     )
-    fun uploadFile(request: UploadRequest): ResourceResponse<FaluFile> {
+    fun uploadFile(request: FaluFileUploadArgs): ResourceResponse<FaluFile> {
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart(
@@ -78,19 +78,23 @@ internal class FaluApiClient internal constructor(
             .writeTimeout(50, TimeUnit.SECONDS)
 
         if (enableLogging) {
-            builder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+            builder.addInterceptor(
+                HttpLoggingInterceptor()
+                    .setLevel(HttpLoggingInterceptor.Level.BODY)
+            )
         }
 
         return super.buildBackChannel(builder)
     }
-
 
     companion object {
         private const val baseUrl = "https://api.falu.io"
     }
 }
 
-internal class FaluAuthenticationHeaderProvider internal constructor(private val publishableKey: String) :
+internal class FaluAuthenticationHeaderProvider internal constructor(
+    private val publishableKey: String
+) :
     AuthenticationHeaderProvider() {
     override fun getParameter(request: Request.Builder): String {
         return publishableKey

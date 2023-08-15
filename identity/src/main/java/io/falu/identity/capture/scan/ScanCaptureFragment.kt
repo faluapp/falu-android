@@ -19,14 +19,11 @@ import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationCapture
 import io.falu.identity.camera.CameraView
 import io.falu.identity.capture.AbstractCaptureFragment.Companion.getIdentityDocumentName
-import io.falu.identity.scan.ScanResult
 import io.falu.identity.databinding.FragmentScanCaptureBinding
 import io.falu.identity.documents.DocumentSelectionFragment
 import io.falu.identity.scan.ScanDisposition
+import io.falu.identity.scan.ScanResult
 import io.falu.identity.utils.FileUtils
-import io.falu.identity.utils.crop
-import io.falu.identity.utils.withBoundingBox
-
 
 internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.Factory) :
     Fragment() {
@@ -54,7 +51,8 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         identityDocumentType =
-            requireArguments().getSerializable(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE) as IdentityDocumentType
+            requireArguments().getSerializable(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE)
+                    as IdentityDocumentType
 
         scanType =
             requireArguments().getSerializable(KEY_DOCUMENT_SCAN_TYPE) as? ScanDisposition.DocumentScanType
@@ -69,7 +67,10 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
         binding.viewCamera.lensFacing = CameraSelector.LENS_FACING_BACK
 
         binding.viewCamera.cameraViewType =
-            if (identityDocumentType != IdentityDocumentType.PASSPORT) CameraView.CameraViewType.ID else CameraView.CameraViewType.PASSPORT
+            if (identityDocumentType != IdentityDocumentType.PASSPORT)
+                CameraView.CameraViewType.ID
+            else
+                CameraView.CameraViewType.PASSPORT
 
         identityViewModel.observeForVerificationResults(
             viewLifecycleOwner,
@@ -155,6 +156,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
                     identityDocumentType.getIdentityDocumentName(requireContext())
                 )
             }
+
             scanType!!.isBack -> {
                 binding.tvScanDocumentSide.text = getString(
                     R.string.scan_capture_text_document_side_back,
@@ -174,17 +176,20 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
             is ScanDisposition.Start -> {
                 resetUI()
             }
+
             is ScanDisposition.Detected -> {
                 binding.tvScanMessage.text = getString(R.string.scan_capture_text_document_detected)
             }
+
             is ScanDisposition.Desired -> {
                 binding.tvScanMessage.text =
                     getString(R.string.scan_capture_text_document_scan_completed)
             }
+
             is ScanDisposition.Undesired -> {}
             is ScanDisposition.Completed -> {}
             is ScanDisposition.Timeout, null -> {
-                //noOP
+                // noOP
             }
         }
     }
@@ -217,7 +222,8 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
         internal const val KEY_SCAN_TYPE_BACK = ":back"
         internal const val REQUEST_KEY_DOCUMENT_SCAN = ":scan"
 
-        internal fun IdentityDocumentType.getScanType(): Pair<ScanDisposition.DocumentScanType, ScanDisposition.DocumentScanType?> {
+        internal fun IdentityDocumentType.getScanType():
+                Pair<ScanDisposition.DocumentScanType, ScanDisposition.DocumentScanType?> {
             return when (this) {
                 IdentityDocumentType.IDENTITY_CARD -> {
                     Pair(
@@ -225,12 +231,14 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
                         ScanDisposition.DocumentScanType.ID_BACK
                     )
                 }
+
                 IdentityDocumentType.PASSPORT -> {
                     Pair(
                         ScanDisposition.DocumentScanType.PASSPORT,
                         null
                     )
                 }
+
                 IdentityDocumentType.DRIVING_LICENSE -> {
                     Pair(
                         ScanDisposition.DocumentScanType.DL_FRONT,

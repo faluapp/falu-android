@@ -152,7 +152,6 @@ internal class ScanCaptureSideFragment(identityViewModelFactory: ViewModelProvid
         }
     }
 
-
     internal companion object {
         private fun NavController.navigateWithDocumentAndScanType(
             identityDocumentType: IdentityDocumentType,

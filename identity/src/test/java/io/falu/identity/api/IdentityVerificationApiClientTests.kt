@@ -3,9 +3,24 @@ package io.falu.identity.api
 import android.os.Build
 import com.google.gson.Gson
 import io.falu.core.models.FaluFile
-import io.falu.identity.api.models.*
+import io.falu.identity.api.models.Branding
+import io.falu.identity.api.models.BusinessInfo
+import io.falu.identity.api.models.IdentityDocumentType
+import io.falu.identity.api.models.Support
+import io.falu.identity.api.models.UploadMethod
+import io.falu.identity.api.models.WorkspaceInfo
 import io.falu.identity.api.models.requirements.Requirement
-import io.falu.identity.api.models.verification.*
+import io.falu.identity.api.models.verification.DocumentDetector
+import io.falu.identity.api.models.verification.Verification
+import io.falu.identity.api.models.verification.VerificationCapture
+import io.falu.identity.api.models.verification.VerificationDocumentSide
+import io.falu.identity.api.models.verification.VerificationDocumentUpload
+import io.falu.identity.api.models.verification.VerificationModel
+import io.falu.identity.api.models.verification.VerificationOptions
+import io.falu.identity.api.models.verification.VerificationOptionsForDocument
+import io.falu.identity.api.models.verification.VerificationStatus
+import io.falu.identity.api.models.verification.VerificationType
+import io.falu.identity.api.models.verification.VerificationUploadRequest
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.Test
@@ -18,7 +33,7 @@ import org.robolectric.annotation.Config
 import software.tingle.api.ResourceResponse
 import software.tingle.api.patch.JsonPatchDocument
 import java.io.File
-import java.util.*
+import java.util.Date
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -111,7 +126,7 @@ class IdentityVerificationApiClientTests {
 
     @Test
     fun `test if identity document upload works`() {
-        mockWebServer.url("${baseUrl}/v1/files")
+        mockWebServer.url("$baseUrl/v1/files")
 
         val resourceResponse = getResponse(tResponse = faluFile)
         whenever(apiClient.uploadIdentityDocuments(eq(verification.id), eq(filePurpose), eq(file)))

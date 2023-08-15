@@ -31,7 +31,6 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
         factory
     }
 
-
     private val binding by lazy {
         ActivityIdentityVerificationBinding.inflate(layoutInflater)
     }
@@ -59,11 +58,13 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
         setContentView(binding.root)
         setNavigationController()
 
-        verificationViewModel.loadUriToImageView(contractArgs.workspaceLogo, binding.ivIdentityVerification)
+        verificationViewModel
+            .loadUriToImageView(contractArgs.workspaceLogo, binding.ivIdentityVerification)
 
         verificationViewModel.fetchVerification(onFailure = {
             finishWithVerificationResult(IdentityVerificationResult.Failed(it))
         })
+
         verificationViewModel.fetchSupportedCountries()
         verificationViewModel.observeForVerificationResults(
             this,

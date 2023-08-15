@@ -3,7 +3,7 @@ package io.falu.identity.capture.scan
 import io.falu.identity.ai.DocumentDetectionAnalyzer
 import io.falu.identity.api.models.verification.VerificationCapture
 import io.falu.identity.camera.CameraView
-import io.falu.identity.scan.*
+import io.falu.identity.scan.AbstractScanner
 import io.falu.identity.scan.IdentityResult
 import io.falu.identity.scan.ProvisionalResult
 import io.falu.identity.scan.ScanDisposition

@@ -1,18 +1,15 @@
 package io.falu.identity.capture.scan
 
 import android.util.Log
-import io.falu.identity.ai.*
 import io.falu.identity.ai.BoundingBox
 import io.falu.identity.ai.DetectionOutput
 import io.falu.identity.ai.DocumentDetectionOutput
 import io.falu.identity.ai.DocumentOption
-import io.falu.identity.scan.ScanDispositionDetector
+import io.falu.identity.ai.calculateIOU
 import io.falu.identity.scan.ScanDisposition
+import io.falu.identity.scan.ScanDispositionDetector
 import org.joda.time.DateTime
 import org.joda.time.Seconds
-import kotlin.math.max
-import kotlin.math.min
-
 
 internal class DocumentDispositionMachine(
     private val timeout: DateTime = DateTime.now().plusSeconds(8),
@@ -38,12 +35,20 @@ internal class DocumentDispositionMachine(
             hasTimedOut -> {
                 ScanDisposition.Timeout(state.type, this)
             }
+
             output.option.matches(state.type) -> {
-                Log.d(TAG, "Model output detected with score ${output.score}, moving to Detected.")
+                Log.d(
+                    TAG, "Model output detected with score ${output.score}, " +
+                            "moving to Detected."
+                )
                 ScanDisposition.Detected(state.type, this)
             }
+
             else -> {
-                Log.d(TAG, "Model output mismatch (${output.option}), start disposition retained.")
+                Log.d(
+                    TAG, "Model output mismatch (${output.option})," +
+                            "start disposition retained."
+                )
                 state
             }
         }
@@ -61,28 +66,34 @@ internal class DocumentDispositionMachine(
             hasTimedOut -> {
                 ScanDisposition.Timeout(state.type, this)
             }
+
             !targetTypeMatches(output.option, state.type) -> {
                 Log.d(TAG, "Option (${output.option}) doesn't match ${state.type}")
                 ScanDisposition.Undesired(state.type, state.dispositionDetector)
             }
+
             output.score < requireThreshold -> {
                 Log.d(
                     TAG,
-                    "Score (${output.score}) for (${output.option}) doesn't meet the required threshold."
+                    "Score (${output.score}) for (${output.option}) " +
+                            "doesn't meet the required threshold."
                 )
                 state.reached = DateTime.now()
                 state
             }
+
             !iouCheckSatisfied(output.box) -> {
                 Log.d(TAG, "IOU check not satisfied")
                 // reset the time
                 state.reached = DateTime.now()
                 state
             }
+
             moreScanningRequired(state) -> {
                 state.reached = DateTime.now()
                 state
             }
+
             else -> {
                 ScanDisposition.Desired(state.type, state.dispositionDetector)
             }
@@ -102,6 +113,7 @@ internal class DocumentDispositionMachine(
                 Log.d(TAG, "Complete the scan. Desired scan for ${state.type} found.")
                 ScanDisposition.Completed(state.type, state.dispositionDetector)
             }
+
             else -> state
         }
     }
@@ -114,10 +126,12 @@ internal class DocumentDispositionMachine(
             hasTimedOut -> {
                 ScanDisposition.Timeout(state.type, this)
             }
+
             elapsedTime(time = state.reached) > undesiredDuration -> {
                 Log.d(TAG, "Scan for ${state.type} undesired, restarting the process.")
                 ScanDisposition.Start(state.type, state.dispositionDetector)
             }
+
             else -> state
         }
     }

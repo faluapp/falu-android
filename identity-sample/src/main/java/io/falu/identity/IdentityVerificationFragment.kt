@@ -52,7 +52,7 @@ class IdentityVerificationFragment : Fragment(), IdentityVerificationCallback {
                 allowPassport = binding.swAllowedTypePassport.isChecked,
                 allowIdentityCard = binding.swAllowedTypeId.isChecked,
                 allowUploads = binding.swAllowUploads.isChecked,
-                allowDocumentSelfie = binding.swAllowDocumentSelfie.isChecked,
+                allowDocumentSelfie = binding.swAllowDocumentSelfie.isChecked
             )
         }
     }

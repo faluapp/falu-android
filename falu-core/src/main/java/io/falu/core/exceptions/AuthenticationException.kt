@@ -6,12 +6,10 @@ import java.net.HttpURLConnection
 
 /**
  * No valid API key provided.
- *
  */
-class AuthenticationException @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-constructor(
-    problem: HttpApiResponseProblem,
-) : FaluException(
-    problem,
-    HttpURLConnection.HTTP_UNAUTHORIZED
-)
+class AuthenticationException
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) constructor(problem: HttpApiResponseProblem) :
+    FaluException(
+        problem,
+        HttpURLConnection.HTTP_UNAUTHORIZED
+    )

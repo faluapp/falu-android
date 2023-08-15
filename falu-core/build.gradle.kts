@@ -5,6 +5,8 @@ plugins {
     id("kotlin-parcelize")
 }
 
+apply(from = "${rootDir}/build-config/klint.gradle.kts")
+
 android {
     compileSdk = 33
     namespace = project.properties["FALU_SDK_NAMESPACE"].toString()
@@ -24,7 +26,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -53,6 +55,10 @@ android {
         buildConfig = true
     }
 
+    lint.enable += "Interoperability"
+    lint.disable += "CoroutineCreationDuringComposition"
+    lint.lintConfig = file("../settings/lint.xml")
+    
     lint {
         abortOnError = false
     }
@@ -70,6 +76,7 @@ dependencies {
     testImplementation(libs.robo)
     testImplementation(libs.mokito.kotlin)
     testImplementation(libs.bundles.kotlin.test)
+    testImplementation(libs.androidx.core.ktx)
 }
 
 ext {

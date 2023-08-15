@@ -7,7 +7,6 @@ import androidx.annotation.RestrictTo
 import okhttp3.Interceptor
 import okhttp3.Response
 
-
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class AbstractAppDetails(private val context: Context) : Interceptor {
 

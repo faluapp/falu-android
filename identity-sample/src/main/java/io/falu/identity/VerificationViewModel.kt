@@ -3,7 +3,11 @@ package io.falu.identity
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.liveData
-import io.falu.identity.models.*
+import io.falu.identity.models.IdentityVerification
+import io.falu.identity.models.IdentityVerificationCreationRequest
+import io.falu.identity.models.IdentityVerificationOptions
+import io.falu.identity.models.IdentityVerificationOptionsForDocument
+import io.falu.identity.models.IdentityVerificationOptionsForSelfie
 import io.falu.identity.sample.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -33,7 +37,7 @@ class VerificationViewModel(application: Application) : AndroidViewModel(applica
                     allowPassport,
                     allowIdentityCard
                 ),
-                selfie = if (allowDocumentSelfie) IdentityVerificationOptionsForSelfie() else null,
+                selfie = if (allowDocumentSelfie) IdentityVerificationOptionsForSelfie() else null
             ),
             type = getVerificationType(allowDocumentSelfie)
         )
@@ -45,7 +49,7 @@ class VerificationViewModel(application: Application) : AndroidViewModel(applica
     private fun generateDocumentOptions(
         allowDrivingLicense: Boolean,
         allowPassport: Boolean,
-        allowIdentityCard: Boolean,
+        allowIdentityCard: Boolean
     ): IdentityVerificationOptionsForDocument {
         return IdentityVerificationOptionsForDocument(
             allowed = mutableListOf<String>().also {
