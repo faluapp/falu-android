@@ -16,7 +16,7 @@ import io.falu.identity.welcome.WelcomeFragment
 
 internal class IdentityVerificationFragmentFactory(
     private val callback: IdentityVerificationResultCallback,
-    private val factory: ViewModelProvider.Factory,
+    private val factory: ViewModelProvider.Factory
 ) :
     FragmentFactory() {
 

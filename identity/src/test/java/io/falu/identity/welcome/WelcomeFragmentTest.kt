@@ -23,7 +23,13 @@ import io.falu.identity.databinding.FragmentWelcomeBinding
 import io.falu.identity.utils.createFactoryFor
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.kotlin.*
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
+import org.mockito.kotlin.KArgumentCaptor
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import kotlin.test.assertEquals
@@ -111,7 +117,9 @@ class WelcomeFragmentTest {
         }
     }
 
-    private fun launchWelcomeFragment(block: (binding: FragmentWelcomeBinding, navController: TestNavHostController) -> Unit) {
+    private fun launchWelcomeFragment(
+        block: (binding: FragmentWelcomeBinding, navController: TestNavHostController) -> Unit
+    ) {
         launchFragmentInContainer(themeResId = MatR.style.Theme_MaterialComponents) {
             WelcomeFragment(
                 createFactoryFor(mockIdentityVerificationViewModel),

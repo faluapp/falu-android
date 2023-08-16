@@ -1,7 +1,7 @@
 package io.falu.identity.models
 
 import com.google.gson.annotations.SerializedName
-import java.util.*
+import java.util.Date
 
 data class IdentityVerificationOutputs(
     /**
@@ -37,6 +37,5 @@ data class IdentityVerificationOutputs(
      * The user’s other verified names.
      */
     @SerializedName("other_names")
-    var otherNames: MutableList<String>?,
-
-    )
+    var otherNames: MutableList<String>?
+)

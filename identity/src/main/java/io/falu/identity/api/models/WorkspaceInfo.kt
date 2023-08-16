@@ -49,5 +49,5 @@ internal data class Branding(
 internal data class Support(
     var email: String?,
     var phone: String?,
-    var url: String?,
+    var url: String?
 )

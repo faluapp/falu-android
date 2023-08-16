@@ -26,10 +26,12 @@ import io.falu.identity.utils.submitVerificationData
 import io.falu.identity.utils.updateVerification
 import software.tingle.api.patch.JsonPatchDocument
 
-internal abstract class AbstractCaptureFragment(identityViewModelFactory: ViewModelProvider.Factory) :
-    CameraPermissionsFragment() {
+internal abstract class AbstractCaptureFragment(
+    identityViewModelFactory: ViewModelProvider.Factory
+) : CameraPermissionsFragment() {
 
-    protected val identityViewModel: IdentityVerificationViewModel by activityViewModels { identityViewModelFactory }
+    protected val identityViewModel: IdentityVerificationViewModel
+            by activityViewModels { identityViewModelFactory }
 
     @VisibleForTesting
     internal var captureDocumentViewModelFactory: ViewModelProvider.Factory =
@@ -44,7 +46,8 @@ internal abstract class AbstractCaptureFragment(identityViewModelFactory: ViewMo
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         identityDocumentType =
-            requireArguments().getSerializable(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE) as IdentityDocumentType
+            requireArguments().getSerializable(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE)
+                    as IdentityDocumentType
 
         uploadStateObservations()
     }
@@ -76,8 +79,8 @@ internal abstract class AbstractCaptureFragment(identityViewModelFactory: ViewMo
 
     protected fun uploadScannedDocument(
         output: DocumentDetectionOutput,
-        documentSide: DocumentSide,
-    ){
+        documentSide: DocumentSide
+    ) {
         if (documentSide == DocumentSide.FRONT) {
             showDocumentFrontUploading()
         } else {
@@ -97,6 +100,7 @@ internal abstract class AbstractCaptureFragment(identityViewModelFactory: ViewMo
                 navigateToErrorFragment(it)
             })
     }
+
     protected abstract fun showDocumentFrontUploading()
 
     protected abstract fun showDocumentBackUploading()
@@ -156,6 +160,7 @@ internal abstract class AbstractCaptureFragment(identityViewModelFactory: ViewMo
                             verificationRequest.addToBundle()
                         )
                     }
+
                     else -> {
                         submitVerificationData(identityViewModel, source, verificationRequest)
                     }

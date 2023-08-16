@@ -1,13 +1,13 @@
 package io.falu.android
 
 import android.content.Context
-import io.falu.android.models.files.UploadRequest
 import io.falu.android.models.payments.Payment
 import io.falu.android.models.payments.PaymentRequest
 import io.falu.android.networking.FaluRepository
 import io.falu.core.ApiKeyValidator
 import io.falu.core.ApiResultCallback
 import io.falu.core.models.FaluFile
+import io.falu.core.models.FaluFileUploadArgs
 
 /**
  * Entry-point to the Falu SDK
@@ -39,7 +39,6 @@ class Falu internal constructor(
         )
     )
 
-
     /**
      * Create a payment asynchronously
      *
@@ -67,7 +66,7 @@ class Falu internal constructor(
      * @param callbacks [ApiResultCallback] to receive the result or error
      *
      */
-    fun createFile(request: UploadRequest, callbacks: ApiResultCallback<FaluFile>) {
+    fun createFile(request: FaluFileUploadArgs, callbacks: ApiResultCallback<FaluFile>) {
         faluRepository.uploadFileAsync(request, callbacks)
     }
 }

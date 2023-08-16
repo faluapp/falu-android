@@ -28,7 +28,6 @@ internal data class DocumentUploadDisposition(
             this.copy(back = result)
         }
 
-
     val isFrontUpload: Boolean
         get() = front != null
 
@@ -38,7 +37,8 @@ internal data class DocumentUploadDisposition(
     val isBothUploadLoad: Boolean
         get() = front != null && back != null
 
-    fun generateVerificationUploadRequest(identityDocumentType: IdentityDocumentType): VerificationUploadRequest {
+    fun generateVerificationUploadRequest(identityDocumentType: IdentityDocumentType):
+            VerificationUploadRequest {
         val front = VerificationDocumentSide(
             method = front!!.method!!,
             file = front!!.file.id,

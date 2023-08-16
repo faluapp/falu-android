@@ -9,7 +9,13 @@ import android.util.Log
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
-import androidx.camera.core.*
+import androidx.camera.core.Camera
+import androidx.camera.core.CameraInfo
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -32,7 +38,6 @@ internal class CameraView @JvmOverloads constructor(
      *
      */
     private val viewCameraFrame: FrameLayout
-
 
     /**
      *

@@ -11,7 +11,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.SavedStateHandle
 import io.falu.identity.utils.FileUtils
 
-
 /**
  * Use camera to capture an image
  */

@@ -5,7 +5,6 @@ import io.falu.identity.ai.BoundingBox
 import io.falu.identity.ai.DetectionOutput
 import io.falu.identity.ai.FaceDetectionOutput
 import io.falu.identity.ai.calculateIOU
-import io.falu.identity.capture.scan.DocumentDispositionMachine
 import io.falu.identity.scan.ScanDispositionDetector
 import io.falu.identity.scan.ScanDisposition
 import org.joda.time.DateTime
@@ -72,7 +71,6 @@ internal class FaceDispositionMachine(
                 ScanDisposition.Desired(state.type, state.dispositionDetector)
             }
         }
-
     }
 
     override fun fromDesired(

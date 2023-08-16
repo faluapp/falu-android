@@ -19,10 +19,9 @@ import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationSelfieUpload
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.camera.CameraView
+import io.falu.identity.databinding.FragmentSelfieBinding
 import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.scan.ScanResult
-import io.falu.identity.databinding.FragmentSelfieBinding
-import io.falu.identity.utils.*
 import io.falu.identity.utils.navigateToApiResponseProblemFragment
 import io.falu.identity.utils.navigateToErrorFragment
 import io.falu.identity.utils.submitVerificationData
@@ -130,17 +129,20 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
             is ScanDisposition.Start -> {
                 resetUI()
             }
+
             is ScanDisposition.Detected -> {
                 binding.tvScanMessage.text = getString(R.string.selfie_text_face_detected)
             }
+
             is ScanDisposition.Desired -> {
                 binding.tvScanMessage.text =
                     getString(R.string.selfie_text_selfie_scan_completed)
             }
+
             is ScanDisposition.Undesired -> {}
             is ScanDisposition.Completed -> {}
             is ScanDisposition.Timeout, null -> {
-                //noOP
+                // noOP
             }
         }
     }
@@ -154,7 +156,7 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
             bitmap,
             onSuccess = { submitSelfieAndUploadedDocuments(it) },
             onFailure = { navigateToErrorFragment(it) },
-            onError = { navigateToApiResponseProblemFragment(it) },
+            onError = { navigateToApiResponseProblemFragment(it) }
         )
     }
 
@@ -163,7 +165,7 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
             VerificationSelfieUpload(
                 UploadMethod.MANUAL,
                 file = file.id,
-                variance = 0F,
+                variance = 0F
             )
 
         val document = JsonPatchDocument().replace("/selfie", selfie)

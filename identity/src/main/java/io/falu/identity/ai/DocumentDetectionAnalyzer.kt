@@ -9,7 +9,11 @@ import androidx.camera.core.ImageProxy
 import io.falu.identity.camera.AnalyzerBuilder
 import io.falu.identity.camera.AnalyzerOutputListener
 import io.falu.identity.scan.ScanDisposition
-import io.falu.identity.utils.*
+import io.falu.identity.utils.centerCrop
+import io.falu.identity.utils.crop
+import io.falu.identity.utils.maxAspectRatio
+import io.falu.identity.utils.rotate
+import io.falu.identity.utils.toBitmap
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.support.common.ops.NormalizeOp
@@ -101,7 +105,7 @@ internal class DocumentDetectionAnalyzer internal constructor(
         val bestBox = boxes.sliceArray(bestIndex..bestIndex + 3)
 
         val box = BoundingBox(
-            left = bestBox[0],// x-min
+            left = bestBox[0], // x-min
             top = bestBox[1], // y-min
             width = bestBox[2] - bestBox[0], // x-max - x-min
             height = bestBox[3] - bestBox[1] // y-max - y-min
@@ -164,7 +168,7 @@ internal class DocumentDetectionAnalyzer internal constructor(
             DL_FRONT,
             ID_BACK,
             ID_FRONT,
-            PASSPORT,
+            PASSPORT
         )
 
         private val DOCUMENT_OPTIONS_MAP = mapOf(

@@ -75,7 +75,7 @@ internal class CaptureDocumentViewModel(
     }
 
     internal class CaptureDocumentViewModelFactory(
-        ownerProvider: () -> SavedStateRegistryOwner,
+        ownerProvider: () -> SavedStateRegistryOwner
     ) : AbstractSavedStateViewModelFactory(ownerProvider(), null) {
 
         @Suppress("UNCHECKED_CAST")

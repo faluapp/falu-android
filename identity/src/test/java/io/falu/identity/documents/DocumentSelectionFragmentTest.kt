@@ -20,7 +20,13 @@ import io.falu.identity.databinding.FragmentDocumentSelectionBinding
 import io.falu.identity.utils.createFactoryFor
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.kotlin.*
+import org.mockito.kotlin.KArgumentCaptor
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import kotlin.test.assertEquals
@@ -51,7 +57,7 @@ class DocumentSelectionFragmentTest {
                         IdentityDocumentType.PASSPORT,
                         IdentityDocumentType.IDENTITY_CARD,
                         IdentityDocumentType.DRIVING_LICENSE
-                    ),
+                    )
                 )
             )
         )
@@ -113,7 +119,9 @@ class DocumentSelectionFragmentTest {
         }
     }
 
-    private fun launchDocumentSelectionFragment(block: (binding: FragmentDocumentSelectionBinding, navController: TestNavHostController) -> Unit) {
+    private fun launchDocumentSelectionFragment(
+        block: (binding: FragmentDocumentSelectionBinding, navController: TestNavHostController) -> Unit
+    ) {
         launchFragmentInContainer(themeResId = MatR.style.Theme_MaterialComponents) {
             DocumentSelectionFragment(createFactoryFor(mockIdentityVerificationViewModel))
         }.onFragment {

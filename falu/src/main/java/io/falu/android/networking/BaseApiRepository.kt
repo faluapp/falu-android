@@ -1,14 +1,14 @@
 package io.falu.android.networking
 
 import android.content.Context
-import io.falu.core.exceptions.APIException
+import io.falu.core.exceptions.ApiException
 import io.falu.core.exceptions.FaluException
+import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
 import software.tingle.api.ResourceResponse
-import kotlin.coroutines.CoroutineContext
 
 /**
  * A base class for Falu-related API requests.
@@ -28,7 +28,6 @@ internal abstract class BaseApiRepository internal constructor(
     override val coroutineContext: CoroutineContext
         get() = Job() + Dispatchers.Main
 
-
     // handle falu Resource Response
     protected suspend fun <TResource> handleFaluResponse(
         response: ResourceResponse<TResource>?,
@@ -39,7 +38,7 @@ internal abstract class BaseApiRepository internal constructor(
             return@withContext
         }
 
-        val exception = APIException(problem = response?.error, statusCode = response?.statusCode)
+        val exception = ApiException(problem = response?.error, statusCode = response?.statusCode)
         dispatchError(exception, callbacks)
     }
 
@@ -50,5 +49,4 @@ internal abstract class BaseApiRepository internal constructor(
     ) = withContext(Dispatchers.Main) {
         callback.onError(FaluException.create(throwable))
     }
-
 }

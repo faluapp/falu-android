@@ -1,8 +1,8 @@
 package io.falu.android.models.payments
 
 import android.os.Parcelable
+import java.util.Date
 import kotlinx.parcelize.Parcelize
-import java.util.*
 
 /**
  * [The Payment Failure object](https://falu.io)
@@ -22,5 +22,5 @@ data class PaymentFailure(
     /**
      * Failure message as received from teh provider
      */
-    var detail: String?,
+    var detail: String?
 ) : Parcelable

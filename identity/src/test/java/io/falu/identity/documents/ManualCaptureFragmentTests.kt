@@ -20,7 +20,13 @@ import io.falu.identity.databinding.FragmentManualCaptureBinding
 import io.falu.identity.utils.createFactoryFor
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.kotlin.*
+import org.mockito.kotlin.KArgumentCaptor
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.same
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import kotlin.test.assertEquals
@@ -77,7 +83,6 @@ class ManualCaptureFragmentTests {
         }
     }
 
-
     @Test
     fun `test if image capture works for id and dl`() {
         captureImage()
@@ -88,7 +93,9 @@ class ManualCaptureFragmentTests {
         captureImage(IdentityDocumentType.PASSPORT)
     }
 
-    private fun captureImage(documentType: IdentityDocumentType = IdentityDocumentType.IDENTITY_CARD) {
+    private fun captureImage(
+        documentType: IdentityDocumentType = IdentityDocumentType.IDENTITY_CARD
+    ) {
         launchManualFragment(documentType) { binding, _, fragment ->
             val frontImageCaptor: KArgumentCaptor<(Uri) -> Unit> = argumentCaptor()
             val backImageImageCaptor: KArgumentCaptor<(Uri) -> Unit> = argumentCaptor()
@@ -116,7 +123,11 @@ class ManualCaptureFragmentTests {
 
     private fun launchManualFragment(
         documentType: IdentityDocumentType = IdentityDocumentType.IDENTITY_CARD,
-        block: (binding: FragmentManualCaptureBinding, navController: TestNavHostController, fragment: AbstractCaptureFragment) -> Unit
+        block: (
+            binding: FragmentManualCaptureBinding,
+            navController: TestNavHostController,
+            fragment: AbstractCaptureFragment
+        ) -> Unit
     ) {
         launchFragmentInContainer(
             bundleOf(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE to documentType),

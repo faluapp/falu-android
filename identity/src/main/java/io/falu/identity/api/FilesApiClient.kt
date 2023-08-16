@@ -1,8 +1,8 @@
 package io.falu.identity.api
 
 import com.google.gson.Gson
-import io.falu.core.exceptions.APIConnectionException
-import io.falu.core.exceptions.APIException
+import io.falu.core.exceptions.ApiConnectionException
+import io.falu.core.exceptions.ApiException
 import io.falu.core.exceptions.AuthenticationException
 import io.falu.identity.BuildConfig
 import io.falu.identity.api.models.country.SupportedCountry
@@ -22,12 +22,12 @@ internal class FilesApiClient : AbstractHttpApiClient(EmptyAuthenticationProvide
 
     @Throws(
         AuthenticationException::class,
-        APIConnectionException::class,
-        APIException::class
+        ApiConnectionException::class,
+        ApiException::class
     )
     fun getSupportedCountries(): ResourceResponse<Array<SupportedCountry>> {
         val builder = Request.Builder()
-            .url("${baseUrl}/identity/supported-countries.json")
+            .url("$baseUrl/identity/supported-countries.json")
             .get()
 
         return execute(builder, Array<SupportedCountry>::class.java)
@@ -35,8 +35,8 @@ internal class FilesApiClient : AbstractHttpApiClient(EmptyAuthenticationProvide
 
     @Throws(
         AuthenticationException::class,
-        APIConnectionException::class,
-        APIException::class
+        ApiConnectionException::class,
+        ApiException::class
     )
     fun downloadFile(url: String, output: File): ResourceResponse<File> {
         val builder = Request.Builder()
@@ -53,12 +53,12 @@ internal class FilesApiClient : AbstractHttpApiClient(EmptyAuthenticationProvide
             .writeTimeout(30, TimeUnit.SECONDS)
 
         if (BuildConfig.DEBUG) {
-            builder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+            builder.addInterceptor(HttpLoggingInterceptor()
+                .setLevel(HttpLoggingInterceptor.Level.BODY))
         }
 
         return super.buildBackChannel(builder)
     }
-
 
     private fun downloadFile(
         builder: Request.Builder,

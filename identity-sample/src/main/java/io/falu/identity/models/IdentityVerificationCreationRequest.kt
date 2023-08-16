@@ -16,5 +16,5 @@ data class IdentityVerificationCreationRequest(
     /**
      * A set of verification checks to be performed.
      */
-    var options: IdentityVerificationOptions?,
+    var options: IdentityVerificationOptions?
 )

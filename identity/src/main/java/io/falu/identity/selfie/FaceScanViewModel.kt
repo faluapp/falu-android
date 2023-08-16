@@ -31,7 +31,6 @@ internal class FaceScanViewModel : ViewModel(),
     val faceScanCompleteDisposition: LiveData<ScanResult>
         get() = _faceScanCompleteDisposition.asLiveData(Dispatchers.Main)
 
-
     /***/
     internal var scanner: FaceScanner? = null
 

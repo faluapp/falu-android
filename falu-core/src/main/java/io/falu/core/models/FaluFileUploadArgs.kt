@@ -1,9 +1,7 @@
 package io.falu.core.models
 
-import androidx.annotation.RestrictTo
-import okhttp3.MediaType
 import java.io.File
-import java.util.*
+import java.util.Date
 
 /**
  * Falu requires request of type `multipart/form-data` when uploading files.
@@ -13,19 +11,19 @@ data class FaluFileUploadArgs(
     /**
      * Contents of the file. It should follow the specifications of RFC 2388.
      */
-    internal var file: File,
+    val file: File,
 
     /**
      * Purpose for a file, possible values include:- `business.icon`, `business.logo`,`customer.signature`,
      * `customer.selfie` `customer.tax.document`,`message.media`,`identity.document`,`identity.video`
      */
-    internal var purpose: String,
+    val purpose: String,
 
     /**
      * Time at which the file expires.
      */
-    internal var date: Date? = null,
-) {
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    internal lateinit var mediaType: MediaType
-}
+    val date: Date? = null,
+
+    /***/
+    val description: String? = null
+)

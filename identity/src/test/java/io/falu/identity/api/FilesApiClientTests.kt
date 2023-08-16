@@ -45,7 +45,7 @@ class FilesApiClientTests {
 
     @Test
     fun `test if fetching supported countries works`() {
-        mockWebServer.url("${baseUrl}/identity/supported-countries.json")
+        mockWebServer.url("$baseUrl/identity/supported-countries.json")
 
         val resourceResponse = getResponse(tResponse = arrayOf(supportedCountry))
         whenever(apiClient.getSupportedCountries()).thenReturn(resourceResponse)

@@ -10,7 +10,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 internal class FileUtils internal constructor(private val context: Context) {
 

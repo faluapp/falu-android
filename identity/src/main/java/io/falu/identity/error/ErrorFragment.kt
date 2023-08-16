@@ -45,7 +45,6 @@ internal class ErrorFragment : AbstractErrorFragment() {
                 }
             }
         }
-
     }
 
     internal companion object {

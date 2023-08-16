@@ -6,9 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import io.falu.identity.IdentityVerificationResultCallback
-import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.databinding.FragmentErrorBinding
 
 internal abstract class AbstractErrorFragment : Fragment() {

@@ -1,6 +1,6 @@
 package io.falu.android.models.payments
 
-import java.util.*
+import java.util.Currency
 import kotlin.math.pow
 
 /**
@@ -8,9 +8,9 @@ import kotlin.math.pow
  */
 internal data class Money(
     var amount: Number,
-    var currency: Currency,
+    var currency: Currency
 ) {
-    /// Minor Unit is a fraction of the base (ex. cents, stotinka, etc.)
+    // / Minor Unit is a fraction of the base (ex. cents, stotinka, etc.)
     val amountInMinorUnits: Int
         get() {
             val units = 10.toDouble().pow(currency.defaultFractionDigits)

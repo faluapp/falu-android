@@ -34,7 +34,9 @@ class ConfirmationFragmentTest {
         }
     }
 
-    private fun launchConfirmationFragment(block: (binding: FragmentConfirmationBinding, navController: TestNavHostController) -> Unit) =
+    private fun launchConfirmationFragment(
+        block: (binding: FragmentConfirmationBinding, navController: TestNavHostController) -> Unit
+    ) =
         launchFragmentInContainer(themeResId = MatR.style.Theme_MaterialComponents) {
             ConfirmationFragment(mockVerificationResultCallback)
         }.onFragment {

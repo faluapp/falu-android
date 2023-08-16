@@ -1,10 +1,9 @@
 package io.falu.core.models
 
 import com.google.gson.annotations.JsonAdapter
-import io.falu.core.models.FaluModel
 import kotlinx.parcelize.Parcelize
 import software.tingle.api.adapters.ISO8601DateAdapter
-import java.util.*
+import java.util.Date
 
 @Parcelize
 data class FaluFile(

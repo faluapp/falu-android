@@ -9,6 +9,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
+import com.nhaarman.mockitokotlin2.KArgumentCaptor
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.same
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.DocumentUploadDisposition
@@ -19,7 +25,6 @@ import io.falu.identity.documents.DocumentSelectionFragment
 import io.falu.identity.utils.createFactoryFor
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.kotlin.*
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import kotlin.test.assertEquals
@@ -42,7 +47,7 @@ class UploadCaptureFragmentTest {
     @Test
     fun `test if result callbacks are initialized and UI correctness for ID cards and DLs`() {
         launchUploadFragment { binding, _, fragment ->
-            val callbackCaptor: KArgumentCaptor<(Uri) -> Unit> = argumentCaptor()
+            val callbackCaptor = argumentCaptor<(Uri) -> Unit>()
 
             verify(mockCaptureDocumentViewModel).pickDocumentImages(
                 same(fragment),
@@ -112,7 +117,11 @@ class UploadCaptureFragmentTest {
 
     private fun launchUploadFragment(
         documentType: IdentityDocumentType = IdentityDocumentType.IDENTITY_CARD,
-        block: (binding: FragmentUploadCaptureBinding, navController: TestNavHostController, fragment: AbstractCaptureFragment) -> Unit
+        block: (
+            binding: FragmentUploadCaptureBinding,
+            navController: TestNavHostController,
+            fragment: AbstractCaptureFragment
+        ) -> Unit
     ) {
         launchFragmentInContainer(
             bundleOf(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE to documentType),
@@ -133,5 +142,4 @@ class UploadCaptureFragmentTest {
             block(FragmentUploadCaptureBinding.bind(it.requireView()), navController, it)
         }
     }
-
 }

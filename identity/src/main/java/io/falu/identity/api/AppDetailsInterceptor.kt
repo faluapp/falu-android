@@ -19,7 +19,9 @@ internal class AppDetailsInterceptor internal constructor(context: Context) :
 
             val installerName = getInstallerPackageName(context.packageName) ?: "StandAloneInstall"
 
-            return "falu-identity/${BuildConfig.FALU_VERSION_NAME}(${BuildConfig.FALU_VERSION_CODE}); $installerName; ($manufacturer; $model; SDK $version; Android $versionRelease)"
+            return "falu-identity/${BuildConfig.FALU_VERSION_NAME}" +
+                    "(${BuildConfig.FALU_VERSION_CODE}); $installerName;" +
+                    " ($manufacturer; $model; SDK $version; Android $versionRelease)"
         }
     }
 }

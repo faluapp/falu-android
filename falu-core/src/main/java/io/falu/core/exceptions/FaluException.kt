@@ -4,7 +4,7 @@ import androidx.annotation.RestrictTo
 import org.json.JSONException
 import software.tingle.api.HttpApiResponseProblem
 import java.io.IOException
-import java.util.*
+import java.util.Objects
 
 /**
  * A base class for Falu-related exceptions.
@@ -16,7 +16,6 @@ abstract class FaluException(
     cause: Throwable? = null,
     message: String? = problem?.description
 ) : Exception(message, cause) {
-
 
     override fun hashCode(): Int {
         return Objects.hash(problem, statusCode, errorCode, message)
@@ -51,9 +50,9 @@ abstract class FaluException(
         fun create(throwable: Throwable): FaluException {
             return when (throwable) {
                 is FaluException -> throwable
-                is JSONException -> APIException(throwable)
-                is IOException -> APIConnectionException.create(throwable)
-                else -> APIException(throwable)
+                is JSONException -> ApiException(throwable)
+                is IOException -> ApiConnectionException.create(throwable)
+                else -> ApiException(throwable)
             }
         }
     }
