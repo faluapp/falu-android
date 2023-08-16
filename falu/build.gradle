@@ -77,7 +77,7 @@ dependencies {
     testImplementation "org.mockito:mockito-inline:$mockito_core_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test-annotations-common:$kotlin_version"
-    testImplementation "androidx.fragment:fragment-testing:1.6.0"
+    testImplementation "androidx.fragment:fragment-testing:1.6.1"
     testImplementation "org.robolectric:robolectric:$robo_version"
     testImplementation "androidx.test.ext:junit:$junit_ext_version"
     testImplementation "androidx.test.espresso:espresso-core:$expresso_version"
