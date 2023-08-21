@@ -10,4 +10,5 @@
     <string name="identity_verification_allowed_type_passport">Passport</string>
     <string name="identity_verification_allowed_type_identity_card">Identity Card</string>
     <string name="identity_verification_option">Use Native SDK</string>
+    <string name="identity_verification_option_id_number">Verify ID number.</string>
 </resources>

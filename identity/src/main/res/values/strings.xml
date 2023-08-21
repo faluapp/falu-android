@@ -5,6 +5,7 @@
     <string name="button_select">Select</string>
     <string name="button_take_photo">Take Photo</string>
     <string name="button_scan">Scan</string>
+    <string name="button_verify">Verify</string>
     <string name="button_take_again">Take Again</string>
     <string name="button_scan_again">Scan Again</string>
     <string name="button_rectify">Resolve Error</string>
@@ -79,4 +80,17 @@
     <string name="selfie_text_face_detected">Face detected, stay still scan in progress!</string>
     <string name="selfie_text_selfie_scan_completed">Scan Complete!</string>
 
+    <!-- Document Verification -->
+    <string name="document_verification_title_document_verification">Verify a user\'s identity by providing their first and last name.</string>
+    <string name="document_verification_hint_first_name">First Name</string>
+    <string name="document_verification_hint_last_name">Last Name</string>
+    <string name="document_verification_hint_document_number">Document Number</string>
+    <string name="document_verification_hint_gender">Gender</string>
+    <string name="document_verification_gender_male">Male</string>
+    <string name="document_verification_gender_female">Female</string>
+    <string name="document_verification_hint_birthday">Date Of Birth</string>
+    <string name="document_verification_error_birthday">The date of birth of the user to be verified is required.</string>
+    <string name="document_verification_error_invalid_document_number">Invalid document number.</string>
+    <string name="document_verification_error_invalid_first_name">The first name is required.</string>
+    <string name="document_verification_error_invalid_last_name">The last name is required.</string>
 </resources>

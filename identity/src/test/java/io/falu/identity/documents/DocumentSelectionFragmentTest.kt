@@ -16,6 +16,7 @@ import io.falu.identity.api.models.country.SupportedCountry
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationOptions
 import io.falu.identity.api.models.verification.VerificationOptionsForDocument
+import io.falu.identity.api.models.verification.VerificationType
 import io.falu.identity.databinding.FragmentDocumentSelectionBinding
 import io.falu.identity.utils.createFactoryFor
 import org.junit.Test
@@ -48,7 +49,9 @@ class DocumentSelectionFragmentTest {
             )
         )
     )
+
     private val verificationWithAllowedDocuments = mock<Verification>().also {
+        whenever(it.type).thenReturn(VerificationType.DOCUMENT)
         whenever(it.options).thenReturn(
             VerificationOptions(
                 countries = mutableListOf("ken", "tza", "uga"),
