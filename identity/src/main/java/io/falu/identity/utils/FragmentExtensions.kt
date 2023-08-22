@@ -1,8 +1,11 @@
 package io.falu.identity.utils
 
+import android.content.Context
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.models.verification.VerificationUploadRequest
@@ -52,8 +55,7 @@ internal fun Fragment.submitVerificationData(
                 }
 
                 it.submitted -> {
-                    findNavController()
-                        .navigate(R.id.action_global_fragment_confirmation)
+                    findNavController().navigate(R.id.action_global_fragment_confirmation)
                 }
             }
         },
@@ -78,4 +80,36 @@ internal fun Fragment.navigateToErrorFragment(it: Throwable) {
  */
 internal fun Fragment.navigateToApiResponseProblemFragment(it: HttpApiResponseProblem?) {
     findNavController().navigateWithApiExceptions(requireContext(), it)
+}
+
+internal fun Fragment.showDatePickerDialog(onPositiveClickListener: (Long) -> Unit) {
+    val datePicker = MaterialDatePicker.Builder
+        .datePicker()
+        .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+        .build()
+    datePicker.addOnPositiveButtonClickListener {
+        onPositiveClickListener(it)
+    }
+    datePicker.show(childFragmentManager, "MaterialDatePicker")
+}
+
+fun Context.showDialog(
+    title: String? = null,
+    message: String? = null,
+    positiveButton: Pair<String, () -> Unit>,
+    negativeButton: Pair<String, () -> Unit>? = null
+) {
+    val dialog = MaterialAlertDialogBuilder(this).setMessage(message)
+        .setTitle(title)
+        .setPositiveButton(positiveButton.first) { _, _ ->
+            positiveButton.second()
+        }
+
+    if (negativeButton != null) {
+        dialog.setNegativeButton(negativeButton.first) { _, _ ->
+            negativeButton.second
+        }
+    }
+
+    dialog.show()
 }

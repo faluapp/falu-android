@@ -15,6 +15,7 @@ import io.falu.identity.R
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.country.SupportedCountry
 import io.falu.identity.api.models.verification.Verification
+import io.falu.identity.api.models.verification.VerificationType
 import io.falu.identity.databinding.FragmentDocumentSelectionBinding
 import io.falu.identity.utils.navigateToApiResponseProblemFragment
 import io.falu.identity.utils.updateVerification
@@ -28,6 +29,8 @@ class DocumentSelectionFragment(private val factory: ViewModelProvider.Factory) 
     private val binding get() = _binding!!
 
     private var identityDocumentType: IdentityDocumentType? = null
+
+    private var verification: Verification? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,22 +54,7 @@ class DocumentSelectionFragment(private val factory: ViewModelProvider.Factory) 
         binding.buttonContinue.text = getString(R.string.button_continue)
         binding.buttonContinue.isEnabled = false
         binding.buttonContinue.setOnClickListener {
-            binding.buttonContinue.showProgress()
-            val country = binding.buttonContinue.tag as SupportedCountry
-            val document = JsonPatchDocument()
-                .replace("country", country.country.code)
-
-            updateVerification(
-                viewModel,
-                document,
-                source = R.id.action_fragment_welcome_to_fragment_document_selection,
-                onSuccess = {
-                    val bundle = bundleOf(KEY_IDENTITY_DOCUMENT_TYPE to identityDocumentType)
-                    findNavController().navigate(
-                        R.id.action_fragment_document_selection_to_fragment_document_capture_methods,
-                        bundle
-                    )
-                })
+            updateVerification()
         }
 
         binding.groupDocumentTypes.setOnCheckedStateChangeListener { group, checkIds ->
@@ -75,8 +63,7 @@ class DocumentSelectionFragment(private val factory: ViewModelProvider.Factory) 
             when (group.checkedChipId) {
                 R.id.chip_passport -> identityDocumentType = IdentityDocumentType.PASSPORT
                 R.id.chip_identity_card -> identityDocumentType = IdentityDocumentType.IDENTITY_CARD
-                R.id.chip_driving_license -> identityDocumentType =
-                    IdentityDocumentType.DRIVING_LICENSE
+                R.id.chip_driving_license -> identityDocumentType = IdentityDocumentType.DRIVING_LICENSE
             }
         }
     }
@@ -126,10 +113,40 @@ class DocumentSelectionFragment(private val factory: ViewModelProvider.Factory) 
         )
     }
 
+    /***/
+    private fun updateVerification() {
+        verification?.let { updateVerification(it) }
+    }
+
+    /***/
+    private fun updateVerification(verification: Verification) {
+        binding.buttonContinue.showProgress()
+        val country = binding.buttonContinue.tag as SupportedCountry
+        val document = JsonPatchDocument()
+            .replace("country", country.country.code)
+
+        val action = if (verification.type != VerificationType.IDENTITY_NUMBER) {
+            R.id.action_fragment_document_selection_to_fragment_document_capture_methods
+        } else {
+            R.id.action_fragment_document_selection_to_fragment_identity_verification
+        }
+
+        updateVerification(
+            viewModel,
+            document,
+            source = R.id.action_fragment_welcome_to_fragment_document_selection,
+            onSuccess = {
+                val bundle = bundleOf(KEY_IDENTITY_DOCUMENT_TYPE to identityDocumentType)
+                findNavController().navigate(action, bundle)
+            })
+    }
+
     /**
      *
      */
     private fun acceptedDocumentOptions(verification: Verification, country: SupportedCountry) {
+        this.verification = verification
+
         val acceptedDocuments =
             verification.options.document.allowed.toSet().intersect(country.documents.toSet())
 

@@ -1,146 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/sw_verification_option"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:checked="true"
-        android:paddingHorizontal="16dp"
-        android:text="@string/identity_verification_option"
-        app:layout_constraintBottom_toTopOf="@id/card_document_options"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card_document_options"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="1dp"
-        app:layout_constraintBottom_toTopOf="@id/view_verification_options"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <LinearLayout
+            android:id="@+id/sw_verification_option"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_margin="8dp"
+            android:checked="true"
             android:paddingHorizontal="16dp"
-            android:paddingTop="8dp">
+            android:text="@string/identity_verification_option"
+            app:layout_constraintBottom_toTopOf="@id/card_document_options"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_document_options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="1dp"
+            app:layout_constraintBottom_toTopOf="@id/view_verification_options"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="8dp">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/identity_verification_allowed_types"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/identity_verification_allowed_types"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 
             <LinearLayout
-                android:id="@+id/view_allowed_types"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toTopOf="@+id/view_verification_options"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent">
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/sw_allowed_type_dl"
+                    android:id="@+id/view_allowed_types"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="@string/identity_verification_allowed_type_driver_license" />
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toTopOf="@+id/view_verification_options"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent">
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/sw_allowed_type_passport"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="@string/identity_verification_allowed_type_passport" />
+                        android:id="@+id/sw_allowed_type_dl"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="@string/identity_verification_allowed_type_driver_license" />
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/sw_allowed_type_id"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="@string/identity_verification_allowed_type_identity_card" />
+                        android:id="@+id/sw_allowed_type_passport"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="@string/identity_verification_allowed_type_passport" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/sw_allowed_type_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="@string/identity_verification_allowed_type_identity_card" />
             </LinearLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-
     <LinearLayout
-        android:id="@+id/view_verification_options"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="32dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_document_options">
+            android:id="@+id/view_verification_options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="32dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_document_options">
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/identity_verification_options"
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/identity_verification_options"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/sw_allow_document_selfie"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:text="@string/identity_verification_require_selfie" />
+                android:id="@+id/sw_allow_document_selfie"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="@string/identity_verification_require_selfie" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/sw_allow_uploads"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:text="@string/identity_verification_allow_uploads" />
+                android:id="@+id/sw_allow_uploads"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="@string/identity_verification_allow_uploads" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/sw_allow_id_number_verification"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="@string/identity_verification_option_id_number" />
 
     </LinearLayout>
 
-
     <LinearLayout
-        android:id="@+id/view_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_verification_options"
-        app:layout_constraintVertical_bias="0.94">
-
-        <TextView
-            android:id="@+id/tv_result"
+            android:id="@+id/view_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_verification_options"
+            app:layout_constraintVertical_bias="0.94">
+
+        <TextView
+                android:id="@+id/tv_result"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:id="@+id/view_progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"
-            android:visibility="invisible"
-            app:indicatorSize="28dp" />
+                android:id="@+id/view_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="invisible"
+                app:indicatorSize="28dp" />
 
         <Button
-            android:id="@+id/button_start_verification"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/button_start_verification" />
+                android:id="@+id/button_start_verification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_start_verification" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

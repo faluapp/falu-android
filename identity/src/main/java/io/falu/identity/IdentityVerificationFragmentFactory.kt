@@ -12,6 +12,7 @@ import io.falu.identity.documents.DocumentCaptureMethodsFragment
 import io.falu.identity.documents.DocumentSelectionFragment
 import io.falu.identity.selfie.SelfieFragment
 import io.falu.identity.support.SupportFragment
+import io.falu.identity.verification.IdentificationVerificationFragment
 import io.falu.identity.welcome.WelcomeFragment
 
 internal class IdentityVerificationFragmentFactory(
@@ -24,8 +25,7 @@ internal class IdentityVerificationFragmentFactory(
         return when (className) {
             WelcomeFragment::class.java.name -> WelcomeFragment(factory, callback)
             DocumentSelectionFragment::class.java.name -> DocumentSelectionFragment(factory)
-            DocumentCaptureMethodsFragment::class.java.name ->
-                DocumentCaptureMethodsFragment(factory)
+            DocumentCaptureMethodsFragment::class.java.name -> DocumentCaptureMethodsFragment(factory)
             ManualCaptureFragment::class.java.name -> ManualCaptureFragment(factory)
             ScanCaptureFragment::class.java.name -> ScanCaptureFragment(factory)
             ScanCaptureSideFragment::class.java.name -> ScanCaptureSideFragment(factory)
@@ -33,6 +33,7 @@ internal class IdentityVerificationFragmentFactory(
             ConfirmationFragment::class.java.name -> ConfirmationFragment(callback)
             SupportFragment::class.java.name -> SupportFragment(factory)
             SelfieFragment::class.java.name -> SelfieFragment(factory)
+            IdentificationVerificationFragment::class.java.name -> IdentificationVerificationFragment(factory)
             else -> super.instantiate(classLoader, className)
         }
     }

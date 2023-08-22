@@ -7,6 +7,7 @@ import io.falu.identity.models.IdentityVerification
 import io.falu.identity.models.IdentityVerificationCreationRequest
 import io.falu.identity.models.IdentityVerificationOptions
 import io.falu.identity.models.IdentityVerificationOptionsForDocument
+import io.falu.identity.models.IdentityVerificationOptionsForIdNumber
 import io.falu.identity.models.IdentityVerificationOptionsForSelfie
 import io.falu.identity.sample.BuildConfig
 import okhttp3.OkHttpClient
@@ -26,20 +27,23 @@ class VerificationViewModel(application: Application) : AndroidViewModel(applica
         allowPassport: Boolean,
         allowIdentityCard: Boolean,
         allowUploads: Boolean,
-        allowDocumentSelfie: Boolean
+        allowDocumentSelfie: Boolean,
+        allowIdNumberVerification: Boolean
     ) = liveData {
 
         val request = IdentityVerificationCreationRequest(
             options = IdentityVerificationOptions(
                 allowUploads = allowUploads,
-                document = generateDocumentOptions(
-                    allowDrivingLicense,
-                    allowPassport,
-                    allowIdentityCard
-                ),
-                selfie = if (allowDocumentSelfie) IdentityVerificationOptionsForSelfie() else null
+                document = if (allowDrivingLicense || allowPassport || allowIdentityCard)
+                    generateDocumentOptions(
+                        allowDrivingLicense,
+                        allowPassport,
+                        allowIdentityCard
+                    ) else null,
+                selfie = if (allowDocumentSelfie) IdentityVerificationOptionsForSelfie() else null,
+                idNumber = if (allowIdNumberVerification) IdentityVerificationOptionsForIdNumber() else null
             ),
-            type = getVerificationType(allowDocumentSelfie)
+            type = getVerificationType(allowDocumentSelfie, allowIdNumberVerification)
         )
 
         val response = apiClient.createIdentityVerification(request)
@@ -60,9 +64,14 @@ class VerificationViewModel(application: Application) : AndroidViewModel(applica
         )
     }
 
-    private fun getVerificationType(requireMatchingSelfie: Boolean): String {
-        return if (requireMatchingSelfie) {
+    private fun getVerificationType(
+        requireMatchingSelfie: Boolean,
+        allowIdNumberVerification: Boolean
+    ): String {
+        return if (requireMatchingSelfie && !allowIdNumberVerification) {
             VERIFICATION_TYPE_DOCUMENT_AND_SELFIE
+        } else if (allowIdNumberVerification) {
+            VERIFICATION_TYPE_ID_NUMBER
         } else {
             VERIFICATION_TYPE_DOCUMENT
         }
@@ -74,6 +83,7 @@ class VerificationViewModel(application: Application) : AndroidViewModel(applica
         const val ALLOWED_TYPE_ID_CARD = "id_card"
         const val VERIFICATION_TYPE_DOCUMENT = "document"
         const val VERIFICATION_TYPE_DOCUMENT_AND_SELFIE = "document_and_selfie"
+        const val VERIFICATION_TYPE_ID_NUMBER = "id_number"
     }
 }
 

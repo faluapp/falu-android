@@ -1,120 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tool="http://schemas.android.com/tools"
-    android:id="@+id/identity_verification_nav_graph"
-    app:startDestination="@id/fragment_welcome">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tool="http://schemas.android.com/tools"
+        android:id="@+id/identity_verification_nav_graph"
+        app:startDestination="@id/fragment_welcome">
 
     <action
-        android:id="@+id/action_global_fragment_confirmation"
-        app:destination="@id/fragment_confirmation" />
+            android:id="@+id/action_global_fragment_confirmation"
+            app:destination="@id/fragment_confirmation" />
 
     <action
-        android:id="@+id/action_global_fragment_error"
-        app:destination="@id/fragment_error" />
+            android:id="@+id/action_global_fragment_error"
+            app:destination="@id/fragment_error" />
 
     <action
-        android:id="@+id/action_global_fragment_support"
-        app:destination="@id/fragment_support" />
+            android:id="@+id/action_global_fragment_support"
+            app:destination="@id/fragment_support" />
 
     <action
-        android:id="@+id/action_global_fragment_selfie"
-        app:destination="@id/fragment_selfie" />
+            android:id="@+id/action_global_fragment_selfie"
+            app:destination="@id/fragment_selfie" />
 
     <action
-        android:id="@+id/action_global_fragment_scan_capture_error"
-        app:destination="@id/fragment_scan_capture_error" />
+            android:id="@+id/action_global_fragment_scan_capture_error"
+            app:destination="@id/fragment_scan_capture_error" />
 
     <action
-        android:id="@+id/action_global_fragment_selfie_capture_error"
-        app:destination="@id/fragment_selfie_capture_error_fragment" />
+            android:id="@+id/action_global_fragment_selfie_capture_error"
+            app:destination="@id/fragment_selfie_capture_error_fragment" />
 
     <fragment
-        android:id="@+id/fragment_welcome"
-        android:name="io.falu.identity.welcome.WelcomeFragment"
-        android:label="WelcomeFragment"
-        tool:layout="@layout/fragment_welcome">
+            android:id="@+id/fragment_welcome"
+            android:name="io.falu.identity.welcome.WelcomeFragment"
+            android:label="WelcomeFragment"
+            tool:layout="@layout/fragment_welcome">
         <action
-            android:id="@+id/action_fragment_welcome_to_fragment_document_selection"
-            app:destination="@id/fragment_document_selection" />
+                android:id="@+id/action_fragment_welcome_to_fragment_document_selection"
+                app:destination="@id/fragment_document_selection" />
     </fragment>
     <fragment
-        android:id="@+id/fragment_document_selection"
-        android:name="io.falu.identity.documents.DocumentSelectionFragment"
-        android:label="DocumentSelectionFragment"
-        tool:layout="@layout/fragment_document_selection">
+            android:id="@+id/fragment_document_selection"
+            android:name="io.falu.identity.documents.DocumentSelectionFragment"
+            android:label="DocumentSelectionFragment"
+            tool:layout="@layout/fragment_document_selection">
         <action
-            android:id="@+id/action_fragment_document_selection_to_fragment_document_capture_methods"
-            app:destination="@id/fragment_document_capture_methods" />
+                android:id="@+id/action_fragment_document_selection_to_fragment_document_capture_methods"
+                app:destination="@id/fragment_document_capture_methods" />
+        <action
+                android:id="@+id/action_fragment_document_selection_to_fragment_identity_verification"
+                app:destination="@id/fragment_identity_verification" />
     </fragment>
     <fragment
-        android:id="@+id/fragment_document_capture_methods"
-        android:name="io.falu.identity.documents.DocumentCaptureMethodsFragment"
-        android:label="DocumentCaptureMethodsFragment"
-        tool:layout="@layout/fragment_document_capture_methods">
+            android:id="@+id/fragment_document_capture_methods"
+            android:name="io.falu.identity.documents.DocumentCaptureMethodsFragment"
+            android:label="DocumentCaptureMethodsFragment"
+            tool:layout="@layout/fragment_document_capture_methods">
         <action
-            android:id="@+id/action_fragment_document_capture_methods_to_fragment_upload_capture"
-            app:destination="@id/fragment_upload_capture" />
+                android:id="@+id/action_fragment_document_capture_methods_to_fragment_upload_capture"
+                app:destination="@id/fragment_upload_capture" />
         <action
-            android:id="@+id/action_fragment_document_capture_methods_to_fragment_manual_capture"
-            app:destination="@id/fragment_manual_capture" />
+                android:id="@+id/action_fragment_document_capture_methods_to_fragment_manual_capture"
+                app:destination="@id/fragment_manual_capture" />
         <action
-            android:id="@+id/action_fragment_document_capture_methods_to_fragment_scan_capture_side"
-            app:destination="@id/fragment_scan_capture_side" />
+                android:id="@+id/action_fragment_document_capture_methods_to_fragment_scan_capture_side"
+                app:destination="@id/fragment_scan_capture_side" />
 
     </fragment>
     <fragment
-        android:id="@+id/fragment_upload_capture"
-        android:name="io.falu.identity.capture.upload.UploadCaptureFragment"
-        android:label="UploadDocumentFragment"
-        tool:layout="@layout/fragment_upload_capture" />
+            android:id="@+id/fragment_upload_capture"
+            android:name="io.falu.identity.capture.upload.UploadCaptureFragment"
+            android:label="UploadDocumentFragment"
+            tool:layout="@layout/fragment_upload_capture" />
     <fragment
-        android:id="@+id/fragment_manual_capture"
-        android:name="io.falu.identity.capture.manual.ManualCaptureFragment"
-        android:label="PhotoUploadFragment"
-        tool:layout="@layout/fragment_manual_capture" />
+            android:id="@+id/fragment_manual_capture"
+            android:name="io.falu.identity.capture.manual.ManualCaptureFragment"
+            android:label="PhotoUploadFragment"
+            tool:layout="@layout/fragment_manual_capture" />
     <fragment
-        android:id="@+id/fragment_confirmation"
-        android:name="io.falu.identity.confirmation.ConfirmationFragment"
-        android:label="ConfirmationFragment"
-        tool:layout="@layout/fragment_confirmation" />
+            android:id="@+id/fragment_confirmation"
+            android:name="io.falu.identity.confirmation.ConfirmationFragment"
+            android:label="ConfirmationFragment"
+            tool:layout="@layout/fragment_confirmation" />
     <fragment
-        android:id="@+id/fragment_error"
-        android:name="io.falu.identity.error.ErrorFragment"
-        android:label="ErrorFragment"
-        tool:layout="@layout/fragment_error" />
+            android:id="@+id/fragment_error"
+            android:name="io.falu.identity.error.ErrorFragment"
+            android:label="ErrorFragment"
+            tool:layout="@layout/fragment_error" />
     <fragment
-        android:id="@+id/fragment_support"
-        android:name="io.falu.identity.support.SupportFragment"
-        android:label="SupportFragment"
-        tool:layout="@layout/fragment_support" />
+            android:id="@+id/fragment_support"
+            android:name="io.falu.identity.support.SupportFragment"
+            android:label="SupportFragment"
+            tool:layout="@layout/fragment_support" />
     <fragment
-        android:id="@+id/fragment_selfie"
-        android:name="io.falu.identity.selfie.SelfieFragment"
-        android:label="SelfieFragment"
-        tool:layout="@layout/fragment_selfie" />
+            android:id="@+id/fragment_selfie"
+            android:name="io.falu.identity.selfie.SelfieFragment"
+            android:label="SelfieFragment"
+            tool:layout="@layout/fragment_selfie" />
     <fragment
-        android:id="@+id/fragment_scan_capture"
-        android:name="io.falu.identity.capture.scan.ScanCaptureFragment"
-        android:label="ScanCaptureFragment"
-        tool:layout="@layout/fragment_scan_capture" />
+            android:id="@+id/fragment_scan_capture"
+            android:name="io.falu.identity.capture.scan.ScanCaptureFragment"
+            android:label="ScanCaptureFragment"
+            tool:layout="@layout/fragment_scan_capture" />
     <fragment
-        android:id="@+id/fragment_scan_capture_side"
-        android:name="io.falu.identity.capture.scan.ScanCaptureSideFragment"
-        android:label="ScanCaptureSideFragment"
-        tool:layout="@layout/fragment_capture_side">
+            android:id="@+id/fragment_scan_capture_side"
+            android:name="io.falu.identity.capture.scan.ScanCaptureSideFragment"
+            android:label="ScanCaptureSideFragment"
+            tool:layout="@layout/fragment_capture_side">
         <action
-            android:id="@+id/action_fragment_scan_capture_side_to_fragment_scan_capture"
-            app:destination="@id/fragment_scan_capture" />
+                android:id="@+id/action_fragment_scan_capture_side_to_fragment_scan_capture"
+                app:destination="@id/fragment_scan_capture" />
     </fragment>
     <fragment
-        android:id="@+id/fragment_scan_capture_error"
-        android:name="io.falu.identity.error.ScanCaptureErrorFragment"
-        android:label="ScanCaptureErrorFragment"
-        tool:layout="@layout/fragment_error" />
+            android:id="@+id/fragment_scan_capture_error"
+            android:name="io.falu.identity.error.ScanCaptureErrorFragment"
+            android:label="ScanCaptureErrorFragment"
+            tool:layout="@layout/fragment_error" />
     <fragment
-        android:id="@+id/fragment_selfie_capture_error_fragment"
-        android:name="io.falu.identity.error.SelfieCaptureErrorFragment"
-        tool:layout="@layout/fragment_error"
-        android:label="SelfieCaptureErrorFragment" />
+            android:id="@+id/fragment_selfie_capture_error_fragment"
+            android:name="io.falu.identity.error.SelfieCaptureErrorFragment"
+            android:label="SelfieCaptureErrorFragment"
+            tool:layout="@layout/fragment_error" />
+    <fragment
+            android:id="@+id/fragment_identity_verification"
+            android:name="io.falu.identity.verification.IdentificationVerificationFragment"
+            android:label="IdentificationVerificationFragment"
+            tool:layout="@layout/fragment_identification_verification"/>
 </navigation>

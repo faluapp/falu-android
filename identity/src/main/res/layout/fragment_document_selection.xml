@@ -1,122 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/content_padding_normal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginHorizontal="@dimen/content_padding_normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingVertical="@dimen/element_spacing_normal">
+                android:orientation="vertical">
 
-                <TextView
+            <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingVertical="@dimen/element_spacing_normal"
-                    android:text="@string/document_selection_subtitle"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                    android:orientation="vertical"
+                    android:paddingVertical="@dimen/element_spacing_normal">
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/element_spacing_normal"
+                        android:text="@string/document_selection_subtitle"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/input_layout_issuing_country"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                        android:id="@+id/input_layout_issuing_country"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
                     <AutoCompleteTextView
-                        android:id="@+id/input_issuing_country"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:focusable="false"
-                        android:hint="@string/document_selection_hint_issuing_country"
-                        android:imeOptions="actionNone"
-                        android:inputType="none" />
+                            android:id="@+id/input_issuing_country"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:focusable="false"
+                            android:hint="@string/document_selection_hint_issuing_country"
+                            android:imeOptions="actionNone"
+                            android:inputType="none" />
 
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/content_padding_normal"
-                    android:paddingBottom="@dimen/element_spacing_normal"
-                    android:text="@string/document_selection_accepted_documents"
-                    android:textAllCaps="true"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/content_padding_normal"
+                        android:paddingBottom="@dimen/element_spacing_normal"
+                        android:text="@string/document_selection_accepted_documents"
+                        android:textAllCaps="true"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
                 <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/group_document_types"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:singleSelection="true">
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_identity_card"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:id="@+id/group_document_types"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:enabled="false"
-                        android:text="@string/document_selection_document_identity_card"
-                        app:chipCornerRadius="@dimen/element_spacing_normal_half" />
+                        app:singleSelection="true">
 
                     <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_passport"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:enabled="false"
-                        android:text="@string/document_selection_document_passport"
-                        app:chipCornerRadius="@dimen/element_spacing_normal_half" />
+                            android:id="@+id/chip_identity_card"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:enabled="false"
+                            android:text="@string/document_selection_document_identity_card"
+                            app:chipCornerRadius="@dimen/element_spacing_normal_half" />
 
                     <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_driving_license"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:enabled="false"
-                        android:text="@string/document_selection_document_driver_license"
-                        app:chipCornerRadius="@dimen/element_spacing_normal_half" />
+                            android:id="@+id/chip_passport"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:enabled="false"
+                            android:text="@string/document_selection_document_passport"
+                            app:chipCornerRadius="@dimen/element_spacing_normal_half" />
+
+                    <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_driving_license"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:enabled="false"
+                            android:text="@string/document_selection_document_driver_license"
+                            app:chipCornerRadius="@dimen/element_spacing_normal_half" />
                 </com.google.android.material.chip.ChipGroup>
+
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
-        android:id="@+id/view_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/content_padding_normal"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/element_spacing_normal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView">
-
-        <io.falu.identity.ui.LoadingButton
-            android:id="@+id/button_continue"
+            android:id="@+id/view_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:enabled="false"
-            android:text="@string/button_continue" />
+            android:layout_marginHorizontal="@dimen/content_padding_normal"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/element_spacing_normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/scrollView">
+
+        <io.falu.identity.ui.LoadingButton
+                android:id="@+id/button_continue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:text="@string/button_continue" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

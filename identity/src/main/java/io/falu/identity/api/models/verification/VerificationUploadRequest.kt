@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.core.os.bundleOf
+import com.google.gson.annotations.SerializedName
 import io.falu.identity.IdentityVerificationResult
 import kotlinx.parcelize.Parcelize
 
@@ -11,8 +12,10 @@ import kotlinx.parcelize.Parcelize
 internal data class VerificationUploadRequest(
     var consent: Boolean = true,
     var country: String? = null,
-    var document: VerificationDocumentUpload,
-    var selfie: VerificationSelfieUpload? = null
+    var document: VerificationDocumentUpload? = null,
+    var selfie: VerificationSelfieUpload? = null,
+    @SerializedName("id_number")
+    var idNumber: VerificationIdNumberUpload? = null
 ) : Parcelable {
 
     @JvmSynthetic
