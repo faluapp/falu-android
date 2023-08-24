@@ -25,8 +25,7 @@ import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.scan.ScanResult
 import io.falu.identity.utils.FileUtils
 
-internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.Factory) :
-    Fragment() {
+internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.Factory) : Fragment() {
 
     private val identityViewModel: IdentityVerificationViewModel by activityViewModels { identityViewModelFactory }
     private val documentScanViewModel: DocumentScanViewModel by activityViewModels()

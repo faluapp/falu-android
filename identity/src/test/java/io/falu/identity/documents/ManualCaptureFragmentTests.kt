@@ -23,12 +23,13 @@ import org.junit.runner.RunWith
 import org.mockito.kotlin.KArgumentCaptor
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.same
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import java.io.File
 import kotlin.test.assertEquals
 import com.google.android.material.R as MatR
 
@@ -40,9 +41,11 @@ class ManualCaptureFragmentTests {
     private val documentUploadDisposition = MutableLiveData(DocumentUploadDisposition())
 
     private val mockCaptureDocumentViewModel = mock<CaptureDocumentViewModel> {}
+    private val modelFile = MutableLiveData<File>()
 
-    private val mockIdentityVerificationViewModel = mock<IdentityVerificationViewModel> {
-        whenever(it.documentUploadDisposition).thenReturn(documentUploadDisposition)
+    private val mockIdentityVerificationViewModel = com.nhaarman.mockitokotlin2.mock<IdentityVerificationViewModel> {
+        com.nhaarman.mockitokotlin2.whenever(it.documentUploadDisposition).thenReturn(documentUploadDisposition)
+        on { it.documentDetectorModelFile } doReturn (modelFile)
     }
 
     @Test

@@ -1,6 +1,7 @@
 package io.falu.identity.capture
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -13,16 +14,23 @@ import androidx.navigation.fragment.findNavController
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.ai.DocumentDetectionOutput
+import io.falu.identity.ai.DocumentEngine
 import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.UploadMethod
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.camera.CameraPermissionsFragment
+import io.falu.identity.capture.scan.DocumentScanViewModel
 import io.falu.identity.documents.DocumentSelectionFragment
+import io.falu.identity.scan.ScanDisposition
+import io.falu.identity.utils.loadDocumentDetectionModel
+import io.falu.identity.utils.matches
 import io.falu.identity.utils.navigateToApiResponseProblemFragment
 import io.falu.identity.utils.navigateToErrorFragment
+import io.falu.identity.utils.rotate
 import io.falu.identity.utils.submitVerificationData
+import io.falu.identity.utils.toBitmap
 import io.falu.identity.utils.updateVerification
 import software.tingle.api.patch.JsonPatchDocument
 
@@ -30,8 +38,8 @@ internal abstract class AbstractCaptureFragment(
     identityViewModelFactory: ViewModelProvider.Factory
 ) : CameraPermissionsFragment() {
 
-    protected val identityViewModel: IdentityVerificationViewModel
-            by activityViewModels { identityViewModelFactory }
+    protected val identityViewModel: IdentityVerificationViewModel by activityViewModels { identityViewModelFactory }
+    private val documentScanViewModel: DocumentScanViewModel by activityViewModels()
 
     @VisibleForTesting
     internal var captureDocumentViewModelFactory: ViewModelProvider.Factory =
@@ -52,8 +60,33 @@ internal abstract class AbstractCaptureFragment(
         uploadStateObservations()
     }
 
-    protected fun uploadDocument(
+    /**
+     * Determine if the type of document provided manually or uploaded is valid
+     *
+     * @param uri
+     */
+    protected fun analyze(
         uri: Uri,
+        scanType: ScanDisposition.DocumentScanType,
+        documentSide: DocumentSide,
+        type: UploadMethod = UploadMethod.MANUAL
+    ) {
+        val bitmap = uri.toBitmap(requireContext().contentResolver).rotate(90)
+
+        loadDocumentDetectionModel(identityViewModel, documentScanViewModel, threshold) {
+            val engine = DocumentEngine(it, threshold)
+            val output = engine.analyze(bitmap) as DocumentDetectionOutput
+
+            if (output.score >= threshold && output.option.matches(scanType)) {
+                uploadDocument(output.bitmap, documentSide, type)
+            } else {
+                findNavController().navigate(R.id.action_global_fragment_scan_capture_error)
+            }
+        }
+    }
+
+    private fun uploadDocument(
+        bitmap: Bitmap,
         documentSide: DocumentSide,
         type: UploadMethod = UploadMethod.MANUAL
     ) {
@@ -64,7 +97,7 @@ internal abstract class AbstractCaptureFragment(
         }
 
         identityViewModel.uploadVerificationDocument(
-            uri,
+            bitmap,
             documentSide,
             type = type,
             onError = {
@@ -172,5 +205,7 @@ internal abstract class AbstractCaptureFragment(
     internal companion object {
         fun IdentityDocumentType.getIdentityDocumentName(context: Context) =
             context.getString(this.titleRes)
+
+        private const val threshold = 0.75f
     }
 }

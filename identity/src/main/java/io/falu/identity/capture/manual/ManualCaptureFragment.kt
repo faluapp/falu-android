@@ -11,6 +11,7 @@ import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.UploadMethod
 import io.falu.identity.capture.AbstractCaptureFragment
+import io.falu.identity.capture.scan.ScanCaptureFragment.Companion.getScanType
 import io.falu.identity.databinding.FragmentManualCaptureBinding
 import io.falu.identity.utils.FileUtils
 
@@ -28,10 +29,17 @@ internal class ManualCaptureFragment(identityViewModelFactory: ViewModelProvider
             this,
             fileUtils,
             onFrontImageCaptured = {
-                uploadDocument(uri = it, DocumentSide.FRONT, UploadMethod.MANUAL)
+                analyze(uri = it, identityDocumentType.getScanType().first, DocumentSide.FRONT, UploadMethod.MANUAL)
             },
             onBackImageCaptured = {
-                uploadDocument(uri = it, DocumentSide.BACK, UploadMethod.MANUAL)
+                identityDocumentType.getScanType().second?.let { scanType ->
+                    analyze(
+                        uri = it,
+                        scanType,
+                        DocumentSide.BACK,
+                        UploadMethod.MANUAL
+                    )
+                }
             }
         )
     }

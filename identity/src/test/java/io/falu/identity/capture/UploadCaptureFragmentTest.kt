@@ -25,8 +25,10 @@ import io.falu.identity.documents.DocumentSelectionFragment
 import io.falu.identity.utils.createFactoryFor
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.doReturn
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import java.io.File
 import kotlin.test.assertEquals
 import com.google.android.material.R as MatR
 
@@ -39,9 +41,11 @@ class UploadCaptureFragmentTest {
     private val documentUploadDisposition = MutableLiveData(DocumentUploadDisposition())
 
     private val mockCaptureDocumentViewModel = mock<CaptureDocumentViewModel> {}
+    private val modelFile = MutableLiveData<File>()
 
     private val mockIdentityVerificationViewModel = mock<IdentityVerificationViewModel> {
         whenever(it.documentUploadDisposition).thenReturn(documentUploadDisposition)
+        on { it.documentDetectorModelFile } doReturn (modelFile)
     }
 
     @Test

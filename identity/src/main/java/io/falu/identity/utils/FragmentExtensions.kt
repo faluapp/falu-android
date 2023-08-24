@@ -9,11 +9,13 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.models.verification.VerificationUploadRequest
+import io.falu.identity.capture.scan.DocumentScanViewModel
 import io.falu.identity.error.ErrorFragment.Companion.navigateWithApiExceptions
 import io.falu.identity.error.ErrorFragment.Companion.navigateWithFailure
 import io.falu.identity.error.ErrorFragment.Companion.navigateWithRequirementErrors
 import software.tingle.api.HttpApiResponseProblem
 import software.tingle.api.patch.JsonPatchDocument
+import java.io.File
 
 internal fun Fragment.updateVerification(
     viewModel: IdentityVerificationViewModel,
@@ -82,6 +84,21 @@ internal fun Fragment.navigateToApiResponseProblemFragment(it: HttpApiResponsePr
     findNavController().navigateWithApiExceptions(requireContext(), it)
 }
 
+internal fun Fragment.loadDocumentDetectionModel(
+    identityViewModel: IdentityVerificationViewModel,
+    documentScanViewModel: DocumentScanViewModel,
+    threshold: Float,
+    onLoad: (File) -> Unit
+) {
+    identityViewModel.documentDetectorModelFile.observe(viewLifecycleOwner) {
+        if (it != null) {
+            documentScanViewModel.initialize(it, threshold)
+            onLoad(it)
+        }
+    }
+}
+
+/***/
 internal fun Fragment.showDatePickerDialog(onPositiveClickListener: (Long) -> Unit) {
     val datePicker = MaterialDatePicker.Builder
         .datePicker()
@@ -93,7 +110,8 @@ internal fun Fragment.showDatePickerDialog(onPositiveClickListener: (Long) -> Un
     datePicker.show(childFragmentManager, "MaterialDatePicker")
 }
 
-fun Context.showDialog(
+/***/
+internal fun Context.showDialog(
     title: String? = null,
     message: String? = null,
     positiveButton: Pair<String, () -> Unit>,
