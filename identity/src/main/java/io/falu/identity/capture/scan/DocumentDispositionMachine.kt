@@ -8,6 +8,7 @@ import io.falu.identity.ai.DocumentOption
 import io.falu.identity.ai.calculateIOU
 import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.scan.ScanDispositionDetector
+import io.falu.identity.utils.matches
 import org.joda.time.DateTime
 import org.joda.time.Seconds
 
@@ -37,18 +38,12 @@ internal class DocumentDispositionMachine(
             }
 
             output.option.matches(state.type) -> {
-                Log.d(
-                    TAG, "Model output detected with score ${output.score}, " +
-                            "moving to Detected."
-                )
+                Log.d(TAG, "Model output detected with score ${output.score}, moving to Detected.")
                 ScanDisposition.Detected(state.type, this)
             }
 
             else -> {
-                Log.d(
-                    TAG, "Model output mismatch (${output.option})," +
-                            "start disposition retained."
-                )
+                Log.d(TAG, "Model output mismatch (${output.option}) start disposition retained.")
                 state
             }
         }
@@ -134,16 +129,6 @@ internal class DocumentDispositionMachine(
 
             else -> state
         }
-    }
-
-    private fun DocumentOption.matches(
-        type: ScanDisposition.DocumentScanType
-    ): Boolean {
-        return this == DocumentOption.DL_BACK && type == ScanDisposition.DocumentScanType.DL_BACK ||
-                this == DocumentOption.DL_FRONT && type == ScanDisposition.DocumentScanType.DL_FRONT ||
-                this == DocumentOption.ID_BACK && type == ScanDisposition.DocumentScanType.ID_BACK ||
-                this == DocumentOption.ID_FRONT && type == ScanDisposition.DocumentScanType.ID_FRONT ||
-                this == DocumentOption.PASSPORT && type == ScanDisposition.DocumentScanType.PASSPORT
     }
 
     private fun targetTypeMatches(

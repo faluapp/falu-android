@@ -17,6 +17,8 @@ import android.text.TextUtils
 import android.util.Size
 import androidx.annotation.CheckResult
 import io.falu.identity.R
+import io.falu.identity.ai.DocumentOption
+import io.falu.identity.scan.ScanDisposition
 import software.tingle.api.HttpApiResponseProblem
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
@@ -207,4 +209,13 @@ internal fun Uri.toBitmap(resolver: ContentResolver): Bitmap {
     return resolver.openInputStream(this).use {
         BitmapFactory.decodeStream(it)
     }
+}
+
+/***/
+internal fun DocumentOption.matches(type: ScanDisposition.DocumentScanType): Boolean {
+    return this == DocumentOption.DL_BACK && type == ScanDisposition.DocumentScanType.DL_BACK ||
+            this == DocumentOption.DL_FRONT && type == ScanDisposition.DocumentScanType.DL_FRONT ||
+            this == DocumentOption.ID_BACK && type == ScanDisposition.DocumentScanType.ID_BACK ||
+            this == DocumentOption.ID_FRONT && type == ScanDisposition.DocumentScanType.ID_FRONT ||
+            this == DocumentOption.PASSPORT && type == ScanDisposition.DocumentScanType.PASSPORT
 }

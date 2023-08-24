@@ -121,15 +121,15 @@ internal class IdentityVerificationViewModel(
     }
 
     internal fun uploadVerificationDocument(
-        uri: Uri,
+        bitmap: Bitmap,
         documentSide: DocumentSide,
         type: UploadMethod,
         onError: (HttpApiResponseProblem?) -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
         uploadFile(
-            file = fileUtils.createFileFromUri(
-                fileUri = uri,
+            file = fileUtils.createFileFromBitmap(
+                bitmap = bitmap,
                 contractArgs.verificationId,
                 documentSide.code
             ),
