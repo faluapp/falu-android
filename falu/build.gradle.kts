@@ -1,5 +1,3 @@
-import com.android.build.gradle.internal.scope.ProjectInfo.Companion.getBaseName
-
 plugins {
     id("com.android.library")
     kotlin("android")
@@ -30,11 +28,12 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+        testInstrumentationRunnerArguments["clearPackageData"] = "true"
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -43,7 +42,6 @@ android {
     }
 
     compileOptions {
-        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
