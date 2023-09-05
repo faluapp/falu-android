@@ -66,7 +66,9 @@ class SupportFragmentTest {
         }
     }
 
-    private fun launchSupportFragment(block: (binding: FragmentSupportBinding, navController: TestNavHostController) -> Unit) {
+    private fun launchSupportFragment(
+        block: (binding: FragmentSupportBinding, navController: TestNavHostController) -> Unit
+    ) {
         launchFragmentInContainer(themeResId = MatR.style.Theme_MaterialComponents) {
             SupportFragment(
                 createFactoryFor(mockIdentityVerificationViewModel)

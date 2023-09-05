@@ -70,9 +70,16 @@ class DocumentsCaptureMethodsFragmentTest {
         }
     }
 
-    private fun launchFragment(block: (binding: FragmentDocumentCaptureMethodsBinding, navController: TestNavHostController) -> Unit) {
+    private fun launchFragment(
+        block: (
+            binding: FragmentDocumentCaptureMethodsBinding,
+            navController: TestNavHostController
+        ) -> Unit
+    ) {
         launchFragmentInContainer(
-            fragmentArgs = bundleOf(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE to IdentityDocumentType.IDENTITY_CARD),
+            fragmentArgs = bundleOf(
+                DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE to IdentityDocumentType.IDENTITY_CARD
+            ),
             themeResId = MatR.style.Theme_MaterialComponents
         ) {
             DocumentCaptureMethodsFragment(createFactoryFor(mockIdentityVerificationViewModel))
