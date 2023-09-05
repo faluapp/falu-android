@@ -2,11 +2,15 @@ package io.falu.identity
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.navigation.fragment.NavHostFragment
 import io.falu.identity.api.IdentityVerificationApiClient
 import io.falu.identity.api.models.verification.Verification
@@ -49,6 +53,8 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
         IdentityVerificationApiClient(this, contractArgs.temporaryKey, BuildConfig.DEBUG)
     }
 
+    private lateinit var launchFallbackUrl: ActivityResultLauncher<Intent>
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         supportFragmentManager.fragmentFactory =
@@ -57,9 +63,12 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         setNavigationController()
+        setupFallbackLauncher()
 
-        verificationViewModel
-            .loadUriToImageView(contractArgs.workspaceLogo, binding.ivIdentityVerification)
+        verificationViewModel.loadUriToImageView(
+            contractArgs.workspaceLogo,
+            binding.ivIdentityVerification
+        )
 
         verificationViewModel.fetchVerification(onFailure = {
             finishWithVerificationResult(IdentityVerificationResult.Failed(it))
@@ -68,7 +77,13 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
         verificationViewModel.fetchSupportedCountries()
         verificationViewModel.observeForVerificationResults(
             this,
-            onSuccess = { onVerificationSuccessful(it) },
+            onSuccess = {
+                if (!it.supported) {
+                    launchFallbackUrl(it.url.orEmpty())
+                } else {
+                    onVerificationSuccessful(it)
+                }
+            },
             onError = { onVerificationFailure(it) })
     }
 
@@ -82,10 +97,12 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
         when (verification.status) {
             VerificationStatus.INPUT_REQUIRED -> {
             }
+
             VerificationStatus.PROCESSING,
             VerificationStatus.VERIFIED -> onFinishWithResult(
                 IdentityVerificationResult.Succeeded
             )
+
             VerificationStatus.CANCELLED -> onFinishWithResult(IdentityVerificationResult.Canceled)
         }
     }
@@ -99,6 +116,34 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
         result.addToIntent(intent)
         setResult(Activity.RESULT_OK, intent)
         finish()
+    }
+
+    private fun setupFallbackLauncher() {
+        launchFallbackUrl =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                verificationViewModel.fetchVerification {
+                    finishWithVerificationResult(IdentityVerificationResult.Failed(it))
+                }
+                verificationViewModel.observeForVerificationResults(this,
+                    onSuccess = {
+                        if (it.submitted) {
+                            finishWithVerificationResult(IdentityVerificationResult.Succeeded)
+                        } else {
+                            finishWithVerificationResult(IdentityVerificationResult.Canceled)
+                        }
+                    },
+                    onError = {
+                        onVerificationFailure(it)
+                    }
+                )
+            }
+    }
+
+    private fun launchFallbackUrl(url: String) {
+        val customTabsIntent = CustomTabsIntent.Builder()
+            .build()
+        customTabsIntent.intent.data = Uri.parse(url)
+        launchFallbackUrl.launch(customTabsIntent.intent)
     }
 
     override fun onFinishWithResult(result: IdentityVerificationResult) {

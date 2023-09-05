@@ -43,10 +43,12 @@ class ManualCaptureFragmentTests {
     private val mockCaptureDocumentViewModel = mock<CaptureDocumentViewModel> {}
     private val modelFile = MutableLiveData<File>()
 
-    private val mockIdentityVerificationViewModel = com.nhaarman.mockitokotlin2.mock<IdentityVerificationViewModel> {
-        com.nhaarman.mockitokotlin2.whenever(it.documentUploadDisposition).thenReturn(documentUploadDisposition)
-        on { it.documentDetectorModelFile } doReturn (modelFile)
-    }
+    private val mockIdentityVerificationViewModel =
+        com.nhaarman.mockitokotlin2.mock<IdentityVerificationViewModel> {
+            com.nhaarman.mockitokotlin2.whenever(it.documentUploadDisposition)
+                .thenReturn(documentUploadDisposition)
+            on { it.documentDetectorModelFile } doReturn (modelFile)
+        }
 
     @Test
     fun `test if result callbacks are initialized and UI correctness for ID cards and DLs`() {

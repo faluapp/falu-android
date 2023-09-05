@@ -67,7 +67,8 @@ internal class ErrorFragment : AbstractErrorFragment() {
             val bundle = bundleOf(
                 KEY_ERROR_TITLE to error.code,
                 KEY_ERROR_DESCRIPTION to error.description,
-                KEY_BACK_BUTTON_DESTINATION to if (error.canNavigateBackTo(source = source)) source else UNKNOWN_DESTINATION,
+                KEY_BACK_BUTTON_DESTINATION to if (error.canNavigateBackTo(source = source))
+                    source else UNKNOWN_DESTINATION,
                 KEY_BACK_BUTTON_TEXT to context.getString(R.string.button_rectify),
                 KEY_CANCEL_FLOW to false,
                 KEY_ERROR_CAUSE to Exception("Identity verification requirement error: ${error.description}")

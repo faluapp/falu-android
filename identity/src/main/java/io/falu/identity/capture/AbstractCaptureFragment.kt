@@ -188,9 +188,11 @@ internal abstract class AbstractCaptureFragment(
             onSuccess = { verification ->
                 when {
                     verification.selfieRequired -> {
-                        findNavController().navigate(R.id.action_global_fragment_selfie, verificationRequest.addToBundle())
+                        findNavController().navigate(
+                            R.id.action_global_fragment_selfie,
+                            verificationRequest.addToBundle()
+                        )
                     }
-
                     else -> {
                         submitVerificationData(identityViewModel, source, verificationRequest)
                     }

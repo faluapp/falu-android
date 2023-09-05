@@ -34,17 +34,25 @@ internal class IdentificationVerificationFragment(factory: ViewModelProvider.Fac
     private lateinit var identityDocumentType: IdentityDocumentType
     private var dateOfBirth: Date? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentIdentificationVerificationBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        identityDocumentType =
-            requireArguments().getSerializable(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE) as IdentityDocumentType
+        identityDocumentType = requireArguments()
+            .getSerializable(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE) as IdentityDocumentType
 
-        val genderAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, Gender.values().map { getString(it.desc) })
+        val genderAdapter = ArrayAdapter(
+            requireContext(),
+            R.layout.dropdown_menu_popup_item,
+            Gender.values().map { getString(it.desc) })
+
         binding.inputGender.setAdapter(genderAdapter)
         binding.inputGender.setText(genderAdapter.getItem(0), false)
         binding.viewBirthday.setOnClickListener {
@@ -71,14 +79,19 @@ internal class IdentificationVerificationFragment(factory: ViewModelProvider.Fac
         val patchDocument = JsonPatchDocument()
             .replace("/id_number", request.idNumber)
 
-        updateVerification(viewModel, patchDocument, source, onSuccess = { submitVerificationData(viewModel, source, request) })
+        updateVerification(
+            viewModel,
+            patchDocument,
+            source,
+            onSuccess = { submitVerificationData(viewModel, source, request) })
     }
 
     private val idNumberUpload: VerificationIdNumberUpload?
         get() {
             if (!isValidDocumentNumber) {
                 binding.inputLayoutDocumentNumber.isErrorEnabled = true
-                binding.inputLayoutDocumentNumber.error = getString(R.string.document_verification_error_invalid_document_number)
+                binding.inputLayoutDocumentNumber.error =
+                    getString(R.string.document_verification_error_invalid_document_number)
                 return null
             }
             binding.inputLayoutDocumentNumber.isErrorEnabled = false
