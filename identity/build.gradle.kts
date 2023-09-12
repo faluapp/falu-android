@@ -78,7 +78,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":falu-core"))
+    api(project(":falu-core"))
     implementation(libs.androidx.activity)
     implementation(libs.androidx.fragment)
     implementation(libs.constraint)

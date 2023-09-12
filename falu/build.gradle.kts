@@ -79,7 +79,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":falu-core"))
+    api(project(":falu-core"))
 
     testImplementation(libs.junit)
     testImplementation(libs.bundles.mokito)
