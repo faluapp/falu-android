@@ -4,6 +4,7 @@ import android.content.Context
 import io.falu.core.ApiKeyValidator
 import io.falu.core.ApiVersion
 import io.falu.core.ApiVersionInterceptor
+import io.falu.core.AppDetailsInterceptor
 import io.falu.core.exceptions.ApiConnectionException
 import io.falu.core.exceptions.ApiException
 import io.falu.core.exceptions.AuthenticationException
@@ -110,8 +111,7 @@ internal class IdentityVerificationApiClient(
             .writeTimeout(50, TimeUnit.SECONDS)
 
         if (enableLogging) {
-            builder.addInterceptor(HttpLoggingInterceptor()
-                    .setLevel(HttpLoggingInterceptor.Level.BODY))
+            builder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
         }
 
         return super.buildBackChannel(builder)

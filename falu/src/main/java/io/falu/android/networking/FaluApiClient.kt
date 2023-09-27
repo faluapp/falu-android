@@ -5,6 +5,7 @@ import io.falu.android.models.payments.Payment
 import io.falu.android.models.payments.PaymentRequest
 import io.falu.core.ApiVersion
 import io.falu.core.ApiVersionInterceptor
+import io.falu.core.AppDetailsInterceptor
 import io.falu.core.exceptions.ApiConnectionException
 import io.falu.core.exceptions.ApiException
 import io.falu.core.exceptions.AuthenticationException

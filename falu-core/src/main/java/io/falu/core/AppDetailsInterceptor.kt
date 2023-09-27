@@ -7,11 +7,14 @@ import androidx.annotation.RestrictTo
 import okhttp3.Interceptor
 import okhttp3.Response
 
+/**
+ * An @[Interceptor] that adds headers for package id, version name and version code to a request before sending
+ */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-abstract class AbstractAppDetails(private val context: Context) : Interceptor {
+class AppDetailsInterceptor(private val context: Context) : Interceptor {
 
     private val userAgent: String by lazy {
-        buildUserAgent(context)
+        buildUserAgent()
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -22,17 +25,26 @@ abstract class AbstractAppDetails(private val context: Context) : Interceptor {
             .header("X-App-Version-Name", appVersionName)
             .header("X-App-Version-Code", appVersionCode)
             .header("User-Agent", userAgent)
+            .header("X-App-Kind", "android")
             .build()
 
         return chain.proceed(request)
     }
 
-    abstract fun buildUserAgent(context: Context): String
+    private fun buildUserAgent(): String {
+        val manufacturer = Build.MANUFACTURER
+        val model = Build.MODEL
+        val versionRelease = Build.VERSION.RELEASE
+
+        return "falu-android/${BuildConfig.FALU_VERSION_NAME} (Android $versionRelease; $manufacturer $model) " +
+                "$packageName/$appVersionName"
+    }
 
     private val appVersionName: String
         get() {
             with(context.packageManager) {
                 return try {
+                    @Suppress("DEPRECATION")
                     getPackageInfo(context.packageName, 0).versionName ?: "0.0.0"
                 } catch (e: PackageManager.NameNotFoundException) {
                     "nameNotFound"
