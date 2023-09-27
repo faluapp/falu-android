@@ -5,24 +5,14 @@ plugins {
     id("kotlin-parcelize")
 }
 
-apply {
-    from(rootProject.file("build-config/version.gradle.kts"))
-}
-
 apply(from = "${rootDir}/build-config/klint.gradle.kts")
 
 android {
     compileSdk = 33
     namespace = project.properties["FALU_SDK_NAMESPACE"].toString()
 
-    val publishVersionCode: String by project.extra
-    val publishVersion: String by project.extra
-
     defaultConfig {
         minSdk = 23
-
-        buildConfigField("String", "FALU_VERSION_NAME", "\"${publishVersion}\"")
-        buildConfigField("String", "FALU_VERSION_CODE", "\"${publishVersionCode}\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
