@@ -2,7 +2,7 @@
 kotlin = "1.9.10"
 junit = "4.13.2"
 abstractions = "1.1.0"
-ktlint = "0.50.0"
+ktlint = "0.51.0-FINAL"
 mockito = "5.2.0"
 mockito-kotlin = "5.1.0"
 robo = "4.10.3"
