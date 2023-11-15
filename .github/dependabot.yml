@@ -8,6 +8,7 @@ updates:
       time: "04:00"
     open-pull-requests-limit: 10
     ignore:
+    # Ignore patch updates for some packages
     - dependency-name: "mockito-*"
       update-types: ["version-update:semver-patch"]
     - dependency-name: "appcompat"
@@ -15,4 +16,12 @@ updates:
     - dependency-name: "fragment-ktx"
       update-types: ["version-update:semver-patch"]
     - dependency-name: "core-ktx"
+      update-types: ["version-update:semver-patch"]
+    - dependency-name: "com.android.tools.build:gradle"
+      update-types: ["version-update:semver-patch"]
+    - dependency-name: "kotlin_version"
+      update-types: ["version-update:semver-patch"]
+    - dependency-name: "kotlin"
+      update-types: ["version-update:semver-patch"]
+    - dependency-name: "android"
       update-types: ["version-update:semver-patch"]
