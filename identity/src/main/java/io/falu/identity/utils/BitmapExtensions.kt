@@ -31,12 +31,11 @@ internal fun Bitmap.toJpgByteArray(quality: Int = 80): ByteArray =
  *
  */
 @CheckResult
-internal fun Bitmap.restrictToSize(maxHeight: Int, maxWidth: Int, filter: Boolean = false): Bitmap {
-    if (maxHeight >= height && maxWidth >= width) {
-        // TODO: 26-10-2022 Calculate new sizes
-        return Bitmap.createScaledBitmap(this, maxWidth, maxHeight, filter)
+internal fun Bitmap.scale(size: Size, filter: Boolean = false): Bitmap {
+    if (size.height == height && size.width == width) {
+        return this
     }
-    return this
+    return Bitmap.createScaledBitmap(this, size.width, size.height, filter)
 }
 
 /**
@@ -81,7 +80,7 @@ internal fun Image.toJpegBitmap(): Bitmap {
  *
  */
 @CheckResult
-internal fun Bitmap.rotate(angle: Int, filter: Boolean = false): Bitmap {
+internal fun Bitmap.rotate(angle: Int = 90, filter: Boolean = false): Bitmap {
     val matrix = Matrix().apply {
         postRotate(angle.toFloat())
     }

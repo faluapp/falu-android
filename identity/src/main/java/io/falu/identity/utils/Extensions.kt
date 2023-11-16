@@ -1,18 +1,7 @@
 package io.falu.identity.utils
 
-import android.content.ContentResolver
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.ImageFormat
-import android.graphics.Matrix
-import android.graphics.Paint
 import android.graphics.Rect
-import android.graphics.YuvImage
-import android.media.Image
-import android.net.Uri
 import android.text.TextUtils
 import android.util.Size
 import androidx.annotation.CheckResult
@@ -20,7 +9,6 @@ import io.falu.identity.R
 import io.falu.identity.ai.DocumentOption
 import io.falu.identity.scan.ScanDisposition
 import software.tingle.api.HttpApiResponseProblem
-import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -85,13 +73,17 @@ internal fun Size.maxAspectRatio(ratio: Float): Size {
     var w = width
     var h = (w / ratio).roundToInt()
 
-    if (h <= height) {
-        return Size(width, height)
-    }
+    println("width: $w; height:$h")
 
-    h = height
-    w = (h * ratio).roundToInt()
-    return Size(min(w, width), h)
+    return if (h <= height) {
+        return Size(width, height)
+    } else {
+        h = height
+        w = (h * ratio).roundToInt()
+
+        println("w: $w; h:$h")
+        Size(min(w, width), h)
+    }
 }
 
 /***/

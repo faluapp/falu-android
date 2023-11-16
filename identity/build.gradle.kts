@@ -98,6 +98,10 @@ dependencies {
     testImplementation(libs.androidx.espresso.core)
     testImplementation(libs.androidx.fragment.testing)
     testImplementation(libs.androidx.core.ktx)
+
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.kotlin.test)
 }
 
 ext {

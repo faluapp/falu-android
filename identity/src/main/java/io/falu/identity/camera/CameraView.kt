@@ -24,7 +24,6 @@ import io.falu.identity.R
 import io.falu.identity.api.models.CameraLens
 import io.falu.identity.api.models.CameraSettings
 import io.falu.identity.api.models.Exposure
-import io.falu.identity.utils.FileUtils
 
 internal class CameraView @JvmOverloads constructor(
     context: Context,
