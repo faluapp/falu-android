@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.core.os.bundleOf
+import io.falu.identity.utils.parcelable
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -41,12 +42,12 @@ sealed class IdentityVerificationResult : Parcelable {
         private const val INTENT_EXTRA_KEY = "extras:verification-results"
 
         fun getFromBundle(bundle: Bundle?): IdentityVerificationResult {
-            return bundle?.getParcelable(INTENT_EXTRA_KEY)
+            return bundle?.parcelable(INTENT_EXTRA_KEY)
                 ?: Failed(IllegalStateException("Could not get verification result from intent"))
         }
 
         fun getFromIntent(intent: Intent?): IdentityVerificationResult {
-            return intent?.getParcelableExtra(INTENT_EXTRA_KEY)
+            return intent?.parcelable(INTENT_EXTRA_KEY)
                 ?: Failed(IllegalStateException("Could not get verification result from intent"))
         }
     }

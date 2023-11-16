@@ -29,6 +29,7 @@ import io.falu.identity.utils.matches
 import io.falu.identity.utils.navigateToApiResponseProblemFragment
 import io.falu.identity.utils.navigateToErrorFragment
 import io.falu.identity.utils.rotate
+import io.falu.identity.utils.serializable
 import io.falu.identity.utils.submitVerificationData
 import io.falu.identity.utils.toBitmap
 import io.falu.identity.utils.updateVerification
@@ -53,9 +54,7 @@ internal abstract class AbstractCaptureFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        identityDocumentType =
-            requireArguments().getSerializable(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE)
-                    as IdentityDocumentType
+        identityDocumentType = requireArguments().serializable(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE)!!
 
         uploadStateObservations()
     }
@@ -193,6 +192,7 @@ internal abstract class AbstractCaptureFragment(
                             verificationRequest.addToBundle()
                         )
                     }
+
                     else -> {
                         submitVerificationData(identityViewModel, source, verificationRequest)
                     }

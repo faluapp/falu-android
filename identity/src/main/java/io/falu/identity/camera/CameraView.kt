@@ -3,7 +3,6 @@ package io.falu.identity.camera
 import android.content.Context
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
-import android.net.Uri
 import android.util.AttributeSet
 import android.util.Log
 import android.widget.FrameLayout
@@ -14,7 +13,6 @@ import androidx.camera.core.CameraInfo
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
@@ -48,11 +46,6 @@ internal class CameraView @JvmOverloads constructor(
      *
      */
     private val ivCameraBorder: ImageView
-
-    /**
-     *
-     */
-    private val fileUtils = FileUtils(context)
 
     private lateinit var _lifecycleOwner: LifecycleOwner
 
@@ -159,8 +152,6 @@ internal class CameraView @JvmOverloads constructor(
      * Declare and bind preview, capture and analysis use cases
      */
     private fun bindCameraUseCases() {
-        val rotation = viewCameraPreview.display.rotation
-
         val cameraProvider = cameraProvider
             ?: throw IllegalStateException("Camera initialization failed.")
 
@@ -170,22 +161,19 @@ internal class CameraView @JvmOverloads constructor(
 
         preview = Preview.Builder()
             .setTargetAspectRatio(aspectRatio)
-            .setTargetRotation(rotation)
             .build()
             .also {
                 it.setSurfaceProvider(viewCameraPreview.surfaceProvider)
             }
 
         imageCapture = ImageCapture.Builder()
-            .setTargetAspectRatio(aspectRatio)
             .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
-            .setTargetRotation(rotation)
+            .setTargetAspectRatio(aspectRatio)
             .build()
 
         imageAnalysis = ImageAnalysis.Builder()
-            .setTargetRotation(rotation)
-            .setTargetAspectRatio(aspectRatio)
             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+            .setTargetAspectRatio(aspectRatio)
             .build()
             .also {
                 it.setAnalyzer(ContextCompat.getMainExecutor(context), LumaAnalyzer { luma ->
@@ -235,33 +223,6 @@ internal class CameraView @JvmOverloads constructor(
      */
     private fun observeCameraState(cameraInfo: CameraInfo) {
         // TODO: 2022-10-31 Observe camera states
-    }
-
-    /**
-     * Take photo using the camera
-     */
-    fun takePhoto(
-        onCaptured: ((Uri?) -> Unit),
-        onCaptureError: ((ImageCaptureException) -> Unit)
-    ) {
-        val imageCapture = imageCapture ?: return
-
-        val outputOptions = ImageCapture
-            .OutputFileOptions
-            .Builder(fileUtils.imageFile)
-            .build()
-
-        imageCapture.takePicture(outputOptions,
-            ContextCompat.getMainExecutor(context),
-            object : ImageCapture.OnImageSavedCallback {
-                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    onCaptured(outputFileResults.savedUri)
-                }
-
-                override fun onError(exception: ImageCaptureException) {
-                    onCaptureError(exception)
-                }
-            })
     }
 
     /**

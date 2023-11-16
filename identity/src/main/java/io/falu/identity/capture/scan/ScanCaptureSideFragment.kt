@@ -19,6 +19,7 @@ import io.falu.identity.capture.scan.ScanCaptureFragment.Companion.getScanType
 import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.databinding.FragmentCaptureSideBinding
 import io.falu.identity.documents.DocumentSelectionFragment
+import io.falu.identity.utils.parcelable
 
 internal class ScanCaptureSideFragment(identityViewModelFactory: ViewModelProvider.Factory) :
     AbstractCaptureFragment(identityViewModelFactory) {
@@ -77,14 +78,14 @@ internal class ScanCaptureSideFragment(identityViewModelFactory: ViewModelProvid
         setFragmentResultListener(ScanCaptureFragment.REQUEST_KEY_DOCUMENT_SCAN) { _, bundle ->
             if (bundle.containsKey(ScanCaptureFragment.KEY_SCAN_TYPE_FRONT)) {
                 val frontResult =
-                    bundle.getParcelable<DocumentDetectionOutput>(ScanCaptureFragment.KEY_SCAN_TYPE_FRONT)!!
+                    bundle.parcelable<DocumentDetectionOutput>(ScanCaptureFragment.KEY_SCAN_TYPE_FRONT)!!
                 uploadScannedDocument(frontResult, DocumentSide.FRONT)
                 return@setFragmentResultListener
             }
 
             if (bundle.containsKey(ScanCaptureFragment.KEY_SCAN_TYPE_BACK)) {
                 val backResult =
-                    bundle.getParcelable<DocumentDetectionOutput>(ScanCaptureFragment.KEY_SCAN_TYPE_BACK)!!
+                    bundle.parcelable<DocumentDetectionOutput>(ScanCaptureFragment.KEY_SCAN_TYPE_BACK)!!
                 uploadScannedDocument(backResult, DocumentSide.BACK)
             }
         }

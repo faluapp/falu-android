@@ -72,7 +72,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.fragment)
     implementation(libs.constraint)
-    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation(libs.androidx.appcompat)
 
     implementation(libs.tensorflow.lite)
     implementation(libs.tensorflow.support)
