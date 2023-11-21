@@ -6,6 +6,7 @@ import android.os.Parcelable
 import androidx.core.os.bundleOf
 import com.google.gson.annotations.SerializedName
 import io.falu.identity.IdentityVerificationResult
+import io.falu.identity.utils.parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -25,11 +26,11 @@ internal data class VerificationUploadRequest(
         private const val KEY_VERIFICATION_UPLOAD_REQUEST = ":verification"
 
         fun getFromBundle(bundle: Bundle?): VerificationUploadRequest? {
-            return bundle?.getParcelable(KEY_VERIFICATION_UPLOAD_REQUEST)
+            return bundle?.parcelable(KEY_VERIFICATION_UPLOAD_REQUEST)
         }
 
         fun getFromIntent(intent: Intent?): IdentityVerificationResult? {
-            return intent?.getParcelableExtra(KEY_VERIFICATION_UPLOAD_REQUEST)
+            return intent?.parcelable(KEY_VERIFICATION_UPLOAD_REQUEST)
         }
     }
 }

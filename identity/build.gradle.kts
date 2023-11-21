@@ -72,7 +72,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.fragment)
     implementation(libs.constraint)
-    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation(libs.androidx.appcompat)
 
     implementation(libs.tensorflow.lite)
     implementation(libs.tensorflow.support)
@@ -98,6 +98,10 @@ dependencies {
     testImplementation(libs.androidx.espresso.core)
     testImplementation(libs.androidx.fragment.testing)
     testImplementation(libs.androidx.core.ktx)
+
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.kotlin.test)
 }
 
 ext {

@@ -24,6 +24,7 @@ import io.falu.identity.documents.DocumentSelectionFragment
 import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.scan.ScanResult
 import io.falu.identity.utils.FileUtils
+import io.falu.identity.utils.serializable
 
 internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.Factory) : Fragment() {
 
@@ -50,11 +51,10 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         identityDocumentType =
-            requireArguments().getSerializable(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE)
-                    as IdentityDocumentType
+            requireArguments().serializable(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE)!!
 
         scanType =
-            requireArguments().getSerializable(KEY_DOCUMENT_SCAN_TYPE) as? ScanDisposition.DocumentScanType
+            requireArguments().serializable(KEY_DOCUMENT_SCAN_TYPE) as? ScanDisposition.DocumentScanType
 
         fileUtils = FileUtils(requireContext())
 

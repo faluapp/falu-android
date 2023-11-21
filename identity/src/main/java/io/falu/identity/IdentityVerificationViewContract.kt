@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.os.bundleOf
+import io.falu.identity.utils.parcelable
 import kotlinx.parcelize.Parcelize
 
 internal class IdentityVerificationViewContract :
@@ -35,11 +36,11 @@ internal data class ContractArgs(
         private const val KEY_CONTRACT_ARGS = ":contract_args"
 
         fun getFromIntent(intent: Intent): ContractArgs? {
-            return intent.getParcelableExtra(KEY_CONTRACT_ARGS)
+            return intent.parcelable(KEY_CONTRACT_ARGS)
         }
 
         fun getFromBundle(bundle: Bundle): ContractArgs? {
-            return bundle.getParcelable(KEY_CONTRACT_ARGS)
+            return bundle.parcelable(KEY_CONTRACT_ARGS)
         }
     }
 }

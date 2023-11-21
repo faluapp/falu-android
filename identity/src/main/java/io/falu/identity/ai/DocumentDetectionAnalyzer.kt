@@ -21,11 +21,13 @@ internal class DocumentDetectionAnalyzer internal constructor(
     @SuppressLint("UnsafeOptInUsageError")
     override fun analyze(image: ImageProxy) {
         // Input:- [1,320,320,1]
-        val bitmap = image.image!!.toBitmap().rotate(image.imageInfo.rotationDegrees)
+        val bitmap = image.image?.toBitmap()?.rotate(image.imageInfo.rotationDegrees)
 
-        val output = engine.analyze(bitmap)
+        val output = bitmap?.let { engine.analyze(it) }
 
-        listener(output)
+        if (output != null) {
+            listener(output)
+        }
 
         image.close()
     }
