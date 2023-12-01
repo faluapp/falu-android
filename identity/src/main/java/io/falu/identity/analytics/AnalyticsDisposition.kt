@@ -16,13 +16,14 @@ internal data class AnalyticsDisposition(
 ) : Parcelable {
 
     fun modify(modification: AnalyticsDisposition): AnalyticsDisposition {
-        return this.copy(
-            backModelScore = modification.backModelScore,
-            uploadMethod = modification.uploadMethod,
-            frontModelScore = modification.frontModelScore,
-            scanType = modification.scanType,
-            selfieModelScore = modification.selfieModelScore,
-            selfie = modification.selfie
-        )
+        return when {
+            modification.backModelScore != null -> this.copy(backModelScore = modification.backModelScore)
+            modification.uploadMethod != null -> this.copy(uploadMethod = modification.uploadMethod)
+            modification.frontModelScore != null -> this.copy(frontModelScore = modification.frontModelScore)
+            modification.scanType != null -> this.copy(scanType = modification.scanType)
+            modification.selfieModelScore != null -> this.copy(selfieModelScore = modification.selfieModelScore)
+            modification.selfie != null -> this.copy(selfie = selfie)
+            else -> this
+        }
     }
 }

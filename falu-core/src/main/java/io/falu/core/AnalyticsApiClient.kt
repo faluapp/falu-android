@@ -22,9 +22,9 @@ class AnalyticsApiClient(key: String) : AbstractHttpApiClient(AnalyticsAuthProvi
         ApiConnectionException::class,
         ApiException::class
     )
-    fun reportTelemetry(request: AnalyticsTelemetry): ResourceResponse<*> {
+    fun reportTelemetry(request: AnalyticsTelemetry, origin: String): ResourceResponse<*> {
         val builder = Request.Builder()
-            .addHeader(KEY_ORIGIN_HEADER, request.origin)
+            .addHeader(KEY_ORIGIN_HEADER, origin)
             .url(analyticsBaseUrl)
             .post(makeJson(request).toRequestBody(MEDIA_TYPE_JSON))
 

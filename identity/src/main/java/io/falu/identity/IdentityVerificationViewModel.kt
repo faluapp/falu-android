@@ -410,7 +410,7 @@ internal class IdentityVerificationViewModel(
 
     fun reportTelemetry(telemetry: AnalyticsTelemetry) {
         launch(Dispatchers.IO) {
-            analyticsApiClient.reportTelemetry(telemetry)
+            analyticsApiClient.reportTelemetry(telemetry, IdentityAnalyticsRequestBuilder.ORIGIN)
         }
     }
 
@@ -428,7 +428,7 @@ internal class IdentityVerificationViewModel(
                     selfie = latest.selfie
                 )
 
-                analyticsApiClient.reportTelemetry(cake)
+                analyticsApiClient.reportTelemetry(cake, IdentityAnalyticsRequestBuilder.ORIGIN  )
             }
         }
     }

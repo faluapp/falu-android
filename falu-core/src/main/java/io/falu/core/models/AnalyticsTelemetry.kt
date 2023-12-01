@@ -63,9 +63,6 @@ data class AnalyticsTelemetry(
      *
      */
     val metadata: Map<String, *>,
-
-    @Expose(serialize = false, deserialize = false)
-    val origin: String,
 )
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

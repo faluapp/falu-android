@@ -142,6 +142,6 @@ internal class IdentityAnalyticsRequestBuilder(
         const val KEY_UPLOAD_METHOD = "upload_method"
         const val KEY_DOC_FRONT_MODEL_SCORE = "document_front_model_score"
         const val KEY_DOC_BACK_MODEL_SCORE = "document_back_model_score"
-        const val KEY_SELFIE_MODEL_SCORE = "document_selfie_model_score"
+        const val KEY_SELFIE_MODEL_SCORE = "selfie_model_score"
     }
 }
