@@ -9,10 +9,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import io.falu.core.exceptions.ApiException
 import io.falu.identity.IdentityVerificationResult
 import io.falu.identity.IdentityVerificationResultCallback
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
+import io.falu.identity.analytics.AnalyticsDisposition
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.databinding.FragmentWelcomeBinding
 import io.falu.identity.utils.navigateToApiResponseProblemFragment
@@ -28,9 +30,7 @@ internal class WelcomeFragment(
     private var _binding: FragmentWelcomeBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: IdentityVerificationViewModel by activityViewModels {
-        factory
-    }
+    private val viewModel: IdentityVerificationViewModel by activityViewModels { factory }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,7 +46,7 @@ internal class WelcomeFragment(
         viewModel.observeForVerificationResults(
             viewLifecycleOwner,
             onSuccess = { onVerificationSuccessful(it) },
-            onError = { onVerificationFailure(it) })
+            onError = { onVerificationFailure((it as ApiException).problem) })
 
         binding.buttonAccept.text = getString(R.string.welcome_button_accept)
         binding.buttonAccept.setOnClickListener {
@@ -64,6 +64,8 @@ internal class WelcomeFragment(
     }
 
     private fun onVerificationSuccessful(verification: Verification) {
+        viewModel.modifyAnalyticsDisposition(disposition = AnalyticsDisposition(selfie = verification.selfieRequired))
+        
         hideProgressView()
         binding.tvWelcomeSubtitle.text =
             getString(

@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import io.falu.core.exceptions.ApiException
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.models.verification.VerificationUploadRequest
@@ -32,7 +33,7 @@ internal fun Fragment.updateVerification(
             }
         },
         onError = {
-            navigateToApiResponseProblemFragment(it)
+            navigateToApiResponseProblemFragment((it as ApiException).problem)
         },
         onFailure = {
             navigateToErrorFragment(it)
@@ -62,7 +63,7 @@ internal fun Fragment.submitVerificationData(
             }
         },
         onError = {
-            navigateToApiResponseProblemFragment(it)
+            navigateToApiResponseProblemFragment((it as ApiException).problem)
         },
         onFailure = {
             navigateToErrorFragment(it)

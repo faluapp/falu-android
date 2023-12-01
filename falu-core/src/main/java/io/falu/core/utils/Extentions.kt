@@ -5,8 +5,10 @@ import android.content.Context
 import android.net.Uri
 import android.webkit.MimeTypeMap
 import androidx.annotation.RestrictTo
+import io.falu.core.exceptions.ApiException
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
+import software.tingle.api.ResourceResponse
 import java.io.File
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -27,3 +29,5 @@ fun File.getMediaType(context: Context): MediaType {
         "*/*".toMediaType()
     }
 }
+
+fun <TResult> ResourceResponse<TResult>.toThrowable() = ApiException(problem = error, statusCode = statusCode)

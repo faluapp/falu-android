@@ -122,8 +122,7 @@ internal class IdentityVerificationApiClient(
     }
 }
 
-internal class IdentityVerificationAuthProvider internal constructor(apiKey: String) :
-    AuthenticationHeaderProvider() {
+internal class IdentityVerificationAuthProvider internal constructor(apiKey: String) : AuthenticationHeaderProvider() {
     private val temporaryKey = ApiKeyValidator.get().requireValid(apiKey)
 
     override fun getParameter(request: Request.Builder): String {

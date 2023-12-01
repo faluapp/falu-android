@@ -8,12 +8,16 @@ import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.savedstate.SavedStateRegistryOwner
+import io.falu.core.AnalyticsApiClient
+import io.falu.core.models.AnalyticsTelemetry
 import io.falu.core.models.FaluFile
+import io.falu.core.utils.toThrowable
+import io.falu.identity.analytics.AnalyticsDisposition
+import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder
 import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.FilesApiClient
 import io.falu.identity.api.IdentityVerificationApiClient
@@ -28,6 +32,8 @@ import io.falu.identity.utils.toWholeNumber
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -43,6 +49,7 @@ import kotlin.coroutines.CoroutineContext
  */
 internal class IdentityVerificationViewModel(
     internal val apiClient: IdentityVerificationApiClient,
+    internal val analyticsRequestBuilder: IdentityAnalyticsRequestBuilder,
     internal val contractArgs: ContractArgs,
     private val fileUtils: FileUtils
 ) : ViewModel(), CoroutineScope {
@@ -51,6 +58,7 @@ internal class IdentityVerificationViewModel(
         get() = Dispatchers.IO
 
     private val filesApiClient = FilesApiClient()
+    private val analyticsApiClient = AnalyticsApiClient(contractArgs.temporaryKey)
 
     /**
      *
@@ -59,6 +67,13 @@ internal class IdentityVerificationViewModel(
     private val _documentUploadDisposition = MutableStateFlow(disposition)
     val documentUploadDisposition: LiveData<DocumentUploadDisposition>
         get() = _documentUploadDisposition.asLiveData(Dispatchers.Main)
+
+    /**
+     * Disposition to track the status of analytics
+     */
+    private val analyticsTelemetryDisposition: AnalyticsDisposition = AnalyticsDisposition()
+    private val _analyticsDisposition = MutableStateFlow(analyticsTelemetryDisposition)
+    val analyticsDisposition: StateFlow<AnalyticsDisposition> = _analyticsDisposition
 
     /**
      *
@@ -124,7 +139,7 @@ internal class IdentityVerificationViewModel(
         bitmap: Bitmap,
         documentSide: DocumentSide,
         type: UploadMethod,
-        onError: (HttpApiResponseProblem?) -> Unit,
+        onError: (Throwable?) -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
         uploadFile(
@@ -144,7 +159,7 @@ internal class IdentityVerificationViewModel(
     internal fun uploadSelfieImage(
         bitmap: Bitmap,
         onSuccess: (FaluFile) -> Unit,
-        onError: (HttpApiResponseProblem?) -> Unit,
+        onError: (Throwable?) -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
         launch(Dispatchers.IO) {
@@ -163,7 +178,7 @@ internal class IdentityVerificationViewModel(
                     handleResponse(
                         response,
                         onSuccess = { onSuccess(it) },
-                        onError = { onError(it?.error) })
+                        onError = { onError(it) })
                 },
                 onFailure = {
                     Log.e(TAG, "Error uploading selfie image", it)
@@ -180,7 +195,7 @@ internal class IdentityVerificationViewModel(
         bitmap: Bitmap,
         documentSide: DocumentSide,
         score: Float,
-        onError: (HttpApiResponseProblem?) -> Unit,
+        onError: (Throwable?) -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
         uploadFile(
@@ -204,7 +219,7 @@ internal class IdentityVerificationViewModel(
         type: UploadMethod,
         verification: String,
         score: Float? = null,
-        onError: (HttpApiResponseProblem?) -> Unit,
+        onError: (Throwable?) -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
         launch(Dispatchers.IO) {
@@ -226,7 +241,7 @@ internal class IdentityVerificationViewModel(
                             current.modify(documentSide, result)
                         }
                     } else {
-                        handleResponse(response, onError = { onError(it?.error) })
+                        handleResponse(response, onError = { onError(it) })
                     }
                 },
                 onFailure = {
@@ -240,7 +255,7 @@ internal class IdentityVerificationViewModel(
     internal fun updateVerification(
         document: JsonPatchDocument,
         onSuccess: ((Verification) -> Unit),
-        onError: ((HttpApiResponseProblem?) -> Unit),
+        onError: ((Throwable?) -> Unit),
         onFailure: ((Throwable) -> Unit)
     ) {
         launch(Dispatchers.IO) {
@@ -251,7 +266,7 @@ internal class IdentityVerificationViewModel(
                     handleResponse(
                         response,
                         onSuccess = { onSuccess(it) },
-                        onError = { onError(it?.error) })
+                        onError = { onError(it) })
                 },
                 onFailure = {
                     Log.e(TAG, "Error updating verification", it)
@@ -264,7 +279,7 @@ internal class IdentityVerificationViewModel(
     internal fun submitVerificationData(
         uploadRequest: VerificationUploadRequest,
         onSuccess: ((Verification) -> Unit),
-        onError: ((HttpApiResponseProblem?) -> Unit),
+        onError: ((Throwable?) -> Unit),
         onFailure: (Throwable) -> Unit
     ) {
         launch(Dispatchers.IO) {
@@ -275,7 +290,7 @@ internal class IdentityVerificationViewModel(
                     handleResponse(
                         response,
                         onSuccess = onSuccess,
-                        onError = { onError(it?.error) })
+                        onError = { onError(it) })
                 },
                 onFailure = {
                     Log.e(TAG, "Error submitting verification", it)
@@ -361,18 +376,22 @@ internal class IdentityVerificationViewModel(
         _documentUploadDisposition.update { DocumentUploadDisposition() }
     }
 
+    internal fun modifyAnalyticsDisposition(disposition: AnalyticsDisposition) {
+        _analyticsDisposition.update { current -> current.modify(disposition) }
+    }
+
     fun observeForVerificationResults(
         owner: LifecycleOwner,
         onSuccess: ((Verification) -> Unit),
-        onError: ((HttpApiResponseProblem?) -> Unit)
+        onError: ((Throwable?) -> Unit)
     ) {
-        verification.observe(owner, Observer<ResourceResponse<Verification>?> { response ->
+        verification.observe(owner) { response ->
             if (response != null && response.successful() && response.resource != null) {
                 onSuccess(response.resource!!)
             } else {
-                onError(response?.error)
+                onError(response?.toThrowable())
             }
-        })
+        }
     }
 
     fun observerForSupportedCountriesResults(
@@ -380,27 +399,51 @@ internal class IdentityVerificationViewModel(
         onSuccess: ((Array<SupportedCountry>) -> Unit),
         onError: ((HttpApiResponseProblem?) -> Unit)
     ) {
-        supportedCountries.observe(
-            owner,
-            Observer<ResourceResponse<Array<SupportedCountry>>?> { response ->
-                if (response != null && response.successful() && response.resource != null) {
-                    onSuccess(response.resource!!)
-                } else {
-                    onError(response?.error)
-                }
-            })
+        supportedCountries.observe(owner) { response ->
+            if (response != null && response.successful() && response.resource != null) {
+                onSuccess(response.resource!!)
+            } else {
+                onError(response?.error)
+            }
+        }
+    }
+
+    fun reportTelemetry(telemetry: AnalyticsTelemetry) {
+        launch(Dispatchers.IO) {
+            analyticsApiClient.reportTelemetry(telemetry)
+        }
+    }
+
+    fun reportSuccessfulVerificationTelemetry() {
+
+        launch(Dispatchers.IO) {
+            analyticsDisposition.collectLatest { latest ->
+                val cake = analyticsRequestBuilder.verificationSuccessful(
+                    fromFallbackUrl = false,
+                    backModelScore = latest.backModelScore,
+                    uploadMethod = latest.uploadMethod,
+                    frontModelScore = latest.frontModelScore,
+                    scanType = latest.scanType,
+                    selfieModelScore = latest.selfieModelScore,
+                    selfie = latest.selfie
+                )
+
+                analyticsApiClient.reportTelemetry(cake)
+            }
+        }
     }
 
     private suspend fun <TResource> handleResponse(
         response: ResourceResponse<TResource>?,
         onSuccess: ((TResource) -> Unit)? = null,
-        onError: ((ResourceResponse<TResource>?) -> Unit)
+        onError: ((Throwable?) -> Unit)
     ) = withContext(Dispatchers.Main) {
         if (response != null && response.successful() && response.resource != null) {
             onSuccess?.invoke(response.resource!!)
             return@withContext
         }
-        onError(response)
+
+        onError(response?.toThrowable())
     }
 
     fun getModel(stream: InputStream, fileName: String): File {
@@ -420,6 +463,7 @@ internal class IdentityVerificationViewModel(
         fun factoryProvider(
             savedStateRegistryOwner: SavedStateRegistryOwner,
             apiClient: () -> IdentityVerificationApiClient,
+            analyticsRequestBuilder: () -> IdentityAnalyticsRequestBuilder,
             fileUtils: () -> FileUtils,
             contractArgs: () -> ContractArgs
         ): AbstractSavedStateViewModelFactory =
@@ -431,6 +475,7 @@ internal class IdentityVerificationViewModel(
                 ): T {
                     return IdentityVerificationViewModel(
                         apiClient(),
+                        analyticsRequestBuilder(),
                         contractArgs(),
                         fileUtils()
                     ) as T

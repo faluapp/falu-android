@@ -10,10 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import io.falu.core.exceptions.ApiException
 import io.falu.core.models.FaluFile
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.ai.FaceDetectionOutput
+import io.falu.identity.analytics.AnalyticsDisposition
 import io.falu.identity.api.models.UploadMethod
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationSelfieUpload
@@ -156,7 +158,7 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
             bitmap,
             onSuccess = { submitSelfieAndUploadedDocuments(it) },
             onFailure = { navigateToErrorFragment(it) },
-            onError = { navigateToApiResponseProblemFragment(it) }
+            onError = { navigateToApiResponseProblemFragment((it as ApiException).problem) }
         )
     }
 
@@ -183,14 +185,23 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
                 // stop the analyzer
                 binding.viewCamera.stopAnalyzer()
                 binding.viewCamera.analyzers.clear()
-                bindToUI((it.output as FaceDetectionOutput))
+
+                val output = it.output as FaceDetectionOutput
+                reportFaceScanSuccessfulTelemetry(output = output)
+                bindToUI(output)
             } else if (it.disposition is ScanDisposition.Timeout) {
+                identityViewModel.reportTelemetry(identityViewModel.analyticsRequestBuilder.selfieScanTimeOut())
+
                 binding.viewCamera.stopAnalyzer()
                 binding.viewCamera.analyzers.clear()
 
                 findNavController().navigate(R.id.action_global_fragment_selfie_capture_error)
             }
         }
+    }
+
+    private fun reportFaceScanSuccessfulTelemetry(output: FaceDetectionOutput) {
+        identityViewModel.modifyAnalyticsDisposition(disposition = AnalyticsDisposition(selfieModelScore = output.score))
     }
 
     override fun onDestroyView() {

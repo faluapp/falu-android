@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.ai.DocumentDetectionOutput
+import io.falu.identity.analytics.AnalyticsDisposition
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationCapture
@@ -206,13 +207,31 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
                 val output = it.output as DocumentDetectionOutput
                 val bitmap = output.bitmap
 
+                reportSuccessfulScanTelemetry(it.disposition as ScanDisposition.Completed, output)
+
                 binding.ivScan.setImageBitmap(bitmap)
             } else if (it.disposition is ScanDisposition.Timeout) {
-                documentScanViewModel.scanner?.stopScan(binding.viewCamera)
 
+                identityViewModel.reportTelemetry(
+                    identityViewModel
+                        .analyticsRequestBuilder
+                        .documentScanTimeOut(scanType = (it.disposition as ScanDisposition.Timeout).type)
+                )
+
+                documentScanViewModel.scanner?.stopScan(binding.viewCamera)
                 findNavController().navigate(R.id.action_global_fragment_scan_capture_error)
             }
         }
+    }
+
+    private fun reportSuccessfulScanTelemetry(scanDisposition: ScanDisposition, output: DocumentDetectionOutput) {
+        val telemetryDisposition = if (scanDisposition.type.isFront) {
+            AnalyticsDisposition(frontModelScore = output.score, scanType = scanDisposition.type)
+        } else {
+            AnalyticsDisposition(backModelScore = output.score, scanType = scanDisposition.type)
+        }
+
+        identityViewModel.modifyAnalyticsDisposition(disposition = telemetryDisposition)
     }
 
     internal companion object {

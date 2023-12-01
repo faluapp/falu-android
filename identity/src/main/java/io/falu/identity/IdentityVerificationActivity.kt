@@ -12,12 +12,12 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.navigation.fragment.NavHostFragment
+import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder
 import io.falu.identity.api.IdentityVerificationApiClient
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationStatus
 import io.falu.identity.databinding.ActivityIdentityVerificationBinding
 import io.falu.identity.utils.FileUtils
-import software.tingle.api.HttpApiResponseProblem
 
 internal class IdentityVerificationActivity : AppCompatActivity(),
     IdentityVerificationResultCallback {
@@ -27,6 +27,7 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
         IdentityVerificationViewModel.factoryProvider(
             this,
             { apiClient },
+            { analyticsRequestBuilder },
             { fileUtils },
             { contractArgs }
         )
@@ -51,6 +52,10 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
 
     private val apiClient: IdentityVerificationApiClient by lazy {
         IdentityVerificationApiClient(this, contractArgs.temporaryKey, BuildConfig.DEBUG)
+    }
+
+    private val analyticsRequestBuilder: IdentityAnalyticsRequestBuilder by lazy {
+        IdentityAnalyticsRequestBuilder(this, contractArgs)
     }
 
     private lateinit var launchFallbackUrl: ActivityResultLauncher<Intent>
@@ -78,13 +83,23 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
         verificationViewModel.observeForVerificationResults(
             this,
             onSuccess = {
+
+                if (savedInstanceState?.getBoolean(KEY_OPENED, false) != true) {
+                    verificationViewModel.reportTelemetry(verificationViewModel.analyticsRequestBuilder.viewOpened())
+                }
+
                 if (!it.supported) {
                     launchFallbackUrl(it.url.orEmpty())
                 } else {
                     onVerificationSuccessful(it)
                 }
             },
-            onError = { onVerificationFailure(it) })
+            onError = { onVerificationFailure(false, it) })
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(KEY_OPENED, true)
     }
 
     private fun onVerificationSuccessful(verification: Verification) {
@@ -107,11 +122,21 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
         }
     }
 
-    private fun onVerificationFailure(error: HttpApiResponseProblem?) {
-        // TODO: Navigate to error page
+    private fun onVerificationFailure(fromFallbackUrl: Boolean, throwable: Throwable?) {
+        verificationViewModel.reportTelemetry(
+            verificationViewModel.analyticsRequestBuilder.verificationFailed(
+                fromFallbackUrl,
+                throwable = throwable
+            )
+        )
     }
 
     private fun finishWithVerificationResult(result: IdentityVerificationResult) {
+
+        verificationViewModel.reportTelemetry(
+            verificationViewModel.analyticsRequestBuilder.viewClosed(result.toString())
+        )
+
         val intent = Intent()
         result.addToIntent(intent)
         setResult(Activity.RESULT_OK, intent)
@@ -129,11 +154,14 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
                         if (it.submitted) {
                             finishWithVerificationResult(IdentityVerificationResult.Succeeded)
                         } else {
+                            verificationViewModel.reportTelemetry(
+                                verificationViewModel.analyticsRequestBuilder.verificationCanceled(true)
+                            )
                             finishWithVerificationResult(IdentityVerificationResult.Canceled)
                         }
                     },
                     onError = {
-                        onVerificationFailure(it)
+                        onVerificationFailure(true, it)
                     }
                 )
             }
@@ -147,10 +175,7 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
     }
 
     override fun onFinishWithResult(result: IdentityVerificationResult) {
-        val intent = Intent()
-        result.addToIntent(intent)
-        setResult(Activity.RESULT_OK, intent)
-        finish()
+        finishWithVerificationResult(result)
     }
 
     private fun setNavigationController() {
@@ -166,5 +191,9 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
         binding.tvSupport.setOnClickListener {
             navController.navigate(R.id.action_global_fragment_support)
         }
+    }
+
+    companion object {
+        private const val KEY_OPENED = ":opened"
     }
 }
