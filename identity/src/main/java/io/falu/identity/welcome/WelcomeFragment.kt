@@ -65,7 +65,7 @@ internal class WelcomeFragment(
 
     private fun onVerificationSuccessful(verification: Verification) {
         viewModel.modifyAnalyticsDisposition(disposition = AnalyticsDisposition(selfie = verification.selfieRequired))
-        
+
         hideProgressView()
         binding.tvWelcomeSubtitle.text =
             getString(

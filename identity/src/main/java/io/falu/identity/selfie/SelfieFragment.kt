@@ -165,6 +165,14 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
         )
     }
 
+    private fun reportCameraInfoTelemetry() {
+        val info = binding.viewCamera.cameraInfo
+
+        identityViewModel.reportTelemetry(
+            identityViewModel.analyticsRequestBuilder.cameraInfo(info?.sensorRotationDegrees, info)
+        )
+    }
+
     private fun submitSelfieAndUploadedDocuments(file: FaluFile) {
         val selfie =
             VerificationSelfieUpload(
@@ -204,7 +212,9 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
     }
 
     private fun reportFaceScanSuccessfulTelemetry(output: FaceDetectionOutput) {
-        identityViewModel.modifyAnalyticsDisposition(disposition = AnalyticsDisposition(selfieModelScore = output.score))
+        identityViewModel.modifyAnalyticsDisposition(
+            disposition = AnalyticsDisposition(selfieModelScore = output.score)
+        )
     }
 
     override fun onDestroyView() {

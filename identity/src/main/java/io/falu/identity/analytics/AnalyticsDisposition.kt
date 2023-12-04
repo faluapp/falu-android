@@ -12,7 +12,7 @@ internal data class AnalyticsDisposition(
     val frontModelScore: Float? = null,
     val scanType: ScanDisposition.DocumentScanType? = null,
     val selfieModelScore: Float? = null,
-    val selfie: Boolean? = null,
+    val selfie: Boolean? = null
 ) : Parcelable {
 
     fun modify(modification: AnalyticsDisposition): AnalyticsDisposition {

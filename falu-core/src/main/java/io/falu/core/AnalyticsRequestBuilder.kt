@@ -11,12 +11,17 @@ import io.falu.core.models.PluginInfo
 import io.falu.core.models.SDKInfo
 import io.falu.core.utils.ContextUtils.appName
 import io.falu.core.utils.ContextUtils.appVersionCode
+import io.falu.core.utils.PluginIdentifier
 
 /**
  * Build analytics parameters
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-open class AnalyticsRequestBuilder(context: Context, private val client: String) {
+open class AnalyticsRequestBuilder(
+    context: Context,
+    private val client: String,
+    private val pluginType: String = PluginIdentifier.pluginType ?: NATIVE_PLUGIN_TYPE
+) {
     private val appContext = context.applicationContext
 
     fun createRequest(event: String, params: Map<String, Any?> = mapOf()) = AnalyticsTelemetry(
@@ -30,8 +35,8 @@ open class AnalyticsRequestBuilder(context: Context, private val client: String)
             name = appContext.appName.toString()
         ),
         device = DeviceInfo(type = "${Build.MANUFACTURER}_${Build.BRAND}_${Build.MODEL}"),
-        plugin = PluginInfo(type = NATIVE_PLUGIN_TYPE),
-        metadata = params,
+        plugin = PluginInfo(type = pluginType),
+        metadata = params
     )
 
     companion object {

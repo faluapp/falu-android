@@ -1,7 +1,6 @@
 package io.falu.core.models
 
 import androidx.annotation.RestrictTo
-import com.google.gson.annotations.Expose
 import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
 import software.tingle.api.adapters.ISO8601DateAdapter
@@ -62,7 +61,7 @@ data class AnalyticsTelemetry(
     /**
      *
      */
-    val metadata: Map<String, *>,
+    val metadata: Map<String, *>
 )
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -111,4 +110,3 @@ data class AppInfo(
      */
     val version: String
 )
-

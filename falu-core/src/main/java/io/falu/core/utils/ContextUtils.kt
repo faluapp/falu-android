@@ -39,7 +39,6 @@ object ContextUtils {
             it.isNullOrBlank()
         } ?: packageName
 
-
     val Context.appVersionName: String
         get() {
             with(packageInfo) {

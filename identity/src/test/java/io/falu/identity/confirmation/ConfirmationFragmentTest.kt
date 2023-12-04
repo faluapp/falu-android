@@ -9,7 +9,6 @@ import io.falu.identity.IdentityVerificationResult
 import io.falu.identity.IdentityVerificationResultCallback
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
-import io.falu.identity.capture.scan.DocumentScanViewModel
 import io.falu.identity.databinding.FragmentConfirmationBinding
 import io.falu.identity.utils.createFactoryFor
 import org.junit.Test
