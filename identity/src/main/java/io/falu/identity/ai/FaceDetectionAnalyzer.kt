@@ -74,7 +74,7 @@ internal class FaceDetectionAnalyzer internal constructor(
                 1 to classifiersBuffer.buffer
             )
         )
-        
+
         inferenceMonitor.monitor()
 
         val scores = classifiersBuffer.floatArray

@@ -90,9 +90,8 @@ internal class DocumentScanViewModel(private val performanceMonitor: ModelPerfor
         private val TAG = DocumentScanViewModel::class.java.simpleName
         fun factoryProvider(
             savedStateRegistryOwner: SavedStateRegistryOwner,
-            performanceMonitor: () -> ModelPerformanceMonitor,
-
-            ): AbstractSavedStateViewModelFactory =
+            performanceMonitor: () -> ModelPerformanceMonitor
+        ): AbstractSavedStateViewModelFactory =
             object : AbstractSavedStateViewModelFactory(savedStateRegistryOwner, null) {
                 override fun <T : ViewModel> create(
                     key: String,
@@ -100,7 +99,7 @@ internal class DocumentScanViewModel(private val performanceMonitor: ModelPerfor
                     handle: SavedStateHandle
                 ): T {
                     return DocumentScanViewModel(
-                        performanceMonitor(),
+                        performanceMonitor()
                     ) as T
                 }
             }

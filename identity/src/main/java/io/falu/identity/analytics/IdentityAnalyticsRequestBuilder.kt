@@ -1,6 +1,7 @@
 package io.falu.identity.analytics
 
 import android.content.Context
+import androidx.camera.core.CameraInfo
 import io.falu.core.AnalyticsRequestBuilder
 import io.falu.identity.ContractArgs
 import io.falu.identity.api.models.IdentityDocumentType
@@ -39,7 +40,7 @@ internal class IdentityAnalyticsRequestBuilder(
         frontModelScore: Float? = null,
         scanType: ScanDisposition.DocumentScanType? = null,
         selfieModelScore: Float? = null,
-        selfie: Boolean? = null,
+        selfie: Boolean? = null
     ) = createRequest(
         EVENT_VERIFICATION_SUCCESSFUL, makeEventParameters(
             KEY_FROM_FALLBACK_URL to fromFallbackUrl.toString(),
@@ -48,7 +49,7 @@ internal class IdentityAnalyticsRequestBuilder(
             KEY_UPLOAD_METHOD to uploadMethod?.name,
             KEY_DOC_FRONT_MODEL_SCORE to frontModelScore.toString(),
             KEY_DOC_BACK_MODEL_SCORE to backModelScore.toString(),
-            KEY_SELFIE_MODEL_SCORE to selfieModelScore.toString(),
+            KEY_SELFIE_MODEL_SCORE to selfieModelScore.toString()
         )
     )
 
@@ -105,6 +106,13 @@ internal class IdentityAnalyticsRequestBuilder(
         )
     )
 
+    fun cameraInfo(rotation: Int?, info: CameraInfo?) = createRequest(
+        EVENT_CAMERA_INFO, makeEventParameters(
+            KEY_CAMERA_ROTATION to rotation.toString(),
+            KEY_CAMERA_INFO to info
+        )
+    )
+
     fun selfieScanTimeOut() = createRequest(EVENT_SELFIE_TIMEOUT)
 
     fun modelPerformance(model: String, preprocessing: Long, inference: Long, frames: Int) = createRequest(
@@ -126,17 +134,12 @@ internal class IdentityAnalyticsRequestBuilder(
         const val EVENT_VERIFICATION_SUCCESSFUL = "verification_successful"
         const val EVENT_VERIFICATION_FAILED = "verification_failed"
         const val EVENT_VERIFICATION_CANCELED = "verification_canceled"
-        const val EVENT_SCREEN_PRESENTED = "screen_presented"
-        const val EVENT_CAMERA_ERROR = "camera_error"
         const val EVENT_CAMERA_PERMISSION_DENIED = "camera_permission_denied"
         const val EVENT_CAMERA_PERMISSION_GRANTED = "camera_permission_granted"
         const val EVENT_IDENTITY_DOCUMENT_TIMEOUT = "document_timeout"
         const val EVENT_SELFIE_TIMEOUT = "selfie_timeout"
-        const val EVENT_AVERAGE_FPS = "average_fps"
         const val EVENT_MODEL_PERFORMANCE = "model_performance"
-        const val EVENT_TIME_TO_SCREEN = "time_to_screen"
-        const val EVENT_IMAGE_UPLOAD = "image_upload"
-        const val EVENT_ERROR = "error"
+        const val EVENT_CAMERA_INFO = "camera_info"
 
         const val KEY_VERIFICATION = "verification"
         const val KEY_DOCUMENT_SCAN_TYPE = "scan_type"
@@ -156,5 +159,7 @@ internal class IdentityAnalyticsRequestBuilder(
         const val KEY_PREPROCESSING = "preprocessing"
         const val KEY_INFERENCE = "inference"
         const val KEY_FRAMES = "frames"
+        const val KEY_CAMERA_ROTATION = "camera_rotation"
+        const val KEY_CAMERA_INFO = "KEY_CAMERA_INFO"
     }
 }

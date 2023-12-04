@@ -50,6 +50,7 @@ internal class CameraView @JvmOverloads constructor(
 
     private var _cameraViewType: CameraViewType = CameraViewType.DEFAULT
     private var _lensFacing: Int = CameraSelector.LENS_FACING_BACK
+    private var _cameraInfo: CameraInfo? = null
 
     @DrawableRes
     private var border: Int = BORDERLESS
@@ -86,11 +87,20 @@ internal class CameraView @JvmOverloads constructor(
             _lifecycleOwner = value
         }
 
+    /**
+     *
+     */
     var cameraViewType: CameraViewType
         get() = _cameraViewType
         set(value) {
             _cameraViewType = value
         }
+
+    /**
+     *
+     */
+    val cameraInfo: CameraInfo?
+        get() = _cameraInfo
 
     val analyzers: MutableList<ImageAnalysis.Analyzer> = mutableListOf()
 
@@ -198,8 +208,6 @@ internal class CameraView @JvmOverloads constructor(
             val surfaceProvider = viewCameraPreview.surfaceProvider
 
             preview?.setSurfaceProvider(surfaceProvider)
-
-            observeCameraState(camera?.cameraInfo!!)
         } catch (e: Exception) {
             Log.e(TAG, "Use case binding failed", e)
         }
@@ -215,13 +223,6 @@ internal class CameraView @JvmOverloads constructor(
                 it.setAnalyzer(ContextCompat.getMainExecutor(context), analyzer)
             }
         }
-    }
-
-    /**
-     *
-     */
-    private fun observeCameraState(cameraInfo: CameraInfo) {
-        // TODO: 2022-10-31 Observe camera states
     }
 
     /**

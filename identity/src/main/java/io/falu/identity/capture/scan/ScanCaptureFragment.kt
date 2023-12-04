@@ -198,6 +198,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
 
     private fun onVerificationPage() {
         documentScanViewModel.documentScanCompleteDisposition.observe(viewLifecycleOwner) {
+
             if (it.disposition is ScanDisposition.Completed) {
                 // stop the analyzer
                 documentScanViewModel.scanner?.stopScan(binding.viewCamera)
@@ -234,6 +235,14 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
         }
 
         identityViewModel.modifyAnalyticsDisposition(disposition = telemetryDisposition)
+    }
+
+    private fun reportCameraInfoTelemetry() {
+        val info = binding.viewCamera.cameraInfo
+
+        identityViewModel.reportTelemetry(
+            identityViewModel.analyticsRequestBuilder.cameraInfo(info?.sensorRotationDegrees, info)
+        )
     }
 
     internal companion object {

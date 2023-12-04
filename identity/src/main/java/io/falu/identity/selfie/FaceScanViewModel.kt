@@ -85,9 +85,8 @@ internal class FaceScanViewModel(private val performanceMonitor: ModelPerformanc
 
         fun factoryProvider(
             savedStateRegistryOwner: SavedStateRegistryOwner,
-            performanceMonitor: () -> ModelPerformanceMonitor,
-
-            ): AbstractSavedStateViewModelFactory =
+            performanceMonitor: () -> ModelPerformanceMonitor
+        ): AbstractSavedStateViewModelFactory =
             object : AbstractSavedStateViewModelFactory(savedStateRegistryOwner, null) {
                 override fun <T : ViewModel> create(
                     key: String,
@@ -95,7 +94,7 @@ internal class FaceScanViewModel(private val performanceMonitor: ModelPerformanc
                     handle: SavedStateHandle
                 ): T {
                     return FaceScanViewModel(
-                        performanceMonitor(),
+                        performanceMonitor()
                     ) as T
                 }
             }
