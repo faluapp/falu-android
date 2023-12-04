@@ -33,7 +33,10 @@ import software.tingle.api.patch.JsonPatchDocument
 internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factory) : Fragment() {
 
     private val identityViewModel: IdentityVerificationViewModel by activityViewModels { identityViewModelFactory }
-    private val faceScanViewModel: FaceScanViewModel by activityViewModels()
+    private val faceScanViewModel: FaceScanViewModel by activityViewModels { faceScanViewModelFactory }
+
+    private val faceScanViewModelFactory =
+        FaceScanViewModel.factoryProvider(this) { identityViewModel.modelPerformanceMonitor }
 
     private var _binding: FragmentSelfieBinding? = null
     private val binding get() = _binding!!

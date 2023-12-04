@@ -6,6 +6,7 @@ import android.graphics.Rect
 import android.util.Size
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import io.falu.identity.analytics.ModelPerformanceMonitor
 import io.falu.identity.camera.AnalyzerBuilder
 import io.falu.identity.camera.AnalyzerOutputListener
 import io.falu.identity.scan.ScanDisposition
@@ -31,6 +32,7 @@ import kotlin.math.min
 internal class FaceDetectionAnalyzer internal constructor(
     model: File,
     private val threshold: Float,
+    private val performanceMonitor: ModelPerformanceMonitor,
     private val listener: AnalyzerOutputListener
 ) : ImageAnalysis.Analyzer {
 
@@ -41,6 +43,7 @@ internal class FaceDetectionAnalyzer internal constructor(
 
     @SuppressLint("UnsafeOptInUsageError")
     override fun analyze(image: ImageProxy) {
+        val preprocessingMonitor = performanceMonitor.monitorPreProcessing()
         interpreter.resetVariableTensors()
 
         // Input:- [1,128,128,3]
@@ -57,7 +60,9 @@ internal class FaceDetectionAnalyzer internal constructor(
             .add(NormalizeOp(NORMALIZE_MEAN, NORMALIZE_STD)) // normalize to [-1, 1)
             .build()
         tensorImage = processor.process(tensorImage)
+        preprocessingMonitor.monitor()
 
+        val inferenceMonitor = performanceMonitor.monitorInference()
         val regressors = Array(1) { Array(OUTPUT_SIZE) { FloatArray(16) } }
         val classifiersBuffer =
             TensorBuffer.createFixedSize(classifiersTensorShape, DataType.FLOAT32)
@@ -69,6 +74,8 @@ internal class FaceDetectionAnalyzer internal constructor(
                 1 to classifiersBuffer.buffer
             )
         )
+        
+        inferenceMonitor.monitor()
 
         val scores = classifiersBuffer.floatArray
         val anchors = generateFaceAnchors(Size(IMAGE_WIDTH, IMAGE_HEIGHT))
@@ -158,12 +165,13 @@ internal class FaceDetectionAnalyzer internal constructor(
 
     internal class Builder(
         private val model: File,
+        private val monitor: ModelPerformanceMonitor,
         private val threshold: Float
     ) :
         AnalyzerBuilder<ScanDisposition, DetectionOutput, ImageAnalysis.Analyzer> {
 
         override fun instance(result: (DetectionOutput) -> Unit): ImageAnalysis.Analyzer {
-            return FaceDetectionAnalyzer(model, threshold, result)
+            return FaceDetectionAnalyzer(model, threshold, monitor, result)
         }
     }
 

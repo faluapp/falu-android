@@ -30,7 +30,9 @@ import io.falu.identity.utils.serializable
 internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.Factory) : Fragment() {
 
     private val identityViewModel: IdentityVerificationViewModel by activityViewModels { identityViewModelFactory }
-    private val documentScanViewModel: DocumentScanViewModel by activityViewModels()
+    private val documentScanViewModel: DocumentScanViewModel by activityViewModels { documentScanViewModelFactory }
+    private val documentScanViewModelFactory =
+        DocumentScanViewModel.factoryProvider(this) { identityViewModel.modelPerformanceMonitor }
 
     private var _binding: FragmentScanCaptureBinding? = null
     private val binding get() = _binding!!

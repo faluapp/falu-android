@@ -3,6 +3,7 @@ package io.falu.identity.ai
 import android.graphics.Bitmap
 import android.graphics.Rect
 import android.util.Size
+import io.falu.identity.analytics.ModelPerformanceMonitor
 import io.falu.identity.utils.centerCrop
 import io.falu.identity.utils.crop
 import io.falu.identity.utils.maxAspectRatio
@@ -17,7 +18,11 @@ import java.io.File
 import kotlin.math.max
 import kotlin.math.min
 
-internal class DocumentEngine(model: File, private val threshold: Float) {
+internal class DocumentEngine(
+    model: File,
+    private val threshold: Float,
+    private val performanceMonitor: ModelPerformanceMonitor
+) {
     private val interpreter = Interpreter(model)
 
     private val maxDetections = 10
@@ -27,6 +32,7 @@ internal class DocumentEngine(model: File, private val threshold: Float) {
     private val detectionsTensorShape = intArrayOf(1)
 
     fun analyze(bitmap: Bitmap): DetectionOutput {
+        val preprocessingMonitor = performanceMonitor.monitorPreProcessing()
         interpreter.resetVariableTensors()
 
         val size = Size(bitmap.width, bitmap.height).maxAspectRatio(0.70f)
@@ -48,6 +54,9 @@ internal class DocumentEngine(model: File, private val threshold: Float) {
             .build()
         tensorImage = processor.process(tensorImage)
 
+        preprocessingMonitor.monitor()
+
+        val inferenceMonitor = performanceMonitor.monitorInference()
         // run:- input: [1,320,320,1], output: (1,10), (1, 10, 4), (1,), (1,10)
         // The output is an array representing the probability scores of the various document types
         val documentOptionScoresBuffer =
@@ -66,6 +75,7 @@ internal class DocumentEngine(model: File, private val threshold: Float) {
                 3 to classesBuffer.buffer
             )
         )
+        inferenceMonitor.monitor()
 
         val scores = documentOptionScoresBuffer.floatArray
         val boxes = boundingBoxesBuffer.floatArray

@@ -1,21 +1,32 @@
 package io.falu.identity.capture.scan
 
 import android.util.Log
+import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import androidx.savedstate.SavedStateRegistryOwner
 import io.falu.identity.ai.DocumentDetectionOutput
-import io.falu.identity.scan.ScanResultCallback
-import io.falu.identity.scan.ScanResult
+import io.falu.identity.analytics.ModelPerformanceMonitor
 import io.falu.identity.scan.IdentityResult
 import io.falu.identity.scan.ProvisionalResult
+import io.falu.identity.scan.ScanResult
+import io.falu.identity.scan.ScanResultCallback
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.io.File
+import kotlin.coroutines.CoroutineContext
 
-internal class DocumentScanViewModel : ViewModel(),
-    ScanResultCallback<ProvisionalResult, IdentityResult> {
+internal class DocumentScanViewModel(private val performanceMonitor: ModelPerformanceMonitor) : ViewModel(),
+    ScanResultCallback<ProvisionalResult, IdentityResult>, CoroutineScope {
+
+    override val coroutineContext: CoroutineContext
+        get() = Job() + Dispatchers.IO
 
     /**
      *
@@ -37,12 +48,14 @@ internal class DocumentScanViewModel : ViewModel(),
     internal var scanner: DocumentScanner? = null
 
     internal fun initialize(model: File, threshold: Float) {
-        scanner = DocumentScanner(model, threshold, this)
+        scanner = DocumentScanner(model, threshold, performanceMonitor, this)
     }
 
     override fun onScanComplete(result: IdentityResult) {
         Log.d(TAG, "Scan completed: $result")
         val documentDetectionOutput = result.output as DocumentDetectionOutput
+
+        reportModelPerformance()
 
         _documentScanCompleteDisposition.update { current ->
             current.modify(output = documentDetectionOutput, disposition = result.disposition)
@@ -66,7 +79,30 @@ internal class DocumentScanViewModel : ViewModel(),
         _documentScanCompleteDisposition.update { ScanResult() }
     }
 
+    internal fun reportModelPerformance() {
+        launch(Dispatchers.IO) {
+            performanceMonitor.reportModelPerformance(DOCUMENT_DETECTOR_MODEL)
+        }
+    }
+
     internal companion object {
+        private const val DOCUMENT_DETECTOR_MODEL = "document_detector_v1"
         private val TAG = DocumentScanViewModel::class.java.simpleName
+        fun factoryProvider(
+            savedStateRegistryOwner: SavedStateRegistryOwner,
+            performanceMonitor: () -> ModelPerformanceMonitor,
+
+            ): AbstractSavedStateViewModelFactory =
+            object : AbstractSavedStateViewModelFactory(savedStateRegistryOwner, null) {
+                override fun <T : ViewModel> create(
+                    key: String,
+                    modelClass: Class<T>,
+                    handle: SavedStateHandle
+                ): T {
+                    return DocumentScanViewModel(
+                        performanceMonitor(),
+                    ) as T
+                }
+            }
     }
 }

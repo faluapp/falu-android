@@ -16,7 +16,7 @@ import io.falu.core.utils.ContextUtils.appVersionCode
  * Build analytics parameters
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-open class AnalyticsRequestBuilder(context: Context, private val client: String, private val origin: String) {
+open class AnalyticsRequestBuilder(context: Context, private val client: String) {
     private val appContext = context.applicationContext
 
     fun createRequest(event: String, params: Map<String, Any?> = mapOf()) = AnalyticsTelemetry(
@@ -32,7 +32,6 @@ open class AnalyticsRequestBuilder(context: Context, private val client: String,
         device = DeviceInfo(type = "${Build.MANUFACTURER}_${Build.BRAND}_${Build.MODEL}"),
         plugin = PluginInfo(type = NATIVE_PLUGIN_TYPE),
         metadata = params,
-        origin = origin
     )
 
     companion object {

@@ -16,6 +16,7 @@ import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.capture.AbstractCaptureFragment
 import io.falu.identity.capture.CaptureDocumentViewModel
 import io.falu.identity.capture.manual.ManualCaptureFragment
+import io.falu.identity.capture.scan.DocumentScanViewModel
 import io.falu.identity.databinding.FragmentManualCaptureBinding
 import io.falu.identity.utils.createFactoryFor
 import org.junit.Test
@@ -41,6 +42,7 @@ class ManualCaptureFragmentTests {
     private val documentUploadDisposition = MutableLiveData(DocumentUploadDisposition())
 
     private val mockCaptureDocumentViewModel = mock<CaptureDocumentViewModel> {}
+    private val mockDocumentScanViewModel = mock<DocumentScanViewModel> {}
     private val modelFile = MutableLiveData<File>()
 
     private val mockIdentityVerificationViewModel =
@@ -140,6 +142,7 @@ class ManualCaptureFragmentTests {
         ) {
             ManualCaptureFragment(createFactoryFor(mockIdentityVerificationViewModel)).also {
                 it.captureDocumentViewModelFactory = createFactoryFor(mockCaptureDocumentViewModel)
+                it.documentScanViewModelFactory = createFactoryFor(mockDocumentScanViewModel)
             }
         }.onFragment {
             val navController = TestNavHostController(ApplicationProvider.getApplicationContext())

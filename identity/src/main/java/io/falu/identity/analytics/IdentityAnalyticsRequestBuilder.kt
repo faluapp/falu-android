@@ -11,7 +11,7 @@ import io.falu.identity.scan.ScanDisposition
 internal class IdentityAnalyticsRequestBuilder(
     context: Context,
     private val args: ContractArgs
-) : AnalyticsRequestBuilder(context, CLIENT, ORIGIN) {
+) : AnalyticsRequestBuilder(context, CLIENT) {
 
     var verification: Verification? = null
 
@@ -107,6 +107,16 @@ internal class IdentityAnalyticsRequestBuilder(
 
     fun selfieScanTimeOut() = createRequest(EVENT_SELFIE_TIMEOUT)
 
+    fun modelPerformance(model: String, preprocessing: Long, inference: Long, frames: Int) = createRequest(
+        EVENT_MODEL_PERFORMANCE,
+        makeEventParameters(
+            KEY_MODEL to model,
+            KEY_PREPROCESSING to preprocessing.toString(),
+            KEY_INFERENCE to inference.toString(),
+            KEY_FRAMES to frames.toString()
+        )
+    )
+
     companion object {
         const val CLIENT = "identity-sdk-mobile"
         const val ORIGIN = "falu-identity-android"
@@ -131,7 +141,6 @@ internal class IdentityAnalyticsRequestBuilder(
         const val KEY_VERIFICATION = "verification"
         const val KEY_DOCUMENT_SCAN_TYPE = "scan_type"
         const val KEY_LIVE = "live"
-        const val KEY_META_DATA = "metadata"
         const val KEY_SELFIE_REQUIRED = "selfie_required"
         const val KEY_PREVIOUS_SCREEN = "previous_screen_name"
         const val KEY_FROM_FALLBACK_URL = "from_fallback_url"
@@ -143,5 +152,9 @@ internal class IdentityAnalyticsRequestBuilder(
         const val KEY_DOC_FRONT_MODEL_SCORE = "document_front_model_score"
         const val KEY_DOC_BACK_MODEL_SCORE = "document_back_model_score"
         const val KEY_SELFIE_MODEL_SCORE = "selfie_model_score"
+        const val KEY_MODEL = "model"
+        const val KEY_PREPROCESSING = "preprocessing"
+        const val KEY_INFERENCE = "inference"
+        const val KEY_FRAMES = "frames"
     }
 }

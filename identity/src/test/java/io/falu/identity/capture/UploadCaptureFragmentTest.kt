@@ -19,6 +19,7 @@ import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.models.IdentityDocumentType
+import io.falu.identity.capture.scan.DocumentScanViewModel
 import io.falu.identity.capture.upload.UploadCaptureFragment
 import io.falu.identity.databinding.FragmentUploadCaptureBinding
 import io.falu.identity.documents.DocumentSelectionFragment
@@ -41,6 +42,7 @@ class UploadCaptureFragmentTest {
     private val documentUploadDisposition = MutableLiveData(DocumentUploadDisposition())
 
     private val mockCaptureDocumentViewModel = mock<CaptureDocumentViewModel> {}
+    private val mockDocumentScanViewModel = mock<DocumentScanViewModel> {}
     private val modelFile = MutableLiveData<File>()
 
     private val mockIdentityVerificationViewModel = mock<IdentityVerificationViewModel> {
@@ -133,6 +135,7 @@ class UploadCaptureFragmentTest {
         ) {
             UploadCaptureFragment(createFactoryFor(mockIdentityVerificationViewModel)).also {
                 it.captureDocumentViewModelFactory = createFactoryFor(mockCaptureDocumentViewModel)
+                it.documentScanViewModelFactory = createFactoryFor(mockDocumentScanViewModel)
             }
         }.onFragment {
             val navController = TestNavHostController(ApplicationProvider.getApplicationContext())

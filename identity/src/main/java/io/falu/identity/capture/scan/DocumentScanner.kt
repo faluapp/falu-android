@@ -1,6 +1,7 @@
 package io.falu.identity.capture.scan
 
 import io.falu.identity.ai.DocumentDetectionAnalyzer
+import io.falu.identity.analytics.ModelPerformanceMonitor
 import io.falu.identity.api.models.verification.VerificationCapture
 import io.falu.identity.camera.CameraView
 import io.falu.identity.scan.AbstractScanner
@@ -15,6 +16,7 @@ import java.io.File
 internal class DocumentScanner(
     private val model: File,
     private val threshold: Float,
+    private val performanceMonitor: ModelPerformanceMonitor,
     callbacks: ScanResultCallback<ProvisionalResult, IdentityResult>
 ) : AbstractScanner(callbacks) {
 
@@ -33,7 +35,7 @@ internal class DocumentScanner(
 
         view.analyzers.add(
             DocumentDetectionAnalyzer
-                .Builder(model = model, threshold)
+                .Builder(model = model, threshold, performanceMonitor)
                 .instance { onResult(it) }
         )
     }

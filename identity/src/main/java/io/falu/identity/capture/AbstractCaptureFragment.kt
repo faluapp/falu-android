@@ -42,7 +42,12 @@ internal abstract class AbstractCaptureFragment(
 ) : CameraPermissionsFragment() {
 
     protected val identityViewModel: IdentityVerificationViewModel by activityViewModels { identityViewModelFactory }
-    private val documentScanViewModel: DocumentScanViewModel by activityViewModels()
+
+    private val documentScanViewModel: DocumentScanViewModel by activityViewModels { documentScanViewModelFactory }
+
+    @VisibleForTesting
+    internal var documentScanViewModelFactory: ViewModelProvider.Factory =
+        DocumentScanViewModel.factoryProvider(this) { identityViewModel.modelPerformanceMonitor }
 
     @VisibleForTesting
     internal var captureDocumentViewModelFactory: ViewModelProvider.Factory =
@@ -75,7 +80,7 @@ internal abstract class AbstractCaptureFragment(
         val bitmap = uri.toBitmap(requireContext().contentResolver).rotate(90)
 
         loadDocumentDetectionModel(identityViewModel, documentScanViewModel, threshold) {
-            val engine = DocumentEngine(it, threshold)
+            val engine = DocumentEngine(it, threshold, identityViewModel.modelPerformanceMonitor)
             val output = engine.analyze(bitmap) as DocumentDetectionOutput
 
             if (output.score >= threshold && output.option.matches(scanType)) {
@@ -95,6 +100,7 @@ internal abstract class AbstractCaptureFragment(
         }
 
         identityViewModel.modifyAnalyticsDisposition(disposition = telemetryDisposition)
+        documentScanViewModel.reportModelPerformance()
     }
 
     private fun uploadDocument(

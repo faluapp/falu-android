@@ -18,6 +18,7 @@ import io.falu.core.models.FaluFile
 import io.falu.core.utils.toThrowable
 import io.falu.identity.analytics.AnalyticsDisposition
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder
+import io.falu.identity.analytics.ModelPerformanceMonitor
 import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.FilesApiClient
 import io.falu.identity.api.IdentityVerificationApiClient
@@ -59,6 +60,8 @@ internal class IdentityVerificationViewModel(
 
     private val filesApiClient = FilesApiClient()
     private val analyticsApiClient = AnalyticsApiClient(contractArgs.temporaryKey)
+
+    internal val modelPerformanceMonitor = ModelPerformanceMonitor(analyticsRequestBuilder, analyticsApiClient)
 
     /**
      *
@@ -428,7 +431,7 @@ internal class IdentityVerificationViewModel(
                     selfie = latest.selfie
                 )
 
-                analyticsApiClient.reportTelemetry(cake, IdentityAnalyticsRequestBuilder.ORIGIN  )
+                analyticsApiClient.reportTelemetry(cake, IdentityAnalyticsRequestBuilder.ORIGIN)
             }
         }
     }
