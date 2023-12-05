@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.ai.DocumentDetectionOutput
+import io.falu.identity.analytics.AnalyticsDisposition
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationCapture
@@ -29,7 +30,9 @@ import io.falu.identity.utils.serializable
 internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.Factory) : Fragment() {
 
     private val identityViewModel: IdentityVerificationViewModel by activityViewModels { identityViewModelFactory }
-    private val documentScanViewModel: DocumentScanViewModel by activityViewModels()
+    private val documentScanViewModel: DocumentScanViewModel by activityViewModels { documentScanViewModelFactory }
+    private val documentScanViewModelFactory =
+        DocumentScanViewModel.factoryProvider(this) { identityViewModel.modelPerformanceMonitor }
 
     private var _binding: FragmentScanCaptureBinding? = null
     private val binding get() = _binding!!
@@ -195,6 +198,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
 
     private fun onVerificationPage() {
         documentScanViewModel.documentScanCompleteDisposition.observe(viewLifecycleOwner) {
+
             if (it.disposition is ScanDisposition.Completed) {
                 // stop the analyzer
                 documentScanViewModel.scanner?.stopScan(binding.viewCamera)
@@ -206,13 +210,39 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
                 val output = it.output as DocumentDetectionOutput
                 val bitmap = output.bitmap
 
+                reportSuccessfulScanTelemetry(it.disposition as ScanDisposition.Completed, output)
+
                 binding.ivScan.setImageBitmap(bitmap)
             } else if (it.disposition is ScanDisposition.Timeout) {
-                documentScanViewModel.scanner?.stopScan(binding.viewCamera)
 
+                identityViewModel.reportTelemetry(
+                    identityViewModel
+                        .analyticsRequestBuilder
+                        .documentScanTimeOut(scanType = (it.disposition as ScanDisposition.Timeout).type)
+                )
+
+                documentScanViewModel.scanner?.stopScan(binding.viewCamera)
                 findNavController().navigate(R.id.action_global_fragment_scan_capture_error)
             }
         }
+    }
+
+    private fun reportSuccessfulScanTelemetry(scanDisposition: ScanDisposition, output: DocumentDetectionOutput) {
+        val telemetryDisposition = if (scanDisposition.type.isFront) {
+            AnalyticsDisposition(frontModelScore = output.score, scanType = scanDisposition.type)
+        } else {
+            AnalyticsDisposition(backModelScore = output.score, scanType = scanDisposition.type)
+        }
+
+        identityViewModel.modifyAnalyticsDisposition(disposition = telemetryDisposition)
+    }
+
+    private fun reportCameraInfoTelemetry() {
+        val info = binding.viewCamera.cameraInfo
+
+        identityViewModel.reportTelemetry(
+            identityViewModel.analyticsRequestBuilder.cameraInfo(info?.sensorRotationDegrees, info)
+        )
     }
 
     internal companion object {

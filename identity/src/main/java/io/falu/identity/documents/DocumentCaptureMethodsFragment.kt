@@ -12,7 +12,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
+import io.falu.identity.analytics.AnalyticsDisposition
 import io.falu.identity.api.models.IdentityDocumentType
+import io.falu.identity.api.models.UploadMethod
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.camera.CameraPermissionsFragment
 import io.falu.identity.databinding.FragmentDocumentCaptureMethodsBinding
@@ -49,16 +51,19 @@ internal class DocumentCaptureMethodsFragment(private val factory: ViewModelProv
 
         binding.viewCaptureMethodScan.setOnClickListener {
             viewModel.resetDocumentUploadDisposition()
+            reportUploadMethodTelemetry(UploadMethod.AUTO)
             checkCameraPermissions(identityDocumentType.toScanCaptureDestination())
         }
 
         binding.viewCaptureMethodPhoto.setOnClickListener {
             viewModel.resetDocumentUploadDisposition()
+            reportUploadMethodTelemetry(UploadMethod.MANUAL)
             checkCameraPermissions(identityDocumentType.toManualCaptureDestination())
         }
 
         binding.viewCaptureMethodUpload.setOnClickListener {
             viewModel.resetDocumentUploadDisposition()
+            reportUploadMethodTelemetry(UploadMethod.UPLOAD)
             navigateToDestination(identityDocumentType.toUploadCaptureDestination())
         }
 
@@ -67,6 +72,13 @@ internal class DocumentCaptureMethodsFragment(private val factory: ViewModelProv
             onSuccess = { onVerificationSuccessful(it) },
             onError = {}
         )
+    }
+
+    /**
+     *
+     */
+    private fun reportUploadMethodTelemetry(uploadMethod: UploadMethod) {
+        viewModel.modifyAnalyticsDisposition(disposition = AnalyticsDisposition(uploadMethod = uploadMethod))
     }
 
     /**
@@ -83,13 +95,14 @@ internal class DocumentCaptureMethodsFragment(private val factory: ViewModelProv
      */
     private fun onCameraPermissionGranted(@IdRes destinationId: Int) {
         navigateToDestination(destinationId)
+        viewModel.reportTelemetry(viewModel.analyticsRequestBuilder.cameraPermissionGranted(identityDocumentType))
     }
 
     /**
      *
      */
     private fun onCameraPermissionDenied() {
-        // TODO: navigate to camera permissions denied view
+        viewModel.reportTelemetry(viewModel.analyticsRequestBuilder.cameraPermissionDenied(identityDocumentType))
     }
 
     /**

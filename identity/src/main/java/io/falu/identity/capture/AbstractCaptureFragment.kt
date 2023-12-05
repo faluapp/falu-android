@@ -11,10 +11,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import io.falu.core.exceptions.ApiException
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.ai.DocumentDetectionOutput
 import io.falu.identity.ai.DocumentEngine
+import io.falu.identity.analytics.AnalyticsDisposition
 import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.IdentityDocumentType
@@ -40,7 +42,12 @@ internal abstract class AbstractCaptureFragment(
 ) : CameraPermissionsFragment() {
 
     protected val identityViewModel: IdentityVerificationViewModel by activityViewModels { identityViewModelFactory }
-    private val documentScanViewModel: DocumentScanViewModel by activityViewModels()
+
+    private val documentScanViewModel: DocumentScanViewModel by activityViewModels { documentScanViewModelFactory }
+
+    @VisibleForTesting
+    internal var documentScanViewModelFactory: ViewModelProvider.Factory =
+        DocumentScanViewModel.factoryProvider(this) { identityViewModel.modelPerformanceMonitor }
 
     @VisibleForTesting
     internal var captureDocumentViewModelFactory: ViewModelProvider.Factory =
@@ -73,15 +80,27 @@ internal abstract class AbstractCaptureFragment(
         val bitmap = uri.toBitmap(requireContext().contentResolver).rotate(90)
 
         loadDocumentDetectionModel(identityViewModel, documentScanViewModel, threshold) {
-            val engine = DocumentEngine(it, threshold)
+            val engine = DocumentEngine(it, threshold, identityViewModel.modelPerformanceMonitor)
             val output = engine.analyze(bitmap) as DocumentDetectionOutput
 
             if (output.score >= threshold && output.option.matches(scanType)) {
+                reportSuccessfulAnalysisTelemetry(documentSide, output)
                 uploadDocument(output.bitmap, documentSide, type)
             } else {
                 findNavController().navigate(R.id.action_global_fragment_scan_capture_error)
             }
         }
+    }
+
+    private fun reportSuccessfulAnalysisTelemetry(documentSide: DocumentSide, output: DocumentDetectionOutput) {
+        val telemetryDisposition = if (documentSide == DocumentSide.FRONT) {
+            AnalyticsDisposition(frontModelScore = output.score)
+        } else {
+            AnalyticsDisposition(backModelScore = output.score)
+        }
+
+        identityViewModel.modifyAnalyticsDisposition(disposition = telemetryDisposition)
+        documentScanViewModel.reportModelPerformance()
     }
 
     private fun uploadDocument(
@@ -101,7 +120,7 @@ internal abstract class AbstractCaptureFragment(
             type = type,
             onError = {
                 resetViews(documentSide)
-                navigateToApiResponseProblemFragment(it)
+                navigateToApiResponseProblemFragment((it as ApiException).problem)
             },
             onFailure = {
                 resetViews(documentSide)
@@ -125,7 +144,7 @@ internal abstract class AbstractCaptureFragment(
             output.score,
             onError = {
                 resetViews(documentSide)
-                navigateToApiResponseProblemFragment(it)
+                navigateToApiResponseProblemFragment((it as ApiException).problem)
             },
             onFailure = {
                 resetViews(documentSide)
@@ -199,7 +218,7 @@ internal abstract class AbstractCaptureFragment(
                 }
             },
             onError = {
-                navigateToApiResponseProblemFragment(it)
+                navigateToApiResponseProblemFragment((it as ApiException).problem)
             }
         )
     }

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import io.falu.core.exceptions.ApiException
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.api.models.Support
 import io.falu.identity.databinding.FragmentSupportBinding
@@ -41,7 +42,7 @@ internal class SupportFragment(
                 bindSupportViews(support)
             },
             onError = {
-                navigateToApiResponseProblemFragment(it)
+                navigateToApiResponseProblemFragment((it as ApiException).problem)
             }
         )
     }

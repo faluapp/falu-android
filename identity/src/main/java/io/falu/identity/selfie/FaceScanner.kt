@@ -1,6 +1,7 @@
 package io.falu.identity.selfie
 
 import io.falu.identity.ai.FaceDetectionAnalyzer
+import io.falu.identity.analytics.ModelPerformanceMonitor
 import io.falu.identity.api.models.verification.VerificationCapture
 import io.falu.identity.camera.CameraView
 import io.falu.identity.scan.AbstractScanner
@@ -14,6 +15,7 @@ import java.io.File
 internal class FaceScanner(
     private val model: File,
     private val threshold: Float,
+    private val performanceMonitor: ModelPerformanceMonitor,
     callback: ScanResultCallback<ProvisionalResult, IdentityResult>
 ) : AbstractScanner(callback) {
 
@@ -31,7 +33,7 @@ internal class FaceScanner(
 
         view.analyzers.add(
             FaceDetectionAnalyzer
-                .Builder(model = model, threshold)
+                .Builder(model = model, performanceMonitor, threshold)
                 .instance { onResult(it) }
         )
     }

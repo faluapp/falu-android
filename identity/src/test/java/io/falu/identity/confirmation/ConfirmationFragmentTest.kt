@@ -7,8 +7,10 @@ import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
 import io.falu.identity.IdentityVerificationResult
 import io.falu.identity.IdentityVerificationResultCallback
+import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.databinding.FragmentConfirmationBinding
+import io.falu.identity.utils.createFactoryFor
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.eq
@@ -22,6 +24,7 @@ import com.google.android.material.R as MatR
 @Config(sdk = [Build.VERSION_CODES.O_MR1])
 class ConfirmationFragmentTest {
     private val mockVerificationResultCallback = mock<IdentityVerificationResultCallback>()
+    private val identityVerificationViewModel = mock<IdentityVerificationViewModel>()
 
     @Test
     fun testButtonClickFinishesWithComplete() {
@@ -38,7 +41,10 @@ class ConfirmationFragmentTest {
         block: (binding: FragmentConfirmationBinding, navController: TestNavHostController) -> Unit
     ) =
         launchFragmentInContainer(themeResId = MatR.style.Theme_MaterialComponents) {
-            ConfirmationFragment(mockVerificationResultCallback)
+            ConfirmationFragment(
+                createFactoryFor(identityVerificationViewModel),
+                mockVerificationResultCallback
+            )
         }.onFragment {
 
             val navController = TestNavHostController(ApplicationProvider.getApplicationContext())

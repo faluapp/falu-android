@@ -5,13 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import io.falu.identity.IdentityVerificationResult
 import io.falu.identity.IdentityVerificationResultCallback
+import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.databinding.FragmentConfirmationBinding
 
-internal class ConfirmationFragment(val callback: IdentityVerificationResultCallback) : Fragment() {
+internal class ConfirmationFragment(
+    private val factory: ViewModelProvider.Factory,
+    val callback: IdentityVerificationResultCallback
+) : Fragment() {
     private var _binding: FragmentConfirmationBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: IdentityVerificationViewModel by activityViewModels { factory }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,6 +34,7 @@ internal class ConfirmationFragment(val callback: IdentityVerificationResultCall
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonFinish.setOnClickListener {
+            viewModel.reportSuccessfulVerificationTelemetry()
             callback.onFinishWithResult(IdentityVerificationResult.Succeeded)
         }
     }

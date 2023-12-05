@@ -18,8 +18,7 @@ import io.falu.identity.welcome.WelcomeFragment
 internal class IdentityVerificationFragmentFactory(
     private val callback: IdentityVerificationResultCallback,
     private val factory: ViewModelProvider.Factory
-) :
-    FragmentFactory() {
+) : FragmentFactory() {
 
     override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
         return when (className) {
@@ -30,7 +29,7 @@ internal class IdentityVerificationFragmentFactory(
             ScanCaptureFragment::class.java.name -> ScanCaptureFragment(factory)
             ScanCaptureSideFragment::class.java.name -> ScanCaptureSideFragment(factory)
             UploadCaptureFragment::class.java.name -> UploadCaptureFragment(factory)
-            ConfirmationFragment::class.java.name -> ConfirmationFragment(callback)
+            ConfirmationFragment::class.java.name -> ConfirmationFragment(factory, callback)
             SupportFragment::class.java.name -> SupportFragment(factory)
             SelfieFragment::class.java.name -> SelfieFragment(factory)
             IdentificationVerificationFragment::class.java.name -> IdentificationVerificationFragment(factory)
