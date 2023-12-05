@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.camera.core.CameraInfo
 import androidx.camera.core.CameraSelector
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -66,6 +67,10 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
         binding.viewCamera.lensFacing = CameraSelector.LENS_FACING_FRONT
         binding.viewCamera.cameraViewType = CameraView.CameraViewType.FACE
         binding.buttonContinue.text = getString(R.string.button_continue)
+
+        binding.viewCamera.setCameraInfoListener {
+            reportCameraInfoTelemetry(it)
+        }
 
         identityViewModel.observeForVerificationResults(
             viewLifecycleOwner,
@@ -165,11 +170,9 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
         )
     }
 
-    private fun reportCameraInfoTelemetry() {
-        val info = binding.viewCamera.cameraInfo
-
+    private fun reportCameraInfoTelemetry(cameraInfo: CameraInfo) {
         identityViewModel.reportTelemetry(
-            identityViewModel.analyticsRequestBuilder.cameraInfo(info?.sensorRotationDegrees, info)
+            identityViewModel.analyticsRequestBuilder.cameraInfo(cameraInfo.sensorRotationDegrees)
         )
     }
 
