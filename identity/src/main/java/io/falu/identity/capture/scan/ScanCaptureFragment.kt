@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.camera.core.CameraInfo
 import androidx.camera.core.CameraSelector
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -73,6 +74,10 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
                 CameraView.CameraViewType.ID
             else
                 CameraView.CameraViewType.PASSPORT
+
+        binding.viewCamera.setCameraInfoListener {
+            reportCameraInfoTelemetry(it)
+        }
 
         identityViewModel.observeForVerificationResults(
             viewLifecycleOwner,
@@ -237,11 +242,10 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
         identityViewModel.modifyAnalyticsDisposition(disposition = telemetryDisposition)
     }
 
-    private fun reportCameraInfoTelemetry() {
-        val info = binding.viewCamera.cameraInfo
-
+    private fun reportCameraInfoTelemetry(info: CameraInfo) {
+        val rotation = info.sensorRotationDegrees
         identityViewModel.reportTelemetry(
-            identityViewModel.analyticsRequestBuilder.cameraInfo(info?.sensorRotationDegrees, info)
+            identityViewModel.analyticsRequestBuilder.cameraInfo(rotation)
         )
     }
 

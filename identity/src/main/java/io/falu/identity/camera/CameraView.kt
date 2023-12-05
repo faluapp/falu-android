@@ -11,6 +11,7 @@ import androidx.annotation.DrawableRes
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraInfo
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.CameraState
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.Preview
@@ -34,6 +35,16 @@ internal class CameraView @JvmOverloads constructor(
     /**
      *
      */
+    private var cameraInfoListener: CameraInfoListener? = null
+
+    /**
+     *
+     */
+    private lateinit var onCameraInfoAvailable: (CameraInfo) -> Unit
+
+    /**
+     *
+     */
     private val viewCameraFrame: FrameLayout
 
     /**
@@ -50,7 +61,6 @@ internal class CameraView @JvmOverloads constructor(
 
     private var _cameraViewType: CameraViewType = CameraViewType.DEFAULT
     private var _lensFacing: Int = CameraSelector.LENS_FACING_BACK
-    private var _cameraInfo: CameraInfo? = null
 
     @DrawableRes
     private var border: Int = BORDERLESS
@@ -99,9 +109,6 @@ internal class CameraView @JvmOverloads constructor(
     /**
      *
      */
-    val cameraInfo: CameraInfo?
-        get() = _cameraInfo
-
     val analyzers: MutableList<ImageAnalysis.Analyzer> = mutableListOf()
 
     init {
@@ -124,6 +131,13 @@ internal class CameraView @JvmOverloads constructor(
         viewCameraPreview.post {
             configureCamera()
         }
+    }
+
+    /**
+     *
+     */
+    fun setCameraInfoListener(onCameraInfoAvailable: (CameraInfo) -> Unit) {
+        this.onCameraInfoAvailable = onCameraInfoAvailable
     }
 
     /**
@@ -208,6 +222,8 @@ internal class CameraView @JvmOverloads constructor(
             val surfaceProvider = viewCameraPreview.surfaceProvider
 
             preview?.setSurfaceProvider(surfaceProvider)
+
+            observeCameraState(camera?.cameraInfo)
         } catch (e: Exception) {
             Log.e(TAG, "Use case binding failed", e)
         }
@@ -226,18 +242,29 @@ internal class CameraView @JvmOverloads constructor(
     }
 
     /**
+     * */
+    private fun observeCameraState(cameraInfo: CameraInfo?) {
+        cameraInfo?.cameraState?.observe(lifecycleOwner) {
+            when (it.type) {
+                CameraState.Type.OPEN -> {
+                    onCameraInfoAvailable(cameraInfo)
+                }
+
+                else -> {}
+            }
+        }
+    }
+
+    /**
      *
      */
     internal val cameraSettings: CameraSettings
         get() {
             val extensions = cameraManager.getCameraCharacteristics(cameraId)
-            val focalLength =
-                extensions.get(CameraCharacteristics.LENS_INFO_AVAILABLE_FOCAL_LENGTHS)?.first()
+            val focalLength = extensions.get(CameraCharacteristics.LENS_INFO_AVAILABLE_FOCAL_LENGTHS)?.first()
             val duration =
-                extensions.get(CameraCharacteristics.SENSOR_INFO_EXPOSURE_TIME_RANGE)?.lower
-                    ?: Float.MIN_VALUE
-            val iso = extensions.get(CameraCharacteristics.SENSOR_INFO_SENSITIVITY_RANGE)?.upper
-                ?: Float.MIN_VALUE
+                extensions.get(CameraCharacteristics.SENSOR_INFO_EXPOSURE_TIME_RANGE)?.lower ?: Float.MIN_VALUE
+            val iso = extensions.get(CameraCharacteristics.SENSOR_INFO_SENSITIVITY_RANGE)?.upper ?: Float.MIN_VALUE
 
             return CameraSettings(
                 lens = CameraLens(model = "Camera-X", focalLength = focalLength!!),
@@ -269,6 +296,10 @@ internal class CameraView @JvmOverloads constructor(
          *
          */
         FACE(ASPECT_RATIO_FACE)
+    }
+
+    internal interface CameraInfoListener {
+        fun onCameraInfoAvailable(info: CameraInfo)
     }
 
     internal companion object {

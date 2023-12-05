@@ -1,7 +1,6 @@
 package io.falu.identity.analytics
 
 import android.content.Context
-import androidx.camera.core.CameraInfo
 import io.falu.core.AnalyticsRequestBuilder
 import io.falu.identity.ContractArgs
 import io.falu.identity.api.models.IdentityDocumentType
@@ -106,10 +105,9 @@ internal class IdentityAnalyticsRequestBuilder(
         )
     )
 
-    fun cameraInfo(rotation: Int?, info: CameraInfo?) = createRequest(
+    fun cameraInfo(rotation: Int?) = createRequest(
         EVENT_CAMERA_INFO, makeEventParameters(
-            KEY_CAMERA_ROTATION to rotation.toString(),
-            KEY_CAMERA_INFO to info
+            KEY_CAMERA_ROTATION to rotation.toString()
         )
     )
 
@@ -160,6 +158,5 @@ internal class IdentityAnalyticsRequestBuilder(
         const val KEY_INFERENCE = "inference"
         const val KEY_FRAMES = "frames"
         const val KEY_CAMERA_ROTATION = "camera_rotation"
-        const val KEY_CAMERA_INFO = "KEY_CAMERA_INFO"
     }
 }
