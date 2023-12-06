@@ -8,7 +8,7 @@ plugins {
 apply(from = "${rootDir}/build-config/klint.gradle.kts")
 
 android {
-    compileSdk = 33
+    compileSdk = 34
     namespace = project.properties["FALU_SDK_NAMESPACE"].toString()
 
     defaultConfig {
@@ -98,6 +98,7 @@ dependencies {
     testImplementation(libs.androidx.espresso.core)
     testImplementation(libs.androidx.fragment.testing)
     testImplementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.browser)
 
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.test.runner)

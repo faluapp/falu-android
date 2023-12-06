@@ -6,13 +6,13 @@ plugins {
 apply(from = "${rootDir}/build-config/klint.gradle.kts")
 
 android {
-    compileSdk = 33
+    compileSdk = 34
     namespace = project.properties["FALU_SDK_NAMESPACE"].toString()
 
     defaultConfig {
         applicationId = "io.falu.identity.sample"
         minSdk = 23
-        targetSdk = 33
+        targetSdk = 34
 
         versionCode = 1
         versionName = "1.0"
@@ -61,8 +61,8 @@ android {
 
 dependencies {
     implementation(project(":identity"))
-    implementation("androidx.browser:browser:1.5.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation(libs.androidx.browser)
     implementation(libs.core.ktx)
     implementation(libs.material)
     implementation(libs.constraint)

@@ -113,15 +113,17 @@ internal class IdentityAnalyticsRequestBuilder(
 
     fun selfieScanTimeOut() = createRequest(EVENT_SELFIE_TIMEOUT)
 
-    fun modelPerformance(model: String, preprocessing: Long, inference: Long, frames: Int) = createRequest(
-        EVENT_MODEL_PERFORMANCE,
-        makeEventParameters(
-            KEY_MODEL to model,
-            KEY_PREPROCESSING to preprocessing.toString(),
-            KEY_INFERENCE to inference.toString(),
-            KEY_FRAMES to frames.toString()
+    fun modelPerformance(model: String, imageInfo: String?, preprocessing: Long, inference: Long, frames: Int) =
+        createRequest(
+            EVENT_MODEL_PERFORMANCE,
+            makeEventParameters(
+                KEY_MODEL to model,
+                KEY_PREPROCESSING_IMAGE_IMAGE to imageInfo,
+                KEY_PREPROCESSING to preprocessing.toString(),
+                KEY_INFERENCE to inference.toString(),
+                KEY_FRAMES to frames.toString()
+            )
         )
-    )
 
     companion object {
         const val CLIENT = "identity-sdk-mobile"
@@ -155,6 +157,7 @@ internal class IdentityAnalyticsRequestBuilder(
         const val KEY_SELFIE_MODEL_SCORE = "selfie_model_score"
         const val KEY_MODEL = "model"
         const val KEY_PREPROCESSING = "preprocessing"
+        const val KEY_PREPROCESSING_IMAGE_IMAGE = "preprocessing_image_info"
         const val KEY_INFERENCE = "inference"
         const val KEY_FRAMES = "frames"
         const val KEY_CAMERA_ROTATION = "camera_rotation"

@@ -38,7 +38,9 @@ class AnalyticsApiClient(key: String) : AbstractHttpApiClient(AnalyticsAuthProvi
             .readTimeout(50, TimeUnit.SECONDS)
             .writeTimeout(50, TimeUnit.SECONDS)
 
-        builder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+        if (BuildConfig.DEBUG) {
+            builder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+        }
 
         return super.buildBackChannel(builder)
     }

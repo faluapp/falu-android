@@ -54,7 +54,7 @@ internal class DocumentEngine(
             .build()
         tensorImage = processor.process(tensorImage)
 
-        preprocessingMonitor.monitor()
+        preprocessingMonitor.monitor(stats = "width: ${tensorImage.width}; height: ${tensorImage.height}")
 
         val inferenceMonitor = performanceMonitor.monitorInference()
         // run:- input: [1,320,320,1], output: (1,10), (1, 10, 4), (1,), (1,10)

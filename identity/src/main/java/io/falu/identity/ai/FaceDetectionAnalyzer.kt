@@ -60,7 +60,10 @@ internal class FaceDetectionAnalyzer internal constructor(
             .add(NormalizeOp(NORMALIZE_MEAN, NORMALIZE_STD)) // normalize to [-1, 1)
             .build()
         tensorImage = processor.process(tensorImage)
-        preprocessingMonitor.monitor()
+        preprocessingMonitor.monitor(
+            stats = "width: ${tensorImage.width}; height: ${tensorImage.height}; " +
+                    "rotation: ${image.imageInfo.rotationDegrees}"
+        )
 
         val inferenceMonitor = performanceMonitor.monitorInference()
         val regressors = Array(1) { Array(OUTPUT_SIZE) { FloatArray(16) } }
