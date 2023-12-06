@@ -31,5 +31,6 @@ internal class MonitorImpl(private val complete: (LocalDateTime, String?) -> Uni
 
 data class Statistic(
     val start: LocalDateTime,
-    val duration: Duration
+    val duration: Duration,
+    val result: String? = null
 )

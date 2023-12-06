@@ -17,8 +17,8 @@ internal class ModelPerformanceMonitor(
     private val inferenceStats = mutableListOf<Statistic>()
 
     fun monitorPreProcessing(): Monitor =
-        MonitorImpl { start, _ ->
-            preprocessingStats.add(Statistic(start, Duration(start.toDateTime(), null)))
+        MonitorImpl { start, stats ->
+            preprocessingStats.add(Statistic(start, Duration(start.toDateTime(), null), stats))
         }
 
     fun monitorInference(): Monitor =
@@ -38,6 +38,7 @@ internal class ModelPerformanceMonitor(
                 model,
                 inference = inferenceStats.duration(),
                 preprocessing = preprocessingStats.duration(),
+                imageInfo = preprocessingStats.last().result,
                 frames = preprocessingStats.size
             ), IdentityAnalyticsRequestBuilder.ORIGIN
         )
