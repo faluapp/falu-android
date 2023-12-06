@@ -8,7 +8,7 @@ plugins {
 apply(from = "${rootDir}/build-config/klint.gradle.kts")
 
 android {
-    compileSdk = 33
+    compileSdk = 34
     namespace = project.properties["FALU_SDK_NAMESPACE"].toString()
 
     defaultConfig {
