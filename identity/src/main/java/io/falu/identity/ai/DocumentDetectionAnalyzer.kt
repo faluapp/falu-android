@@ -24,7 +24,6 @@ internal class DocumentDetectionAnalyzer internal constructor(
     override fun analyze(image: ImageProxy) {
         // Input:- [1,320,320,1]
         val bitmap = image.image?.toBitmap()?.rotate(image.imageInfo.rotationDegrees)
-
         val output = bitmap?.let { engine.analyze(it) }
 
         if (output != null) {
