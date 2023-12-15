@@ -5,6 +5,7 @@ import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
 import android.util.AttributeSet
 import android.util.Log
+import android.view.Surface.ROTATION_0
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
@@ -196,6 +197,7 @@ internal class CameraView @JvmOverloads constructor(
 
         imageAnalysis = ImageAnalysis.Builder()
             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+            .setTargetRotation(ROTATION_0)
             .setTargetAspectRatio(aspectRatio)
             .build()
             .also {
