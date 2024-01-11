@@ -1,11 +1,12 @@
 package io.falu.identity.camera
 
+import android.app.Activity
 import android.content.Context
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
+import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
-import android.view.Surface.ROTATION_0
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
@@ -14,7 +15,6 @@ import androidx.camera.core.CameraInfo
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.CameraState
 import androidx.camera.core.ImageAnalysis
-import androidx.camera.core.ImageCapture
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
@@ -32,11 +32,6 @@ internal class CameraView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
-
-    /**
-     *
-     */
-    private var cameraInfoListener: CameraInfoListener? = null
 
     /**
      *
@@ -68,7 +63,6 @@ internal class CameraView @JvmOverloads constructor(
     private var brightness: Double = 0.0
 
     private var preview: Preview? = null
-    private var imageCapture: ImageCapture? = null
     private var imageAnalysis: ImageAnalysis? = null
     private var camera: Camera? = null
     private var cameraProvider: ProcessCameraProvider? = null
@@ -111,6 +105,22 @@ internal class CameraView @JvmOverloads constructor(
      *
      */
     val analyzers: MutableList<ImageAnalysis.Analyzer> = mutableListOf()
+
+    /**
+     *
+     */
+    private val displayInfo by lazy {
+        val activity = context as Activity
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            activity.display
+        } else {
+            null
+        } ?: @Suppress("Deprecation")
+        activity.windowManager.defaultDisplay
+    }
+
+    private val displayRotation by lazy { displayInfo.rotation }
 
     init {
         context.withStyledAttributes(attrs, R.styleable.CameraView) {
@@ -184,21 +194,17 @@ internal class CameraView @JvmOverloads constructor(
         val aspectRatio = cameraViewType.ratio.second
 
         preview = Preview.Builder()
-            .setTargetAspectRatio(aspectRatio)
+            .setTargetRotation(displayRotation)
             .build()
             .also {
                 it.setSurfaceProvider(viewCameraPreview.surfaceProvider)
             }
 
-        imageCapture = ImageCapture.Builder()
-            .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
-            .setTargetAspectRatio(aspectRatio)
-            .build()
-
         imageAnalysis = ImageAnalysis.Builder()
             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-            .setTargetRotation(ROTATION_0)
+            .setTargetRotation(displayRotation)
             .setTargetAspectRatio(aspectRatio)
+            .setImageQueueDepth(1)
             .build()
             .also {
                 it.setAnalyzer(ContextCompat.getMainExecutor(context), LumaAnalyzer { luma ->
@@ -217,7 +223,6 @@ internal class CameraView @JvmOverloads constructor(
                 lifecycleOwner,
                 cameraSelector,
                 preview,
-                imageCapture,
                 imageAnalysis
             )
 
@@ -298,10 +303,6 @@ internal class CameraView @JvmOverloads constructor(
          *
          */
         FACE(ASPECT_RATIO_FACE)
-    }
-
-    internal interface CameraInfoListener {
-        fun onCameraInfoAvailable(info: CameraInfo)
     }
 
     internal companion object {
