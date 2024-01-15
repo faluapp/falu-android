@@ -134,7 +134,7 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
     private fun finishWithVerificationResult(result: IdentityVerificationResult) {
 
         verificationViewModel.reportTelemetry(
-            verificationViewModel.analyticsRequestBuilder.viewClosed(result.toString())
+            verificationViewModel.analyticsRequestBuilder.viewClosed(result.javaClass.name)
         )
 
         val intent = Intent()
