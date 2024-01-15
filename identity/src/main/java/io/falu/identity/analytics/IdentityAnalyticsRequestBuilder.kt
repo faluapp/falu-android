@@ -15,7 +15,7 @@ internal class IdentityAnalyticsRequestBuilder(
 
     var verification: Verification? = null
 
-    fun viewOpened() = createRequest(EVENT_VERIFICATION_VIEW_OPENED, mapOf(KEY_VERIFICATION to args.verificationId))
+    fun viewOpened() = createRequest(EVENT_VERIFICATION_VIEW_OPENED, makeEventParameters())
 
     private fun makeEventParameters(vararg params: Pair<String, *>) = mapOf(
         KEY_VERIFICATION to args.verificationId,
@@ -27,8 +27,8 @@ internal class IdentityAnalyticsRequestBuilder(
     )
 
     fun viewClosed(verificationResult: String) = createRequest(
-        EVENT_VERIFICATION_VIEW_CLOSED, mapOf(
-            EVENT_VERIFICATION_VIEW_CLOSED to verificationResult
+        EVENT_VERIFICATION_VIEW_CLOSED, makeEventParameters(
+            KEY_VIEW_RESULT to verificationResult
         )
     )
 
@@ -44,11 +44,11 @@ internal class IdentityAnalyticsRequestBuilder(
         EVENT_VERIFICATION_SUCCESSFUL, makeEventParameters(
             KEY_FROM_FALLBACK_URL to fromFallbackUrl.toString(),
             KEY_DOCUMENT_SCAN_TYPE to scanType?.name,
-            KEY_SELFIE_REQUIRED to selfie.toString(),
+            KEY_SELFIE_REQUIRED to selfie,
             KEY_UPLOAD_METHOD to uploadMethod?.name,
-            KEY_DOC_FRONT_MODEL_SCORE to frontModelScore.toString(),
-            KEY_DOC_BACK_MODEL_SCORE to backModelScore.toString(),
-            KEY_SELFIE_MODEL_SCORE to selfieModelScore.toString()
+            KEY_DOC_FRONT_MODEL_SCORE to frontModelScore,
+            KEY_DOC_BACK_MODEL_SCORE to backModelScore,
+            KEY_SELFIE_MODEL_SCORE to selfieModelScore
         )
     )
 
@@ -59,10 +59,10 @@ internal class IdentityAnalyticsRequestBuilder(
         previousScreenName: String? = null
     ) = createRequest(
         EVENT_VERIFICATION_CANCELED, makeEventParameters(
-            KEY_FROM_FALLBACK_URL to fromFallbackUrl.toString(),
+            KEY_FROM_FALLBACK_URL to fromFallbackUrl,
             KEY_DOCUMENT_SCAN_TYPE to scanType?.name,
-            KEY_SELFIE_REQUIRED to selfie.toString(),
-            KEY_PREVIOUS_SCREEN to previousScreenName.toString()
+            KEY_SELFIE_REQUIRED to selfie,
+            KEY_PREVIOUS_SCREEN to previousScreenName
         )
     )
 
@@ -73,9 +73,9 @@ internal class IdentityAnalyticsRequestBuilder(
         throwable: Throwable?
     ) = createRequest(
         EVENT_VERIFICATION_FAILED, makeEventParameters(
-            KEY_FROM_FALLBACK_URL to fromFallbackUrl.toString(),
+            KEY_FROM_FALLBACK_URL to fromFallbackUrl,
             KEY_DOCUMENT_SCAN_TYPE to scanType?.name,
-            KEY_SELFIE_REQUIRED to selfie.toString(),
+            KEY_SELFIE_REQUIRED to selfie,
             KEY_EXCEPTION to mapOf(
                 KEY_EXCEPTION_NAME to throwable?.javaClass?.name,
                 KEY_EXCEPTION_STACKTRACE to throwable?.stackTrace
@@ -84,7 +84,7 @@ internal class IdentityAnalyticsRequestBuilder(
     )
 
     fun documentScanTimeOut(scanType: ScanDisposition.DocumentScanType) = createRequest(
-        EVENT_IDENTITY_DOCUMENT_TIMEOUT, mapOf(KEY_DOCUMENT_SCAN_TYPE to scanType.name)
+        EVENT_IDENTITY_DOCUMENT_TIMEOUT, makeEventParameters(KEY_DOCUMENT_SCAN_TYPE to scanType.name)
     )
 
     fun cameraPermissionDenied(
@@ -111,7 +111,7 @@ internal class IdentityAnalyticsRequestBuilder(
         )
     )
 
-    fun selfieScanTimeOut() = createRequest(EVENT_SELFIE_TIMEOUT)
+    fun selfieScanTimeOut() = createRequest(EVENT_SELFIE_TIMEOUT, makeEventParameters())
 
     fun modelPerformance(model: String, imageInfo: String?, preprocessing: Long, inference: Long, frames: Int) =
         createRequest(
@@ -161,5 +161,6 @@ internal class IdentityAnalyticsRequestBuilder(
         const val KEY_INFERENCE = "inference"
         const val KEY_FRAMES = "frames"
         const val KEY_CAMERA_ROTATION = "camera_rotation"
+        const val KEY_VIEW_RESULT = "view_result"
     }
 }
