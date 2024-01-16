@@ -9,11 +9,11 @@ import android.graphics.ImageFormat
 import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Rect
-import android.graphics.YuvImage
-import android.media.Image
 import android.net.Uri
+import android.renderscript.RenderScript
 import android.util.Size
 import androidx.annotation.CheckResult
+import androidx.camera.core.ImageProxy
 import java.io.ByteArrayOutputStream
 
 /**
@@ -39,41 +39,34 @@ internal fun Bitmap.scale(size: Size, filter: Boolean = false): Bitmap {
 }
 
 /**
+ * Convert ImageProxy to bitmap
  *
+ * @param renderScript
  */
 @CheckResult
-internal fun Image.toBitmap(): Bitmap {
-    val yBuffer = planes[0].buffer // Y
-    val uBuffer = planes[1].buffer // U
-    val vBuffer = planes[2].buffer // V
+internal fun ImageProxy.toBitmap(renderScript: RenderScript) = when (format) {
+    ImageFormat.NV21 -> {
+        NV21Utils.toBitmap(width, height, planes[0].buffer.toByteArray(), renderScript)
+    }
 
-    val ySize = yBuffer.remaining()
-    val uSize = uBuffer.remaining()
-    val vSize = vBuffer.remaining()
+    ImageFormat.YUV_420_888 -> {
+        NV21Utils.toBitmap(
+            width,
+            height,
+            NV21Utils.yuvPlanesToNV21(
+                width,
+                height,
+                planes.toList().map { it.buffer }.toTypedArray(),
+                planes.toList().map { it.rowStride }.toIntArray(),
+                planes.toList().map { it.pixelStride }.toIntArray()
+            ),
+            renderScript
+        )
+    }
 
-    val nv21 = ByteArray(ySize + uSize + vSize)
-
-    yBuffer.get(nv21, 0, ySize)
-    vBuffer.get(nv21, ySize, vSize)
-    uBuffer.get(nv21, ySize + vSize, uSize)
-
-    val yuvImage = YuvImage(nv21, ImageFormat.NV21, this.width, this.height, null)
-    val out = ByteArrayOutputStream()
-    yuvImage.compressToJpeg(Rect(0, 0, yuvImage.width, yuvImage.height), 100, out)
-    val imageBytes = out.toByteArray()
-    return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-}
-
-/**
- *
- */
-@CheckResult
-internal fun Image.toJpegBitmap(): Bitmap {
-    require(format == ImageFormat.JPEG) { "Image is not in JPEG format" }
-
-    val buffer = planes[0].buffer
-    val bytes = buffer.toByteArray()
-    return BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+    else -> {
+        throw Exception(format.toString())
+    }
 }
 
 /**

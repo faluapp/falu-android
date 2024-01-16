@@ -1,6 +1,8 @@
+@file:Suppress("deprecation") // ktlint-disable annotation
 package io.falu.identity.utils
 
 import android.content.Context
+import android.renderscript.RenderScript
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -132,3 +134,6 @@ internal fun Context.showDialog(
 
     dialog.show()
 }
+
+/***/
+internal fun Context.getRenderScript() = RenderScript.create(this)

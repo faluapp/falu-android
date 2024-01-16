@@ -4,7 +4,9 @@ import android.content.Context
 import android.graphics.Rect
 import android.text.TextUtils
 import android.util.Size
+import android.view.View
 import androidx.annotation.CheckResult
+import androidx.annotation.RestrictTo
 import io.falu.identity.R
 import io.falu.identity.ai.DocumentOption
 import io.falu.identity.scan.ScanDisposition
@@ -37,6 +39,12 @@ internal fun ByteBuffer.toByteArray(): ByteArray {
     get(data) // Copy the buffer into a byte array
     return data // Return the byte array
 }
+
+/**
+ * Determine the size of a [View].
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun View.size() = Size(width, height)
 
 @CheckResult
 internal fun Int.toFraction(): Float {

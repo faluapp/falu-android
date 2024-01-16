@@ -1,5 +1,6 @@
 package io.falu.identity.selfie
 
+import android.renderscript.RenderScript
 import io.falu.identity.ai.FaceDetectionAnalyzer
 import io.falu.identity.analytics.ModelPerformanceMonitor
 import io.falu.identity.api.models.verification.VerificationCapture
@@ -22,7 +23,8 @@ internal class FaceScanner(
     override fun scan(
         view: CameraView,
         scanType: ScanDisposition.DocumentScanType,
-        capture: VerificationCapture
+        capture: VerificationCapture,
+        renderScript: RenderScript
     ) {
         val machine = FaceDispositionMachine(
             timeout = DateTime.now().plusMillis(capture.timeout)
@@ -33,7 +35,7 @@ internal class FaceScanner(
 
         view.analyzers.add(
             FaceDetectionAnalyzer
-                .Builder(model = model, performanceMonitor, threshold)
+                .Builder(model = model, performanceMonitor, threshold, renderScript)
                 .instance { onResult(it) }
         )
     }

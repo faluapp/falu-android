@@ -25,6 +25,7 @@ import io.falu.identity.camera.CameraView
 import io.falu.identity.databinding.FragmentSelfieBinding
 import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.scan.ScanResult
+import io.falu.identity.utils.getRenderScript
 import io.falu.identity.utils.navigateToApiResponseProblemFragment
 import io.falu.identity.utils.navigateToErrorFragment
 import io.falu.identity.utils.submitVerificationData
@@ -117,7 +118,8 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
         faceScanViewModel.scanner?.scan(
             binding.viewCamera,
             ScanDisposition.DocumentScanType.SELFIE,
-            verification.capture
+            verification.capture,
+            requireContext().getRenderScript()
         )
     }
 
