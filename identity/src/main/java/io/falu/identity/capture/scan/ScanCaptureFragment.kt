@@ -26,6 +26,7 @@ import io.falu.identity.documents.DocumentSelectionFragment
 import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.scan.ScanResult
 import io.falu.identity.utils.FileUtils
+import io.falu.identity.utils.getRenderScript
 import io.falu.identity.utils.serializable
 
 internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.Factory) : Fragment() {
@@ -152,7 +153,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
         scanType: ScanDisposition.DocumentScanType,
         capture: VerificationCapture
     ) {
-        documentScanViewModel.scanner?.scan(binding.viewCamera, scanType, capture)
+        documentScanViewModel.scanner?.scan(binding.viewCamera, scanType, capture, requireContext().getRenderScript())
     }
 
     private fun resetUI() {

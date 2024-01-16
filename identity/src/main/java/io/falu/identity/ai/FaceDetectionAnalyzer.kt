@@ -3,6 +3,7 @@ package io.falu.identity.ai
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.Rect
+import android.renderscript.RenderScript
 import android.util.Size
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
@@ -33,6 +34,7 @@ internal class FaceDetectionAnalyzer internal constructor(
     model: File,
     private val threshold: Float,
     private val performanceMonitor: ModelPerformanceMonitor,
+    private val renderScript: RenderScript,
     private val listener: AnalyzerOutputListener
 ) : ImageAnalysis.Analyzer {
 
@@ -47,7 +49,7 @@ internal class FaceDetectionAnalyzer internal constructor(
         interpreter.resetVariableTensors()
 
         // Input:- [1,128,128,3]
-        val bitmap = image.image!!.toBitmap().rotate(image.imageInfo.rotationDegrees)
+        val bitmap = image.toBitmap(renderScript).rotate(image.imageInfo.rotationDegrees)
         val size = Size(bitmap.width, bitmap.height).maxAspectRatio(0.70f)
         val cropped = bitmap.centerCrop(size)
 
@@ -169,12 +171,13 @@ internal class FaceDetectionAnalyzer internal constructor(
     internal class Builder(
         private val model: File,
         private val monitor: ModelPerformanceMonitor,
-        private val threshold: Float
+        private val threshold: Float,
+        private val renderScript: RenderScript
     ) :
         AnalyzerBuilder<ScanDisposition, DetectionOutput, ImageAnalysis.Analyzer> {
 
         override fun instance(result: (DetectionOutput) -> Unit): ImageAnalysis.Analyzer {
-            return FaceDetectionAnalyzer(model, threshold, monitor, result)
+            return FaceDetectionAnalyzer(model, threshold, monitor, renderScript, result)
         }
     }
 

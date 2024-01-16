@@ -1,5 +1,6 @@
 package io.falu.identity.capture.scan
 
+import android.renderscript.RenderScript
 import io.falu.identity.ai.DocumentDetectionAnalyzer
 import io.falu.identity.analytics.ModelPerformanceMonitor
 import io.falu.identity.api.models.verification.VerificationCapture
@@ -23,7 +24,8 @@ internal class DocumentScanner(
     override fun scan(
         view: CameraView,
         scanType: ScanDisposition.DocumentScanType,
-        capture: VerificationCapture
+        capture: VerificationCapture,
+        renderScript: RenderScript
     ) {
         val machine = DocumentDispositionMachine(
             timeout = DateTime.now().plusMillis(capture.timeout),
@@ -35,7 +37,7 @@ internal class DocumentScanner(
 
         view.analyzers.add(
             DocumentDetectionAnalyzer
-                .Builder(model = model, threshold, performanceMonitor)
+                .Builder(model = model, threshold, renderScript, performanceMonitor)
                 .instance { onResult(it) }
         )
     }

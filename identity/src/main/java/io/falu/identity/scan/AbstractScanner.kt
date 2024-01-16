@@ -1,5 +1,6 @@
 package io.falu.identity.scan
 
+import android.renderscript.RenderScript
 import io.falu.identity.ai.DetectionOutput
 import io.falu.identity.api.models.verification.VerificationCapture
 import io.falu.identity.camera.CameraView
@@ -16,7 +17,8 @@ internal abstract class AbstractScanner(
     internal abstract fun scan(
         view: CameraView,
         scanType: ScanDisposition.DocumentScanType,
-        capture: VerificationCapture
+        capture: VerificationCapture,
+        renderScript: RenderScript
     )
 
     internal fun stopScan(view: CameraView) {

@@ -6,7 +6,9 @@ import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
 import android.os.Build
 import android.util.AttributeSet
+import android.util.DisplayMetrics
 import android.util.Log
+import android.util.Size
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
@@ -26,6 +28,9 @@ import io.falu.identity.R
 import io.falu.identity.api.models.CameraLens
 import io.falu.identity.api.models.CameraSettings
 import io.falu.identity.api.models.Exposure
+import io.falu.identity.utils.size
+import kotlin.math.max
+import kotlin.math.min
 
 internal class CameraView @JvmOverloads constructor(
     context: Context,
@@ -121,6 +126,13 @@ internal class CameraView @JvmOverloads constructor(
     }
 
     private val displayRotation by lazy { displayInfo.rotation }
+    private val displayMetrics by lazy { DisplayMetrics().also { display.getRealMetrics(it) } }
+    private val displaySize by lazy {
+        Size(
+            displayMetrics.widthPixels,
+            displayMetrics.heightPixels
+        )
+    }
 
     init {
         context.withStyledAttributes(attrs, R.styleable.CameraView) {
@@ -191,10 +203,9 @@ internal class CameraView @JvmOverloads constructor(
 
         val cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
 
-        val aspectRatio = cameraViewType.ratio.second
-
         preview = Preview.Builder()
             .setTargetRotation(displayRotation)
+            .setTargetResolution(viewCameraPreview.size())
             .build()
             .also {
                 it.setSurfaceProvider(viewCameraPreview.surfaceProvider)
@@ -203,7 +214,7 @@ internal class CameraView @JvmOverloads constructor(
         imageAnalysis = ImageAnalysis.Builder()
             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
             .setTargetRotation(displayRotation)
-            .setTargetAspectRatio(aspectRatio)
+            .setTargetResolution(MINIMUM_RESOLUTION.toResolution(displaySize))
             .setImageQueueDepth(1)
             .build()
             .also {
@@ -283,6 +294,18 @@ internal class CameraView @JvmOverloads constructor(
     private val cameraId: String
         get() = cameraManager.cameraIdList.first()
 
+    private fun Size.toResolution(display: Size) = when {
+        display.width >= display.height -> Size(
+            max(width, height), // width
+            min(width, height) // height
+        )
+
+        else -> Size(
+            min(width, height), // width
+            max(width, height) // height
+        )
+    }
+
     internal enum class CameraViewType(val ratio: Pair<String, Int>) {
         /**
          *
@@ -312,5 +335,6 @@ internal class CameraView @JvmOverloads constructor(
         private val ASPECT_RATIO_FACE = Pair("2:2", 2 / 2)
         private val ASPECT_RATIO_DEFAULT = Pair("16:9", 16 / 9)
         private const val BORDERLESS = -1
+        private val MINIMUM_RESOLUTION = Size(1440, 1080)
     }
 }
