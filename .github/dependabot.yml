@@ -6,7 +6,6 @@ updates:
       interval: "weekly"
       day: "tuesday"
       time: "04:00"
-    open-pull-requests-limit: 10
     reviewers:
     - SecyWecy
     - mburumaxwell
