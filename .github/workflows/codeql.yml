@@ -55,6 +55,7 @@ jobs:
       if: matrix.language == 'java-kotlin'
       with:
         java-version: 17
+        distribution: 'temurin'
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
