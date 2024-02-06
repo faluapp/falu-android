@@ -7,6 +7,9 @@ updates:
       day: "tuesday"
       time: "04:00"
     open-pull-requests-limit: 10
+    reviewers:
+    - SecyWecy
+    - mburumaxwell
     ignore:
     # Ignore patch updates for some packages
     - dependency-name: "mockito-*"
