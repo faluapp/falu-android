@@ -1,5 +1,6 @@
 package io.falu.identity.api.models.verification
 
+import com.google.gson.annotations.SerializedName
 import io.falu.identity.api.models.Branding
 import io.falu.identity.api.models.BusinessInfo
 import io.falu.identity.api.models.Support
@@ -22,6 +23,8 @@ internal data class Verification(
      * Contains `true` if verification is in live mode and `false` if it isn't
      */
     var live: Boolean,
+    @SerializedName("remaining_attempts")
+    var remainingAttempts: Int? = null,
     var workspace: WorkspaceInfo,
     var business: BusinessInfo,
     var support: Support?,
