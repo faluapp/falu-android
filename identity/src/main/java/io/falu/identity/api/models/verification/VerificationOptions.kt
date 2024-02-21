@@ -15,6 +15,13 @@ internal data class VerificationOptions(
     var allowUploads: Boolean = false,
 
     /**
+     * The maximum number of verification attempts the user is allowed to make.
+     * A large number of attempts could signal fraudulent behavior.
+     * */
+    @SerializedName("max_attempts")
+    var maxAttempts: Int? = null,
+
+    /**
      * Options for the document check.
      */
     var document: VerificationOptionsForDocument,

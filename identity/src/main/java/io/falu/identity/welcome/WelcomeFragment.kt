@@ -17,6 +17,7 @@ import io.falu.identity.R
 import io.falu.identity.analytics.AnalyticsDisposition
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.databinding.FragmentWelcomeBinding
+import io.falu.identity.error.ErrorFragment.Companion.navigateWithDepletedAttempts
 import io.falu.identity.utils.navigateToApiResponseProblemFragment
 import io.falu.identity.utils.updateVerification
 import software.tingle.api.HttpApiResponseProblem
@@ -67,6 +68,14 @@ internal class WelcomeFragment(
         viewModel.modifyAnalyticsDisposition(disposition = AnalyticsDisposition(selfie = verification.selfieRequired))
 
         hideProgressView()
+
+        val remainingAttempts = verification.remainingAttempts
+
+        if (remainingAttempts != null && remainingAttempts == 0) {
+            findNavController().navigateWithDepletedAttempts(requireContext())
+            return
+        }
+
         binding.tvWelcomeSubtitle.text =
             getString(
                 R.string.welcome_subtitle,

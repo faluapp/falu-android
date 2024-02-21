@@ -100,5 +100,16 @@ internal class ErrorFragment : AbstractErrorFragment() {
             )
             navigate(R.id.action_global_fragment_error, bundle)
         }
+
+        internal fun NavController.navigateWithDepletedAttempts(context: Context) {
+            val bundle = bundleOf(
+                KEY_ERROR_TITLE to context.getString(R.string.error_title_depleted_attempts),
+                KEY_ERROR_DESCRIPTION to context.getString(R.string.error_description_depleted_attempts),
+                KEY_CANCEL_FLOW to true,
+                KEY_ERROR_CAUSE to Exception(context.getString(R.string.error_description_depleted_attempts))
+            )
+
+            navigate(R.id.action_global_fragment_error, bundle)
+        }
     }
 }
