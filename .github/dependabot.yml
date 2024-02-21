@@ -7,7 +7,7 @@ updates:
       day: "tuesday"
       time: "04:00"
     reviewers:
-      - SecyWecy
+      - sethonyango
       - mburumaxwell
     ignore:
       # Ignore patch updates for some packages
@@ -35,5 +35,5 @@ updates:
       interval: "weekly"
       time: "02:00"
     reviewers:
-      - SecyWecy
+      - sethonyango
       - mburumaxwell
