@@ -47,6 +47,7 @@ class WelcomeFragmentTest {
         whenever(it.requirements).thenReturn(
             Requirement(pending = mutableListOf(RequirementType.CONSENT), errors = mutableListOf())
         )
+        whenever(it.remainingAttempts).thenReturn(null)
     }
 
     private val mockIdentityVerificationViewModel = mock<IdentityVerificationViewModel> {
