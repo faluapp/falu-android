@@ -20,7 +20,7 @@ data class PaymentFailure(
     var timestamp: Date?,
 
     /**
-     * Failure message as received from teh provider
+     * Failure message as received from the provider
      */
     var detail: String?
 ) : Parcelable

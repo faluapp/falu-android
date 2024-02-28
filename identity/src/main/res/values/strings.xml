@@ -28,10 +28,10 @@
     <string name="error_description_http_error">The following unexpected errors occurred:\n\n<b>%1$s</b>.\n\nPlease try again later!</string>
     <string name="error_title_depleted_attempts">Verification Attempts Depleted</string>
     <string name="error_description_depleted_attempts">You have depleted your allocated number of verification attempts. Please contact support to start a new verification!</string>
-    <string name="error_title_scan_capture">Couldn\'t scan document!</string>
+    <string name="error_title_scan_capture">Could not scan document!</string>
     <string name="error_description_scan_capture">Scanning a high quality image failed.</string>
     <string name="error_message_scan_capture">You can try scanning your document again or change the method of capturing the document.</string>
-    <string name="error_title_selfie_capture">Couldn\'t detect a face in the capture</string>
+    <string name="error_title_selfie_capture">Could not detect a face in the capture</string>
     <string name="error_description_selfie_capture">We could not detect your face in the capture. You can try to take the selfie again.</string>
 
     <!--Welcome-->

@@ -79,7 +79,7 @@ joda = { module = "joda-time:joda-time", version.ref = "joda" }
 [bundles]
 mokito = ["mokito-core", "mokito-inline"]
 kotlin-test = ["kotlin-test-junit", "kotlin-test-annotations"]
-androidx-lifecyle = ["androidx-livedata", "androidx-viewmodel", "androidx-runtime"]
+androidx-lifecycle = ["androidx-livedata", "androidx-viewmodel", "androidx-runtime"]
 camera = ["androidx-camera-core", "androidx-camera-camera2", "androidx-camera-lifecycle", "androidx-camera-video", "androidx-camera-extensions", "androidx-camera-view"]
 navigation = ["androidx-navigation-fragment", "androidx-navigation-ui"]
 
