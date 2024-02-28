@@ -79,7 +79,7 @@ dependencies {
 
     implementation(libs.bundles.navigation)
     implementation(libs.bundles.camera)
-    implementation(libs.bundles.androidx.lifecyle)
+    implementation(libs.bundles.androidx.lifecycle)
     implementation(libs.androidx.exifinterface)
 
     implementation(libs.core.ktx)
