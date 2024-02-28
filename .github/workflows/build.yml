@@ -2,8 +2,9 @@ name: Build
 
 on:
   push:
+    branches:
+      - main # updates the cache
     tags:
-      - 'main' # updates the cache
       - '*'
     paths-ignore: # do not trigger for changes:
       - README.md
