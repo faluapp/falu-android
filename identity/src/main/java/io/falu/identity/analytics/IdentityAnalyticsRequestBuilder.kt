@@ -113,14 +113,14 @@ internal class IdentityAnalyticsRequestBuilder(
 
     fun selfieScanTimeOut() = createRequest(EVENT_SELFIE_TIMEOUT, makeEventParameters())
 
-    fun modelPerformance(model: String, imageInfo: String?, preprocessing: Long, inference: Long, frames: Int) =
+    fun modelPerformance(model: String, imageInfo: String?, preprocessing: Long?, inference: Long?, frames: Int) =
         createRequest(
             EVENT_MODEL_PERFORMANCE,
             makeEventParameters(
                 KEY_MODEL to model,
                 KEY_PREPROCESSING_IMAGE_IMAGE to imageInfo,
-                KEY_PREPROCESSING to preprocessing.toString(),
-                KEY_INFERENCE to inference.toString(),
+                KEY_PREPROCESSING to preprocessing,
+                KEY_INFERENCE to inference,
                 KEY_FRAMES to frames.toString()
             )
         )
