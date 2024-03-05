@@ -30,8 +30,8 @@ internal data class RequirementError(
                 RequirementType.DOCUMENT_BACK -> {
                     document_upload_ids.contains(source)
                 }
-                RequirementType.SELFIE -> TODO()
-                RequirementType.VIDEO -> TODO()
+                RequirementType.SELFIE,
+                RequirementType.VIDEO -> true
                 else -> false
             }
     }
