@@ -29,8 +29,13 @@ internal class ModelPerformanceMonitor(
     /**
      * Calculate the average duration from a list of statistics
      */
-    private fun List<Statistic>.duration() =
-        (this.fold(Duration.ZERO) { duration, next -> duration + next.duration }.millis / size)
+    private fun List<Statistic>.duration(): Long {
+        if (isEmpty()) {
+            return 0
+        }
+
+        return (this.fold(Duration.ZERO) { duration, next -> duration + next.duration }.millis / size)
+    }
 
     fun reportModelPerformance(model: String) {
         apiClient.reportTelemetry(

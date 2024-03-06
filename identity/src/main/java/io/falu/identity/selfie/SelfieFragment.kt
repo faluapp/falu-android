@@ -69,10 +69,6 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
         binding.viewCamera.cameraViewType = CameraView.CameraViewType.FACE
         binding.buttonContinue.text = getString(R.string.button_continue)
 
-        binding.viewCamera.setCameraInfoListener {
-            reportCameraInfoTelemetry(it)
-        }
-
         identityViewModel.observeForVerificationResults(
             viewLifecycleOwner,
             onError = {},
