@@ -69,7 +69,7 @@ androidx-fragment-testing = { module = "androidx.fragment:fragment-testing", ver
 androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidx-test-rules" }
 androidx-core-ktx = { module = "androidx.test:core-ktx", version.ref = "androidx-core-ktx" }
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test-runner" }
-androidx-browser = { group = "androidx.browser", name = "browser", version = "1.7.0" }
+androidx-browser = { group = "androidx.browser", name = "browser", version = "1.8.0" }
 
 tensorflow-lite = { module = "org.tensorflow:tensorflow-lite", version.ref = "tensorflow-lite" }
 tensorflow-support = { module = "org.tensorflow:tensorflow-lite-support", version.ref = "tensorflow-support" }
