@@ -1,6 +1,6 @@
 [versions]
 appcompat = "1.6.1"
-kotlin = "1.9.22"
+kotlin = "1.9.23"
 junit = "4.13.2"
 abstractions = "1.1.2"
 ktlint = "0.51.0-FINAL"
