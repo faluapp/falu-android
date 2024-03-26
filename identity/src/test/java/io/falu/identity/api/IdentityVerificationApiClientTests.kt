@@ -80,7 +80,7 @@ class IdentityVerificationApiClientTests {
         id = "file_123",
         created = Date(),
         updated = Date(),
-        purpose = filePurpose,
+        purpose = FILE_PURPOSE,
         type = "",
         fileName = "iv_123_front.jpg",
         null,
@@ -95,7 +95,7 @@ class IdentityVerificationApiClientTests {
 
     @Test
     fun `test if fetching verification works`() {
-        mockWebServer.url("$baseUrl/v1/identity/verifications/${verification.id}/workflow")
+        mockWebServer.url("$BASE_URL/v1/identity/verifications/${verification.id}/workflow")
 
         val resourceResponse = getResponse(tResponse = verification)
         whenever(apiClient.getVerification(verification.id)).thenReturn(resourceResponse)
@@ -109,7 +109,7 @@ class IdentityVerificationApiClientTests {
 
     @Test
     fun `test if updating verification works`() {
-        mockWebServer.url("$baseUrl/v1/identity/verifications/${verification.id}/workflow")
+        mockWebServer.url("$BASE_URL/v1/identity/verifications/${verification.id}/workflow")
 
         val document = JsonPatchDocument().replace("/test", "test")
 
@@ -126,22 +126,22 @@ class IdentityVerificationApiClientTests {
 
     @Test
     fun `test if identity document upload works`() {
-        mockWebServer.url("$baseUrl/v1/files")
+        mockWebServer.url("$BASE_URL/v1/files")
 
         val resourceResponse = getResponse(tResponse = faluFile)
-        whenever(apiClient.uploadIdentityDocuments(eq(verification.id), eq(filePurpose), eq(file)))
+        whenever(apiClient.uploadIdentityDocuments(eq(verification.id), eq(FILE_PURPOSE), eq(file)))
             .thenReturn(resourceResponse)
 
         mockWebServer.enqueue(getMockedResponse(tResponse = faluFile))
 
-        val response = apiClient.uploadIdentityDocuments(verification.id, filePurpose, file)
+        val response = apiClient.uploadIdentityDocuments(verification.id, FILE_PURPOSE, file)
         assertNotNull(response.resource)
         assertEquals(response.resource!!.id, faluFile.id)
     }
 
     @Test
     fun `test  if verification submission works`() {
-        mockWebServer.url("$baseUrl/v1/identity/verifications/$verification/workflow/submit")
+        mockWebServer.url("$BASE_URL/v1/identity/verifications/$verification/workflow/submit")
 
         val request = VerificationUploadRequest(
             consent = true,
@@ -179,7 +179,7 @@ class IdentityVerificationApiClientTests {
     }
 
     companion object {
-        private const val baseUrl = "https://api.falu.io"
-        private const val filePurpose = "identity.private"
+        private const val BASE_URL = "https://api.falu.io"
+        private const val FILE_PURPOSE = "identity.private"
     }
 }
