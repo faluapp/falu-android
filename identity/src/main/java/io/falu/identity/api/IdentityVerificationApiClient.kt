@@ -40,7 +40,7 @@ internal class IdentityVerificationApiClient(
     )
     fun getVerification(verification: String): ResourceResponse<Verification> {
         val builder = Request.Builder()
-            .url("$baseUrl/v1/identity/verifications/$verification/workflow")
+            .url("$BASE_URL/v1/identity/verifications/$verification/workflow")
             .get()
 
         return execute(builder, Verification::class.java)
@@ -56,7 +56,7 @@ internal class IdentityVerificationApiClient(
         document: JsonPatchDocument
     ): ResourceResponse<Verification> {
         val builder = Request.Builder()
-            .url("$baseUrl/v1/identity/verifications/$verification/workflow")
+            .url("$BASE_URL/v1/identity/verifications/$verification/workflow")
             .patch(makeJson(document.getOperations()).toRequestBody(MEDIA_TYPE_PATH_JSON))
 
         return execute(builder, Verification::class.java)
@@ -80,7 +80,7 @@ internal class IdentityVerificationApiClient(
             .build()
 
         val builder = Request.Builder()
-            .url("$baseUrl/v1/files")
+            .url("$CDN_BASE_URL/v1/files")
             .post(requestBody)
         return execute(builder, FaluFile::class.java)
     }
@@ -95,7 +95,7 @@ internal class IdentityVerificationApiClient(
         request: VerificationUploadRequest
     ): ResourceResponse<Verification> {
         val builder = Request.Builder()
-            .url("$baseUrl/v1/identity/verifications/$verification/workflow/submit")
+            .url("$BASE_URL/v1/identity/verifications/$verification/workflow/submit")
             .post(makeJson(request).toRequestBody(MEDIA_TYPE_JSON))
 
         return execute(builder, Verification::class.java)
@@ -118,7 +118,8 @@ internal class IdentityVerificationApiClient(
     }
 
     internal companion object {
-        private const val baseUrl = "https://api.falu.io"
+        private const val BASE_URL = "https://api.falu.io"
+        private const val CDN_BASE_URL = "https://files.falu.io"
     }
 }
 

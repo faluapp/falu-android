@@ -39,7 +39,7 @@ internal class FaluApiClient internal constructor(
     )
     suspend fun createPayment(request: PaymentRequest): ResourceResponse<Payment> {
         val builder = Request.Builder()
-            .url("$baseUrl/v1/payments")
+            .url("$BASE_URL/v1/payments")
             .post(makeJson(request).toRequestBody(MEDIA_TYPE_JSON))
 
         return executeAsync(builder, Payment::class.java)
@@ -64,7 +64,7 @@ internal class FaluApiClient internal constructor(
             .build()
 
         val builder = Request.Builder()
-            .url("$baseUrl/v1/files")
+            .url("$CDN_BASE_URL/v1/files")
             .post(requestBody)
         return execute(builder, FaluFile::class.java)
     }
@@ -89,7 +89,8 @@ internal class FaluApiClient internal constructor(
     }
 
     companion object {
-        private const val baseUrl = "https://api.falu.io"
+        private const val BASE_URL = "https://api.falu.io"
+        private const val CDN_BASE_URL = "https://files.falu.io"
     }
 }
 

@@ -45,7 +45,7 @@ class FilesApiClientTests {
 
     @Test
     fun `test if fetching supported countries works`() {
-        mockWebServer.url("$baseUrl/identity/supported-countries.json")
+        mockWebServer.url("$CDN_BASE_URL/identity/supported-countries.json")
 
         val resourceResponse = getResponse(tResponse = arrayOf(supportedCountry))
         whenever(apiClient.getSupportedCountries()).thenReturn(resourceResponse)
@@ -71,6 +71,6 @@ class FilesApiClientTests {
     }
 
     companion object {
-        private const val baseUrl = "https://cdn.falu.io"
+        private const val CDN_BASE_URL = "https://cdn.falu.io"
     }
 }

@@ -240,8 +240,6 @@ internal class CameraView @JvmOverloads constructor(
             val surfaceProvider = viewCameraPreview.surfaceProvider
 
             preview?.setSurfaceProvider(surfaceProvider)
-
-            observeCameraState(camera?.cameraInfo)
         } catch (e: Exception) {
             Log.e(TAG, "Use case binding failed", e)
         }
