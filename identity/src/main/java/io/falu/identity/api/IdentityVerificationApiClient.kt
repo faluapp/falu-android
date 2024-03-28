@@ -80,7 +80,7 @@ internal class IdentityVerificationApiClient(
             .build()
 
         val builder = Request.Builder()
-            .url("$CDN_BASE_URL/v1/files")
+            .url("$FILES_BASE_URL/v1/files")
             .post(requestBody)
         return execute(builder, FaluFile::class.java)
     }
@@ -119,7 +119,7 @@ internal class IdentityVerificationApiClient(
 
     internal companion object {
         private const val BASE_URL = "https://api.falu.io"
-        private const val CDN_BASE_URL = "https://files.falu.io"
+        private const val FILES_BASE_URL = "https://files.falu.io"
     }
 }
 
