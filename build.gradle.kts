@@ -17,7 +17,7 @@ allprojects {
 
 plugins {
     id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
-    kotlin("android") version "1.9.23" apply false
+    kotlin("android") version "1.9.24" apply false
 }
 
 val publishUsername: String? by extra {
