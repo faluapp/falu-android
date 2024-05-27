@@ -12,13 +12,10 @@ updates:
           - "core-ktx"
       kotlin:
         patterns:
+          - "android" # released together with the ones below
           - "kotlin"
           - "kotlin_version"
           - "org.jetbrains.kotlin*"
-      android:
-        patterns:
-          - "android"
-          - "com.android.tools.build*"
     reviewers:
       - sethonyango
     ignore:
