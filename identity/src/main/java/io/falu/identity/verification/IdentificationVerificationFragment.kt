@@ -17,7 +17,7 @@ import io.falu.identity.api.models.verification.VerificationIdNumberUpload
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.databinding.FragmentIdentificationVerificationBinding
 import io.falu.identity.documents.DocumentSelectionFragment
-import io.falu.identity.utils.parcelable
+import io.falu.identity.utils.serializable
 import io.falu.identity.utils.showDatePickerDialog
 import io.falu.identity.utils.showDialog
 import io.falu.identity.utils.submitVerificationData
@@ -46,12 +46,13 @@ internal class IdentificationVerificationFragment(factory: ViewModelProvider.Fac
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        identityDocumentType = requireArguments().parcelable(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE)!!
+        identityDocumentType =
+            requireArguments().serializable<IdentityDocumentType>(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE)!!
 
         val genderAdapter = ArrayAdapter(
             requireContext(),
             R.layout.dropdown_menu_popup_item,
-            Gender.values().map { getString(it.desc) })
+            Gender.entries.map { getString(it.desc) })
 
         binding.inputGender.setAdapter(genderAdapter)
         binding.inputGender.setText(genderAdapter.getItem(0), false)
