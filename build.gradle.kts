@@ -5,7 +5,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:8.4.0")
+        classpath("com.android.tools.build:gradle:8.4.1")
         classpath("io.github.gradle-nexus:publish-plugin:1.3.0")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.0")
     }
@@ -17,7 +17,7 @@ allprojects {
 
 plugins {
     id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
-    kotlin("android") version "1.9.24" apply false
+    kotlin("android") version "2.0.0" apply false
 }
 
 val publishUsername: String? by extra {
