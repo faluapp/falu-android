@@ -46,8 +46,8 @@ internal class IdentificationVerificationFragment(factory: ViewModelProvider.Fac
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        identityDocumentType =
-            requireArguments().serializable<IdentityDocumentType>(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE)!!
+        identityDocumentType = requireArguments()
+            .serializable<IdentityDocumentType>(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE)!!
 
         val genderAdapter = ArrayAdapter(
             requireContext(),
