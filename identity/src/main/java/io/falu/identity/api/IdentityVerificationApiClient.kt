@@ -10,6 +10,7 @@ import io.falu.core.exceptions.ApiException
 import io.falu.core.exceptions.AuthenticationException
 import io.falu.core.models.FaluFile
 import io.falu.core.utils.getMediaType
+import io.falu.identity.api.models.country.SupportedCountry
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import okhttp3.MultipartBody
@@ -99,6 +100,14 @@ internal class IdentityVerificationApiClient(
             .post(makeJson(request).toRequestBody(MEDIA_TYPE_JSON))
 
         return execute(builder, Verification::class.java)
+    }
+
+    fun getSupportedCountries(): ResourceResponse<Array<SupportedCountry>> {
+        val builder = Request.Builder()
+            .url("$BASE_URL/v1/identity/supported-documents")
+            .get()
+
+        return execute(builder, Array<SupportedCountry>::class.java)
     }
 
     override fun buildBackChannel(builder: OkHttpClient.Builder): OkHttpClient {

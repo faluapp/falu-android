@@ -306,7 +306,7 @@ internal class IdentityVerificationViewModel(
     internal fun fetchSupportedCountries() {
         launch(Dispatchers.IO) {
             runCatching {
-                filesApiClient.getSupportedCountries()
+                apiClient.getSupportedCountries()
             }.fold(
                 onSuccess = {
                     _supportedCountries.postValue(it)
