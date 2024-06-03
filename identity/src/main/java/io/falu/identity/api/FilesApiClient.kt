@@ -1,6 +1,8 @@
 package io.falu.identity.api
 
 import com.google.gson.Gson
+import io.falu.core.ApiVersion
+import io.falu.core.ApiVersionInterceptor
 import io.falu.core.exceptions.ApiConnectionException
 import io.falu.core.exceptions.ApiException
 import io.falu.core.exceptions.AuthenticationException
@@ -18,6 +20,7 @@ import java.io.FileOutputStream
 import java.util.concurrent.TimeUnit
 
 internal class FilesApiClient : AbstractHttpApiClient(EmptyAuthenticationProvider()) {
+    private val apiVersionInterceptor = ApiVersionInterceptor(ApiVersion.get().code)
     private val gson = Gson()
 
     @Throws(
@@ -27,7 +30,7 @@ internal class FilesApiClient : AbstractHttpApiClient(EmptyAuthenticationProvide
     )
     fun getSupportedCountries(): ResourceResponse<Array<SupportedCountry>> {
         val builder = Request.Builder()
-            .url("$baseUrl/identity/supported-countries.json")
+            .url("$BASE_URL/v1/identity/verifications/supported_documents")
             .get()
 
         return execute(builder, Array<SupportedCountry>::class.java)
@@ -48,13 +51,16 @@ internal class FilesApiClient : AbstractHttpApiClient(EmptyAuthenticationProvide
     override fun buildBackChannel(builder: OkHttpClient.Builder): OkHttpClient {
         builder
             .followRedirects(false)
+            .addInterceptor(apiVersionInterceptor)
             .connectTimeout(50, TimeUnit.SECONDS) // default is 50 seconds
             .readTimeout(50, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
 
         if (BuildConfig.DEBUG) {
-            builder.addInterceptor(HttpLoggingInterceptor()
-                .setLevel(HttpLoggingInterceptor.Level.BODY))
+            builder.addInterceptor(
+                HttpLoggingInterceptor()
+                    .setLevel(HttpLoggingInterceptor.Level.BODY)
+            )
         }
 
         return super.buildBackChannel(builder)
@@ -81,6 +87,7 @@ internal class FilesApiClient : AbstractHttpApiClient(EmptyAuthenticationProvide
                         FileOutputStream(output).use { stream.copyTo(it) }
                     }
                 }
+
                 400 -> errorModel =
                     gson.fromJson(body.charStream(), HttpApiResponseProblem::class.java)
             }
@@ -91,6 +98,6 @@ internal class FilesApiClient : AbstractHttpApiClient(EmptyAuthenticationProvide
     }
 
     internal companion object {
-        private const val baseUrl = "https://cdn.falu.io"
+        private const val BASE_URL = "https://api.falu.io"
     }
 }

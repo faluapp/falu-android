@@ -29,7 +29,7 @@ class FilesApiClientTests {
     private val apiClient: FilesApiClient = mock()
 
     private val supportedCountry = SupportedCountry(
-        country = Country("ken", "Kenya"),
+        country = Country("ken", "Kenya", flag = "http://cake.com/flag.svg"),
         documents = mutableListOf(
             IdentityDocumentType.IDENTITY_CARD,
             IdentityDocumentType.PASSPORT,

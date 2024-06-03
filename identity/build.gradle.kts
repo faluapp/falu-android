@@ -1,7 +1,6 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-    kotlin("kapt")
     id("kotlin-parcelize")
 }
 
@@ -85,6 +84,7 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.material)
     implementation(libs.joda)
+    implementation(libs.bundles.coil)
 
     testImplementation(libs.junit)
     testImplementation(libs.bundles.mokito)
