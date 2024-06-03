@@ -41,7 +41,7 @@ class DocumentSelectionFragmentTest {
 
     private val supportedCountries = arrayOf(
         SupportedCountry(
-            country = Country("ken", "Kenya"),
+            country = Country("ken", "Kenya", flag = "http://cake.com/flag.svg"),
             documents = mutableListOf(
                 IdentityDocumentType.IDENTITY_CARD,
                 IdentityDocumentType.DRIVING_LICENSE,
