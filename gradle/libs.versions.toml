@@ -1,5 +1,5 @@
 [versions]
-appcompat = "1.6.1"
+appcompat = "1.7.0"
 kotlin = "2.0.0"
 junit = "4.13.2"
 abstractions = "1.1.4"
