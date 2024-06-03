@@ -61,7 +61,7 @@ android {
 
 dependencies {
     implementation(project(":identity"))
-    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.appcompat:appcompat:1.7.0")
     implementation(libs.androidx.browser)
     implementation(libs.core.ktx)
     implementation(libs.material)
