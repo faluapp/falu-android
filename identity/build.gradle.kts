@@ -85,6 +85,7 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.material)
     implementation(libs.joda)
+    implementation(libs.bundles.coil)
 
     testImplementation(libs.junit)
     testImplementation(libs.bundles.mokito)

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -16,6 +15,7 @@ import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.country.SupportedCountry
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationType
+import io.falu.identity.countries.CountriesAdapter
 import io.falu.identity.databinding.FragmentDocumentSelectionBinding
 import io.falu.identity.utils.navigateToApiResponseProblemFragment
 import io.falu.identity.utils.updateVerification
@@ -77,18 +77,20 @@ class DocumentSelectionFragment(private val factory: ViewModelProvider.Factory) 
      *
      */
     private fun onSupportedCountriesListed(countries: List<SupportedCountry>) {
-        val countriesAdapter = ArrayAdapter(
-            requireContext(),
-            R.layout.dropdown_menu_popup_item,
-            countries.map { it.country.name })
+        val countriesAdapter = CountriesAdapter(requireContext(), R.layout.list_item_countries, countries)
 
+//            ArrayAdapter(
+//                requireContext(),
+//                R.layout.dropdown_menu_popup_item,
+//                countries.map { it.country.name })
         binding.inputIssuingCountry.setAdapter(countriesAdapter)
-        binding.inputIssuingCountry.setText(countriesAdapter.getItem(0), false)
+        binding.inputIssuingCountry.setText(countriesAdapter.getItem(0)?.country?.name.orEmpty(), false)
 
         val country = getSupportedCountry(countries)
         getVerificationResults(country)
 
-        binding.inputIssuingCountry.setOnItemClickListener { _, _, _, _ ->
+        binding.inputIssuingCountry.setOnItemClickListener { _, _, position, _ ->
+            binding.inputIssuingCountry.setText(countriesAdapter.getItem(position)?.country?.name.orEmpty(), false)
             getVerificationResults(country)
         }
     }

@@ -27,6 +27,7 @@ ktx = "1.13.1"
 material = "1.12.0"
 joda = "2.12.7"
 nexus = "2.0.0"
+coil = "2.6.0"
 
 [libraries]
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -70,6 +71,8 @@ androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidx-
 androidx-core-ktx = { module = "androidx.test:core-ktx", version.ref = "androidx-core-ktx" }
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test-runner" }
 androidx-browser = { group = "androidx.browser", name = "browser", version = "1.8.0" }
+coil-ktx = { module = "io.coil-kt:coil", version.ref = "coil" }
+coil-svg = { module = "io.coil-kt:coil-svg", version.ref = "coil" }
 
 tensorflow-lite = { module = "org.tensorflow:tensorflow-lite", version.ref = "tensorflow-lite" }
 tensorflow-support = { module = "org.tensorflow:tensorflow-lite-support", version.ref = "tensorflow-support" }
@@ -82,6 +85,7 @@ kotlin-test = ["kotlin-test-junit", "kotlin-test-annotations"]
 androidx-lifecycle = ["androidx-livedata", "androidx-viewmodel", "androidx-runtime"]
 camera = ["androidx-camera-core", "androidx-camera-camera2", "androidx-camera-lifecycle", "androidx-camera-video", "androidx-camera-extensions", "androidx-camera-view"]
 navigation = ["androidx-navigation-fragment", "androidx-navigation-ui"]
+coil = ["coil-ktx", "coil-svg"]
 
 [plugins]
 nexus = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexus" }
