@@ -18,6 +18,7 @@ import io.falu.identity.api.models.verification.VerificationDocumentUpload
 import io.falu.identity.api.models.verification.VerificationModel
 import io.falu.identity.api.models.verification.VerificationOptions
 import io.falu.identity.api.models.verification.VerificationOptionsForDocument
+import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.api.models.verification.VerificationStatus
 import io.falu.identity.api.models.verification.VerificationType
 import io.falu.identity.api.models.verification.VerificationUploadRequest
@@ -31,7 +32,6 @@ import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import software.tingle.api.ResourceResponse
-import software.tingle.api.patch.JsonPatchDocument
 import java.io.File
 import java.util.Date
 import kotlin.test.BeforeTest
@@ -111,7 +111,7 @@ class IdentityVerificationApiClientTests {
     fun `test if updating verification works`() {
         mockWebServer.url("$BASE_URL/v1/identity/verifications/${verification.id}/workflow")
 
-        val document = JsonPatchDocument().replace("/test", "test")
+        val document = VerificationUpdateOptions(consent = true)
 
         val resourceResponse = getResponse(tResponse = verification)
         whenever(apiClient.updateVerification(verification.id, document))
@@ -121,7 +121,7 @@ class IdentityVerificationApiClientTests {
 
         val response = apiClient.updateVerification(verification.id, document)
         assertNotNull(response.resource)
-        assertEquals(response.resource!!.id, verification.id)
+        assertEquals(response.resource?.id.orEmpty(), verification.id)
     }
 
     @Test

@@ -14,6 +14,7 @@ import io.falu.identity.R
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.verification.Gender
 import io.falu.identity.api.models.verification.VerificationIdNumberUpload
+import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.databinding.FragmentIdentificationVerificationBinding
 import io.falu.identity.documents.DocumentSelectionFragment
@@ -22,7 +23,6 @@ import io.falu.identity.utils.showDatePickerDialog
 import io.falu.identity.utils.showDialog
 import io.falu.identity.utils.submitVerificationData
 import io.falu.identity.utils.updateVerification
-import software.tingle.api.patch.JsonPatchDocument
 import java.util.Date
 
 internal class IdentificationVerificationFragment(factory: ViewModelProvider.Factory) : Fragment() {
@@ -77,12 +77,11 @@ internal class IdentificationVerificationFragment(factory: ViewModelProvider.Fac
     }
 
     private fun updateVerification(request: VerificationUploadRequest, source: Int) {
-        val patchDocument = JsonPatchDocument()
-            .replace("/id_number", request.idNumber)
+        val updateOptions = VerificationUpdateOptions(idNumber = request.idNumber)
 
         updateVerification(
             viewModel,
-            patchDocument,
+            updateOptions,
             source,
             onSuccess = { submitVerificationData(viewModel, source, request) })
     }

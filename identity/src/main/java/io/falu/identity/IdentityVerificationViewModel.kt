@@ -26,6 +26,7 @@ import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.UploadMethod
 import io.falu.identity.api.models.country.SupportedCountry
 import io.falu.identity.api.models.verification.Verification
+import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.api.models.verification.VerificationUploadResult
 import io.falu.identity.utils.FileUtils
@@ -40,7 +41,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import software.tingle.api.HttpApiResponseProblem
 import software.tingle.api.ResourceResponse
-import software.tingle.api.patch.JsonPatchDocument
 import java.io.File
 import java.io.InputStream
 import kotlin.coroutines.CoroutineContext
@@ -256,14 +256,14 @@ internal class IdentityVerificationViewModel(
     }
 
     internal fun updateVerification(
-        document: JsonPatchDocument,
+        updateOptions: VerificationUpdateOptions,
         onSuccess: ((Verification) -> Unit),
         onError: ((Throwable?) -> Unit),
         onFailure: ((Throwable) -> Unit)
     ) {
         launch(Dispatchers.IO) {
             runCatching {
-                apiClient.updateVerification(contractArgs.verificationId, document)
+                apiClient.updateVerification(contractArgs.verificationId, updateOptions)
             }.fold(
                 onSuccess = { response ->
                     handleResponse(

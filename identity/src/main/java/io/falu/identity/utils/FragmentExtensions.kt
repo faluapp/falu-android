@@ -11,22 +11,22 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.falu.core.exceptions.ApiException
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
+import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.capture.scan.DocumentScanViewModel
 import io.falu.identity.error.ErrorFragment.Companion.navigateWithApiExceptions
 import io.falu.identity.error.ErrorFragment.Companion.navigateWithFailure
 import io.falu.identity.error.ErrorFragment.Companion.navigateWithRequirementErrors
 import software.tingle.api.HttpApiResponseProblem
-import software.tingle.api.patch.JsonPatchDocument
 import java.io.File
 
 internal fun Fragment.updateVerification(
     viewModel: IdentityVerificationViewModel,
-    document: JsonPatchDocument,
+    updateOptions: VerificationUpdateOptions,
     @IdRes source: Int,
     onSuccess: (() -> Unit)
 ) {
-    viewModel.updateVerification(document,
+    viewModel.updateVerification(updateOptions,
         onSuccess = {
             when {
                 else -> {

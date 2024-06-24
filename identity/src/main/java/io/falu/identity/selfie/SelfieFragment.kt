@@ -19,6 +19,7 @@ import io.falu.identity.ai.FaceDetectionOutput
 import io.falu.identity.analytics.AnalyticsDisposition
 import io.falu.identity.api.models.UploadMethod
 import io.falu.identity.api.models.verification.Verification
+import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.api.models.verification.VerificationSelfieUpload
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.camera.CameraView
@@ -30,7 +31,6 @@ import io.falu.identity.utils.navigateToApiResponseProblemFragment
 import io.falu.identity.utils.navigateToErrorFragment
 import io.falu.identity.utils.submitVerificationData
 import io.falu.identity.utils.updateVerification
-import software.tingle.api.patch.JsonPatchDocument
 
 internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factory) : Fragment() {
 
@@ -175,16 +175,15 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
     }
 
     private fun submitSelfieAndUploadedDocuments(file: FaluFile) {
-        val selfie =
-            VerificationSelfieUpload(
-                UploadMethod.MANUAL,
-                file = file.id,
-                variance = 0F
-            )
+        val selfie = VerificationSelfieUpload(
+            UploadMethod.MANUAL,
+            file = file.id,
+            variance = 0F
+        )
 
-        val document = JsonPatchDocument().replace("/selfie", selfie)
+        val updateOptions = VerificationUpdateOptions(selfie = selfie)
 
-        updateVerification(identityViewModel, document, R.id.fragment_selfie, onSuccess = {
+        updateVerification(identityViewModel, updateOptions, R.id.fragment_selfie, onSuccess = {
             selfie.camera = binding.viewCamera.cameraSettings
             verificationRequest.selfie = selfie
             submitVerificationData(identityViewModel, R.id.fragment_selfie, verificationRequest)
