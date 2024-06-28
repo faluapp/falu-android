@@ -16,12 +16,12 @@ import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.analytics.AnalyticsDisposition
 import io.falu.identity.api.models.verification.Verification
+import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.databinding.FragmentWelcomeBinding
 import io.falu.identity.error.ErrorFragment.Companion.navigateWithDepletedAttempts
 import io.falu.identity.utils.navigateToApiResponseProblemFragment
 import io.falu.identity.utils.updateVerification
 import software.tingle.api.HttpApiResponseProblem
-import software.tingle.api.patch.JsonPatchDocument
 
 internal class WelcomeFragment(
     private val factory: ViewModelProvider.Factory,
@@ -88,11 +88,12 @@ internal class WelcomeFragment(
     }
 
     private fun submitConsentData() {
-        val document = JsonPatchDocument().replace("consent", true)
+        val updateOptions = VerificationUpdateOptions(consent = true)
+
         binding.buttonAccept.showProgress()
         updateVerification(
             viewModel,
-            document,
+            updateOptions,
             source = R.id.fragment_welcome,
             onSuccess = {
                 binding.buttonAccept.showProgress()

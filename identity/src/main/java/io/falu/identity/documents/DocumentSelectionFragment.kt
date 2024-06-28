@@ -14,12 +14,12 @@ import io.falu.identity.R
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.country.SupportedCountry
 import io.falu.identity.api.models.verification.Verification
+import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.api.models.verification.VerificationType
 import io.falu.identity.countries.CountriesAdapter
 import io.falu.identity.databinding.FragmentDocumentSelectionBinding
 import io.falu.identity.utils.navigateToApiResponseProblemFragment
 import io.falu.identity.utils.updateVerification
-import software.tingle.api.patch.JsonPatchDocument
 
 class DocumentSelectionFragment(private val factory: ViewModelProvider.Factory) : Fragment() {
 
@@ -124,8 +124,7 @@ class DocumentSelectionFragment(private val factory: ViewModelProvider.Factory) 
     private fun updateVerification(verification: Verification) {
         binding.buttonContinue.showProgress()
         val country = binding.buttonContinue.tag as SupportedCountry
-        val document = JsonPatchDocument()
-            .replace("country", country.country.code)
+        val updateOptions = VerificationUpdateOptions(country = country.country.code)
 
         val action = if (verification.type != VerificationType.IDENTITY_NUMBER) {
             R.id.action_fragment_document_selection_to_fragment_document_capture_methods
@@ -135,7 +134,7 @@ class DocumentSelectionFragment(private val factory: ViewModelProvider.Factory) 
 
         updateVerification(
             viewModel,
-            document,
+            updateOptions,
             source = R.id.action_fragment_welcome_to_fragment_document_selection,
             onSuccess = {
                 val bundle = bundleOf(KEY_IDENTITY_DOCUMENT_TYPE to identityDocumentType)

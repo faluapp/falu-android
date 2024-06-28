@@ -11,6 +11,7 @@ import io.falu.core.exceptions.AuthenticationException
 import io.falu.core.models.FaluFile
 import io.falu.core.utils.getMediaType
 import io.falu.identity.api.models.verification.Verification
+import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -21,7 +22,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import software.tingle.api.AbstractHttpApiClient
 import software.tingle.api.ResourceResponse
 import software.tingle.api.authentication.AuthenticationHeaderProvider
-import software.tingle.api.patch.JsonPatchDocument
 import java.io.File
 import java.util.concurrent.TimeUnit
 
@@ -53,11 +53,11 @@ internal class IdentityVerificationApiClient(
     )
     fun updateVerification(
         verification: String,
-        document: JsonPatchDocument
+        updateOptions: VerificationUpdateOptions
     ): ResourceResponse<Verification> {
         val builder = Request.Builder()
             .url("$BASE_URL/v1/identity/verifications/$verification/workflow")
-            .patch(makeJson(document.getOperations()).toRequestBody(MEDIA_TYPE_PATH_JSON))
+            .patch(makeJson(updateOptions).toRequestBody(MEDIA_TYPE_PATCH_MERGE))
 
         return execute(builder, Verification::class.java)
     }

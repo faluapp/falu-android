@@ -21,6 +21,7 @@ import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.UploadMethod
+import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.camera.CameraPermissionsFragment
 import io.falu.identity.capture.scan.DocumentScanViewModel
@@ -35,7 +36,6 @@ import io.falu.identity.utils.serializable
 import io.falu.identity.utils.submitVerificationData
 import io.falu.identity.utils.toBitmap
 import io.falu.identity.utils.updateVerification
-import software.tingle.api.patch.JsonPatchDocument
 
 internal abstract class AbstractCaptureFragment(
     identityViewModelFactory: ViewModelProvider.Factory
@@ -189,10 +189,9 @@ internal abstract class AbstractCaptureFragment(
         @IdRes source: Int,
         verificationRequest: VerificationUploadRequest
     ) {
-        val patchDocument = JsonPatchDocument()
-            .replace("/document", verificationRequest.document)
+        val patchRequest = VerificationUpdateOptions(document = verificationRequest.document)
 
-        updateVerification(identityViewModel, patchDocument, source, onSuccess = {
+        updateVerification(identityViewModel, patchRequest, source, onSuccess = {
             attemptDocumentSubmission(source, verificationRequest)
         })
     }

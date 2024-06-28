@@ -19,7 +19,7 @@ data class ApiVersion internal constructor(internal val version: String) {
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     companion object {
-        private const val API_VERSION_CODE: String = "2022-09-01"
+        private const val API_VERSION_CODE: String = "2024-06-01"
 
         private val INSTANCE = ApiVersion(API_VERSION_CODE)
 
