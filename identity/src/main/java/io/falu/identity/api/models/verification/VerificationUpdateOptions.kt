@@ -8,5 +8,7 @@ internal data class VerificationUpdateOptions(
     val country: String? = null,
     val selfie: VerificationSelfieUpload? = null,
     @SerializedName("id_number")
-    val idNumber: VerificationIdNumberUpload? = null
+    val idNumber: VerificationIdNumberUpload? = null,
+    @SerializedName("tax_id")
+    var taxPin: VerificationTaxPinUpload ? = null
 )

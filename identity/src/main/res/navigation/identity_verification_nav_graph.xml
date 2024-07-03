@@ -22,6 +22,10 @@
             app:destination="@id/fragment_selfie" />
 
     <action
+            android:id="@+id/action_global_fragment_tax_pin_verification"
+            app:destination="@id/fragment_tax_pin_verification" />
+
+    <action
             android:id="@+id/action_global_fragment_scan_capture_error"
             app:destination="@id/fragment_scan_capture_error" />
 
@@ -124,5 +128,11 @@
             android:id="@+id/fragment_identity_verification"
             android:name="io.falu.identity.verification.IdentificationVerificationFragment"
             android:label="IdentificationVerificationFragment"
-            tool:layout="@layout/fragment_identification_verification"/>
+            tool:layout="@layout/fragment_identification_verification">
+    </fragment>
+    <fragment
+            android:id="@+id/fragment_tax_pin_verification"
+            android:name="io.falu.identity.verification.TaxPinVerificationFragment"
+            android:label="TaxPinVerificationFragment"
+            tool:layout="@layout/fragment_tax_pin_verification"/>
 </navigation>

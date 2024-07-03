@@ -39,6 +39,9 @@ internal data class Verification(
     val videoRequired: Boolean
         get() = options.video != null
 
+    val taxPinRequired: Boolean
+        get() = options.tax != null
+
     val hasRequirementErrors: Boolean
         get() = requirements.errors.isNotEmpty()
 

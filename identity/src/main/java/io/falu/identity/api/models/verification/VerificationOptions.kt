@@ -34,5 +34,11 @@ internal data class VerificationOptions(
     /**
      * Options for the video check.
      */
-    var video: VerificationOptionsForVideo? = null
+    var video: VerificationOptionsForVideo? = null,
+
+    /**
+     * Options for the tax pin check.
+     */
+    @SerializedName("tax_id")
+    var tax: VerificationOptionsForTax? = null
 )

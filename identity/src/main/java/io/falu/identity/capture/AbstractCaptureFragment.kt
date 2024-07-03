@@ -211,6 +211,13 @@ internal abstract class AbstractCaptureFragment(
                         )
                     }
 
+                    verification.taxPinRequired -> {
+                        findNavController().navigate(
+                            R.id.action_global_fragment_tax_pin_verification,
+                            verificationRequest.addToBundle()
+                        )
+                    }
+
                     else -> {
                         submitVerificationData(identityViewModel, source, verificationRequest)
                     }

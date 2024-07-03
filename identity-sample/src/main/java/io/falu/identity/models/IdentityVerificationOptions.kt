@@ -28,5 +28,11 @@ data class IdentityVerificationOptions(
     /**
      * Options for the video check.
      */
-    var video: IdentityVerificationOptionsForVideo? = null
+    var video: IdentityVerificationOptionsForVideo? = null,
+
+    /**
+     * Options for the tax pin check.
+     */
+    @SerializedName("tax_id")
+    var tax: IdentityVerificationOptionsForTax? = null
 )

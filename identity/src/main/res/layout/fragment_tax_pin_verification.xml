@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <TextView
+            android:id="@+id/tv_verification_document"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/element_spacing_normal"
+            android:paddingVertical="@dimen/content_padding_normal"
+            android:gravity="center_horizontal"
+            android:text="@string/tax_pin_verification_title_tax_pin"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Tax Pin Number -->
+    <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_tax_pin"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/content_padding_normal"
+            android:layout_marginVertical="@dimen/element_spacing_normal"
+            app:layout_constraintTop_toBottomOf="@+id/tv_verification_document">
+
+        <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_tax_pin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/tax_pin_verification_hint_tax_pin"
+                android:imeOptions="actionDone" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+            android:id="@+id/view_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/content_padding_normal"
+            android:layout_marginTop="@dimen/content_padding_normal"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/element_spacing_normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/input_layout_tax_pin">
+
+        <io.falu.identity.ui.LoadingButton
+                android:id="@+id/button_continue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:text="@string/button_continue" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

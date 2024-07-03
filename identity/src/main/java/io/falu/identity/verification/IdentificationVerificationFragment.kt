@@ -6,9 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import io.falu.core.exceptions.ApiException
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.models.IdentityDocumentType
@@ -18,6 +21,7 @@ import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.databinding.FragmentIdentificationVerificationBinding
 import io.falu.identity.documents.DocumentSelectionFragment
+import io.falu.identity.utils.navigateToApiResponseProblemFragment
 import io.falu.identity.utils.serializable
 import io.falu.identity.utils.showDatePickerDialog
 import io.falu.identity.utils.showDialog
@@ -73,17 +77,43 @@ internal class IdentificationVerificationFragment(factory: ViewModelProvider.Fac
         val request = VerificationUploadRequest(idNumber = identityUpload)
 
         binding.buttonContinue.showProgress()
-        updateVerification(request, 0)
+        updateVerification(request)
     }
 
-    private fun updateVerification(request: VerificationUploadRequest, source: Int) {
+    private fun updateVerification(request: VerificationUploadRequest) {
         val updateOptions = VerificationUpdateOptions(idNumber = request.idNumber)
 
         updateVerification(
             viewModel,
             updateOptions,
-            source,
-            onSuccess = { submitVerificationData(viewModel, source, request) })
+            0,
+            onSuccess = { attemptIdNumberSubmission(verificationRequest = request) })
+    }
+
+    private fun attemptIdNumberSubmission(
+        @IdRes source: Int = 0,
+        verificationRequest: VerificationUploadRequest
+    ) {
+        viewModel.observeForVerificationResults(
+            viewLifecycleOwner,
+            onSuccess = { verification ->
+                when {
+                    verification.taxPinRequired -> {
+                        findNavController().navigate(
+                            R.id.action_global_fragment_tax_pin_verification,
+                            verificationRequest.addToBundle()
+                        )
+                    }
+
+                    else -> {
+                        submitVerificationData(viewModel, source, verificationRequest)
+                    }
+                }
+            },
+            onError = {
+                navigateToApiResponseProblemFragment((it as ApiException).problem)
+            }
+        )
     }
 
     private val idNumberUpload: VerificationIdNumberUpload?

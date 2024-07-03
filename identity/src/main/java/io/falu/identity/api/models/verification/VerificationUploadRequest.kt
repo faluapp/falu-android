@@ -16,7 +16,9 @@ internal data class VerificationUploadRequest(
     var document: VerificationDocumentUpload? = null,
     var selfie: VerificationSelfieUpload? = null,
     @SerializedName("id_number")
-    var idNumber: VerificationIdNumberUpload? = null
+    var idNumber: VerificationIdNumberUpload? = null,
+    @SerializedName("tax_id")
+    var taxPin: VerificationTaxPinUpload? = null
 ) : Parcelable {
 
     @JvmSynthetic

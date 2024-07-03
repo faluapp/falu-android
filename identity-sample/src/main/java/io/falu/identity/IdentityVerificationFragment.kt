@@ -53,7 +53,8 @@ class IdentityVerificationFragment : Fragment(), IdentityVerificationCallback {
                 allowIdentityCard = binding.swAllowedTypeId.isChecked,
                 allowUploads = binding.swAllowUploads.isChecked,
                 allowDocumentSelfie = binding.swAllowDocumentSelfie.isChecked,
-                allowIdNumberVerification = binding.swAllowIdNumberVerification.isChecked
+                allowIdNumberVerification = binding.swAllowIdNumberVerification.isChecked,
+                allowTaxPin = binding.swAllowTaxPinVerification.isChecked
             )
         }
     }
@@ -69,7 +70,8 @@ class IdentityVerificationFragment : Fragment(), IdentityVerificationCallback {
         allowIdentityCard: Boolean,
         allowUploads: Boolean,
         allowDocumentSelfie: Boolean,
-        allowIdNumberVerification: Boolean
+        allowIdNumberVerification: Boolean,
+        allowTaxPin: Boolean
     ) {
         binding.viewProgress.visibility = View.VISIBLE
         viewModel.requestIdentityVerification(
@@ -78,7 +80,8 @@ class IdentityVerificationFragment : Fragment(), IdentityVerificationCallback {
             allowIdentityCard,
             allowUploads,
             allowDocumentSelfie,
-            allowIdNumberVerification
+            allowIdNumberVerification,
+            allowTaxPin
         ).observe(viewLifecycleOwner) { result ->
             binding.viewProgress.visibility = View.GONE
 

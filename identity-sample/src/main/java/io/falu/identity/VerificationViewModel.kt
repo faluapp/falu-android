@@ -9,6 +9,7 @@ import io.falu.identity.models.IdentityVerificationOptions
 import io.falu.identity.models.IdentityVerificationOptionsForDocument
 import io.falu.identity.models.IdentityVerificationOptionsForIdNumber
 import io.falu.identity.models.IdentityVerificationOptionsForSelfie
+import io.falu.identity.models.IdentityVerificationOptionsForTax
 import io.falu.identity.sample.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -28,7 +29,8 @@ class VerificationViewModel(application: Application) : AndroidViewModel(applica
         allowIdentityCard: Boolean,
         allowUploads: Boolean,
         allowDocumentSelfie: Boolean,
-        allowIdNumberVerification: Boolean
+        allowIdNumberVerification: Boolean,
+        allowTaxPin: Boolean
     ) = liveData {
 
         val request = IdentityVerificationCreationRequest(
@@ -41,7 +43,8 @@ class VerificationViewModel(application: Application) : AndroidViewModel(applica
                         allowIdentityCard
                     ) else null,
                 selfie = if (allowDocumentSelfie) IdentityVerificationOptionsForSelfie() else null,
-                idNumber = if (allowIdNumberVerification) IdentityVerificationOptionsForIdNumber() else null
+                idNumber = if (allowIdNumberVerification) IdentityVerificationOptionsForIdNumber() else null,
+                tax = if (allowTaxPin) IdentityVerificationOptionsForTax(allowed = mutableListOf("ken_pin")) else null
             ),
             type = getVerificationType(allowDocumentSelfie, allowIdNumberVerification)
         )

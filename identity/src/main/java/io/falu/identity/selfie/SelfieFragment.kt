@@ -19,8 +19,8 @@ import io.falu.identity.ai.FaceDetectionOutput
 import io.falu.identity.analytics.AnalyticsDisposition
 import io.falu.identity.api.models.UploadMethod
 import io.falu.identity.api.models.verification.Verification
-import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.api.models.verification.VerificationSelfieUpload
+import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.camera.CameraView
 import io.falu.identity.databinding.FragmentSelfieBinding
@@ -186,7 +186,7 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
         updateVerification(identityViewModel, updateOptions, R.id.fragment_selfie, onSuccess = {
             selfie.camera = binding.viewCamera.cameraSettings
             verificationRequest.selfie = selfie
-            submitVerificationData(identityViewModel, R.id.fragment_selfie, verificationRequest)
+            attemptSelfieSubmission()
         })
     }
 
@@ -209,6 +209,28 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
                 findNavController().navigate(R.id.action_global_fragment_selfie_capture_error)
             }
         }
+    }
+
+    private fun attemptSelfieSubmission() {
+        identityViewModel.observeForVerificationResults(viewLifecycleOwner,
+            onSuccess = { verification ->
+                when {
+                    verification.taxPinRequired -> {
+                        findNavController().navigate(
+                            R.id.action_global_fragment_tax_pin_verification,
+                            verificationRequest.addToBundle()
+                        )
+                    }
+
+                    else -> {
+                        submitVerificationData(identityViewModel, R.id.fragment_selfie, verificationRequest)
+                    }
+                }
+            },
+            onError = {
+                navigateToApiResponseProblemFragment((it as ApiException).problem)
+            }
+        )
     }
 
     private fun reportFaceScanSuccessfulTelemetry(output: FaceDetectionOutput) {
