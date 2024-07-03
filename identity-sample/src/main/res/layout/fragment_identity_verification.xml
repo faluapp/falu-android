@@ -112,6 +112,13 @@
                 android:checked="false"
                 android:text="@string/identity_verification_option_id_number" />
 
+        <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/sw_allow_tax_pin_verification"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="@string/identity_verification_option_tax_pin" />
+
     </LinearLayout>
 
     <LinearLayout

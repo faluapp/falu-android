@@ -11,4 +11,5 @@
     <string name="identity_verification_allowed_type_identity_card">Identity Card</string>
     <string name="identity_verification_option">Use Native SDK</string>
     <string name="identity_verification_option_id_number">Verify ID number.</string>
+    <string name="identity_verification_option_tax_pin">Verify Tax PIN</string>
 </resources>
