@@ -71,7 +71,7 @@ class IdentityVerificationFragment : Fragment(), IdentityVerificationCallback {
         allowUploads: Boolean,
         allowDocumentSelfie: Boolean,
         allowIdNumberVerification: Boolean,
-        allowTaxPin : Boolean
+        allowTaxPin: Boolean
     ) {
         binding.viewProgress.visibility = View.VISIBLE
         viewModel.requestIdentityVerification(
