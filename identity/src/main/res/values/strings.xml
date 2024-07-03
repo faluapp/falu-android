@@ -95,4 +95,11 @@
     <string name="document_verification_error_invalid_document_number">Invalid document number.</string>
     <string name="document_verification_error_invalid_first_name">The first name is required.</string>
     <string name="document_verification_error_invalid_last_name">The last name is required.</string>
+
+    <!--  Tax Pin Verification  -->
+    <string name="tax_pin_verification_title_tax_pin">Verify a user\'s Tax Pin</string>
+    <string name="tax_pin_verification_hint_tax_pin">Tax Pin Number</string>
+    <string name="tax_pin_verification_error_invalid_tax_pin_number">Invalid tax pin.</string>
+
+
 </resources>
