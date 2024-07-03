@@ -10,6 +10,7 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="@dimen/element_spacing_normal"
             android:paddingVertical="@dimen/content_padding_normal"
+            android:gravity="center_horizontal"
             android:text="@string/tax_pin_verification_title_tax_pin"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             app:layout_constraintEnd_toEndOf="parent"

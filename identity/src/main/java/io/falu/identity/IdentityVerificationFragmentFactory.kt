@@ -13,6 +13,7 @@ import io.falu.identity.documents.DocumentSelectionFragment
 import io.falu.identity.selfie.SelfieFragment
 import io.falu.identity.support.SupportFragment
 import io.falu.identity.verification.IdentificationVerificationFragment
+import io.falu.identity.verification.TaxPinVerificationFragment
 import io.falu.identity.welcome.WelcomeFragment
 
 internal class IdentityVerificationFragmentFactory(
@@ -33,6 +34,7 @@ internal class IdentityVerificationFragmentFactory(
             SupportFragment::class.java.name -> SupportFragment(factory)
             SelfieFragment::class.java.name -> SelfieFragment(factory)
             IdentificationVerificationFragment::class.java.name -> IdentificationVerificationFragment(factory)
+            TaxPinVerificationFragment::class.java.name -> TaxPinVerificationFragment(factory)
             else -> super.instantiate(classLoader, className)
         }
     }

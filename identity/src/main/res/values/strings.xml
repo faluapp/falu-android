@@ -83,7 +83,8 @@
     <string name="selfie_text_selfie_scan_completed">Scan Complete!</string>
 
     <!-- Document Verification -->
-    <string name="document_verification_title_document_verification">Verify a user\'s identity by providing their first and last name.</string>
+    <string name="document_verification_title_document_verification">Verify your identity by providing
+        your first and last name.</string>
     <string name="document_verification_hint_first_name">First Name</string>
     <string name="document_verification_hint_last_name">Last Name</string>
     <string name="document_verification_hint_document_number">Document Number</string>
@@ -97,7 +98,7 @@
     <string name="document_verification_error_invalid_last_name">The last name is required.</string>
 
     <!--  Tax Pin Verification  -->
-    <string name="tax_pin_verification_title_tax_pin">Verify a user\'s Tax Pin</string>
+    <string name="tax_pin_verification_title_tax_pin">Verify your Tax Pin</string>
     <string name="tax_pin_verification_hint_tax_pin">Tax Pin Number</string>
     <string name="tax_pin_verification_error_invalid_tax_pin_number">Invalid tax pin.</string>
 

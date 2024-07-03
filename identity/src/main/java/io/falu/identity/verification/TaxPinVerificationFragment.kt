@@ -82,10 +82,6 @@ internal class TaxPinVerificationFragment(factory: ViewModelProvider.Factory) : 
     private val isValidPin: Boolean
         get() {
             val taxPin = binding.inputTaxPin.text.toString()
-            return taxPin.matches(taxPinPattern)
+            return taxPin.isNotEmpty()
         }
-
-    companion object {
-        private val taxPinPattern = Regex("^[A-Z0-9]{18}$")
-    }
 }
