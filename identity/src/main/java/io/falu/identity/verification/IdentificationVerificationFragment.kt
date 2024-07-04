@@ -66,7 +66,7 @@ internal class IdentificationVerificationFragment(factory: ViewModelProvider.Fac
                 binding.tvBirthday.text = DateUtils.formatDateTime(requireContext(), it, DateUtils.FORMAT_SHOW_DATE)
             }
         }
-        binding.buttonContinue.text = getString(R.string.button_verify)
+        binding.buttonContinue.text = getString(R.string.button_continue)
         binding.buttonContinue.setOnClickListener {
             verify()
         }
