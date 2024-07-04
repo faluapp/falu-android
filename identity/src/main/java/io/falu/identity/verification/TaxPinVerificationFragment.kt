@@ -39,7 +39,7 @@ internal class TaxPinVerificationFragment(factory: ViewModelProvider.Factory) : 
                 "Verification upload request is null"
             }
 
-        binding.buttonContinue.text = getString(R.string.button_verify)
+        binding.buttonContinue.text = getString(R.string.button_continue)
         binding.buttonContinue.setOnClickListener {
             verify(verificationRequest)
         }
