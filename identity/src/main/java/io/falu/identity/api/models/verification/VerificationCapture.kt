@@ -47,6 +47,6 @@ internal data class DocumentDetector(
 internal data class Blur(
     @SerializedName("min_duration")
     var duration: Int,
-    @SerializedName("io_u")
+    @SerializedName("iou")
     var iou: Int
 ) : Parcelable
