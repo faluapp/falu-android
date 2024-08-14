@@ -42,6 +42,7 @@ class IdentityVerificationFragment : Fragment(), IdentityVerificationCallback {
         verificationView = FaluIdentityVerificationView.create(
             fragment = this,
             logo = logoUri,
+            maxNetworkRetries = 2,
             // logo = Uri.parse("https://path/to/logo-no-text.jpg") // Or use a remote image
             callback = this
         )

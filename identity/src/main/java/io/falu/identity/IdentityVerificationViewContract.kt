@@ -26,6 +26,7 @@ internal class IdentityVerificationViewContract :
 internal data class ContractArgs(
     var temporaryKey: String,
     var verificationId: String,
+    var maxNetworkRetries: Int,
     var workspaceLogo: Uri
 ) : Parcelable {
 

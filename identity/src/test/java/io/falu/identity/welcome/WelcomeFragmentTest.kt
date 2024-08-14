@@ -55,9 +55,10 @@ class WelcomeFragmentTest {
 
         on { apiClient }.thenReturn(
             IdentityVerificationApiClient(
-                ApplicationProvider.getApplicationContext(),
-                temporaryKey,
-                true
+                context = ApplicationProvider.getApplicationContext(),
+                apiKey = temporaryKey,
+                maxNetworkRetries = 0,
+                enableLogging = true
             )
         )
     }
@@ -146,6 +147,7 @@ class WelcomeFragmentTest {
         val contractArgs = ContractArgs(
             temporaryKey = temporaryKey,
             verificationId = "iv_1234",
+            maxNetworkRetries = 0,
             workspaceLogo = logo
         )
     }

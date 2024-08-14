@@ -22,7 +22,8 @@ class Falu internal constructor(
     /**
      * Constructor with publishable key.
      *
-     * @param publishableKey the client's publishable key
+     * @param publishableKey the client's publishable key.
+     * @param maxNetworkRetries the maximum number of network retries.
      * @param enableLogging enable logging in FALU SDK; disabled by default.
      * It is recommended to disable logging in production.
      */
@@ -30,11 +31,13 @@ class Falu internal constructor(
     constructor(
         context: Context,
         publishableKey: String,
+        maxNetworkRetries: Int = 0,
         enableLogging: Boolean = false
     ) : this(
         FaluRepository(
             context,
             ApiKeyValidator.get().requireValid(publishableKey),
+            maxNetworkRetries,
             enableLogging
         )
     )

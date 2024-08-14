@@ -7,15 +7,18 @@ import androidx.fragment.app.Fragment
 
 internal class IdentityVerificationView private constructor(
     private val logo: Uri,
+    private val maxNetworkRetries: Int = 0,
     private val launcher: ActivityResultLauncher<ContractArgs>
 ) : FaluIdentityVerificationView {
 
     constructor(
         activity: ComponentActivity,
         logoUri: Uri,
+        maxNetworkRetries: Int = 0,
         callback: IdentityVerificationCallback
     ) : this(
         logoUri,
+        maxNetworkRetries,
         activity.registerForActivityResult(
             IdentityVerificationViewContract(),
             callback::onVerificationResult
@@ -25,9 +28,11 @@ internal class IdentityVerificationView private constructor(
     constructor(
         fragment: Fragment,
         logoUri: Uri,
+        maxNetworkRetries: Int = 0,
         callback: IdentityVerificationCallback
     ) : this(
         logoUri,
+        maxNetworkRetries,
         fragment.registerForActivityResult(
             IdentityVerificationViewContract(),
             callback::onVerificationResult
@@ -36,7 +41,7 @@ internal class IdentityVerificationView private constructor(
 
     override fun open(verificationId: String, temporaryKey: String) {
         launcher.launch(
-            ContractArgs(temporaryKey, verificationId, logo)
+            ContractArgs(temporaryKey, verificationId, maxNetworkRetries, logo)
         )
     }
 }

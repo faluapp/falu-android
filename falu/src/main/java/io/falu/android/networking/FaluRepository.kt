@@ -15,9 +15,10 @@ import kotlinx.coroutines.launch
 internal class FaluRepository internal constructor(
     context: Context,
     publishableKey: String,
+    maxNetworkRetries: Int = 0,
     enableLogging: Boolean
 ) :
-    BaseApiRepository(context, publishableKey, enableLogging) {
+    BaseApiRepository(context, publishableKey, maxNetworkRetries, enableLogging) {
 
     /**
      * Create a payment asynchronously

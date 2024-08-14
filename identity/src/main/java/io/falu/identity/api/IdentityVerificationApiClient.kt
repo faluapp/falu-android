@@ -5,6 +5,7 @@ import io.falu.core.ApiKeyValidator
 import io.falu.core.ApiVersion
 import io.falu.core.ApiVersionInterceptor
 import io.falu.core.AppDetailsInterceptor
+import io.falu.core.NetworkRetriesInterceptor
 import io.falu.core.exceptions.ApiConnectionException
 import io.falu.core.exceptions.ApiException
 import io.falu.core.exceptions.AuthenticationException
@@ -28,10 +29,12 @@ import java.util.concurrent.TimeUnit
 internal class IdentityVerificationApiClient(
     private val context: Context,
     apiKey: String,
+    maxNetworkRetries: Int = 0,
     private val enableLogging: Boolean
 ) : AbstractHttpApiClient(IdentityVerificationAuthProvider(apiKey)) {
     private val appDetailsInterceptor = AppDetailsInterceptor(context)
     private val apiVersionInterceptor = ApiVersionInterceptor(ApiVersion.get().code)
+    private val networkRetriesInterceptor = NetworkRetriesInterceptor(maxNetworkRetries)
 
     @Throws(
         AuthenticationException::class,
@@ -105,6 +108,7 @@ internal class IdentityVerificationApiClient(
         builder
             .addInterceptor(appDetailsInterceptor)
             .addInterceptor(apiVersionInterceptor)
+            .addInterceptor(networkRetriesInterceptor)
             .followRedirects(false)
             .connectTimeout(50, TimeUnit.SECONDS) // default is 50 seconds
             .readTimeout(50, TimeUnit.SECONDS)
