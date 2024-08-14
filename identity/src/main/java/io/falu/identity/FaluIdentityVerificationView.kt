@@ -16,13 +16,15 @@ interface FaluIdentityVerificationView {
         fun create(
             activity: ComponentActivity,
             logo: Uri,
+            maxNetworkRetries: Int = 0,
             callback: IdentityVerificationCallback
-        ): FaluIdentityVerificationView = IdentityVerificationView(activity, logo, callback)
+        ): FaluIdentityVerificationView = IdentityVerificationView(activity, logo, maxNetworkRetries, callback)
 
         fun create(
             fragment: Fragment,
             logo: Uri,
+            maxNetworkRetries: Int = 0,
             callback: IdentityVerificationCallback
-        ): FaluIdentityVerificationView = IdentityVerificationView(fragment, logo, callback)
+        ): FaluIdentityVerificationView = IdentityVerificationView(fragment, logo, maxNetworkRetries, callback)
     }
 }

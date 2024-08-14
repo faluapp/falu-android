@@ -51,7 +51,8 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
     }
 
     private val apiClient: IdentityVerificationApiClient by lazy {
-        IdentityVerificationApiClient(this, contractArgs.temporaryKey, BuildConfig.DEBUG)
+        IdentityVerificationApiClient(this, contractArgs.temporaryKey, contractArgs.maxNetworkRetries,
+            BuildConfig.DEBUG)
     }
 
     private val analyticsRequestBuilder: IdentityAnalyticsRequestBuilder by lazy {

@@ -16,12 +16,14 @@ import software.tingle.api.ResourceResponse
 internal abstract class BaseApiRepository internal constructor(
     context: Context,
     publishableKey: String,
+    maxNetworkRetries: Int = 0,
     enableLogging: Boolean
 ) :
     CoroutineScope {
     protected val faluApiClient = FaluApiClient(
         context,
         publishableKey,
+        maxNetworkRetries,
         enableLogging
     )
 

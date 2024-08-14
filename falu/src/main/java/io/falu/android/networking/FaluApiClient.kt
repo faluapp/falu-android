@@ -6,6 +6,7 @@ import io.falu.android.models.payments.PaymentRequest
 import io.falu.core.ApiVersion
 import io.falu.core.ApiVersionInterceptor
 import io.falu.core.AppDetailsInterceptor
+import io.falu.core.NetworkRetriesInterceptor
 import io.falu.core.exceptions.ApiConnectionException
 import io.falu.core.exceptions.ApiException
 import io.falu.core.exceptions.AuthenticationException
@@ -26,11 +27,13 @@ import java.util.concurrent.TimeUnit
 internal class FaluApiClient internal constructor(
     private val context: Context,
     publishableKey: String,
+    maxNetworkRetries: Int = 0,
     private val enableLogging: Boolean
 ) : AbstractHttpApiClient(FaluAuthenticationHeaderProvider(publishableKey)) {
 
     private val appDetailsInterceptor = AppDetailsInterceptor(context)
     private val apiVersionInterceptor = ApiVersionInterceptor(ApiVersion.get().code)
+    private val networkRetriesInterceptor = NetworkRetriesInterceptor(maxNetworkRetries)
 
     @Throws(
         AuthenticationException::class,
@@ -73,6 +76,7 @@ internal class FaluApiClient internal constructor(
         builder
             .addInterceptor(appDetailsInterceptor)
             .addInterceptor(apiVersionInterceptor)
+            .addInterceptor(networkRetriesInterceptor)
             .followRedirects(false)
             .connectTimeout(50, TimeUnit.SECONDS) // default is 10 seconds
             .readTimeout(50, TimeUnit.SECONDS)
