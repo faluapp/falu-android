@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import io.falu.core.exceptions.ApiException
 import io.falu.identity.IdentityVerificationViewModel
+import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCREEN_NAME_SUPPORT
 import io.falu.identity.api.models.Support
 import io.falu.identity.databinding.FragmentSupportBinding
 import io.falu.identity.utils.navigateToApiResponseProblemFragment
@@ -34,6 +35,10 @@ internal class SupportFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.reportTelemetry(
+            viewModel.analyticsRequestBuilder.screenPresented(screenName = SCREEN_NAME_SUPPORT)
+        )
 
         viewModel.observeForVerificationResults(
             viewLifecycleOwner,

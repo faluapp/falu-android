@@ -15,6 +15,7 @@ import io.falu.identity.IdentityVerificationResultCallback
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.analytics.AnalyticsDisposition
+import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCREEN_NAME_WELCOME
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.databinding.FragmentWelcomeBinding
@@ -44,6 +45,8 @@ internal class WelcomeFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.reportTelemetry(viewModel.analyticsRequestBuilder.screenPresented(screenName = SCREEN_NAME_WELCOME))
+        
         viewModel.observeForVerificationResults(
             viewLifecycleOwner,
             onSuccess = { onVerificationSuccessful(it) },

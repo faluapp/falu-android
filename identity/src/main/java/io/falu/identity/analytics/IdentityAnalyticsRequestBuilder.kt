@@ -125,6 +125,14 @@ internal class IdentityAnalyticsRequestBuilder(
             )
         )
 
+    fun screenPresented(scanType: ScanDisposition.DocumentScanType? = null, screenName: String) = createRequest(
+        EVENT_SCREEN_PRESENTED,
+        makeEventParameters(
+            KEY_DOCUMENT_SCAN_TYPE to scanType?.name,
+            KEY_SCREEN_NAME to screenName
+        )
+    )
+
     companion object {
         const val CLIENT = "identity-sdk-mobile"
         const val ORIGIN = "falu-identity-android"
@@ -137,6 +145,7 @@ internal class IdentityAnalyticsRequestBuilder(
         const val EVENT_CAMERA_PERMISSION_DENIED = "camera_permission_denied"
         const val EVENT_CAMERA_PERMISSION_GRANTED = "camera_permission_granted"
         const val EVENT_IDENTITY_DOCUMENT_TIMEOUT = "document_timeout"
+        const val EVENT_SCREEN_PRESENTED = "screen_presented"
         const val EVENT_SELFIE_TIMEOUT = "selfie_timeout"
         const val EVENT_MODEL_PERFORMANCE = "model_performance"
         const val EVENT_CAMERA_INFO = "camera_info"
@@ -162,5 +171,16 @@ internal class IdentityAnalyticsRequestBuilder(
         const val KEY_FRAMES = "frames"
         const val KEY_CAMERA_ROTATION = "camera_rotation"
         const val KEY_VIEW_RESULT = "view_result"
+        const val KEY_SCREEN_NAME = "screen_name"
+
+        const val SCREEN_NAME_ERROR = "error"
+        const val SCREEN_NAME_WELCOME = "welcome"
+        const val SCREEN_NAME_DOCUMENT_SELECTION = "document_selection"
+        const val SCREEN_NAME_DOCUMENT_CAPTURE_METHODS = "document_capture_methods"
+        const val SCREEN_NAME_MANUAL_CAPTURE = "manual_capture"
+        const val SCREEN_NAME_AUTO_CAPTURE = "auto_capture"
+        const val SCREEN_NAME_UPLOAD_CAPTURE = "upload_capture"
+        const val SCREEN_NAME_SUPPORT = "support"
+        const val SCREEN_NAME_SELFIE = "selfie"
     }
 }

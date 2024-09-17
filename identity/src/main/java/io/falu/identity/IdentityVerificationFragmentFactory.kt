@@ -10,6 +10,9 @@ import io.falu.identity.capture.upload.UploadCaptureFragment
 import io.falu.identity.confirmation.ConfirmationFragment
 import io.falu.identity.documents.DocumentCaptureMethodsFragment
 import io.falu.identity.documents.DocumentSelectionFragment
+import io.falu.identity.error.ErrorFragment
+import io.falu.identity.error.ScanCaptureErrorFragment
+import io.falu.identity.error.SelfieCaptureErrorFragment
 import io.falu.identity.selfie.SelfieFragment
 import io.falu.identity.support.SupportFragment
 import io.falu.identity.verification.IdentificationVerificationFragment
@@ -33,6 +36,9 @@ internal class IdentityVerificationFragmentFactory(
             ConfirmationFragment::class.java.name -> ConfirmationFragment(factory, callback)
             SupportFragment::class.java.name -> SupportFragment(factory)
             SelfieFragment::class.java.name -> SelfieFragment(factory)
+            ErrorFragment::class.java.name -> ErrorFragment(factory)
+            SelfieCaptureErrorFragment::class.java.name -> SelfieCaptureErrorFragment(factory)
+            ScanCaptureErrorFragment::class.java.name -> ScanCaptureErrorFragment(factory)
             IdentificationVerificationFragment::class.java.name -> IdentificationVerificationFragment(factory)
             TaxPinVerificationFragment::class.java.name -> TaxPinVerificationFragment(factory)
             else -> super.instantiate(classLoader, className)

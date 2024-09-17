@@ -17,6 +17,7 @@ import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.ai.FaceDetectionOutput
 import io.falu.identity.analytics.AnalyticsDisposition
+import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCREEN_NAME_SELFIE
 import io.falu.identity.api.models.UploadMethod
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationSelfieUpload
@@ -56,6 +57,14 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        identityViewModel.reportTelemetry(
+            identityViewModel.analyticsRequestBuilder.screenPresented(
+                scanType = ScanDisposition.DocumentScanType.SELFIE,
+                screenName = SCREEN_NAME_SELFIE
+            )
+        )
+
         verificationRequest =
             requireNotNull(VerificationUploadRequest.getFromBundle(requireArguments())) {
                 "Verification upload request is null"

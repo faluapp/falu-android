@@ -15,6 +15,8 @@ import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.ai.DocumentDetectionOutput
 import io.falu.identity.analytics.AnalyticsDisposition
+import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCREEN_NAME_AUTO_CAPTURE
+import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCREEN_NAME_MANUAL_CAPTURE
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationCapture
@@ -54,6 +56,11 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        identityViewModel.reportTelemetry(
+            identityViewModel.analyticsRequestBuilder.screenPresented(screenName = SCREEN_NAME_AUTO_CAPTURE)
+        )
+
         identityDocumentType =
             requireArguments().serializable(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE)!!
 

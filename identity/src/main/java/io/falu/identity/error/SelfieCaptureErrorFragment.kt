@@ -2,11 +2,14 @@ package io.falu.identity.error
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import io.falu.identity.IdentityVerificationResult
 import io.falu.identity.R
 
-internal class SelfieCaptureErrorFragment : AbstractErrorFragment() {
+internal class SelfieCaptureErrorFragment(identityViewModelFactory: ViewModelProvider.Factory) :
+    AbstractErrorFragment(identityViewModelFactory) {
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
