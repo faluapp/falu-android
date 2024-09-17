@@ -11,7 +11,6 @@ import io.falu.core.ApiResultCallback
 import java.util.Date
 import kotlin.test.Test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
 import org.junit.runner.RunWith
 import org.mockito.kotlin.mock
 import org.robolectric.RobolectricTestRunner
@@ -22,8 +21,6 @@ import org.robolectric.annotation.Config
 @ExperimentalCoroutinesApi
 class FaluEndToEndTest {
     private val context: Context = ApplicationProvider.getApplicationContext()
-
-    private val testDispatcher = TestCoroutineDispatcher()
 
     private val faluRepository = mock<FaluRepository>()
 
