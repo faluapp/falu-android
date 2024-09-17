@@ -46,7 +46,6 @@ internal class WelcomeFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.reportTelemetry(viewModel.analyticsRequestBuilder.screenPresented(screenName = SCREEN_NAME_WELCOME))
-        
         viewModel.observeForVerificationResults(
             viewLifecycleOwner,
             onSuccess = { onVerificationSuccessful(it) },
