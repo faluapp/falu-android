@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.core.os.bundleOf
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import io.falu.identity.IdentityVerificationResult
@@ -14,7 +15,8 @@ import io.falu.identity.api.models.requirements.RequirementError.Companion.canNa
 import io.falu.identity.utils.getErrorDescription
 import software.tingle.api.HttpApiResponseProblem
 
-internal class ErrorFragment : AbstractErrorFragment() {
+internal class ErrorFragment(identityViewModelFactory: ViewModelProvider.Factory) :
+    AbstractErrorFragment(identityViewModelFactory) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

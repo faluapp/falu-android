@@ -15,8 +15,10 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.same
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import io.falu.identity.ContractArgs
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
+import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder
 import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.capture.scan.DocumentScanViewModel
@@ -48,6 +50,12 @@ class UploadCaptureFragmentTest {
     private val mockIdentityVerificationViewModel = mock<IdentityVerificationViewModel> {
         whenever(it.documentUploadDisposition).thenReturn(documentUploadDisposition)
         on { it.documentDetectorModelFile } doReturn (modelFile)
+        on { analyticsRequestBuilder }.thenReturn(
+            IdentityAnalyticsRequestBuilder(
+                context = ApplicationProvider.getApplicationContext(),
+                args = contractArgs
+            )
+        )
     }
 
     @Test
@@ -148,5 +156,17 @@ class UploadCaptureFragmentTest {
 
             block(FragmentUploadCaptureBinding.bind(it.requireView()), navController, it)
         }
+    }
+
+    private companion object {
+        const val temporaryKey = "fskt_1234"
+        val logo = org.mockito.kotlin.mock<Uri>()
+
+        val contractArgs = ContractArgs(
+            temporaryKey = temporaryKey,
+            verificationId = "iv_1234",
+            maxNetworkRetries = 0,
+            workspaceLogo = logo
+        )
     }
 }

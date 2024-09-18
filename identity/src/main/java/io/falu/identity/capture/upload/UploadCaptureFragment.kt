@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import io.falu.identity.R
+import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCREEN_NAME_UPLOAD_CAPTURE
 import io.falu.identity.api.DocumentUploadDisposition
 import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.IdentityDocumentType
@@ -30,6 +31,11 @@ internal class UploadCaptureFragment(identityViewModelFactory: ViewModelProvider
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        identityViewModel.reportTelemetry(
+            identityViewModel.analyticsRequestBuilder.screenPresented(screenName = SCREEN_NAME_UPLOAD_CAPTURE)
+        )
+
         binding.cardDocumentBack.visibility =
             if (isPassport) View.GONE else View.VISIBLE
         binding.buttonContinue.isEnabled = false

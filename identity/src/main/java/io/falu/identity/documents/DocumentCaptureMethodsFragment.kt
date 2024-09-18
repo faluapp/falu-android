@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.analytics.AnalyticsDisposition
+import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCREEN_NAME_DOCUMENT_CAPTURE_METHODS
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.UploadMethod
 import io.falu.identity.api.models.verification.Verification
@@ -39,6 +40,11 @@ internal class DocumentCaptureMethodsFragment(private val factory: ViewModelProv
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.reportTelemetry(
+            viewModel.analyticsRequestBuilder.screenPresented(screenName = SCREEN_NAME_DOCUMENT_CAPTURE_METHODS)
+        )
+
         identityDocumentType =
             (requireArguments().getSerializable(DocumentSelectionFragment.KEY_IDENTITY_DOCUMENT_TYPE)
                     as IdentityDocumentType?)!!

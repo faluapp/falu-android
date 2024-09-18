@@ -11,11 +11,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
+import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCREEN_NAME_DOCUMENT_SELECTION
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.country.SupportedCountry
 import io.falu.identity.api.models.verification.Verification
-import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.api.models.verification.VerificationType
+import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.countries.CountriesAdapter
 import io.falu.identity.databinding.FragmentDocumentSelectionBinding
 import io.falu.identity.utils.navigateToApiResponseProblemFragment
@@ -43,6 +44,10 @@ class DocumentSelectionFragment(private val factory: ViewModelProvider.Factory) 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.reportTelemetry(viewModel.analyticsRequestBuilder
+            .screenPresented(screenName = SCREEN_NAME_DOCUMENT_SELECTION))
+
         viewModel.observerForSupportedCountriesResults(
             viewLifecycleOwner,
             onSuccess = { onSupportedCountriesListed(it.toList()) },
