@@ -1,5 +1,6 @@
 package io.falu.identity.documents
 
+import android.net.Uri
 import android.os.Build
 import android.view.View
 import android.widget.ProgressBar
@@ -8,8 +9,10 @@ import androidx.navigation.Navigation
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
 import com.google.android.material.button.MaterialButton
+import io.falu.identity.ContractArgs
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
+import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.country.Country
 import io.falu.identity.api.models.country.SupportedCountry
@@ -37,7 +40,14 @@ import com.google.android.material.R as MatR
 @Config(sdk = [Build.VERSION_CODES.O_MR1])
 class DocumentSelectionFragmentTest {
 
-    private val mockIdentityVerificationViewModel = mock<IdentityVerificationViewModel> {}
+    private val mockIdentityVerificationViewModel = mock<IdentityVerificationViewModel> {
+        on { analyticsRequestBuilder }.thenReturn(
+            IdentityAnalyticsRequestBuilder(
+                context = ApplicationProvider.getApplicationContext(),
+                args = contractArgs
+            )
+        )
+    }
 
     private val supportedCountries = arrayOf(
         SupportedCountry(
@@ -138,5 +148,17 @@ class DocumentSelectionFragmentTest {
 
             block(FragmentDocumentSelectionBinding.bind(it.requireView()), navController)
         }
+    }
+
+    private companion object {
+        const val temporaryKey = "fskt_1234"
+        val logo = mock<Uri>()
+
+        val contractArgs = ContractArgs(
+            temporaryKey = temporaryKey,
+            verificationId = "iv_1234",
+            maxNetworkRetries = 0,
+            workspaceLogo = logo
+        )
     }
 }

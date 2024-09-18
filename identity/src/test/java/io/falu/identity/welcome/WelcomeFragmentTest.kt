@@ -14,6 +14,7 @@ import io.falu.identity.ContractArgs
 import io.falu.identity.IdentityVerificationResultCallback
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
+import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder
 import io.falu.identity.api.IdentityVerificationApiClient
 import io.falu.identity.api.models.WorkspaceInfo
 import io.falu.identity.api.models.requirements.Requirement
@@ -59,6 +60,13 @@ class WelcomeFragmentTest {
                 apiKey = temporaryKey,
                 maxNetworkRetries = 0,
                 enableLogging = true
+            )
+        )
+
+        on { analyticsRequestBuilder }.thenReturn(
+            IdentityAnalyticsRequestBuilder(
+                context = ApplicationProvider.getApplicationContext(),
+                args = contractArgs
             )
         )
     }
