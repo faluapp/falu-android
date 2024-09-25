@@ -30,6 +30,7 @@ import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.api.models.verification.VerificationUploadResult
 import io.falu.identity.utils.FileUtils
+import io.falu.identity.utils.isHttp
 import io.falu.identity.utils.toWholeNumber
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -105,8 +106,6 @@ internal class IdentityVerificationViewModel(
     private val _faceDetectorModelFile = MutableLiveData<File?>()
     val faceDetectorModelFile: LiveData<File?>
         get() = _faceDetectorModelFile
-
-    private fun Uri.isHttp() = this.scheme!!.startsWith("http")
 
     internal fun fetchVerification(modelRequired: Boolean = true, onFailure: (Throwable) -> Unit) {
         launch(Dispatchers.IO) {

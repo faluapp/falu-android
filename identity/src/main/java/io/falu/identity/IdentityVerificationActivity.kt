@@ -5,18 +5,20 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.navigation.fragment.NavHostFragment
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder
 import io.falu.identity.api.IdentityVerificationApiClient
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationStatus
 import io.falu.identity.databinding.ActivityIdentityVerificationBinding
+import io.falu.identity.ui.IdentityVerificationBaseScreen
+import io.falu.identity.ui.theme.IdentityTheme
 import io.falu.identity.utils.FileUtils
 
 internal class IdentityVerificationActivity : AppCompatActivity(),
@@ -51,8 +53,10 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
     }
 
     private val apiClient: IdentityVerificationApiClient by lazy {
-        IdentityVerificationApiClient(this, contractArgs.temporaryKey, contractArgs.maxNetworkRetries,
-            BuildConfig.DEBUG)
+        IdentityVerificationApiClient(
+            this, contractArgs.temporaryKey, contractArgs.maxNetworkRetries,
+            BuildConfig.DEBUG
+        )
     }
 
     private val analyticsRequestBuilder: IdentityAnalyticsRequestBuilder by lazy {
@@ -67,8 +71,19 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
             IdentityVerificationFragmentFactory(this, factory)
 
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
-        setNavigationController()
+
+        setContent {
+            IdentityTheme {
+                IdentityVerificationBaseScreen(
+                    viewModel = verificationViewModel,
+                    contractArgs = contractArgs,
+                    onHelpAndSupportClicked = {}) {
+                    IdentityNavigationGraph(startDestination = "welcome", identityViewModel = verificationViewModel)
+                }
+            }
+        }
+
+        //  setNavigationController()
         setupFallbackLauncher()
 
         verificationViewModel.loadUriToImageView(
@@ -179,20 +194,20 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
         finishWithVerificationResult(result)
     }
 
-    private fun setNavigationController() {
-        //
-        supportActionBar?.hide()
-
-        //
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
-        val navController = navHostFragment.navController
-
-        //
-        binding.tvSupport.setOnClickListener {
-            navController.navigate(R.id.action_global_fragment_support)
-        }
-    }
+//    private fun setNavigationController() {
+//        //
+//        supportActionBar?.hide()
+//
+//        //
+//        val navHostFragment =
+//            supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
+//        val navController = navHostFragment.navController
+//
+//        //
+//        binding.tvSupport.setOnClickListener {
+//            navController.navigate(R.id.action_global_fragment_support)
+//        }
+//    }
 
     companion object {
         private const val KEY_OPENED = ":opened"

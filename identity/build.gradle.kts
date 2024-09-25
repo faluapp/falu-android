@@ -2,6 +2,7 @@ plugins {
     id("com.android.library")
     kotlin("android")
     id("kotlin-parcelize")
+    alias(libs.plugins.compose.compiler)
 }
 
 apply(from = "${rootDir}/build-config/klint.gradle.kts")
@@ -46,6 +47,7 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
+        compose = true
     }
 
     lint.enable += "Interoperability"
@@ -72,6 +74,18 @@ dependencies {
     implementation(libs.androidx.fragment)
     implementation(libs.constraint)
     implementation(libs.androidx.appcompat)
+
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.preview)
+    implementation(libs.material3)
+    implementation(libs.compose.activity)
+    implementation(libs.compose.navigation)
+    implementation("androidx.compose.runtime:runtime")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation(libs.accompanist)
+    implementation(libs.androidx.runtime.livedata)
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    implementation("androidx.compose.ui:ui-tooling-preview")
 
     implementation(libs.tensorflow.lite)
     implementation(libs.tensorflow.support)
@@ -100,6 +114,7 @@ dependencies {
     testImplementation(libs.androidx.core.ktx)
     implementation(libs.androidx.browser)
 
+    androidTestImplementation(libs.ui.tests)
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.kotlin.test)

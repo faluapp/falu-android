@@ -2,6 +2,7 @@ package io.falu.identity.utils
 
 import android.content.Context
 import android.graphics.Rect
+import android.net.Uri
 import android.text.TextUtils
 import android.util.Size
 import android.view.View
@@ -102,3 +103,5 @@ internal fun DocumentOption.matches(type: ScanDisposition.DocumentScanType): Boo
             this == DocumentOption.ID_FRONT && type == ScanDisposition.DocumentScanType.ID_FRONT ||
             this == DocumentOption.PASSPORT && type == ScanDisposition.DocumentScanType.PASSPORT
 }
+
+internal fun Uri.isHttp() = this.scheme!!.startsWith("http")
