@@ -76,8 +76,8 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
             IdentityTheme {
                 IdentityVerificationBaseScreen(
                     viewModel = verificationViewModel,
-                    contractArgs = contractArgs,
-                    onHelpAndSupportClicked = {}) {
+                    contractArgs = contractArgs
+                ) {
                     IdentityNavigationGraph(startDestination = "welcome", identityViewModel = verificationViewModel)
                 }
             }

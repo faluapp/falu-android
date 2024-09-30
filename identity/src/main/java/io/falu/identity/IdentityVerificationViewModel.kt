@@ -90,7 +90,7 @@ internal class IdentityVerificationViewModel(
      *
      */
     private val _supportedCountries = MutableLiveData<ResourceResponse<Array<SupportedCountry>>?>()
-    private val supportedCountries: LiveData<ResourceResponse<Array<SupportedCountry>>?>
+    val supportedCountries: LiveData<ResourceResponse<Array<SupportedCountry>>?>
         get() = _supportedCountries
 
     /**

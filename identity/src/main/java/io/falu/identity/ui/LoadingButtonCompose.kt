@@ -20,21 +20,19 @@ fun LoadingButton(
     enabled: Boolean = true,
     onClick: () -> Unit
 ) {
-    Box(modifier = modifier) {
-        Button(
-            onClick = onClick,
-            enabled = enabled && !isLoading,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            if (isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(dimensionResource(R.dimen.content_padding_normal)),
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    strokeWidth = dimensionResource(R.dimen.element_spacing_normal_quarter)
-                )
-            } else {
-                Text(text = text)
-            }
+    Button(
+        onClick = onClick,
+        enabled = enabled && !isLoading,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(dimensionResource(R.dimen.content_padding_normal)),
+                color = MaterialTheme.colorScheme.onPrimary,
+                strokeWidth = dimensionResource(R.dimen.element_spacing_normal_quarter)
+            )
+        } else {
+            Text(text = text)
         }
     }
 }

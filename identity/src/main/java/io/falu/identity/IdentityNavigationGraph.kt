@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import io.falu.identity.screens.DocumentSelectionScreen
 import io.falu.identity.screens.WelcomeScreen
 
 @Composable
@@ -25,7 +26,17 @@ internal fun IdentityNavigationGraph(
         modifier = modifier
     ) {
         composable(IdentityDestinations.WELCOME_ROUTE) {
-            WelcomeScreen(viewModel = identityViewModel)
+            WelcomeScreen(
+                viewModel = identityViewModel,
+                navigateToDocumentSelection = { navActions.navigateToDocumentSelection() },
+                navigateToError = {})
+        }
+
+        composable(IdentityDestinations.DOCUMENT_SELECTION_ROUTE) {
+            DocumentSelectionScreen(
+                viewModel = identityViewModel,
+                navigateToCaptureMethods = {},
+                navigateToError = {})
         }
     }
 }
