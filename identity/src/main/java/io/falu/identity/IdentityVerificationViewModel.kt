@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import android.widget.ImageView
+import androidx.activity.result.ActivityResultCaller
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -30,6 +31,7 @@ import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.api.models.verification.VerificationUploadResult
 import io.falu.identity.utils.FileUtils
+import io.falu.identity.utils.IdentityImageHandler
 import io.falu.identity.utils.isHttp
 import io.falu.identity.utils.toWholeNumber
 import kotlinx.coroutines.CoroutineScope
@@ -50,9 +52,11 @@ import kotlin.coroutines.CoroutineContext
  * View model that is shared across all fragments
  */
 internal class IdentityVerificationViewModel(
+    private val saveStateHandle: SavedStateHandle,
     internal val apiClient: IdentityVerificationApiClient,
     internal val analyticsRequestBuilder: IdentityAnalyticsRequestBuilder,
     internal val contractArgs: ContractArgs,
+    internal val imageHandler: IdentityImageHandler,
     private val fileUtils: FileUtils
 ) : ViewModel(), CoroutineScope {
 
@@ -417,7 +421,6 @@ internal class IdentityVerificationViewModel(
     }
 
     fun reportSuccessfulVerificationTelemetry() {
-
         launch(Dispatchers.IO) {
             analyticsDisposition.collectLatest { latest ->
                 val cake = analyticsRequestBuilder.verificationSuccessful(
@@ -452,6 +455,38 @@ internal class IdentityVerificationViewModel(
         return fileUtils.createFileFromInputStream(stream, fileName)
     }
 
+    fun registerActivityResultCaller(
+        activityResultCaller: ActivityResultCaller
+    ) {
+        imageHandler.registerActivityResultCaller(
+            activityResultCaller,
+            saveStateHandle,
+            fileUtils,
+            onFrontImageCaptured = {},
+            onBackImageCaptured = {},
+            onFrontImagePicked = {
+                uploadFile(
+                    fileUtils.createFileFromUri(it, contractArgs.verificationId, "front"),
+                    DocumentSide.FRONT,
+                    UploadMethod.AUTO,
+                    contractArgs.verificationId,
+                    onError = {},
+                    onFailure = {}
+                )
+            },
+            onBackImagePicked = {
+                uploadFile(
+                    fileUtils.createFileFromUri(it, contractArgs.verificationId, "front"),
+                    DocumentSide.FRONT,
+                    UploadMethod.AUTO,
+                    contractArgs.verificationId,
+                    onError = {},
+                    onFailure = {}
+                )
+            }
+        )
+    }
+
     private suspend fun handleFailureResponse(
         throwable: Throwable,
         onFailure: (Throwable) -> Unit
@@ -467,6 +502,7 @@ internal class IdentityVerificationViewModel(
             apiClient: () -> IdentityVerificationApiClient,
             analyticsRequestBuilder: () -> IdentityAnalyticsRequestBuilder,
             fileUtils: () -> FileUtils,
+            imageHandler: () -> IdentityImageHandler,
             contractArgs: () -> ContractArgs
         ): AbstractSavedStateViewModelFactory =
             object : AbstractSavedStateViewModelFactory(savedStateRegistryOwner, null) {
@@ -476,9 +512,11 @@ internal class IdentityVerificationViewModel(
                     handle: SavedStateHandle
                 ): T {
                     return IdentityVerificationViewModel(
+                        handle,
                         apiClient(),
                         analyticsRequestBuilder(),
                         contractArgs(),
+                        imageHandler(),
                         fileUtils()
                     ) as T
                 }

@@ -20,6 +20,7 @@ import io.falu.identity.databinding.ActivityIdentityVerificationBinding
 import io.falu.identity.ui.IdentityVerificationBaseScreen
 import io.falu.identity.ui.theme.IdentityTheme
 import io.falu.identity.utils.FileUtils
+import io.falu.identity.utils.IdentityImageHandler
 
 internal class IdentityVerificationActivity : AppCompatActivity(),
     IdentityVerificationResultCallback {
@@ -31,6 +32,7 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
             { apiClient },
             { analyticsRequestBuilder },
             { fileUtils },
+            { IdentityImageHandler() },
             { contractArgs }
         )
 
@@ -72,6 +74,7 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
 
         super.onCreate(savedInstanceState)
 
+        verificationViewModel.registerActivityResultCaller(this)
         setContent {
             IdentityTheme {
                 IdentityVerificationBaseScreen(

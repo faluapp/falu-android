@@ -6,6 +6,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import io.falu.identity.IdentityDestinations.DOCUMENT_CAPTURE_METHODS_ROUTE
 import io.falu.identity.IdentityDestinations.DOCUMENT_CAPTURE_METHOD_MANUAL_ROUTE
 import io.falu.identity.IdentityDestinations.DOCUMENT_CAPTURE_METHOD_SCAN_ROUTE
+import io.falu.identity.IdentityDestinations.DOCUMENT_CAPTURE_METHOD_UPLOAD_ROUTE
 import io.falu.identity.IdentityDestinations.DOCUMENT_SELECTION_ROUTE
 import io.falu.identity.IdentityDestinations.WELCOME_ROUTE
 import io.falu.identity.api.models.IdentityDocumentType
@@ -94,7 +95,7 @@ internal class IdentityVerificationNavActions(private val navController: NavCont
             putSerializable("documentType", documentType)
         }
 
-        navController.navigate(DOCUMENT_CAPTURE_METHOD_MANUAL_ROUTE.replace("{documentType}", documentType.name)) {
+        navController.navigate(DOCUMENT_CAPTURE_METHOD_UPLOAD_ROUTE.replace("{documentType}", documentType.name)) {
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
             }

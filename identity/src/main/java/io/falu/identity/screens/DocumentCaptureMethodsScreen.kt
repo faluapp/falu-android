@@ -46,7 +46,7 @@ internal fun DocumentCaptureMethodsScreen(
 
         DocumentSelectionView(
             documentType,
-            allowUploads = verification.options.allowUploads,
+            allowUploads = true,
             onCaptureMethod = { navigateToCaptureMethod(it) })
     }
 }
