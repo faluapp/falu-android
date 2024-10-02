@@ -11,11 +11,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.UploadMethod
+import io.falu.identity.screens.ConfirmationScreen
 import io.falu.identity.screens.DocumentCaptureMethodsScreen
 import io.falu.identity.screens.DocumentSelectionScreen
-import io.falu.identity.screens.capture.UploadCaptureScreen
 import io.falu.identity.screens.WelcomeScreen
 import io.falu.identity.screens.capture.ManualCaptureScreen
+import io.falu.identity.screens.capture.UploadCaptureScreen
 
 @Composable
 internal fun IdentityNavigationGraph(
@@ -37,6 +38,10 @@ internal fun IdentityNavigationGraph(
                 viewModel = identityViewModel,
                 navigateToDocumentSelection = { navActions.navigateToDocumentSelection() },
                 navigateToError = {})
+        }
+
+        composable(IdentityDestinations.CONFIRMATION_ROUTE) {
+            ConfirmationScreen(viewModel = identityViewModel)
         }
 
         composable(IdentityDestinations.DOCUMENT_SELECTION_ROUTE) {
@@ -69,7 +74,14 @@ internal fun IdentityNavigationGraph(
             })
         ) { entry ->
             val identityDocumentType = entry.arguments?.getSerializable("documentType") as IdentityDocumentType
-            UploadCaptureScreen(identityViewModel, identityDocumentType)
+            UploadCaptureScreen(
+                identityViewModel,
+                identityDocumentType,
+                navigateToSelfie = {},
+                navigateToTaxPin = {},
+                navigateToRequirementErrors = {},
+                navigateToConfirmation = { navActions.navigateToConfirmation() },
+                navigateToError = {})
         }
 
         composable(
@@ -79,7 +91,14 @@ internal fun IdentityNavigationGraph(
             })
         ) { entry ->
             val identityDocumentType = entry.arguments?.getSerializable("documentType") as IdentityDocumentType
-            ManualCaptureScreen(identityViewModel, identityDocumentType)
+            ManualCaptureScreen(
+                identityViewModel,
+                identityDocumentType,
+                navigateToSelfie = {},
+                navigateToTaxPin = {},
+                navigateToRequirementErrors = {},
+                navigateToConfirmation = { navActions.navigateToConfirmation() },
+                navigateToError = {})
         }
     }
 }

@@ -3,12 +3,14 @@ package io.falu.identity
 import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import io.falu.identity.IdentityDestinations.CONFIRMATION_ROUTE
 import io.falu.identity.IdentityDestinations.DOCUMENT_CAPTURE_METHODS_ROUTE
 import io.falu.identity.IdentityDestinations.DOCUMENT_CAPTURE_METHOD_MANUAL_ROUTE
 import io.falu.identity.IdentityDestinations.DOCUMENT_CAPTURE_METHOD_SCAN_ROUTE
 import io.falu.identity.IdentityDestinations.DOCUMENT_CAPTURE_METHOD_UPLOAD_ROUTE
 import io.falu.identity.IdentityDestinations.DOCUMENT_SELECTION_ROUTE
 import io.falu.identity.IdentityDestinations.WELCOME_ROUTE
+import io.falu.identity.IdentityScreens.CONFIRMATION
 import io.falu.identity.api.models.IdentityDocumentType
 
 private object IdentityScreens {
@@ -19,6 +21,7 @@ private object IdentityScreens {
     const val DOCUMENT_CAPTURE_METHOD_SCAN = "document_capture_method_scan/{documentType}"
     const val DOCUMENT_CAPTURE_METHOD_MANUAL = "document_capture_method_manual/{documentType}"
     const val DOCUMENT_CAPTURE_METHOD_UPLOAD = "document_capture_method_upload/{documentType}"
+    const val CONFIRMATION = "confirmation"
 }
 
 internal class IdentityVerificationNavActions(private val navController: NavController) {
@@ -34,6 +37,16 @@ internal class IdentityVerificationNavActions(private val navController: NavCont
 
     fun navigateToDocumentSelection() {
         navController.navigate(DOCUMENT_SELECTION_ROUTE) {
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = false
+        }
+    }
+
+    fun navigateToConfirmation() {
+        navController.navigate(CONFIRMATION_ROUTE) {
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
             }
@@ -114,5 +127,6 @@ object IdentityDestinations {
     const val DOCUMENT_CAPTURE_METHOD_SCAN_ROUTE = IdentityScreens.DOCUMENT_CAPTURE_METHOD_SCAN
     const val DOCUMENT_CAPTURE_METHOD_MANUAL_ROUTE = IdentityScreens.DOCUMENT_CAPTURE_METHOD_MANUAL
     const val DOCUMENT_CAPTURE_METHOD_UPLOAD_ROUTE = IdentityScreens.DOCUMENT_CAPTURE_METHOD_UPLOAD
+    const val CONFIRMATION_ROUTE = CONFIRMATION
     const val SUPPORT_ROUTE = IdentityScreens.SUPPORT
 }

@@ -306,6 +306,42 @@ internal class IdentityVerificationViewModel(
         }
     }
 
+    internal fun attemptDocumentSubmission(
+        verification: Verification,
+        verificationRequest: VerificationUploadRequest,
+        navigateToSelfie: (() -> Unit) = {},
+        navigateToTaxPin: (() -> Unit) = {},
+        navigateToRequirementErrors: (() -> Unit) = {},
+        onSubmitted: (() -> Unit) = {},
+        onError: (Throwable?) -> Unit = {}
+    ) {
+        when {
+            verification.selfieRequired -> {
+                navigateToSelfie()
+            }
+
+            verification.taxPinRequired -> {
+                navigateToTaxPin()
+            }
+
+            else -> {
+                submitVerificationData(
+                    verificationRequest,
+                    onSuccess = {
+                        when {
+                            it.hasRequirementErrors -> {
+                                navigateToRequirementErrors()
+                            }
+
+                            it.submitted -> {
+                                onSubmitted()
+                            }
+                        }
+                    }, onFailure = { onError(it.cause) }, onError = { onError(it) })
+            }
+        }
+    }
+
     internal fun fetchSupportedCountries() {
         launch(Dispatchers.IO) {
             runCatching {

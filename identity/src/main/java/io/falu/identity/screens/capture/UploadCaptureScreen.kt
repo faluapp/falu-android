@@ -13,6 +13,7 @@ import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCREEN_NAME_UPLOAD_CAPTURE
 import io.falu.identity.api.models.IdentityDocumentType
+import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.ui.LoadingButton
 import io.falu.identity.ui.ObserveVerificationAndCompose
 
@@ -20,6 +21,11 @@ import io.falu.identity.ui.ObserveVerificationAndCompose
 internal fun UploadCaptureScreen(
     viewModel: IdentityVerificationViewModel,
     documentType: IdentityDocumentType,
+    navigateToSelfie: () -> Unit,
+    navigateToTaxPin: () -> Unit,
+    navigateToRequirementErrors: () -> Unit,
+    navigateToConfirmation: () -> Unit,
+    navigateToError: (Throwable?) -> Unit
 ) {
     val verificationResponse by viewModel.verification.observeAsState()
     val documentDisposition by viewModel.documentUploadDisposition.observeAsState()
@@ -47,7 +53,30 @@ internal fun UploadCaptureScreen(
                 LoadingButton(
                     text = stringResource(R.string.button_continue),
                     enabled = documentDisposition?.isBothUploadLoad ?: false
-                ) { }
+                ) {
+                    if (documentDisposition == null) return@LoadingButton
+
+                    val uploadRequest = documentDisposition!!.generateVerificationUploadRequest(documentType)
+
+                    val options = VerificationUpdateOptions(document = uploadRequest.document)
+
+                    viewModel.updateVerification(
+                        options,
+                        onSuccess = {
+                            viewModel.attemptDocumentSubmission(
+                                verification = verification,
+                                verificationRequest = uploadRequest,
+                                navigateToSelfie = navigateToSelfie,
+                                navigateToTaxPin = navigateToTaxPin,
+                                navigateToRequirementErrors = navigateToRequirementErrors,
+                                onSubmitted = navigateToConfirmation,
+                                onError = { navigateToError(it) }
+                            )
+                        },
+                        onError = { navigateToError(it) },
+                        onFailure = { navigateToError(it) }
+                    )
+                }
             }
         }
     }
