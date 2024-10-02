@@ -462,13 +462,31 @@ internal class IdentityVerificationViewModel(
             activityResultCaller,
             saveStateHandle,
             fileUtils,
-            onFrontImageCaptured = {},
-            onBackImageCaptured = {},
+            onFrontImageCaptured = {
+                uploadFile(
+                    fileUtils.createFileFromUri(it, contractArgs.verificationId, "front"),
+                    DocumentSide.FRONT,
+                    UploadMethod.MANUAL,
+                    contractArgs.verificationId,
+                    onError = {},
+                    onFailure = {}
+                )
+            },
+            onBackImageCaptured = {
+                uploadFile(
+                    fileUtils.createFileFromUri(it, contractArgs.verificationId, "back"),
+                    DocumentSide.BACK,
+                    UploadMethod.MANUAL,
+                    contractArgs.verificationId,
+                    onError = {},
+                    onFailure = {}
+                )
+            },
             onFrontImagePicked = {
                 uploadFile(
                     fileUtils.createFileFromUri(it, contractArgs.verificationId, "front"),
                     DocumentSide.FRONT,
-                    UploadMethod.AUTO,
+                    UploadMethod.UPLOAD,
                     contractArgs.verificationId,
                     onError = {},
                     onFailure = {}
@@ -476,9 +494,9 @@ internal class IdentityVerificationViewModel(
             },
             onBackImagePicked = {
                 uploadFile(
-                    fileUtils.createFileFromUri(it, contractArgs.verificationId, "front"),
-                    DocumentSide.FRONT,
-                    UploadMethod.AUTO,
+                    fileUtils.createFileFromUri(it, contractArgs.verificationId, "back"),
+                    DocumentSide.BACK,
+                    UploadMethod.UPLOAD,
                     contractArgs.verificationId,
                     onError = {},
                     onFailure = {}

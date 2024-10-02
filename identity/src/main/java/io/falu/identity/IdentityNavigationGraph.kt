@@ -13,8 +13,9 @@ import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.UploadMethod
 import io.falu.identity.screens.DocumentCaptureMethodsScreen
 import io.falu.identity.screens.DocumentSelectionScreen
-import io.falu.identity.screens.DocumentUploadScreen
+import io.falu.identity.screens.capture.UploadCaptureScreen
 import io.falu.identity.screens.WelcomeScreen
+import io.falu.identity.screens.capture.ManualCaptureScreen
 
 @Composable
 internal fun IdentityNavigationGraph(
@@ -68,7 +69,17 @@ internal fun IdentityNavigationGraph(
             })
         ) { entry ->
             val identityDocumentType = entry.arguments?.getSerializable("documentType") as IdentityDocumentType
-            DocumentUploadScreen(identityViewModel, identityDocumentType)
+            UploadCaptureScreen(identityViewModel, identityDocumentType)
+        }
+
+        composable(
+            IdentityDestinations.DOCUMENT_CAPTURE_METHOD_MANUAL_ROUTE,
+            arguments = listOf(navArgument("documentType") {
+                type = NavType.EnumType(IdentityDocumentType::class.java)
+            })
+        ) { entry ->
+            val identityDocumentType = entry.arguments?.getSerializable("documentType") as IdentityDocumentType
+            ManualCaptureScreen(identityViewModel, identityDocumentType)
         }
     }
 }

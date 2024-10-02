@@ -1,4 +1,4 @@
-package io.falu.identity.screens
+package io.falu.identity.screens.capture
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
@@ -14,9 +14,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -25,47 +22,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
-import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCREEN_NAME_UPLOAD_CAPTURE
 import io.falu.identity.api.models.IdentityDocumentType
-import io.falu.identity.ui.LoadingButton
-import io.falu.identity.ui.ObserveVerificationAndCompose
 import io.falu.identity.ui.theme.IdentityTheme
 
 @Composable
-internal fun DocumentUploadScreen(
-    viewModel: IdentityVerificationViewModel,
-    documentType: IdentityDocumentType,
-) {
-    val verificationResponse by viewModel.verification.observeAsState()
-    val documentDisposition by viewModel.documentUploadDisposition.observeAsState()
-
-    ObserveVerificationAndCompose(verificationResponse, onError = {}) { verification ->
-        LaunchedEffect(Unit) {
-            viewModel.reportTelemetry(
-                viewModel.analyticsRequestBuilder.screenPresented(screenName = SCREEN_NAME_UPLOAD_CAPTURE)
-            )
-        }
-
-        Column {
-            DocumentUploadView(
-                documentType,
-                documentDisposition?.isFrontUpload ?: false,
-                documentDisposition?.isBackUploaded ?: false,
-                onFront = { viewModel.imageHandler.pickImageFront() },
-                onBack = { viewModel.imageHandler.pickImageBack() })
-
-            LoadingButton(
-                text = stringResource(R.string.button_continue),
-                enabled = documentDisposition?.isBothUploadLoad ?: false
-            ) { }
-        }
-    }
-}
-
-@Composable
-private fun DocumentUploadView(
+internal fun DocumentCaptureView(
+    title: String,
     documentType: IdentityDocumentType,
     isFrontUploaded: Boolean,
     isBackUploaded: Boolean,
@@ -78,7 +41,7 @@ private fun DocumentUploadView(
             .padding(horizontal = dimensionResource(R.dimen.content_padding_normal))
     ) {
         Text(
-            text = stringResource(id = R.string.upload_document_capture_title, stringResource(documentType.titleRes)),
+            text = title,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = dimensionResource(R.dimen.element_spacing_normal)),
@@ -163,9 +126,13 @@ private fun DocumentCard(
 
 @Preview
 @Composable
-fun DocumentUploadScreenPreview() {
+fun DocumentCapturePreview() {
     IdentityTheme {
-        DocumentUploadView(
+        DocumentCaptureView(
+            title = stringResource(
+                id = R.string.upload_document_capture_title,
+                stringResource(IdentityDocumentType.IDENTITY_CARD.titleRes)
+            ),
             documentType = IdentityDocumentType.IDENTITY_CARD,
             isFrontUploaded = true,
             isBackUploaded = true,
