@@ -11,11 +11,13 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.UploadMethod
+import io.falu.identity.capture.scan.DocumentScanViewModel
 import io.falu.identity.screens.ConfirmationScreen
 import io.falu.identity.screens.DocumentCaptureMethodsScreen
 import io.falu.identity.screens.DocumentSelectionScreen
 import io.falu.identity.screens.WelcomeScreen
 import io.falu.identity.screens.capture.ManualCaptureScreen
+import io.falu.identity.screens.capture.ScanCaptureScreen
 import io.falu.identity.screens.capture.UploadCaptureScreen
 
 @Composable
@@ -23,6 +25,7 @@ internal fun IdentityNavigationGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     identityViewModel: IdentityVerificationViewModel,
+    documentScanViewModel: DocumentScanViewModel,
     startDestination: String,
     navActions: IdentityVerificationNavActions = remember(navController) {
         IdentityVerificationNavActions(navController)
@@ -99,6 +102,25 @@ internal fun IdentityNavigationGraph(
                 navigateToRequirementErrors = {},
                 navigateToConfirmation = { navActions.navigateToConfirmation() },
                 navigateToError = {})
+        }
+
+        composable(
+            IdentityDestinations.DOCUMENT_CAPTURE_METHOD_SCAN_ROUTE,
+            arguments = listOf(navArgument("documentType") {
+                type = NavType.EnumType(IdentityDocumentType::class.java)
+            })
+        ) { entry ->
+            val identityDocumentType = entry.arguments?.getSerializable("documentType") as IdentityDocumentType
+            ScanCaptureScreen(
+                viewModel = identityViewModel,
+                documentScanViewModel = documentScanViewModel,
+                documentType = identityDocumentType,
+                navigateToSelfie = {},
+                navigateToTaxPin = {},
+                navigateToRequirementErrors = {},
+                navigateToConfirmation = { navActions.navigateToConfirmation() },
+                navigateToError = {}
+            )
         }
     }
 }

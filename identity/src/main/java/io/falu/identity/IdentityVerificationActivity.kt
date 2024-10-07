@@ -16,6 +16,7 @@ import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder
 import io.falu.identity.api.IdentityVerificationApiClient
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationStatus
+import io.falu.identity.capture.scan.DocumentScanViewModel
 import io.falu.identity.databinding.ActivityIdentityVerificationBinding
 import io.falu.identity.ui.IdentityVerificationBaseScreen
 import io.falu.identity.ui.theme.IdentityTheme
@@ -39,6 +40,10 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
     private val verificationViewModel: IdentityVerificationViewModel by viewModels {
         factory
     }
+
+    private val documentScanViewModel: DocumentScanViewModel by viewModels { documentScanViewModelFactory }
+    private val documentScanViewModelFactory =
+        DocumentScanViewModel.factoryProvider(this) { verificationViewModel.modelPerformanceMonitor }
 
     private val binding by lazy {
         ActivityIdentityVerificationBinding.inflate(layoutInflater)
@@ -81,7 +86,11 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
                     viewModel = verificationViewModel,
                     contractArgs = contractArgs
                 ) {
-                    IdentityNavigationGraph(startDestination = "welcome", identityViewModel = verificationViewModel)
+                    IdentityNavigationGraph(
+                        startDestination = "welcome",
+                        identityViewModel = verificationViewModel,
+                        documentScanViewModel = documentScanViewModel
+                    )
                 }
             }
         }

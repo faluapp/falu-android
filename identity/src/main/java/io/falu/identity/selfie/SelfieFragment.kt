@@ -121,7 +121,6 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
 
     private fun scan(verification: Verification) {
         faceScanViewModel.scanner?.scan(
-            binding.viewCamera,
             ScanDisposition.DocumentScanType.SELFIE,
             verification.capture,
             requireContext().getRenderScript()

@@ -10,21 +10,30 @@ internal abstract class AbstractScanner(
 ) {
 
     protected var disposition: ScanDisposition? = null
+    protected var cameraView: CameraView? = null
+
     private var previousDisposition: ScanDisposition? = null
 
     private var isFirstOutput = false
 
     internal abstract fun scan(
-        view: CameraView,
         scanType: ScanDisposition.DocumentScanType,
         capture: VerificationCapture,
         renderScript: RenderScript
     )
 
-    internal fun stopScan(view: CameraView) {
-        view.analyzers.clear()
-        view.stopAnalyzer()
+    internal fun stopScan() {
+        requireCameraView().analyzers.clear()
+        requireCameraView().stopAnalyzer()
     }
+
+    internal fun onUpdateCameraView(view: CameraView) {
+        if (cameraView == null) {
+            cameraView = view
+        }
+    }
+
+    fun requireCameraView() = requireNotNull(cameraView)
 
     internal fun onResult(output: DetectionOutput) {
         requireNotNull(disposition) { "Initial Disposition cannot be null" }

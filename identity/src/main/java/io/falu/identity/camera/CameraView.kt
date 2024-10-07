@@ -1,6 +1,5 @@
 package io.falu.identity.camera
 
-import android.app.Activity
 import android.content.Context
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
@@ -28,6 +27,7 @@ import io.falu.identity.R
 import io.falu.identity.api.models.CameraLens
 import io.falu.identity.api.models.CameraSettings
 import io.falu.identity.api.models.Exposure
+import io.falu.identity.utils.getActivity
 import io.falu.identity.utils.size
 import kotlin.math.max
 import kotlin.math.min
@@ -111,22 +111,18 @@ internal class CameraView @JvmOverloads constructor(
      */
     val analyzers: MutableList<ImageAnalysis.Analyzer> = mutableListOf()
 
-    /**
-     *
-     */
     private val displayInfo by lazy {
-        val activity = context as Activity
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            activity.display
+            requireNotNull(context.getActivity()).display
         } else {
             null
-        } ?: @Suppress("Deprecation")
-        activity.windowManager.defaultDisplay
+        }
+            ?: @Suppress("Deprecation")
+            requireNotNull(context.getActivity()).windowManager.defaultDisplay
     }
 
     private val displayRotation by lazy { displayInfo.rotation }
-    private val displayMetrics by lazy { DisplayMetrics().also { display.getRealMetrics(it) } }
+    private val displayMetrics by lazy { DisplayMetrics().also { displayInfo.getRealMetrics(it) } }
     private val displaySize by lazy {
         Size(
             displayMetrics.widthPixels,

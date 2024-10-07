@@ -4,7 +4,6 @@ import android.renderscript.RenderScript
 import io.falu.identity.ai.FaceDetectionAnalyzer
 import io.falu.identity.analytics.ModelPerformanceMonitor
 import io.falu.identity.api.models.verification.VerificationCapture
-import io.falu.identity.camera.CameraView
 import io.falu.identity.scan.AbstractScanner
 import io.falu.identity.scan.IdentityResult
 import io.falu.identity.scan.ProvisionalResult
@@ -21,7 +20,6 @@ internal class FaceScanner(
 ) : AbstractScanner(callback) {
 
     override fun scan(
-        view: CameraView,
         scanType: ScanDisposition.DocumentScanType,
         capture: VerificationCapture,
         renderScript: RenderScript
@@ -33,7 +31,7 @@ internal class FaceScanner(
         disposition =
             ScanDisposition.Start(scanType, machine)
 
-        view.analyzers.add(
+        requireCameraView().analyzers.add(
             FaceDetectionAnalyzer
                 .Builder(model = model, performanceMonitor, threshold, renderScript)
                 .instance { onResult(it) }

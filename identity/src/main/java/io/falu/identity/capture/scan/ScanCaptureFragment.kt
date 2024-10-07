@@ -154,7 +154,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
         scanType: ScanDisposition.DocumentScanType,
         capture: VerificationCapture
     ) {
-        documentScanViewModel.scanner?.scan(binding.viewCamera, scanType, capture, requireContext().getRenderScript())
+        documentScanViewModel.scanner?.scan(scanType, capture, requireContext().getRenderScript())
     }
 
     private fun resetUI() {
@@ -208,7 +208,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
 
             if (it.disposition is ScanDisposition.Completed) {
                 // stop the analyzer
-                documentScanViewModel.scanner?.stopScan(binding.viewCamera)
+                documentScanViewModel.scanner?.stopScan()
                 binding.buttonContinue.tag = it
                 binding.buttonContinue.isEnabled = true
 
@@ -228,7 +228,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
                         .documentScanTimeOut(scanType = (it.disposition as ScanDisposition.Timeout).type)
                 )
 
-                documentScanViewModel.scanner?.stopScan(binding.viewCamera)
+                documentScanViewModel.scanner?.stopScan()
                 findNavController().navigate(R.id.action_global_fragment_scan_capture_error)
             }
         }

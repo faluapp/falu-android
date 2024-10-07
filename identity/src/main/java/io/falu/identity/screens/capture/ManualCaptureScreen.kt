@@ -28,7 +28,7 @@ internal fun ManualCaptureScreen(
     navigateToConfirmation: () -> Unit,
     navigateToError: (Throwable?) -> Unit
 ) {
-    val context = LocalContext.current;
+    val context = LocalContext.current
     val verificationResponse by viewModel.verification.observeAsState()
     val documentDisposition by viewModel.documentUploadDisposition.observeAsState()
 
@@ -61,7 +61,6 @@ internal fun ManualCaptureScreen(
                     val uploadRequest = documentDisposition!!.generateVerificationUploadRequest(documentType)
 
                     val options = VerificationUpdateOptions(document = uploadRequest.document)
-
 
                     viewModel.updateVerification(
                         options,

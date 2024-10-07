@@ -70,7 +70,7 @@ private fun SupportedCountryViews(
 
         ExposedDropdownMenuBox(
             expanded = expanded,
-            onExpandedChange = { expanded = !expanded },
+            onExpandedChange = { expanded = !expanded }
         ) {
             OutlinedTextField(
                 readOnly = true,
@@ -85,7 +85,7 @@ private fun SupportedCountryViews(
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(
                         expanded = expanded,
-                        modifier = Modifier.menuAnchor(MenuAnchorType.SecondaryEditable),
+                        modifier = Modifier.menuAnchor(MenuAnchorType.SecondaryEditable)
                     )
                 },
                 colors = OutlinedTextFieldDefaults.colors(),

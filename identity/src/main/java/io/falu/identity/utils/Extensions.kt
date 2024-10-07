@@ -1,6 +1,8 @@
 package io.falu.identity.utils
 
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.graphics.Rect
 import android.net.Uri
 import android.text.TextUtils
@@ -105,3 +107,9 @@ internal fun DocumentOption.matches(type: ScanDisposition.DocumentScanType): Boo
 }
 
 internal fun Uri.isHttp() = this.scheme!!.startsWith("http")
+
+internal fun Context.getActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.getActivity()
+    else -> null
+}

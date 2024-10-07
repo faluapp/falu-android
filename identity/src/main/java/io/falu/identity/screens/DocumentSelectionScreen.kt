@@ -40,7 +40,7 @@ import software.tingle.api.ResourceResponse
 internal fun DocumentSelectionScreen(
     viewModel: IdentityVerificationViewModel,
     navigateToCaptureMethods: (IdentityDocumentType) -> Unit,
-    navigateToError: (Throwable) -> Unit,
+    navigateToError: (Throwable) -> Unit
 ) {
     val verificationResponse by viewModel.verification.observeAsState()
     val supportedCountriesResponse by viewModel.supportedCountries.observeAsState()

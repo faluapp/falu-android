@@ -51,7 +51,7 @@ internal fun DocumentCaptureView(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = dimensionResource(id = R.dimen.content_padding_normal)),
+                .padding(top = dimensionResource(id = R.dimen.content_padding_normal))
         ) {
             DocumentCard(
                 title = stringResource(

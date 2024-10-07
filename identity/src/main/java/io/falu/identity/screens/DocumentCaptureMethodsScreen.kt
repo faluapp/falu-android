@@ -103,7 +103,7 @@ internal fun CaptureMethodCard(methodText: String, modifier: Modifier = Modifier
             .clickable { onCardClick() },
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
-        shape = MaterialTheme.shapes.medium,
+        shape = MaterialTheme.shapes.medium
     ) {
         // Card content
         Row(

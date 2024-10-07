@@ -4,7 +4,6 @@ import android.renderscript.RenderScript
 import io.falu.identity.ai.DocumentDetectionAnalyzer
 import io.falu.identity.analytics.ModelPerformanceMonitor
 import io.falu.identity.api.models.verification.VerificationCapture
-import io.falu.identity.camera.CameraView
 import io.falu.identity.scan.AbstractScanner
 import io.falu.identity.scan.IdentityResult
 import io.falu.identity.scan.ProvisionalResult
@@ -22,7 +21,6 @@ internal class DocumentScanner(
 ) : AbstractScanner(callbacks) {
 
     override fun scan(
-        view: CameraView,
         scanType: ScanDisposition.DocumentScanType,
         capture: VerificationCapture,
         renderScript: RenderScript
@@ -35,7 +33,7 @@ internal class DocumentScanner(
 
         disposition = ScanDisposition.Start(scanType, machine)
 
-        view.analyzers.add(
+        requireCameraView().analyzers.add(
             DocumentDetectionAnalyzer
                 .Builder(model = model, threshold, renderScript, performanceMonitor)
                 .instance { onResult(it) }
