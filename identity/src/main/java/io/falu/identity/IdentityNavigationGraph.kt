@@ -15,6 +15,7 @@ import io.falu.identity.capture.scan.DocumentScanViewModel
 import io.falu.identity.screens.ConfirmationScreen
 import io.falu.identity.screens.DocumentCaptureMethodsScreen
 import io.falu.identity.screens.DocumentSelectionScreen
+import io.falu.identity.screens.InitialLoadingScreen
 import io.falu.identity.screens.WelcomeScreen
 import io.falu.identity.screens.capture.ManualCaptureScreen
 import io.falu.identity.screens.capture.ScanCaptureScreen
@@ -36,6 +37,10 @@ internal fun IdentityNavigationGraph(
         startDestination = startDestination,
         modifier = modifier
     ) {
+        composable(IdentityDestinations.INITIAL_ROUTE) {
+            InitialLoadingScreen(identityViewModel = identityViewModel, navActions = navActions)
+        }
+
         composable(IdentityDestinations.WELCOME_ROUTE) {
             WelcomeScreen(
                 viewModel = identityViewModel,
