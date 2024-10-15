@@ -27,7 +27,6 @@ import io.falu.identity.camera.CameraView
 import io.falu.identity.databinding.FragmentSelfieBinding
 import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.scan.ScanResult
-import io.falu.identity.utils.getRenderScript
 import io.falu.identity.utils.navigateToApiResponseProblemFragment
 import io.falu.identity.utils.navigateToErrorFragment
 import io.falu.identity.utils.submitVerificationData
@@ -73,7 +72,7 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
         faceScanViewModel.resetScanDispositions()
         resetUI()
 
-        binding.viewCamera.lifecycleOwner = viewLifecycleOwner
+        //binding.viewCamera.lifecycleOwner = viewLifecycleOwner
         binding.viewCamera.lensFacing = CameraSelector.LENS_FACING_FRONT
         binding.viewCamera.cameraViewType = CameraView.CameraViewType.FACE
         binding.buttonContinue.text = getString(R.string.button_continue)
@@ -100,7 +99,7 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
             faceScanViewModel.resetScanDispositions()
             val verification = binding.buttonReset.tag as Verification
             scan(verification)
-            binding.viewCamera.startAnalyzer()
+           // binding.viewCamera.startAnalyzer()
         }
 
         faceScanViewModel.faceScanDisposition.observe(viewLifecycleOwner) {
@@ -111,8 +110,8 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
     private fun initiateAnalyzer(verification: Verification) {
         identityViewModel.faceDetectorModelFile.observe(viewLifecycleOwner) {
             if (it != null) {
-                faceScanViewModel
-                    .initialize(it, verification.capture.models.face?.threshold ?: THRESHOLD)
+//                faceScanViewModel
+//                    .initialize(it, verification.capture.models.face?.threshold ?: THRESHOLD)
             }
 
             scan(verification)
@@ -120,11 +119,11 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
     }
 
     private fun scan(verification: Verification) {
-        faceScanViewModel.scanner?.scan(
-            ScanDisposition.DocumentScanType.SELFIE,
-            verification.capture,
-            requireContext().getRenderScript()
-        )
+//        faceScanViewModel.scanner?.scan(
+//            ScanDisposition.DocumentScanType.SELFIE,
+//            verification.capture,
+//            requireContext().getRenderScript()
+//        )
     }
 
     private fun bindToUI(output: FaceDetectionOutput) {
@@ -192,7 +191,7 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
         val updateOptions = VerificationUpdateOptions(selfie = selfie)
 
         updateVerification(identityViewModel, updateOptions, R.id.fragment_selfie, onSuccess = {
-            selfie.camera = binding.viewCamera.cameraSettings
+           // selfie.camera = binding.viewCamera.cameraSettings
             verificationRequest.selfie = selfie
             attemptSelfieSubmission()
         })
@@ -202,7 +201,7 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
         faceScanViewModel.faceScanCompleteDisposition.observe(viewLifecycleOwner) {
             if (it.disposition is ScanDisposition.Completed) {
                 // stop the analyzer
-                binding.viewCamera.stopAnalyzer()
+              //  binding.viewCamera.stopAnalyzer()
                 binding.viewCamera.analyzers.clear()
 
                 val output = it.output as FaceDetectionOutput
@@ -211,7 +210,7 @@ internal class SelfieFragment(identityViewModelFactory: ViewModelProvider.Factor
             } else if (it.disposition is ScanDisposition.Timeout) {
                 identityViewModel.reportTelemetry(identityViewModel.analyticsRequestBuilder.selfieScanTimeOut())
 
-                binding.viewCamera.stopAnalyzer()
+              //  binding.viewCamera.stopAnalyzer()
                 binding.viewCamera.analyzers.clear()
 
                 findNavController().navigate(R.id.action_global_fragment_selfie_capture_error)

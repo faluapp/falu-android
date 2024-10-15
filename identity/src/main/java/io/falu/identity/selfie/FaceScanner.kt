@@ -1,40 +1,36 @@
 package io.falu.identity.selfie
 
+import android.content.Context
 import android.renderscript.RenderScript
+import io.falu.identity.R
 import io.falu.identity.ai.FaceDetectionAnalyzer
 import io.falu.identity.analytics.ModelPerformanceMonitor
 import io.falu.identity.api.models.verification.VerificationCapture
 import io.falu.identity.scan.AbstractScanner
-import io.falu.identity.scan.IdentityResult
-import io.falu.identity.scan.ProvisionalResult
 import io.falu.identity.scan.ScanDisposition
-import io.falu.identity.scan.ScanResultCallback
+import io.falu.identity.utils.getRenderScript
 import org.joda.time.DateTime
 import java.io.File
 
-internal class FaceScanner(
-    private val model: File,
-    private val threshold: Float,
-    private val performanceMonitor: ModelPerformanceMonitor,
-    callback: ScanResultCallback<ProvisionalResult, IdentityResult>
-) : AbstractScanner(callback) {
-
-    override fun scan(
-        scanType: ScanDisposition.DocumentScanType,
+internal class FaceScanner(private val context: Context) : AbstractScanner() {
+    
+    override fun addAnalyzers(
+        model: File,
         capture: VerificationCapture,
-        renderScript: RenderScript
+        scanType: ScanDisposition.DocumentScanType,
+        performanceMonitor: ModelPerformanceMonitor
     ) {
-        val machine = FaceDispositionMachine(
-            timeout = DateTime.now().plusMillis(capture.timeout)
-        )
-
-        disposition =
-            ScanDisposition.Start(scanType, machine)
-
         requireCameraView().analyzers.add(
-            FaceDetectionAnalyzer
-                .Builder(model = model, performanceMonitor, threshold, renderScript)
-                .instance { onResult(it) }
+            FaceDetectionAnalyzer.Builder(
+                model = model,
+                performanceMonitor,
+                capture.models.face?.threshold ?: 0.75f,
+                context.getRenderScript()
+            ).instance { onResult(it) }
         )
+    }
+
+    override fun onCameraViewReady() {
+        requireCameraView().ivCameraBorder.setBackgroundResource(R.drawable.ic_falu_selfie_border)
     }
 }

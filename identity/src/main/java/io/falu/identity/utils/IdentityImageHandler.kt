@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.Uri
 import androidx.activity.result.ActivityResultCaller
 import androidx.lifecycle.SavedStateHandle
-import io.falu.identity.capture.CaptureDocumentViewModel
 import io.falu.identity.capture.ImageCapture
 import io.falu.identity.capture.ImagePicker
 
@@ -32,7 +31,7 @@ internal class IdentityImageHandler {
                 caller,
                 utils,
                 savedStateHandle,
-                CaptureDocumentViewModel.KEY_FRONT_IMAGE_URI,
+                KEY_FRONT_IMAGE_URI,
                 onFrontImageCaptured
             )
         imageCaptureBack =
@@ -40,7 +39,7 @@ internal class IdentityImageHandler {
                 caller,
                 utils,
                 savedStateHandle,
-                CaptureDocumentViewModel.KEY_BACK_IMAGE_URI,
+                KEY_BACK_IMAGE_URI,
                 onBackImageCaptured
             )
         frontImagePicker = ImagePicker(caller, onFrontImagePicked)

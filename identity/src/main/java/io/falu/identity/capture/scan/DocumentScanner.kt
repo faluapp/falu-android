@@ -1,29 +1,28 @@
 package io.falu.identity.capture.scan
 
-import android.renderscript.RenderScript
+import android.content.Context
+import io.falu.identity.R
 import io.falu.identity.ai.DocumentDetectionAnalyzer
 import io.falu.identity.analytics.ModelPerformanceMonitor
 import io.falu.identity.api.models.verification.VerificationCapture
 import io.falu.identity.scan.AbstractScanner
-import io.falu.identity.scan.IdentityResult
-import io.falu.identity.scan.ProvisionalResult
 import io.falu.identity.scan.ScanDisposition
-import io.falu.identity.scan.ScanResultCallback
+import io.falu.identity.utils.getRenderScript
 import io.falu.identity.utils.toFraction
 import org.joda.time.DateTime
 import java.io.File
 
-internal class DocumentScanner(
-    private val model: File,
-    private val threshold: Float,
-    private val performanceMonitor: ModelPerformanceMonitor,
-    callbacks: ScanResultCallback<ProvisionalResult, IdentityResult>
-) : AbstractScanner(callbacks) {
+internal class DocumentScanner(private val context: Context) : AbstractScanner() {
 
-    override fun scan(
-        scanType: ScanDisposition.DocumentScanType,
+    override fun onCameraViewReady() {
+        requireCameraView().ivCameraBorder.setBackgroundResource(R.drawable.ic_falu_document_border)
+    }
+
+    override fun addAnalyzers(
+        model: File,
         capture: VerificationCapture,
-        renderScript: RenderScript
+        scanType: ScanDisposition.DocumentScanType,
+        performanceMonitor: ModelPerformanceMonitor
     ) {
         val machine = DocumentDispositionMachine(
             timeout = DateTime.now().plusMillis(capture.timeout),
@@ -34,9 +33,12 @@ internal class DocumentScanner(
         disposition = ScanDisposition.Start(scanType, machine)
 
         requireCameraView().analyzers.add(
-            DocumentDetectionAnalyzer
-                .Builder(model = model, threshold, renderScript, performanceMonitor)
-                .instance { onResult(it) }
+            DocumentDetectionAnalyzer.Builder(
+                model = model,
+                capture.models.document.threshold,
+                context.getRenderScript(),
+                performanceMonitor
+            ).instance { onResult(it) }
         )
     }
 }

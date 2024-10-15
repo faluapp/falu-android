@@ -26,15 +26,12 @@ internal sealed class ScanDisposition(
 
         val isFront: Boolean
             get() {
-                return this == DL_FRONT ||
-                        this == ID_FRONT ||
-                        this == PASSPORT
+                return this == DL_FRONT || this == ID_FRONT || this == PASSPORT
             }
 
         val isBack: Boolean
             get() {
-                return this == DL_BACK ||
-                        this == ID_BACK
+                return this == DL_BACK || this == ID_BACK
             }
     }
 
@@ -55,8 +52,7 @@ internal sealed class ScanDisposition(
         type: DocumentScanType,
         detector: ScanDispositionDetector,
         internal var reached: DateTime = DateTime.now()
-    ) :
-        ScanDisposition(type, detector, false) {
+    ) : ScanDisposition(type, detector, false) {
         override fun next(output: DetectionOutput) = dispositionDetector.fromDetected(this, output)
     }
 
@@ -67,8 +63,7 @@ internal sealed class ScanDisposition(
         type: DocumentScanType,
         detector: ScanDispositionDetector,
         val reached: DateTime = DateTime.now()
-    ) :
-        ScanDisposition(type, detector, false) {
+    ) : ScanDisposition(type, detector, false) {
         override fun next(output: DetectionOutput): ScanDisposition =
             dispositionDetector.fromDesired(this, output)
     }
@@ -80,8 +75,7 @@ internal sealed class ScanDisposition(
         type: DocumentScanType,
         detector: ScanDispositionDetector,
         val reached: DateTime = DateTime.now()
-    ) :
-        ScanDisposition(type, detector, false) {
+    ) : ScanDisposition(type, detector, false) {
         override fun next(output: DetectionOutput): ScanDisposition =
             dispositionDetector.fromUndesired(this, output)
     }

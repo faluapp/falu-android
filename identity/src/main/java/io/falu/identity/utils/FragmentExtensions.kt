@@ -95,7 +95,7 @@ internal fun Fragment.loadDocumentDetectionModel(
 ) {
     identityViewModel.documentDetectorModelFile.observe(viewLifecycleOwner) {
         if (it != null) {
-            documentScanViewModel.initialize(it, threshold)
+          //  documentScanViewModel.initialize(it, threshold)
             onLoad(it)
         }
     }

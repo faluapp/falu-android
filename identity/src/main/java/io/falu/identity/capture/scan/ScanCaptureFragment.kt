@@ -26,7 +26,6 @@ import io.falu.identity.documents.DocumentSelectionFragment
 import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.scan.ScanResult
 import io.falu.identity.utils.FileUtils
-import io.falu.identity.utils.getRenderScript
 import io.falu.identity.utils.serializable
 
 internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.Factory) : Fragment() {
@@ -72,7 +71,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
 
         resetUI()
 
-        binding.viewCamera.lifecycleOwner = viewLifecycleOwner
+       // binding.viewCamera.lifecycleOwner = viewLifecycleOwner
         binding.viewCamera.lensFacing = CameraSelector.LENS_FACING_BACK
 
         binding.viewCamera.cameraViewType =
@@ -119,7 +118,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
             documentScanViewModel.resetScanDispositions()
             val verification = binding.buttonReset.tag as Verification
             startScan(scanType!!, verification.capture)
-            binding.viewCamera.startAnalyzer()
+          //  binding.viewCamera.startAnalyzer()
         }
 
         identityViewModel.observeForVerificationResults(
@@ -138,23 +137,23 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
     }
 
     private fun initiateScanner(verification: Verification) {
-        identityViewModel.documentDetectorModelFile.observe(viewLifecycleOwner) {
-            if (it != null) {
-                documentScanViewModel.initialize(
-                    it,
-                    verification.capture.models.document.threshold
-                )
-
-                startScan(scanType!!, verification.capture)
-            }
-        }
+//        identityViewModel.documentDetectorModelFile.observe(viewLifecycleOwner) {
+//            if (it != null) {
+//                documentScanViewModel.initialize(
+//                    it,
+//                    verification.capture.models.document.threshold
+//                )
+//
+//                startScan(scanType!!, verification.capture)
+//            }
+        //}
     }
 
     private fun startScan(
         scanType: ScanDisposition.DocumentScanType,
         capture: VerificationCapture
     ) {
-        documentScanViewModel.scanner?.scan(scanType, capture, requireContext().getRenderScript())
+        // documentScanViewModel.scanner?.scan(scanType, capture, requireContext().getRenderScript())
     }
 
     private fun resetUI() {
@@ -208,7 +207,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
 
             if (it.disposition is ScanDisposition.Completed) {
                 // stop the analyzer
-                documentScanViewModel.scanner?.stopScan()
+               // documentScanViewModel.scanner?.stopScan()
                 binding.buttonContinue.tag = it
                 binding.buttonContinue.isEnabled = true
 
@@ -228,7 +227,7 @@ internal class ScanCaptureFragment(identityViewModelFactory: ViewModelProvider.F
                         .documentScanTimeOut(scanType = (it.disposition as ScanDisposition.Timeout).type)
                 )
 
-                documentScanViewModel.scanner?.stopScan()
+              //  documentScanViewModel.scanner?.stopScan()
                 findNavController().navigate(R.id.action_global_fragment_scan_capture_error)
             }
         }

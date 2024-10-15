@@ -6,10 +6,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import io.falu.identity.IdentityVerificationNavActions
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCREEN_NAME_UPLOAD_CAPTURE
@@ -21,16 +25,16 @@ import io.falu.identity.ui.ObserveVerificationAndCompose
 @Composable
 internal fun ManualCaptureScreen(
     viewModel: IdentityVerificationViewModel,
-    documentType: IdentityDocumentType,
-    navigateToSelfie: () -> Unit,
-    navigateToTaxPin: () -> Unit,
-    navigateToRequirementErrors: () -> Unit,
-    navigateToConfirmation: () -> Unit,
-    navigateToError: (Throwable?) -> Unit
+    navActions: IdentityVerificationNavActions,
+    documentType: IdentityDocumentType
 ) {
     val context = LocalContext.current
+
     val verificationResponse by viewModel.verification.observeAsState()
     val documentDisposition by viewModel.documentUploadDisposition.observeAsState()
+
+    var frontLoading by remember { mutableStateOf(documentDisposition?.isFrontUpload ?: false) }
+    var backLoading by remember { mutableStateOf(documentDisposition?.isBackUploaded ?: false) }
 
     ObserveVerificationAndCompose(verificationResponse, onError = {}) { verification ->
         LaunchedEffect(Unit) {
@@ -48,8 +52,17 @@ internal fun ManualCaptureScreen(
                 documentType = documentType,
                 isFrontUploaded = documentDisposition?.isFrontUpload ?: false,
                 isBackUploaded = documentDisposition?.isBackUploaded ?: false,
-                onFront = { viewModel.imageHandler.captureImageFront(context) },
-                onBack = { viewModel.imageHandler.captureImageBack(context) })
+                isFrontLoading = frontLoading,
+                isBackLoading = backLoading,
+                onFront = {
+                    frontLoading = true
+                    viewModel.imageHandler.captureImageFront(context)
+                },
+                onBack = {
+                    backLoading = true
+                    viewModel.imageHandler.captureImageBack(context)
+                }
+            )
 
             Column(modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.content_padding_normal))) {
                 LoadingButton(
@@ -66,17 +79,13 @@ internal fun ManualCaptureScreen(
                         options,
                         onSuccess = {
                             viewModel.attemptDocumentSubmission(
+                                navActions = navActions,
                                 verification = verification,
-                                verificationRequest = uploadRequest,
-                                navigateToSelfie = navigateToSelfie,
-                                navigateToTaxPin = navigateToTaxPin,
-                                navigateToRequirementErrors = navigateToRequirementErrors,
-                                onSubmitted = navigateToConfirmation,
-                                onError = { navigateToError(it) }
+                                verificationRequest = uploadRequest
                             )
                         },
-                        onError = { navigateToError(it) },
-                        onFailure = { navigateToError(it) }
+                        onError = { navActions.navigateToError() },
+                        onFailure = { navActions.navigateToError() }
                     )
                 }
             }

@@ -2,6 +2,7 @@ package io.falu.identity.capture.scan
 
 import android.util.Log
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -9,17 +10,20 @@ import androidx.lifecycle.asLiveData
 import androidx.savedstate.SavedStateRegistryOwner
 import io.falu.identity.ai.DocumentDetectionOutput
 import io.falu.identity.analytics.ModelPerformanceMonitor
+import io.falu.identity.api.models.verification.VerificationCapture
 import io.falu.identity.scan.IdentityResult
 import io.falu.identity.scan.ProvisionalResult
+import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.scan.ScanResult
 import io.falu.identity.scan.ScanResultCallback
+import io.falu.identity.utils.toFraction
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.io.File
+import org.joda.time.DateTime
 import kotlin.coroutines.CoroutineContext
 
 internal class DocumentScanViewModel(private val performanceMonitor: ModelPerformanceMonitor) : ViewModel(),
@@ -45,10 +49,34 @@ internal class DocumentScanViewModel(private val performanceMonitor: ModelPerfor
     /**
      *
      */
-    internal var scanner: DocumentScanner? = null
+    private lateinit var scanner: DocumentScanner
 
-    internal fun initialize(model: File, threshold: Float) {
-        scanner = DocumentScanner(model, threshold, performanceMonitor, this)
+    internal fun initializeScanner(scanner: DocumentScanner) {
+        this.scanner = scanner
+        this.scanner.callbacks = this
+    }
+
+    internal fun startScan(
+        owner: LifecycleOwner,
+        capture: VerificationCapture,
+        scanType: ScanDisposition.DocumentScanType
+    ) {
+        scanner.requireCameraView().bindLifecycle(owner)
+        scanner.requireCameraView().startAnalyzer()
+
+        scanner.disposition = null
+
+        val machine = DocumentDispositionMachine(
+            timeout = DateTime.now().plusMillis(capture.timeout),
+            iou = capture.blur?.iou?.toFraction() ?: 0.95f,
+            requiredTime = capture.blur?.duration?.div(1000) ?: 5
+        )
+        scanner.disposition = ScanDisposition.Start(scanType, machine)
+    }
+
+    internal fun stopScan(owner: LifecycleOwner) {
+        scanner.requireCameraView().stopAnalyzer()
+        scanner.requireCameraView().unbindFromLifecycle(owner)
     }
 
     override fun onScanComplete(result: IdentityResult) {
@@ -65,7 +93,7 @@ internal class DocumentScanViewModel(private val performanceMonitor: ModelPerfor
     override fun onProgress(result: ProvisionalResult) {
         Log.d(TAG, "Scan in progress: ${result.disposition}")
 
-        scanner?.changeDisposition(result.disposition) {
+        scanner.changeDisposition(result.disposition) {
             if (it) {
                 _documentScanDisposition.update { current ->
                     current.modify(disposition = result.disposition)

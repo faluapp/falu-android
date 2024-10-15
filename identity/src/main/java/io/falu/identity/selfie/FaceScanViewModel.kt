@@ -2,6 +2,7 @@ package io.falu.identity.selfie
 
 import android.util.Log
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -9,8 +10,10 @@ import androidx.lifecycle.asLiveData
 import androidx.savedstate.SavedStateRegistryOwner
 import io.falu.identity.ai.FaceDetectionOutput
 import io.falu.identity.analytics.ModelPerformanceMonitor
+import io.falu.identity.api.models.verification.VerificationCapture
 import io.falu.identity.scan.IdentityResult
 import io.falu.identity.scan.ProvisionalResult
+import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.scan.ScanResult
 import io.falu.identity.scan.ScanResultCallback
 import kotlinx.coroutines.CoroutineScope
@@ -19,7 +22,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.io.File
+import org.joda.time.DateTime
 import kotlin.coroutines.CoroutineContext
 
 internal class FaceScanViewModel(private val performanceMonitor: ModelPerformanceMonitor) : ViewModel(),
@@ -42,11 +45,26 @@ internal class FaceScanViewModel(private val performanceMonitor: ModelPerformanc
     val faceScanCompleteDisposition: LiveData<ScanResult>
         get() = _faceScanCompleteDisposition.asLiveData(Dispatchers.Main)
 
-    /***/
-    internal var scanner: FaceScanner? = null
+    private lateinit var scanner: FaceScanner
 
-    internal fun initialize(model: File, threshold: Float) {
-        scanner = FaceScanner(model, threshold, performanceMonitor, this)
+    internal fun initializeScanner(scanner: FaceScanner) {
+        this.scanner = scanner
+        this.scanner.callbacks = this
+    }
+
+    internal fun startScan(owner: LifecycleOwner, capture: VerificationCapture) {
+        scanner.requireCameraView().bindLifecycle(owner)
+        scanner.requireCameraView().startAnalyzer()
+
+        scanner.disposition = null
+
+        val machine = FaceDispositionMachine(timeout = DateTime.now().plusMillis(capture.timeout))
+        scanner.disposition = ScanDisposition.Start(ScanDisposition.DocumentScanType.SELFIE, machine)
+    }
+
+    internal fun stopScan(owner: LifecycleOwner) {
+        scanner.requireCameraView().unbindFromLifecycle(owner)
+        scanner.requireCameraView().stopAnalyzer()
     }
 
     override fun onScanComplete(result: IdentityResult) {
@@ -73,7 +91,7 @@ internal class FaceScanViewModel(private val performanceMonitor: ModelPerformanc
         _faceScanDisposition.update { ScanResult() }
     }
 
-    internal fun reportModelPerformance() {
+    private fun reportModelPerformance() {
         launch(Dispatchers.IO) {
             performanceMonitor.reportModelPerformance(FACE_DETECTOR_MODEL)
         }

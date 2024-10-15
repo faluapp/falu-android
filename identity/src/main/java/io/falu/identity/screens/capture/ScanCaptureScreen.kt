@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import io.falu.identity.IdentityVerificationNavActions
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.ai.DocumentDetectionOutput
@@ -39,24 +40,22 @@ import io.falu.identity.capture.scan.ScanCaptureFragment.Companion.getScanType
 import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.ui.LoadingButton
 import io.falu.identity.ui.ObserveVerificationAndCompose
-import io.falu.identity.utils.getRenderScript
 
 @Composable
 internal fun ScanCaptureScreen(
     viewModel: IdentityVerificationViewModel,
     documentScanViewModel: DocumentScanViewModel,
+    navActions: IdentityVerificationNavActions,
     documentType: IdentityDocumentType,
-    navigateToSelfie: () -> Unit,
-    navigateToTaxPin: () -> Unit,
-    navigateToRequirementErrors: () -> Unit,
-    navigateToConfirmation: () -> Unit,
-    navigateToError: (Throwable?) -> Unit
 ) {
     val verificationResponse by viewModel.verification.observeAsState()
-    val documentModel by viewModel.documentDetectorModelFile.observeAsState()
     val documentDisposition by viewModel.documentUploadDisposition.observeAsState()
+
     var uploadFront by remember { mutableStateOf(false) }
     var uploadBack by remember { mutableStateOf(false) }
+
+    var frontLoading by remember { mutableStateOf(documentDisposition?.isFrontUpload ?: false) }
+    var backLoading by remember { mutableStateOf(documentDisposition?.isBackUploaded ?: false) }
 
     ObserveVerificationAndCompose(verificationResponse, onError = {}) { verification ->
         LaunchedEffect(Unit) {
@@ -64,28 +63,28 @@ internal fun ScanCaptureScreen(
                 viewModel.analyticsRequestBuilder.screenPresented(screenName = SCREEN_NAME_AUTO_CAPTURE)
             )
         }
-        LaunchedEffect(Unit) {
-            documentModel?.let {
-                documentScanViewModel.initialize(it, verification.capture.models.document.threshold)
-            }
-        }
 
         Box(modifier = Modifier.wrapContentHeight()) {
             when {
                 uploadFront -> {
                     DocumentSideCapture(
-                        viewModel,
-                        documentScanViewModel,
-                        documentType,
-                        documentType.getScanType().first,
-                        verification.capture,
-                        documentScanViewModel.scanner,
+                        identityViewModel = viewModel,
+                        documentScanViewModel = documentScanViewModel,
+                        documentType = documentType,
+                        scanType = documentType.getScanType().first,
+                        capture = verification.capture,
                         onUpload = {
-                            uploadDocument(viewModel, it, DocumentSide.FRONT) { ex -> navigateToError(ex) }
+                            frontLoading = true
+                            uploadDocument(
+                                viewModel,
+                                navActions,
+                                it,
+                                DocumentSide.FRONT,
+                                onLoad = { loading -> frontLoading = loading }
+                            )
                             uploadFront = false
                         },
-                        onScanTimeOut = {
-                        }
+                        onScanTimeOut = { navActions.navigateToError() }
                     )
                 }
 
@@ -97,13 +96,18 @@ internal fun ScanCaptureScreen(
                             documentType,
                             it,
                             verification.capture,
-                            documentScanViewModel.scanner,
                             onUpload = { output ->
-                                uploadDocument(viewModel, output, DocumentSide.BACK) { ex -> navigateToError(ex) }
+                                backLoading = true
+                                uploadDocument(
+                                    viewModel,
+                                    navActions,
+                                    output,
+                                    DocumentSide.BACK,
+                                    onLoad = { loading -> backLoading = loading }
+                                )
                                 uploadBack = false
                             },
-                            onScanTimeOut = {
-                            }
+                            onScanTimeOut = { navActions.navigateToError() }
                         )
                     }
                 }
@@ -118,6 +122,8 @@ internal fun ScanCaptureScreen(
                             documentType = documentType,
                             isFrontUploaded = documentDisposition?.isFrontUpload ?: false,
                             isBackUploaded = documentDisposition?.isBackUploaded ?: false,
+                            isFrontLoading = frontLoading,
+                            isBackLoading = backLoading,
                             onFront = { uploadFront = true },
                             onBack = { uploadBack = true })
 
@@ -141,16 +147,12 @@ internal fun ScanCaptureScreen(
                                     onSuccess = {
                                         viewModel.attemptDocumentSubmission(
                                             verification = verification,
+                                            navActions = navActions,
                                             verificationRequest = uploadRequest,
-                                            navigateToSelfie = navigateToSelfie,
-                                            navigateToTaxPin = navigateToTaxPin,
-                                            navigateToRequirementErrors = navigateToRequirementErrors,
-                                            onSubmitted = navigateToConfirmation,
-                                            onError = { navigateToError(it) }
                                         )
                                     },
-                                    onError = { navigateToError(it) },
-                                    onFailure = { navigateToError(it) }
+                                    onError = { navActions.navigateToError() },
+                                    onFailure = { navActions.navigateToError() }
                                 )
                             }
                         }
@@ -168,7 +170,6 @@ private fun DocumentSideCapture(
     documentType: IdentityDocumentType,
     scanType: ScanDisposition.DocumentScanType,
     capture: VerificationCapture,
-    scanner: DocumentScanner?,
     onUpload: (DocumentDetectionOutput) -> Unit,
     onScanTimeOut: () -> Unit
 ) {
@@ -178,6 +179,10 @@ private fun DocumentSideCapture(
     val documentScanDisposition by documentScanViewModel.documentScanDisposition.observeAsState()
     var detectionOutput by remember { mutableStateOf<DocumentDetectionOutput?>(null) }
 
+    val scanner = remember {
+        DocumentScanner(context)
+    }
+
     LaunchedEffect(Unit) {
         detectionOutput = null
         documentScanViewModel.resetScanDispositions()
@@ -186,6 +191,12 @@ private fun DocumentSideCapture(
     val newDisplayState by remember {
         derivedStateOf {
             documentScanDisposition?.disposition
+        }
+    }
+
+    LaunchedEffect(newDisplayState) {
+        if (newDisplayState is ScanDisposition.Completed) {
+            documentScanViewModel.stopScan(owner)
         }
     }
 
@@ -223,9 +234,11 @@ private fun DocumentSideCapture(
         verificationCapture = capture,
         documentScanViewModel = documentScanViewModel,
         onScanComplete = { detectionOutput = it },
+        scanType = scanType,
+        scanner = scanner,
         onTimeout = { onScanTimeOut() }
     ) {
-        scanner?.scan(scanType, capture, context.getRenderScript())
+        documentScanViewModel.startScan(owner, capture, scanType)
     }
 
     Column(
@@ -258,16 +271,23 @@ private fun DocumentSideCapture(
                         bitmap = detectionOutput!!.bitmap,
                         onContinue = {
                             onUpload(detectionOutput!!)
-                            detectionOutput = null
                         },
-                        onDiscard = { detectionOutput = null }
+                        onDiscard = {
+                            detectionOutput = null
+                            documentScanViewModel.startScan(owner, capture, scanType)
+                        }
                     )
                 }
 
                 else -> {
                     Column {
                         Text(
-                            text = message,
+                            text = message.ifEmpty {
+                                stringResource(
+                                    R.string.scan_capture_text_scan_message,
+                                    documentType.getIdentityDocumentName(context)
+                                )
+                            },
                             style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -281,9 +301,8 @@ private fun DocumentSideCapture(
                                 .wrapContentHeight(),
                             factory = { ctx ->
                                 CameraView(ctx).apply {
-                                    lifecycleOwner = owner
+                                    bindLifecycle(owner)
                                     lensFacing = CameraSelector.LENS_FACING_BACK
-
                                     cameraViewType = if (documentType != IdentityDocumentType.PASSPORT)
                                         CameraView.CameraViewType.ID
                                     else
@@ -291,7 +310,7 @@ private fun DocumentSideCapture(
                                 }
                             },
                             update = {
-                                scanner?.onUpdateCameraView(it)
+                                scanner.onUpdateCameraView(it)
                             }
                         )
                     }
@@ -303,19 +322,22 @@ private fun DocumentSideCapture(
 
 private fun uploadDocument(
     identityViewModel: IdentityVerificationViewModel,
+    navActions: IdentityVerificationNavActions,
     output: DocumentDetectionOutput,
     documentSide: DocumentSide,
-    onError: (Throwable) -> Unit
+    onLoad: (Boolean) -> Unit,
 ) {
     identityViewModel.uploadScannedDocument(
         output.bitmap,
         documentSide,
         output.score,
         onError = {
-            // onError((it as ApiException).problem)
+            onLoad(false)
+            navActions.navigateToError()
         },
         onFailure = {
-            onError(it)
+            onLoad(false)
+            navActions.navigateToError()
         }
     )
 }

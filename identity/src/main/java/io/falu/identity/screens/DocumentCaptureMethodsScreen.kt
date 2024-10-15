@@ -63,7 +63,10 @@ private fun DocumentSelectionView(
             .padding(horizontal = dimensionResource(R.dimen.content_padding_normal))
     ) {
         Text(
-            text = stringResource(R.string.document_capture_method_subtitle, stringResource(documentType.titleRes)),
+            text = stringResource(
+                R.string.document_capture_method_subtitle,
+                stringResource(documentType.titleRes)
+            ),
             style = MaterialTheme.typography.bodyMedium
         )
 

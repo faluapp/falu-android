@@ -307,21 +307,17 @@ internal class IdentityVerificationViewModel(
     }
 
     internal fun attemptDocumentSubmission(
+        navActions: IdentityVerificationNavActions,
         verification: Verification,
         verificationRequest: VerificationUploadRequest,
-        navigateToSelfie: (() -> Unit) = {},
-        navigateToTaxPin: (() -> Unit) = {},
-        navigateToRequirementErrors: (() -> Unit) = {},
-        onSubmitted: (() -> Unit) = {},
-        onError: (Throwable?) -> Unit = {}
     ) {
         when {
             verification.selfieRequired -> {
-                navigateToSelfie()
+                navActions.navigateToSelfie()
             }
 
             verification.taxPinRequired -> {
-                navigateToTaxPin()
+                // navActions.navigateToTaxPin()
             }
 
             else -> {
@@ -330,14 +326,14 @@ internal class IdentityVerificationViewModel(
                     onSuccess = {
                         when {
                             it.hasRequirementErrors -> {
-                                navigateToRequirementErrors()
+                                // navActions.navigateToRequirementErrors()
                             }
 
                             it.submitted -> {
-                                onSubmitted()
+                                navActions.navigateToConfirmation()
                             }
                         }
-                    }, onFailure = { onError(it.cause) }, onError = { onError(it) })
+                    }, onFailure = { navActions.navigateToError() }, onError = { navActions.navigateToError() })
             }
         }
     }
