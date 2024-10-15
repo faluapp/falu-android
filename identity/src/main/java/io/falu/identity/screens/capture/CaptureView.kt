@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,6 +17,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,6 +32,8 @@ import io.falu.identity.ui.theme.IdentityTheme
 internal fun DocumentCaptureView(
     title: String,
     documentType: IdentityDocumentType,
+    isFrontLoading: Boolean = false,
+    isBackLoading: Boolean = false,
     isFrontUploaded: Boolean,
     isBackUploaded: Boolean,
     onFront: () -> Unit,
@@ -59,7 +63,8 @@ internal fun DocumentCaptureView(
                     stringResource(documentType.titleRes)
                 ),
                 onSelectClicked = { onFront() },
-                isUploaded = isFrontUploaded
+                isUploaded = isFrontUploaded,
+                loading = isFrontLoading
             )
 
             if (documentType != IdentityDocumentType.PASSPORT) {
@@ -69,7 +74,8 @@ internal fun DocumentCaptureView(
                         stringResource(documentType.titleRes)
                     ),
                     onSelectClicked = { onBack() },
-                    isUploaded = isBackUploaded
+                    isUploaded = isBackUploaded,
+                    loading = isBackLoading
                 )
             }
         }
@@ -80,6 +86,7 @@ internal fun DocumentCaptureView(
 private fun DocumentCard(
     title: String,
     onSelectClicked: () -> Unit,
+    loading: Boolean,
     isUploaded: Boolean
 ) {
     Card(
@@ -105,10 +112,19 @@ private fun DocumentCard(
             )
 
             Row(verticalAlignment = Alignment.CenterVertically) {
-                if (!isUploaded) {
+                if (!isUploaded && !loading) {
                     TextButton(onClick = onSelectClicked) {
                         Text(text = stringResource(id = R.string.button_select))
                     }
+                }
+
+                if (!isUploaded && loading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(dimensionResource(R.dimen.content_padding_normal)),
+                        color = MaterialTheme.colorScheme.secondary,
+                        strokeWidth = dimensionResource(R.dimen.element_spacing_normal_quarter),
+                        trackColor = Color.LightGray,
+                    )
                 }
 
                 if (isUploaded) {
@@ -134,8 +150,8 @@ fun DocumentCapturePreview() {
                 stringResource(IdentityDocumentType.IDENTITY_CARD.titleRes)
             ),
             documentType = IdentityDocumentType.IDENTITY_CARD,
-            isFrontUploaded = true,
-            isBackUploaded = true,
+            isFrontUploaded = false,
+            isBackUploaded = false,
             onFront = {},
             onBack = {})
     }

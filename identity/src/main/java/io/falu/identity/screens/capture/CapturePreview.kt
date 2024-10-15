@@ -12,9 +12,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults.buttonColors
 import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -57,20 +55,6 @@ internal fun CapturePreview(bitmap: Bitmap, onContinue: () -> Unit, onDiscard: (
                 .padding(horizontal = dimensionResource(R.dimen.content_padding_normal))
         ) {
             Text(text = stringResource(id = R.string.button_continue))
-        }
-
-        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.element_spacing_normal_half)))
-
-        Button(
-            onClick = onDiscard,
-            colors = buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondary
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = dimensionResource(R.dimen.content_padding_normal))
-        ) {
-            Text(text = stringResource(id = R.string.button_scan_again))
         }
     }
 }
