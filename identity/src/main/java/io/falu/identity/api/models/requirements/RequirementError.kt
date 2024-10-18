@@ -22,16 +22,20 @@ internal data class RequirementError(
                 RequirementType.CONSENT -> {
                     source == R.id.fragment_welcome
                 }
+
                 RequirementType.COUNTRY,
                 RequirementType.DOCUMENT_TYPE -> {
                     source == R.id.fragment_document_selection
                 }
+
                 RequirementType.DOCUMENT_FRONT,
                 RequirementType.DOCUMENT_BACK -> {
                     document_upload_ids.contains(source)
                 }
+
                 RequirementType.SELFIE,
                 RequirementType.VIDEO -> true
+
                 else -> false
             }
     }

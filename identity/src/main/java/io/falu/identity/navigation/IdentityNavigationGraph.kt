@@ -1,4 +1,4 @@
-package io.falu.identity
+package io.falu.identity.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.UploadMethod
 import io.falu.identity.capture.scan.DocumentScanViewModel
@@ -20,6 +21,8 @@ import io.falu.identity.screens.WelcomeScreen
 import io.falu.identity.screens.capture.ManualCaptureScreen
 import io.falu.identity.screens.capture.ScanCaptureScreen
 import io.falu.identity.screens.capture.UploadCaptureScreen
+import io.falu.identity.screens.selfie.SelfieScreen
+import io.falu.identity.selfie.FaceScanViewModel
 
 @Composable
 internal fun IdentityNavigationGraph(
@@ -27,6 +30,7 @@ internal fun IdentityNavigationGraph(
     navController: NavHostController = rememberNavController(),
     identityViewModel: IdentityVerificationViewModel,
     documentScanViewModel: DocumentScanViewModel,
+    faceScanViewModel: FaceScanViewModel,
     startDestination: String,
     navActions: IdentityVerificationNavActions = remember(navController) {
         IdentityVerificationNavActions(navController)
@@ -59,6 +63,14 @@ internal fun IdentityNavigationGraph(
                 navigateToError = {})
         }
 
+        composable(IdentityDestinations.SELFIE_ROUTE) {
+            SelfieScreen(
+                viewModel = identityViewModel,
+                faceScanViewModel = faceScanViewModel,
+                navActions = navActions
+            )
+        }
+
         composable(
             IdentityDestinations.DOCUMENT_CAPTURE_METHODS_ROUTE,
             arguments = listOf(navArgument("documentType") {
@@ -83,13 +95,10 @@ internal fun IdentityNavigationGraph(
         ) { entry ->
             val identityDocumentType = entry.arguments?.getSerializable("documentType") as IdentityDocumentType
             UploadCaptureScreen(
-                identityViewModel,
-                identityDocumentType,
-                navigateToSelfie = {},
-                navigateToTaxPin = {},
-                navigateToRequirementErrors = {},
-                navigateToConfirmation = { navActions.navigateToConfirmation() },
-                navigateToError = {})
+                viewModel = identityViewModel,
+                documentType = identityDocumentType,
+                navActions = navActions
+            )
         }
 
         composable(
@@ -100,13 +109,10 @@ internal fun IdentityNavigationGraph(
         ) { entry ->
             val identityDocumentType = entry.arguments?.getSerializable("documentType") as IdentityDocumentType
             ManualCaptureScreen(
-                identityViewModel,
-                identityDocumentType,
-                navigateToSelfie = {},
-                navigateToTaxPin = {},
-                navigateToRequirementErrors = {},
-                navigateToConfirmation = { navActions.navigateToConfirmation() },
-                navigateToError = {})
+                viewModel = identityViewModel,
+                documentType = identityDocumentType,
+                navActions = navActions
+            )
         }
 
         composable(
@@ -120,11 +126,7 @@ internal fun IdentityNavigationGraph(
                 viewModel = identityViewModel,
                 documentScanViewModel = documentScanViewModel,
                 documentType = identityDocumentType,
-                navigateToSelfie = {},
-                navigateToTaxPin = {},
-                navigateToRequirementErrors = {},
-                navigateToConfirmation = { navActions.navigateToConfirmation() },
-                navigateToError = {}
+                navActions = navActions
             )
         }
     }

@@ -1,17 +1,17 @@
-package io.falu.identity
+package io.falu.identity.navigation
 
 import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import io.falu.identity.IdentityDestinations.CONFIRMATION_ROUTE
-import io.falu.identity.IdentityDestinations.DOCUMENT_CAPTURE_METHODS_ROUTE
-import io.falu.identity.IdentityDestinations.DOCUMENT_CAPTURE_METHOD_MANUAL_ROUTE
-import io.falu.identity.IdentityDestinations.DOCUMENT_CAPTURE_METHOD_SCAN_ROUTE
-import io.falu.identity.IdentityDestinations.DOCUMENT_CAPTURE_METHOD_UPLOAD_ROUTE
-import io.falu.identity.IdentityDestinations.DOCUMENT_SELECTION_ROUTE
-import io.falu.identity.IdentityDestinations.SELFIE_ROUTE
-import io.falu.identity.IdentityDestinations.WELCOME_ROUTE
-import io.falu.identity.IdentityScreens.CONFIRMATION
+import io.falu.identity.navigation.IdentityDestinations.CONFIRMATION_ROUTE
+import io.falu.identity.navigation.IdentityDestinations.DOCUMENT_CAPTURE_METHODS_ROUTE
+import io.falu.identity.navigation.IdentityDestinations.DOCUMENT_CAPTURE_METHOD_MANUAL_ROUTE
+import io.falu.identity.navigation.IdentityDestinations.DOCUMENT_CAPTURE_METHOD_SCAN_ROUTE
+import io.falu.identity.navigation.IdentityDestinations.DOCUMENT_CAPTURE_METHOD_UPLOAD_ROUTE
+import io.falu.identity.navigation.IdentityDestinations.DOCUMENT_SELECTION_ROUTE
+import io.falu.identity.navigation.IdentityDestinations.SELFIE_ROUTE
+import io.falu.identity.navigation.IdentityDestinations.WELCOME_ROUTE
+import io.falu.identity.navigation.IdentityScreens.CONFIRMATION
 import io.falu.identity.api.models.IdentityDocumentType
 
 private object IdentityScreens {
@@ -135,6 +135,16 @@ internal class IdentityVerificationNavActions(private val navController: NavCont
     fun navigateToError() {
 
     }
+
+    fun navigateWithRequirementErrors() {
+
+    }
+
+    fun navigateWithApiExceptions() {}
+
+    fun navigateWithFailure() {}
+
+    fun navigateWithDepletedAttempts() {}
 }
 
 object IdentityDestinations {

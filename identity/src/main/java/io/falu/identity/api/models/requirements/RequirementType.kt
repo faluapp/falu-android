@@ -1,7 +1,7 @@
 package io.falu.identity.api.models.requirements
 
 import com.google.gson.annotations.SerializedName
-import io.falu.identity.IdentityVerificationNavActions
+import io.falu.identity.navigation.IdentityVerificationNavActions
 import io.falu.identity.api.models.verification.Verification
 
 internal enum class RequirementType {

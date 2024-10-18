@@ -31,7 +31,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import io.falu.core.models.FaluFile
-import io.falu.identity.IdentityVerificationNavActions
+import io.falu.identity.navigation.IdentityVerificationNavActions
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.ai.FaceDetectionOutput
