@@ -3,6 +3,8 @@ package io.falu.identity.navigation
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
+import io.falu.identity.utils.serializable
+import java.io.Serializable
 
 internal abstract class IdentityDestination(val popUpToParam: PopUpTo? = null) {
 
@@ -63,3 +65,6 @@ internal fun NavBackStackEntry?.getInt(arg: String) =
 
 internal fun NavBackStackEntry?.getBoolean(arg: String) =
     this?.arguments?.getBoolean(arg, false) ?: false
+
+internal inline fun <reified TSerializalble : Serializable> NavBackStackEntry.getSerializable(arg: String) =
+    this.arguments?.serializable<TSerializalble>(arg)
