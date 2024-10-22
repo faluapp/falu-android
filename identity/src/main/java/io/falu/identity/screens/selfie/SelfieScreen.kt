@@ -1,5 +1,6 @@
 package io.falu.identity.screens.selfie
 
+import android.content.Context
 import androidx.camera.core.CameraSelector
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,7 +32,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import io.falu.core.models.FaluFile
-import io.falu.identity.navigation.IdentityVerificationNavActions
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.ai.FaceDetectionOutput
@@ -43,8 +43,10 @@ import io.falu.identity.api.models.verification.VerificationSelfieUpload
 import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.camera.CameraView
+import io.falu.identity.navigation.IdentityVerificationNavActions
 import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.screens.capture.CapturePreview
+import io.falu.identity.navigation.ErrorDestination
 import io.falu.identity.selfie.FaceScanViewModel
 import io.falu.identity.selfie.FaceScanner
 import io.falu.identity.ui.ObserveVerificationAndCompose
@@ -57,6 +59,7 @@ internal fun SelfieScreen(
     faceScanViewModel: FaceScanViewModel,
     navActions: IdentityVerificationNavActions
 ) {
+    val context = LocalContext.current
     val verificationResponse by viewModel.verification.observeAsState()
 
     ObserveVerificationAndCompose(verificationResponse, onError = {}) { verification ->
@@ -72,13 +75,23 @@ internal fun SelfieScreen(
             capture = verification.capture,
             onUpload = {
                 uploadSelfie(
+                    context = context,
                     identityViewModel = viewModel,
                     navActions = navActions,
                     verification = verification,
                     output = it
                 )
             },
-            onScanTimeOut = {}
+            onScanTimeOut = {
+                navActions.navigateToError(
+                    ErrorDestination.withCameraTimeout(
+                        title = context.getString(R.string.error_title_selfie_capture),
+                        desc = context.getString(R.string.error_description_selfie_capture),
+                        backButtonText = context.getString(R.string.button_try_again),
+                        backButtonDestination = "",
+                    )
+                )
+            }
         )
     }
 }
@@ -229,6 +242,7 @@ private fun SelfieCameraView(owner: LifecycleOwner, scanner: FaceScanner) {
 }
 
 private fun uploadSelfie(
+    context: Context,
     identityViewModel: IdentityVerificationViewModel,
     navActions: IdentityVerificationNavActions,
     verification: Verification,
@@ -238,18 +252,40 @@ private fun uploadSelfie(
         output.bitmap,
         onSuccess = {
             submitSelfieAndUploadedDocuments(
+                context = context,
                 identityViewModel = identityViewModel,
                 navActions = navActions,
                 verification = verification,
                 file = it
             )
         },
-        onFailure = { navActions.navigateToError() },
-        onError = { navActions.navigateToError() }
+        onFailure = {
+            navActions.navigateToError(
+                ErrorDestination.withApiFailure(
+                    title = context.getString(R.string.error_title),
+                    desc = context.getString(R.string.error_title_unexpected_error),
+                    backButtonText = context.getString(R.string.button_rectify),
+                    backButtonDestination = "",
+                    throwable = it
+                )
+            )
+        },
+        onError = {
+            navActions.navigateToError(
+                ErrorDestination.withApiFailure(
+                    title = context.getString(R.string.error_title),
+                    desc = context.getString(R.string.error_title_unexpected_error),
+                    backButtonText = context.getString(R.string.button_rectify),
+                    backButtonDestination = "",
+                    throwable = it
+                )
+            )
+        }
     )
 }
 
 private fun submitSelfieAndUploadedDocuments(
+    context: Context,
     identityViewModel: IdentityVerificationViewModel,
     navActions: IdentityVerificationNavActions,
     verification: Verification,
@@ -268,13 +304,34 @@ private fun submitSelfieAndUploadedDocuments(
         options,
         onSuccess = {
             identityViewModel.attemptDocumentSubmission(
+                context = context,
                 navActions = navActions,
                 verification = verification,
                 verificationRequest = uploadRequest,
             )
         },
-        onFailure = { navActions.navigateToError() },
-        onError = { navActions.navigateToError() }
+        onFailure = {
+            navActions.navigateToError(
+                ErrorDestination.withApiFailure(
+                    title = context.getString(R.string.error_title),
+                    desc = context.getString(R.string.error_title_unexpected_error),
+                    backButtonText = context.getString(R.string.button_rectify),
+                    backButtonDestination = "",
+                    throwable = it
+                )
+            )
+        },
+        onError = {
+            navActions.navigateToError(
+                ErrorDestination.withApiFailure(
+                    title = context.getString(R.string.error_title),
+                    desc = context.getString(R.string.error_title_unexpected_error),
+                    backButtonText = context.getString(R.string.button_rectify),
+                    backButtonDestination = "",
+                    throwable = it
+                )
+            )
+        }
     )
 }
 

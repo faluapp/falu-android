@@ -1,5 +1,6 @@
 package io.falu.identity.screens.capture
 
+import android.content.Context
 import androidx.camera.core.CameraSelector
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,7 +24,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import io.falu.identity.navigation.IdentityVerificationNavActions
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.ai.DocumentDetectionOutput
@@ -37,6 +37,8 @@ import io.falu.identity.capture.AbstractCaptureFragment.Companion.getIdentityDoc
 import io.falu.identity.capture.scan.DocumentScanViewModel
 import io.falu.identity.capture.scan.DocumentScanner
 import io.falu.identity.capture.scan.ScanCaptureFragment.Companion.getScanType
+import io.falu.identity.navigation.IdentityVerificationNavActions
+import io.falu.identity.navigation.ErrorDestination
 import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.ui.LoadingButton
 import io.falu.identity.ui.ObserveVerificationAndCompose
@@ -48,6 +50,7 @@ internal fun ScanCaptureScreen(
     navActions: IdentityVerificationNavActions,
     documentType: IdentityDocumentType,
 ) {
+    val context = LocalContext.current
     val verificationResponse by viewModel.verification.observeAsState()
     val documentDisposition by viewModel.documentUploadDisposition.observeAsState()
 
@@ -76,6 +79,7 @@ internal fun ScanCaptureScreen(
                         onUpload = {
                             frontLoading = true
                             uploadDocument(
+                                context,
                                 viewModel,
                                 navActions,
                                 it,
@@ -84,7 +88,17 @@ internal fun ScanCaptureScreen(
                             )
                             uploadFront = false
                         },
-                        onScanTimeOut = { navActions.navigateToError() }
+                        onScanTimeOut = {
+                            navActions.navigateToError(
+                                ErrorDestination.withCameraTimeout(
+                                    title = context.getString(R.string.error_title_scan_capture),
+                                    desc = context.getString(R.string.error_description_scan_capture),
+                                    message = context.getString(R.string.error_message_scan_capture),
+                                    backButtonText = context.getString(R.string.button_try_again),
+                                    backButtonDestination = "",
+                                )
+                            )
+                        }
                     )
                 }
 
@@ -99,6 +113,7 @@ internal fun ScanCaptureScreen(
                             onUpload = { output ->
                                 backLoading = true
                                 uploadDocument(
+                                    context,
                                     viewModel,
                                     navActions,
                                     output,
@@ -107,7 +122,17 @@ internal fun ScanCaptureScreen(
                                 )
                                 uploadBack = false
                             },
-                            onScanTimeOut = { navActions.navigateToError() }
+                            onScanTimeOut = {
+                                navActions.navigateToError(
+                                    ErrorDestination.withCameraTimeout(
+                                        title = context.getString(R.string.error_title_scan_capture),
+                                        desc = context.getString(R.string.error_description_scan_capture),
+                                        message = context.getString(R.string.error_message_scan_capture),
+                                        backButtonText = context.getString(R.string.button_try_again),
+                                        backButtonDestination = "",
+                                    )
+                                )
+                            }
                         )
                     }
                 }
@@ -146,13 +171,34 @@ internal fun ScanCaptureScreen(
                                     options,
                                     onSuccess = {
                                         viewModel.attemptDocumentSubmission(
+                                            context = context,
                                             verification = verification,
                                             navActions = navActions,
                                             verificationRequest = uploadRequest,
                                         )
                                     },
-                                    onError = { navActions.navigateToError() },
-                                    onFailure = { navActions.navigateToError() }
+                                    onError = {
+                                        navActions.navigateToError(
+                                            ErrorDestination.withApiFailure(
+                                                title = context.getString(R.string.error_title),
+                                                desc = context.getString(R.string.error_title_unexpected_error),
+                                                backButtonText = context.getString(R.string.button_rectify),
+                                                backButtonDestination = "",
+                                                throwable = it
+                                            )
+                                        )
+                                    },
+                                    onFailure = {
+                                        navActions.navigateToError(
+                                            ErrorDestination.withApiFailure(
+                                                title = context.getString(R.string.error_title),
+                                                desc = context.getString(R.string.error_title_unexpected_error),
+                                                backButtonText = context.getString(R.string.button_rectify),
+                                                backButtonDestination = "",
+                                                throwable = it
+                                            )
+                                        )
+                                    }
                                 )
                             }
                         }
@@ -321,6 +367,7 @@ private fun DocumentSideCapture(
 }
 
 private fun uploadDocument(
+    context: Context,
     identityViewModel: IdentityVerificationViewModel,
     navActions: IdentityVerificationNavActions,
     output: DocumentDetectionOutput,
@@ -333,11 +380,27 @@ private fun uploadDocument(
         output.score,
         onError = {
             onLoad(false)
-            navActions.navigateToError()
+            navActions.navigateToError(
+                ErrorDestination.withApiFailure(
+                    title = context.getString(R.string.error_title),
+                    desc = context.getString(R.string.error_title_unexpected_error),
+                    backButtonText = context.getString(R.string.button_rectify),
+                    backButtonDestination = "",
+                    throwable = it
+                )
+            )
         },
         onFailure = {
             onLoad(false)
-            navActions.navigateToError()
+            navActions.navigateToError(
+                ErrorDestination.withApiFailure(
+                    title = context.getString(R.string.error_title),
+                    desc = context.getString(R.string.error_title_unexpected_error),
+                    backButtonText = context.getString(R.string.button_rectify),
+                    backButtonDestination = "",
+                    throwable = it
+                )
+            )
         }
     )
 }

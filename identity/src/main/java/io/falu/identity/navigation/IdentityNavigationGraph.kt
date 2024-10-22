@@ -3,6 +3,7 @@ package io.falu.identity.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -10,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import io.falu.identity.IdentityVerificationViewModel
+import io.falu.identity.R
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.UploadMethod
 import io.falu.identity.capture.scan.DocumentScanViewModel
@@ -21,6 +23,8 @@ import io.falu.identity.screens.WelcomeScreen
 import io.falu.identity.screens.capture.ManualCaptureScreen
 import io.falu.identity.screens.capture.ScanCaptureScreen
 import io.falu.identity.screens.capture.UploadCaptureScreen
+import io.falu.identity.screens.error.ErrorScreen
+import io.falu.identity.screens.error.ErrorScreenButton
 import io.falu.identity.screens.selfie.SelfieScreen
 import io.falu.identity.selfie.FaceScanViewModel
 
@@ -46,10 +50,7 @@ internal fun IdentityNavigationGraph(
         }
 
         composable(IdentityDestinations.WELCOME_ROUTE) {
-            WelcomeScreen(
-                viewModel = identityViewModel,
-                navigateToDocumentSelection = { navActions.navigateToDocumentSelection() },
-                navigateToError = {})
+            WelcomeScreen(viewModel = identityViewModel, navActions = navActions)
         }
 
         composable(IdentityDestinations.CONFIRMATION_ROUTE) {
@@ -127,6 +128,27 @@ internal fun IdentityNavigationGraph(
                 documentScanViewModel = documentScanViewModel,
                 documentType = identityDocumentType,
                 navActions = navActions
+            )
+        }
+
+        composable(
+            ErrorDestination.ROUTE.route,
+            arguments = ErrorDestination.ROUTE.arguments
+        ) { entry ->
+
+            ErrorScreen(
+                title = ErrorDestination.errorTitle(entry) ?: "",
+                desc = ErrorDestination.errorDescription(entry) ?: "",
+                message = ErrorDestination.errorMessage(entry),
+                primaryButton = ErrorScreenButton(
+                    text = ErrorDestination.backButtonText(entry) ?: "",
+                    onClick = {}
+                ),
+                secondaryButton = if (ErrorDestination.cancelFlow(entry)) {
+                    ErrorScreenButton(text = stringResource(R.string.button_cancel), onClick = {})
+                } else {
+                    null
+                }
             )
         }
     }

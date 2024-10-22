@@ -3,21 +3,28 @@ package io.falu.identity.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.falu.core.utils.toThrowable
-import io.falu.identity.IdentityVerificationNavActions
 import io.falu.identity.IdentityVerificationViewModel
+import io.falu.identity.R
 import io.falu.identity.api.models.requirements.RequirementType
 import io.falu.identity.api.models.requirements.RequirementType.Companion.nextDestination
 import io.falu.identity.api.models.verification.Verification
+import io.falu.identity.navigation.IdentityVerificationNavActions
+import io.falu.identity.navigation.ErrorDestination
+import io.falu.identity.ui.theme.IdentityTheme
 import software.tingle.api.ResourceResponse
 
 /**
@@ -26,11 +33,22 @@ import software.tingle.api.ResourceResponse
 @Composable
 internal fun InitialLoadingScreen(
     identityViewModel: IdentityVerificationViewModel,
-    navActions: IdentityVerificationNavActions,
+    navActions: IdentityVerificationNavActions
 ) {
+    val context = LocalContext.current
     val verificationResponse by identityViewModel.verification.observeAsState()
 
-    ObserveVerificationAndCompose(verificationResponse, onError = {}) { verification ->
+    ObserveVerificationAndCompose(verificationResponse, onError = {
+        navActions.navigateToError(
+            ErrorDestination.withApiFailure(
+                title = context.getString(R.string.error_title),
+                desc = context.getString(R.string.error_title_unexpected_error),
+                backButtonText = context.getString(R.string.button_rectify),
+                backButtonDestination = "",
+                throwable = it
+            )
+        )
+    }) { verification ->
         LaunchedEffect(Unit) {
             verification.requirements.pending.nextDestination(navActions, verification)
         }
@@ -45,7 +63,12 @@ internal fun LoadingScreen() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        CircularProgressIndicator(modifier = Modifier.padding(bottom = 32.dp))
+        CircularProgressIndicator(
+            modifier = Modifier.size(48.dp),
+            color = MaterialTheme.colorScheme.secondary,
+            strokeWidth = 4.dp,
+            trackColor = Color.LightGray,
+        )
     }
 }
 
@@ -60,5 +83,13 @@ internal fun ObserveVerificationAndCompose(
         response == null -> LoadingScreen()
         response.successful() && response.resource != null -> response.resource?.let { onSuccess(it) }
         else -> onError(response.toThrowable())
+    }
+}
+
+@Preview
+@Composable
+internal fun LoadingScreenPreview() {
+    IdentityTheme {
+        LoadingScreen()
     }
 }

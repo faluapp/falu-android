@@ -152,7 +152,6 @@ private fun DocumentOptions(
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.size(FilterChipDefaults.IconSize)
-
                         )
                     }
                 }

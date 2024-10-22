@@ -3,6 +3,7 @@ package io.falu.identity.navigation
 import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.navigation.IdentityDestinations.CONFIRMATION_ROUTE
 import io.falu.identity.navigation.IdentityDestinations.DOCUMENT_CAPTURE_METHODS_ROUTE
 import io.falu.identity.navigation.IdentityDestinations.DOCUMENT_CAPTURE_METHOD_MANUAL_ROUTE
@@ -12,7 +13,6 @@ import io.falu.identity.navigation.IdentityDestinations.DOCUMENT_SELECTION_ROUTE
 import io.falu.identity.navigation.IdentityDestinations.SELFIE_ROUTE
 import io.falu.identity.navigation.IdentityDestinations.WELCOME_ROUTE
 import io.falu.identity.navigation.IdentityScreens.CONFIRMATION
-import io.falu.identity.api.models.IdentityDocumentType
 
 private object IdentityScreens {
     const val INITIAL = "initial"
@@ -25,7 +25,7 @@ private object IdentityScreens {
     const val DOCUMENT_CAPTURE_METHOD_UPLOAD = "document_capture_method_upload/{documentType}"
     const val CONFIRMATION = "confirmation"
     const val SELFIE = "selfie"
-    const val ERROR = "error"
+    const val ERROR = "error/{workflow-error}"
 }
 
 internal class IdentityVerificationNavActions(private val navController: NavController) {
@@ -132,19 +132,9 @@ internal class IdentityVerificationNavActions(private val navController: NavCont
         }
     }
 
-    fun navigateToError() {
-
+    fun navigateToError(error: ErrorDestination) {
+        navController.navigateTo(error)
     }
-
-    fun navigateWithRequirementErrors() {
-
-    }
-
-    fun navigateWithApiExceptions() {}
-
-    fun navigateWithFailure() {}
-
-    fun navigateWithDepletedAttempts() {}
 }
 
 object IdentityDestinations {

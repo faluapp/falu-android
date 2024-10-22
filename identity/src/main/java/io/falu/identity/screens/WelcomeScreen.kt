@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -25,6 +26,8 @@ import io.falu.identity.R
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCREEN_NAME_WELCOME
 import io.falu.identity.api.models.WorkspaceInfo
 import io.falu.identity.api.models.verification.VerificationUpdateOptions
+import io.falu.identity.navigation.IdentityVerificationNavActions
+import io.falu.identity.navigation.ErrorDestination
 import io.falu.identity.ui.IdentityVerificationHeader
 import io.falu.identity.ui.LoadingButton
 import io.falu.identity.ui.ObserveVerificationAndCompose
@@ -33,9 +36,9 @@ import io.falu.identity.ui.theme.IdentityTheme
 @Composable
 internal fun WelcomeScreen(
     viewModel: IdentityVerificationViewModel,
-    navigateToDocumentSelection: () -> Unit,
-    navigateToError: (Throwable) -> Unit
+    navActions: IdentityVerificationNavActions
 ) {
+    val context = LocalContext.current
     val response by viewModel.verification.observeAsState()
 
     ObserveVerificationAndCompose(response, onError = {}) { verification ->
@@ -49,9 +52,29 @@ internal fun WelcomeScreen(
             onAccepted = {
                 viewModel.updateVerification(
                     VerificationUpdateOptions(consent = true),
-                    onSuccess = { navigateToDocumentSelection() },
-                    onError = {},
-                    onFailure = { navigateToError(it) }
+                    onSuccess = { navActions.navigateToDocumentSelection() },
+                    onError = {
+                        navActions.navigateToError(
+                            ErrorDestination.withApiFailure(
+                                title = context.getString(R.string.error_title),
+                                desc = context.getString(R.string.error_title_unexpected_error),
+                                backButtonText = context.getString(R.string.button_rectify),
+                                backButtonDestination = "",
+                                throwable = it
+                            )
+                        )
+                    },
+                    onFailure = {
+                        navActions.navigateToError(
+                            ErrorDestination.withApiFailure(
+                                title = context.getString(R.string.error_title),
+                                desc = context.getString(R.string.error_title_unexpected_error),
+                                backButtonText = context.getString(R.string.button_rectify),
+                                backButtonDestination = "",
+                                throwable = it
+                            )
+                        )
+                    }
                 )
             },
             onDeclined = {}
