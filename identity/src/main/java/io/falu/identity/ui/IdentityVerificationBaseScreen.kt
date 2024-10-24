@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,6 +24,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,7 +37,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
@@ -43,33 +46,36 @@ import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.models.WorkspaceInfo
 import io.falu.identity.api.models.verification.Verification
-import io.falu.identity.ui.theme.IdentityTheme
 import software.tingle.api.ResourceResponse
 
 @Composable
 internal fun IdentityVerificationBaseScreen(
-    contractArgs: ContractArgs,
     viewModel: IdentityVerificationViewModel,
+    contractArgs: ContractArgs,
     content: @Composable () -> Unit
 ) {
     val response by viewModel.verification.observeAsState()
+    var workspace by remember { mutableStateOf<WorkspaceInfo?>(null) }
+    var liveMode by remember { mutableStateOf<Boolean?>(null) }
 
     ObserveVerificationAndCompose(response, onError = {}) { verification ->
-        IdentityVerificationHeader(
-            contractArgs.workspaceLogo,
-            verification.workspace,
-            verification.live,
-        ) {
-            content()
-        }
+        liveMode = verification.live
+        workspace = verification.workspace
     }
+
+    IdentityVerificationHeader(
+        logoUri = contractArgs.workspaceLogo,
+        workspace = workspace,
+        live = liveMode,
+        content = content
+    )
 }
 
 @Composable
 internal fun IdentityVerificationHeader(
     logoUri: Uri,
-    workspace: WorkspaceInfo,
-    live: Boolean,
+    workspace: WorkspaceInfo?,
+    live: Boolean?,
     content: @Composable () -> Unit
 ) {
     Column(
@@ -79,9 +85,7 @@ internal fun IdentityVerificationHeader(
             .padding(horizontal = dimensionResource(id = R.dimen.content_padding_normal)),
         verticalArrangement = Arrangement.Center
     ) {
-        Box(
-            contentAlignment = Alignment.TopCenter,
-        ) {
+        Box(contentAlignment = Alignment.TopCenter) {
             WelcomeImage(logoUri = logoUri)
 
             // Information Card
@@ -96,13 +100,17 @@ internal fun IdentityVerificationHeader(
                         .padding(top = dimensionResource(R.dimen.content_padding_normal))
                         .padding(vertical = dimensionResource(R.dimen.content_padding_normal))
                 ) {
+                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.element_spacing_normal)))
+
                     // Workspace Name
-                    Text(
-                        text = workspace.name,
-                        style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
-                    )
+                    if (workspace != null && workspace.name.isNotEmpty()) {
+                        Text(
+                            text = workspace.name,
+                            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center
+                        )
+                    }
 
                     // Identity Verification Title
                     Text(
@@ -112,20 +120,28 @@ internal fun IdentityVerificationHeader(
                         textAlign = TextAlign.Center
                     )
 
-                    // Divider
-                    HorizontalDivider(modifier = Modifier.fillMaxWidth())
-
-                    if (!live) {
+                    if (live == null || live) {
+                        // Divider
+                        HorizontalDivider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = dimensionResource(R.dimen.element_spacing_normal))
+                                .height(dimensionResource(R.dimen.element_spacing_normal_half)),
+                            color = Color.LightGray
+                        )
+                    }
+                    if (live != null && !live) {
                         SandboxView()
                     }
-                }
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = dimensionResource(R.dimen.element_spacing_normal))
-                ) {
-                    content()
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = dimensionResource(R.dimen.content_padding_normal))
+                            .padding(bottom = dimensionResource(R.dimen.element_spacing_normal))
+                    ) {
+                        content()
+                    }
                 }
             }
         }
@@ -207,13 +223,5 @@ internal fun ObserveVerificationAndCompose(
         onSuccess(response.resource!!)
     } else {
         onError(response?.toThrowable())
-    }
-}
-
-@Preview
-@Composable
-fun IdentityBasePreview() {
-    IdentityTheme {
-        IdentityVerificationHeader(Uri.EMPTY, WorkspaceInfo(name = "Showcases", country = "US"), false, {})
     }
 }

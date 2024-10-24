@@ -105,15 +105,16 @@ internal data class ErrorDestination(
             title: String,
             desc: String,
             throwable: Throwable?,
+            cancelFlow: Boolean = true,
             backButtonText: String,
-            backButtonDestination: String
+            backButtonDestination: String? = null
         ) = ErrorDestination(
             title = title,
             desc = desc,
             backButtonText = backButtonText,
-            backButtonDestination = backButtonDestination,
+            backButtonDestination = backButtonDestination ?: "",
             throwable = throwable,
-            cancelFlow = true
+            cancelFlow = cancelFlow
         )
 
         fun withDepletedAttempts(
