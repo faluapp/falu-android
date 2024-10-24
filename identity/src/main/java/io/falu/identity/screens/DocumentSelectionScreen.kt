@@ -126,7 +126,7 @@ private fun DocumentOptions(
                 .padding(bottom = dimensionResource(R.dimen.element_spacing_normal))
         )
 
-        allowedDocuments.forEach { documentType ->
+        allowedDocuments.reversed().forEach { documentType ->
             ElevatedFilterChip(
                 modifier = Modifier
                     .fillMaxWidth()

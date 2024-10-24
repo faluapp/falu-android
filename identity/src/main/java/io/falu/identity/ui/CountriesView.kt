@@ -23,12 +23,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.decode.SvgDecoder
+import coil.request.ImageRequest
 import io.falu.core.utils.toThrowable
 import io.falu.identity.R
 import io.falu.identity.api.models.IdentityDocumentType
@@ -57,6 +59,7 @@ private fun SupportedCountryViews(
     supportedCountries: Array<SupportedCountry>,
     onCountrySelected: (SupportedCountry) -> Unit = {}
 ) {
+    val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
 
     Column(
@@ -103,14 +106,17 @@ private fun SupportedCountryViews(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 AsyncImage(
-                                    model = option.country.flag,
+                                    model = ImageRequest.Builder(context)
+                                        .data(option.country.flag)
+                                        .decoderFactory(SvgDecoder.Factory())
+                                        .build(),
                                     contentDescription = null,
-                                    modifier = Modifier
-                                        .size(24.dp)
-                                        .padding(end = 8.dp),
-                                    contentScale = ContentScale.Crop
+                                    modifier = Modifier.size(24.dp)
                                 )
-                                Text(text = option.country.name)
+                                Text(
+                                    text = option.country.name,
+                                    modifier = Modifier.padding(start = dimensionResource(R.dimen.element_spacing_normal))
+                                )
                             }
                         },
                         onClick = {
