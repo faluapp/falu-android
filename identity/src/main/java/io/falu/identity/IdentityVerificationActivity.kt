@@ -18,6 +18,8 @@ import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationStatus
 import io.falu.identity.capture.scan.DocumentScanViewModel
 import io.falu.identity.databinding.ActivityIdentityVerificationBinding
+import io.falu.identity.navigation.IdentityNavigationGraph
+import io.falu.identity.selfie.FaceScanViewModel
 import io.falu.identity.ui.IdentityVerificationBaseScreen
 import io.falu.identity.ui.theme.IdentityTheme
 import io.falu.identity.utils.FileUtils
@@ -44,6 +46,10 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
     private val documentScanViewModel: DocumentScanViewModel by viewModels { documentScanViewModelFactory }
     private val documentScanViewModelFactory =
         DocumentScanViewModel.factoryProvider(this) { verificationViewModel.modelPerformanceMonitor }
+
+    private val faceScanViewModel: FaceScanViewModel by viewModels { faceScanViewModelFactory }
+    private val faceScanViewModelFactory =
+        FaceScanViewModel.factoryProvider(this) { verificationViewModel.modelPerformanceMonitor }
 
     private val binding by lazy {
         ActivityIdentityVerificationBinding.inflate(layoutInflater)
@@ -73,25 +79,23 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
     private lateinit var launchFallbackUrl: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         supportFragmentManager.fragmentFactory =
             IdentityVerificationFragmentFactory(this, factory)
 
         super.onCreate(savedInstanceState)
 
+        supportActionBar?.hide()
+
         verificationViewModel.registerActivityResultCaller(this)
+
         setContent {
             IdentityTheme {
-                IdentityVerificationBaseScreen(
-                    viewModel = verificationViewModel,
+                IdentityNavigationGraph(
+                    identityViewModel = verificationViewModel,
+                    documentScanViewModel = documentScanViewModel,
+                    faceScanViewModel = faceScanViewModel,
                     contractArgs = contractArgs
-                ) {
-                    IdentityNavigationGraph(
-                        startDestination = "welcome",
-                        identityViewModel = verificationViewModel,
-                        documentScanViewModel = documentScanViewModel
-                    )
-                }
+                )
             }
         }
 
