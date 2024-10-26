@@ -14,13 +14,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import io.falu.identity.IdentityVerificationResult
+import io.falu.identity.IdentityVerificationResultCallback
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCREEN_NAME_CONFIRMATION
 import io.falu.identity.ui.ObserveVerificationAndCompose
 
 @Composable
-internal fun ConfirmationScreen(viewModel: IdentityVerificationViewModel) {
+internal fun ConfirmationScreen(
+    viewModel: IdentityVerificationViewModel,
+    callback: IdentityVerificationResultCallback
+) {
     val verificationResponse by viewModel.verification.observeAsState()
 
     ObserveVerificationAndCompose(verificationResponse, onError = {}) {
@@ -54,7 +59,10 @@ internal fun ConfirmationScreen(viewModel: IdentityVerificationViewModel) {
             )
 
             Button(
-                onClick = { },
+                onClick = {
+                    viewModel.reportSuccessfulVerificationTelemetry()
+                    callback.onFinishWithResult(IdentityVerificationResult.Succeeded)
+                },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = stringResource(R.string.button_finish))

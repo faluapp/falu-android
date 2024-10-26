@@ -94,7 +94,8 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
                     identityViewModel = verificationViewModel,
                     documentScanViewModel = documentScanViewModel,
                     faceScanViewModel = faceScanViewModel,
-                    contractArgs = contractArgs
+                    contractArgs = contractArgs,
+                    verificationResultCallback = this
                 )
             }
         }

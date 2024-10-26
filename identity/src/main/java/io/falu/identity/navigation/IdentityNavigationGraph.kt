@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import io.falu.identity.ContractArgs
+import io.falu.identity.IdentityVerificationResultCallback
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.models.UploadMethod
@@ -34,6 +35,7 @@ internal fun IdentityNavigationGraph(
     identityViewModel: IdentityVerificationViewModel,
     documentScanViewModel: DocumentScanViewModel,
     faceScanViewModel: FaceScanViewModel,
+    verificationResultCallback: IdentityVerificationResultCallback,
     contractArgs: ContractArgs,
     startDestination: String = InitialDestination.ROUTE.route,
     navActions: IdentityVerificationNavActions = remember(navController) {
@@ -58,7 +60,7 @@ internal fun IdentityNavigationGraph(
             }
 
             composable(ConfirmationDestination.ROUTE.route) {
-                ConfirmationScreen(viewModel = identityViewModel)
+                ConfirmationScreen(viewModel = identityViewModel, callback = verificationResultCallback)
             }
 
             composable(DocumentSelectionDestination.ROUTE.route) {
