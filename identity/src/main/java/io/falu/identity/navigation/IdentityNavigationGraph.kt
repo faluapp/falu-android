@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import io.falu.identity.ContractArgs
+import io.falu.identity.IdentityVerificationResult
 import io.falu.identity.IdentityVerificationResultCallback
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
@@ -56,7 +57,11 @@ internal fun IdentityNavigationGraph(
             }
 
             composable(WelcomeDestination.ROUTE.route) {
-                WelcomeScreen(viewModel = identityViewModel, navActions = navActions)
+                WelcomeScreen(
+                    viewModel = identityViewModel,
+                    navActions = navActions,
+                    verificationResultCallback = verificationResultCallback
+                )
             }
 
             composable(ConfirmationDestination.ROUTE.route) {
@@ -149,7 +154,12 @@ internal fun IdentityNavigationGraph(
                         onClick = {}
                     ),
                     secondaryButton = if (ErrorDestination.cancelFlow(entry)) {
-                        ErrorScreenButton(text = stringResource(R.string.button_cancel), onClick = {})
+                        ErrorScreenButton(
+                            text = stringResource(R.string.button_cancel),
+                            onClick = {
+                                verificationResultCallback.onFinishWithResult(IdentityVerificationResult.Canceled)
+                            }
+                        )
                     } else {
                         null
                     }

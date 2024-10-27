@@ -21,6 +21,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import io.falu.identity.IdentityVerificationResult
+import io.falu.identity.IdentityVerificationResultCallback
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCREEN_NAME_WELCOME
@@ -36,7 +38,8 @@ import io.falu.identity.ui.theme.IdentityTheme
 @Composable
 internal fun WelcomeScreen(
     viewModel: IdentityVerificationViewModel,
-    navActions: IdentityVerificationNavActions
+    navActions: IdentityVerificationNavActions,
+    verificationResultCallback: IdentityVerificationResultCallback
 ) {
     val context = LocalContext.current
     val response by viewModel.verification.observeAsState()
@@ -77,7 +80,7 @@ internal fun WelcomeScreen(
                     }
                 )
             },
-            onDeclined = {}
+            onDeclined = { verificationResultCallback.onFinishWithResult(IdentityVerificationResult.Canceled)}
         )
     }
 }
@@ -100,8 +103,8 @@ private fun ConsentView(
             text = stringResource(R.string.welcome_subtitle, workspaceName.replaceFirstChar { it.uppercase() }),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = dimensionResource(id = R.dimen.element_spacing_normal)),
-            style = MaterialTheme.typography.bodySmall
+                .padding(top = dimensionResource(id = R.dimen.element_spacing_normal)),
+            style = MaterialTheme.typography.bodyMedium
         )
 
         Text(
