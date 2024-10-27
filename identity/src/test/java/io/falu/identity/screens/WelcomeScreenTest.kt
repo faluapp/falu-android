@@ -10,6 +10,7 @@ import androidx.test.core.app.ApplicationProvider
 import io.falu.identity.ContractArgs
 import io.falu.identity.IdentityVerificationResultCallback
 import io.falu.identity.IdentityVerificationViewModel
+import io.falu.identity.TestApplication
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder
 import io.falu.identity.api.IdentityVerificationApiClient
 import io.falu.identity.api.models.WorkspaceInfo
@@ -31,8 +32,8 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [Build.VERSION_CODES.O_MR1])
-class WelcomeScreenTest {
+@Config(application = TestApplication::class, sdk = [Build.VERSION_CODES.Q])
+internal class WelcomeScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
