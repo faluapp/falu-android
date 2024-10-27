@@ -43,6 +43,7 @@ internal fun WelcomeScreen(
 ) {
     val context = LocalContext.current
     val response by viewModel.verification.observeAsState()
+    var isAcceptLoading by remember { mutableStateOf(false) }
 
     ObserveVerificationAndCompose(response, onError = {}) { verification ->
         LaunchedEffect(Unit) {
@@ -52,11 +53,17 @@ internal fun WelcomeScreen(
         }
         ConsentView(
             workspaceName = verification.workspace.name.replaceFirstChar { it.uppercase() },
+            loading = isAcceptLoading,
             onAccepted = {
+                isAcceptLoading = true
                 viewModel.updateVerification(
                     VerificationUpdateOptions(consent = true),
-                    onSuccess = { navActions.navigateToDocumentSelection() },
+                    onSuccess = {
+                        isAcceptLoading = false
+                        navActions.navigateToDocumentSelection()
+                    },
                     onError = {
+                        isAcceptLoading = false
                         navActions.navigateToError(
                             ErrorDestination.withApiFailure(
                                 title = context.getString(R.string.error_title),
@@ -80,7 +87,7 @@ internal fun WelcomeScreen(
                     }
                 )
             },
-            onDeclined = { verificationResultCallback.onFinishWithResult(IdentityVerificationResult.Canceled)}
+            onDeclined = { verificationResultCallback.onFinishWithResult(IdentityVerificationResult.Canceled) }
         )
     }
 }
@@ -88,11 +95,11 @@ internal fun WelcomeScreen(
 @Composable
 private fun ConsentView(
     workspaceName: String,
+    loading: Boolean,
     onAccepted: () -> Unit,
     onDeclined: () -> Unit
 ) {
     val scrollState = rememberScrollState()
-    var isAcceptLoading by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -116,10 +123,8 @@ private fun ConsentView(
             textAlign = TextAlign.Start
         )
 
-        LoadingButton(text = stringResource(R.string.welcome_button_accept), isLoading = isAcceptLoading) {
-            isAcceptLoading = true
+        LoadingButton(text = stringResource(R.string.welcome_button_accept), isLoading = loading) {
             onAccepted()
-            isAcceptLoading = false
         }
 
         LoadingButton(text = stringResource(R.string.welcome_button_decline)) { onDeclined() }
@@ -131,7 +136,7 @@ private fun ConsentView(
 fun WelcomePreview() {
     IdentityTheme {
         IdentityVerificationHeader(Uri.EMPTY, WorkspaceInfo(name = "Showcases", country = "US"), false) {
-            ConsentView(workspaceName = "Showcases", onAccepted = {}, onDeclined = {})
+            ConsentView(workspaceName = "Showcases", loading = true, onAccepted = {}, onDeclined = {})
         }
     }
 }
