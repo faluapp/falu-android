@@ -100,6 +100,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.joda)
     implementation(libs.bundles.coil)
+    implementation(libs.androidx.browser)
 
     testImplementation(libs.junit)
     testImplementation(libs.bundles.mokito)
@@ -113,9 +114,9 @@ dependencies {
     testImplementation(libs.androidx.espresso.core)
     testImplementation(libs.androidx.fragment.testing)
     testImplementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.browser)
 
     androidTestImplementation(libs.ui.tests)
+    debugImplementation(libs.ui.tests.manifest)
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.kotlin.test)

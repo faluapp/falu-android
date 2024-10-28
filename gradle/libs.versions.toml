@@ -82,6 +82,7 @@ coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
 compose-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 ui-tests = { module = "androidx.compose.ui:ui-test-junit4" }
+ui-tests-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 material3 = { module = "androidx.compose.material3:material3" }
 accompanist = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
 compose-activity = { module = "androidx.activity:activity-compose" }

@@ -6,6 +6,7 @@ import android.net.Uri
 import android.util.Log
 import android.widget.ImageView
 import androidx.activity.result.ActivityResultCaller
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -89,7 +90,8 @@ internal class IdentityVerificationViewModel(
     /**
      *
      */
-    private val _verification = MutableLiveData<ResourceResponse<Verification>?>()
+    @VisibleForTesting
+    internal val _verification = MutableLiveData<ResourceResponse<Verification>?>()
     val verification: LiveData<ResourceResponse<Verification>?>
         get() = _verification
 

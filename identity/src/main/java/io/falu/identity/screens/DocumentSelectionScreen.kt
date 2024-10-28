@@ -20,8 +20,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
@@ -30,18 +33,25 @@ import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.country.Country
 import io.falu.identity.api.models.country.SupportedCountry
 import io.falu.identity.api.models.verification.VerificationUpdateOptions
+import io.falu.identity.navigation.ErrorDestination
+import io.falu.identity.navigation.IdentityVerificationNavActions
 import io.falu.identity.ui.CountriesView
 import io.falu.identity.ui.LoadingButton
 import io.falu.identity.ui.ObserveVerificationAndCompose
 import io.falu.identity.ui.theme.IdentityTheme
 import software.tingle.api.ResourceResponse
 
+internal const val TAG_DOCUMENT_ID_CARD = "Identity Card"
+internal const val TAG_DOCUMENT_PASSPORT = "Passport"
+internal const val TAG_DOCUMENT_DL = "Driving Licence"
+internal const val TAG_CONTINUE_BUTTON = "Continue"
+
 @Composable
 internal fun DocumentSelectionScreen(
     viewModel: IdentityVerificationViewModel,
-    navigateToCaptureMethods: (IdentityDocumentType) -> Unit,
-    navigateToError: (Throwable) -> Unit
+    navActions: IdentityVerificationNavActions,
 ) {
+    val context = LocalContext.current
     val verificationResponse by viewModel.verification.observeAsState()
     val supportedCountriesResponse by viewModel.supportedCountries.observeAsState()
     var selectedDocumentType by remember { mutableStateOf<IdentityDocumentType?>(null) }
@@ -66,16 +76,40 @@ internal fun DocumentSelectionScreen(
             )
 
             Box(modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.content_padding_normal))) {
-                LoadingButton(text = stringResource(R.string.button_continue), enabled = selectedDocumentType != null) {
+                LoadingButton(
+                    text = stringResource(R.string.button_continue),
+                    enabled = selectedDocumentType != null,
+                    modifier = Modifier.semantics { testTag = TAG_CONTINUE_BUTTON }
+                ) {
                     isLoading = true
 
                     val updateOptions = VerificationUpdateOptions(country = selectedCountry?.country?.code.orEmpty())
 
                     viewModel.updateVerification(
                         updateOptions,
-                        onSuccess = { navigateToCaptureMethods(selectedDocumentType!!) },
-                        onError = {},
-                        onFailure = { navigateToError(it) }
+                        onSuccess = { navActions.navigateToDocumentCaptureMethods(selectedDocumentType!!) },
+                        onError = {
+                            navActions.navigateToError(
+                                ErrorDestination.withApiFailure(
+                                    title = context.getString(R.string.error_title),
+                                    desc = context.getString(R.string.error_title_unexpected_error),
+                                    backButtonText = context.getString(R.string.button_rectify),
+                                    backButtonDestination = "",
+                                    throwable = it
+                                )
+                            )
+                        },
+                        onFailure = {
+                            navActions.navigateToError(
+                                ErrorDestination.withApiFailure(
+                                    title = context.getString(R.string.error_title),
+                                    desc = context.getString(R.string.error_title_unexpected_error),
+                                    backButtonText = context.getString(R.string.button_rectify),
+                                    backButtonDestination = "",
+                                    throwable = it
+                                )
+                            )
+                        }
                     )
 
                     isLoading = false
@@ -94,9 +128,7 @@ private fun DocumentSelectionView(
     var selectedCountry by remember { mutableStateOf<SupportedCountry?>(null) }
 
     Column {
-        CountriesView(response, selectedCountry, onCountrySelected = {
-            selectedCountry = it
-        })
+        CountriesView(response, selectedCountry, onCountrySelected = { selectedCountry = it })
         DocumentOptions(allowedDocuments, selectedCountry, onSelected)
     }
 }
@@ -107,6 +139,7 @@ private fun DocumentOptions(
     supportedCountry: SupportedCountry?,
     onSelected: (IdentityDocumentType, SupportedCountry) -> Unit
 ) {
+    val context = LocalContext.current
     var selected by remember { mutableStateOf<IdentityDocumentType?>(null) }
 
     fun isSelected(documentType: IdentityDocumentType) = selected == documentType
@@ -130,7 +163,8 @@ private fun DocumentOptions(
             ElevatedFilterChip(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = dimensionResource(R.dimen.element_spacing_normal)),
+                    .padding(bottom = dimensionResource(R.dimen.element_spacing_normal))
+                    .semantics { testTag = context.getString(documentType.titleRes) },
                 selected = isSelected(documentType),
                 enabled = isEnabled(documentType),
                 onClick = {

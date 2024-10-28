@@ -1,17 +1,17 @@
-package io.falu.identity.documents
+package io.falu.identity.screens
 
 import android.net.Uri
 import android.os.Build
-import android.view.View
-import android.widget.ProgressBar
-import androidx.fragment.app.testing.launchFragmentInContainer
-import androidx.navigation.Navigation
-import androidx.navigation.testing.TestNavHostController
+import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.junit4.ComposeContentTestRule
+import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
+import androidx.lifecycle.MutableLiveData
 import androidx.test.core.app.ApplicationProvider
-import com.google.android.material.button.MaterialButton
 import io.falu.identity.ContractArgs
 import io.falu.identity.IdentityVerificationViewModel
-import io.falu.identity.R
+import io.falu.identity.TestApplication
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.country.Country
@@ -20,25 +20,35 @@ import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationOptions
 import io.falu.identity.api.models.verification.VerificationOptionsForDocument
 import io.falu.identity.api.models.verification.VerificationType
-import io.falu.identity.databinding.FragmentDocumentSelectionBinding
-import io.falu.identity.utils.createFactoryFor
+import io.falu.identity.navigation.IdentityVerificationNavActions
+import io.falu.identity.ui.TAG_INPUT_ISSUING_COUNTRY
+import okhttp3.Headers
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.KArgumentCaptor
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import kotlin.test.assertEquals
-import com.google.android.material.R as MatR
+import software.tingle.api.ResourceResponse
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [Build.VERSION_CODES.O_MR1])
-class DocumentSelectionFragmentTest {
+@Config(application = TestApplication::class, sdk = [Build.VERSION_CODES.Q])
+internal class DocumentSelectionScreenTest {
+    @get:Rule
+    val composeTestRule = createComposeRule()
+
+    private val verificationResponse = MutableLiveData<ResourceResponse<Verification>?>(null)
+    private val supportedCountriesResponse = MutableLiveData<ResourceResponse<Array<SupportedCountry>>?>()
+
+    private val navActions = mock<IdentityVerificationNavActions> {
+        on { navigateToDocumentCaptureMethods(any()) }.then {}
+        on { navigateToError(any()) }.then {}
+    }
 
     private val mockIdentityVerificationViewModel = mock<IdentityVerificationViewModel> {
         on { analyticsRequestBuilder }.thenReturn(
@@ -47,6 +57,8 @@ class DocumentSelectionFragmentTest {
                 args = contractArgs
             )
         )
+        on { verification }.thenReturn(verificationResponse)
+        on { supportedCountries }.thenReturn(supportedCountriesResponse)
     }
 
     private val supportedCountries = arrayOf(
@@ -59,6 +71,7 @@ class DocumentSelectionFragmentTest {
             )
         )
     )
+
 
     private val verificationWithAllowedDocuments = mock<Verification>().also {
         whenever(it.type).thenReturn(VerificationType.DOCUMENT)
@@ -76,16 +89,6 @@ class DocumentSelectionFragmentTest {
         )
     }
 
-    private fun successfulVerification(data: Verification = verificationWithAllowedDocuments) {
-        val successCaptor: KArgumentCaptor<(Verification) -> Unit> = argumentCaptor()
-        verify(mockIdentityVerificationViewModel, times(1)).observeForVerificationResults(
-            any(),
-            successCaptor.capture(),
-            any()
-        )
-        successCaptor.lastValue(data)
-    }
-
     private fun getSupportedCountries() {
         val successCaptor: KArgumentCaptor<(Array<SupportedCountry>) -> Unit> = argumentCaptor()
         verify(mockIdentityVerificationViewModel)
@@ -96,58 +99,55 @@ class DocumentSelectionFragmentTest {
 
     @Test
     fun `test setup of supported countries and available documents`() {
-        launchDocumentSelectionFragment { binding, _ ->
-            getSupportedCountries()
+        val response = ResourceResponse(
+            200,
+            Headers.headersOf(),
+            verificationWithAllowedDocuments,
+            null
+        )
 
-            successfulVerification()
+        setComposeTestRuleWith(response) {
+            onNodeWithTag(TAG_INPUT_ISSUING_COUNTRY).performClick()
 
-            assertEquals(binding.inputIssuingCountry.text.toString(), "Kenya")
-            assertEquals(binding.chipDrivingLicense.isEnabled, true)
-            assertEquals(binding.chipIdentityCard.isEnabled, true)
-            assertEquals(binding.chipPassport.isEnabled, true)
+            onNodeWithTag(TAG_DOCUMENT_ID_CARD).assertExists().assertIsNotEnabled()
+            onNodeWithTag(TAG_DOCUMENT_PASSPORT).assertExists().assertIsNotEnabled()
+            onNodeWithTag(TAG_DOCUMENT_DL).assertExists().assertIsNotEnabled()
         }
     }
 
     @Test
     fun `test if identity card document selected and continue`() {
-        launchDocumentSelectionFragment { binding, _ ->
-            getSupportedCountries()
+        val response = ResourceResponse(
+            200,
+            Headers.headersOf(),
+            verificationWithAllowedDocuments,
+            null
+        )
 
-            successfulVerification()
+        setComposeTestRuleWith(response) {
+            composeTestRule.onNodeWithTag(TAG_DOCUMENT_ID_CARD).performClick()
 
-            binding.chipIdentityCard.isChecked = true
-
-            binding.buttonContinue.findViewById<MaterialButton>(R.id.button_loading).callOnClick()
-
-            verify(mockIdentityVerificationViewModel).updateVerification(any(), any(), any(), any())
-
-            assertEquals(
-                binding.buttonContinue.findViewById<MaterialButton>(R.id.button_loading).isEnabled,
-                false
-            )
-            assertEquals(
-                binding.buttonContinue.findViewById<ProgressBar>(R.id.progress_view).visibility,
-                View.VISIBLE
-            )
+            composeTestRule.onNodeWithTag(TAG_CONTINUE_BUTTON).performClick()
+            composeTestRule.onNodeWithTag(TAG_CONTINUE_BUTTON).assertIsNotEnabled()
         }
     }
 
-    private fun launchDocumentSelectionFragment(
-        block: (binding: FragmentDocumentSelectionBinding, navController: TestNavHostController) -> Unit
+    private fun setComposeTestRuleWith(
+        response: ResourceResponse<Verification>,
+        testBlock: ComposeContentTestRule.() -> Unit = {}
     ) {
-        launchFragmentInContainer(themeResId = MatR.style.Theme_MaterialComponents) {
-            DocumentSelectionFragment(createFactoryFor(mockIdentityVerificationViewModel))
-        }.onFragment {
-            val navController = TestNavHostController(ApplicationProvider.getApplicationContext())
-
-            navController.setGraph(R.navigation.identity_verification_nav_graph)
-
-            navController.setCurrentDestination(R.id.fragment_document_selection)
-
-            Navigation.setViewNavController(it.requireView(), navController)
-
-            block(FragmentDocumentSelectionBinding.bind(it.requireView()), navController)
+        verificationResponse.postValue(response)
+        supportedCountriesResponse.postValue(
+            ResourceResponse(
+                200, Headers.headersOf(), supportedCountries,
+                null
+            )
+        )
+        composeTestRule.setContent {
+            DocumentSelectionScreen(mockIdentityVerificationViewModel, navActions)
         }
+
+        with(composeTestRule, testBlock)
     }
 
     private companion object {

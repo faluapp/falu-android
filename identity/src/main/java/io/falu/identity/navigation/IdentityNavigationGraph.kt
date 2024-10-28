@@ -69,10 +69,7 @@ internal fun IdentityNavigationGraph(
             }
 
             composable(DocumentSelectionDestination.ROUTE.route) {
-                DocumentSelectionScreen(
-                    viewModel = identityViewModel,
-                    navigateToCaptureMethods = { navActions.navigateToDocumentCaptureMethods(it) },
-                    navigateToError = {})
+                DocumentSelectionScreen(viewModel = identityViewModel, navActions = navActions)
             }
 
             composable(SelfieDestination.ROUTE.route) {

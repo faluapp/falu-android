@@ -26,6 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -39,6 +41,8 @@ import io.falu.identity.api.models.country.Country
 import io.falu.identity.api.models.country.SupportedCountry
 import io.falu.identity.ui.theme.IdentityTheme
 import software.tingle.api.ResourceResponse
+
+internal const val TAG_INPUT_ISSUING_COUNTRY = "input_issuing_country"
 
 @Composable
 internal fun CountriesView(
@@ -98,6 +102,9 @@ private fun SupportedCountryViews(
                 modifier = Modifier
                     .menuAnchor(MenuAnchorType.PrimaryNotEditable)
                     .fillMaxWidth()
+                    .semantics {
+                        testTag = TAG_INPUT_ISSUING_COUNTRY
+                    }
             )
 
             ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
