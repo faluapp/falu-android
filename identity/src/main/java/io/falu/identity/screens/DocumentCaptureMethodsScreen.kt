@@ -37,7 +37,7 @@ internal fun DocumentCaptureMethodsScreen(
 ) {
     val verificationResponse by viewModel.verification.observeAsState()
 
-    ObserveVerificationAndCompose(verificationResponse, onError = {}) { verification ->
+    ObserveVerificationAndCompose(verificationResponse, onError = {}) {
         LaunchedEffect(Unit) {
             viewModel.reportTelemetry(
                 viewModel.analyticsRequestBuilder.screenPresented(screenName = SCREEN_NAME_DOCUMENT_CAPTURE_METHODS)
