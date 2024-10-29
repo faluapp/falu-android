@@ -26,11 +26,8 @@ import okhttp3.Headers
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.kotlin.KArgumentCaptor
 import org.mockito.kotlin.any
-import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -72,7 +69,6 @@ internal class DocumentSelectionScreenTest {
         )
     )
 
-
     private val verificationWithAllowedDocuments = mock<Verification>().also {
         whenever(it.type).thenReturn(VerificationType.DOCUMENT)
         whenever(it.options).thenReturn(
@@ -87,14 +83,6 @@ internal class DocumentSelectionScreenTest {
                 )
             )
         )
-    }
-
-    private fun getSupportedCountries() {
-        val successCaptor: KArgumentCaptor<(Array<SupportedCountry>) -> Unit> = argumentCaptor()
-        verify(mockIdentityVerificationViewModel)
-            .observerForSupportedCountriesResults(any(), successCaptor.capture(), any())
-
-        successCaptor.lastValue(supportedCountries)
     }
 
     @Test

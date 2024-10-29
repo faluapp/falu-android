@@ -54,7 +54,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/upload_document_capture_document_font"
+                            android:text="@string/upload_document_capture_document_front"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
                         <LinearLayout

@@ -59,9 +59,10 @@ internal fun DocumentCaptureView(
         ) {
             DocumentCard(
                 title = stringResource(
-                    R.string.upload_document_capture_document_font,
+                    R.string.upload_document_capture_document_front,
                     stringResource(documentType.titleRes)
                 ),
+                buttonText = stringResource(id = R.string.button_select_front),
                 onSelectClicked = { onFront() },
                 isUploaded = isFrontUploaded,
                 loading = isFrontLoading
@@ -73,6 +74,7 @@ internal fun DocumentCaptureView(
                         R.string.upload_document_capture_document_back,
                         stringResource(documentType.titleRes)
                     ),
+                    buttonText = stringResource(id = R.string.button_select_back),
                     onSelectClicked = { onBack() },
                     isUploaded = isBackUploaded,
                     loading = isBackLoading
@@ -85,6 +87,7 @@ internal fun DocumentCaptureView(
 @Composable
 private fun DocumentCard(
     title: String,
+    buttonText: String,
     onSelectClicked: () -> Unit,
     loading: Boolean,
     isUploaded: Boolean
@@ -114,7 +117,7 @@ private fun DocumentCard(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (!isUploaded && !loading) {
                     TextButton(onClick = onSelectClicked) {
-                        Text(text = stringResource(id = R.string.button_select))
+                        Text(text = buttonText)
                     }
                 }
 
@@ -142,7 +145,7 @@ private fun DocumentCard(
 
 @Preview
 @Composable
-fun DocumentCapturePreview() {
+internal fun DocumentCapturePreview() {
     IdentityTheme {
         DocumentCaptureView(
             title = stringResource(

@@ -71,7 +71,7 @@ internal class ManualCaptureFragment(identityViewModelFactory: ViewModelProvider
             )
         binding.tvCardFront.text =
             getString(
-                R.string.upload_document_capture_document_font,
+                R.string.upload_document_capture_document_front,
                 identityDocumentType.getIdentityDocumentName(requireContext())
             )
         binding.tvCardBack.text =

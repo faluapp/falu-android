@@ -3,6 +3,8 @@
     <string name="button_continue">Continue</string>
     <string name="button_finish">Complete</string>
     <string name="button_select">Select</string>
+    <string name="button_select_front">Select Front</string>
+    <string name="button_select_back">Select Back</string>
     <string name="button_take_photo">Take Photo</string>
     <string name="button_scan">Scan</string>
     <string name="button_verify">Verify</string>
@@ -56,7 +58,7 @@
 
     <!--Upload Document -->
     <string name="upload_document_capture_title">%1$s upload</string>
-    <string name="upload_document_capture_document_font">Front of %1$s</string>
+    <string name="upload_document_capture_document_front">Front of %1$s</string>
     <string name="upload_document_capture_document_back">Back of %1$s</string>
 
     <!--Scan Capture -->
