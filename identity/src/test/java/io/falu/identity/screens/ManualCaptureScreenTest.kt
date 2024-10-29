@@ -39,6 +39,7 @@ import kotlin.test.Test
 @RunWith(RobolectricTestRunner::class)
 @Config(application = TestApplication::class, sdk = [Build.VERSION_CODES.Q])
 internal class ManualCaptureScreenTest {
+
     private val context = ApplicationProvider.getApplicationContext<Context>()
 
     private val documentUploadDisposition = MutableLiveData(DocumentUploadDisposition())
