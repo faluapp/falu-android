@@ -21,6 +21,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -37,8 +38,10 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import io.falu.core.utils.toThrowable
 import io.falu.identity.ContractArgs
@@ -46,12 +49,15 @@ import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.models.WorkspaceInfo
 import io.falu.identity.api.models.verification.Verification
+import io.falu.identity.navigation.SupportDestination
+import io.falu.identity.ui.theme.IdentityTheme
 import software.tingle.api.ResourceResponse
 
 @Composable
 internal fun IdentityVerificationBaseScreen(
     viewModel: IdentityVerificationViewModel,
     contractArgs: ContractArgs,
+    navigateToSupport: () -> Unit = {},
     content: @Composable () -> Unit
 ) {
     val response by viewModel.verification.observeAsState()
@@ -67,6 +73,7 @@ internal fun IdentityVerificationBaseScreen(
         logoUri = contractArgs.workspaceLogo,
         workspace = workspace,
         live = liveMode,
+        navigateToSupport = navigateToSupport,
         content = content
     )
 }
@@ -76,11 +83,12 @@ internal fun IdentityVerificationHeader(
     logoUri: Uri,
     workspace: WorkspaceInfo?,
     live: Boolean?,
+    isSupportScreen: Boolean = false,
+    navigateToSupport: () -> Unit = {},
     content: @Composable () -> Unit
 ) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
             .fillMaxSize()
             .padding(horizontal = dimensionResource(id = R.dimen.content_padding_normal)),
         verticalArrangement = Arrangement.Center
@@ -91,14 +99,13 @@ internal fun IdentityVerificationHeader(
             // Information Card
             Card(
                 shape = RoundedCornerShape(2.dp),
-                modifier = Modifier
-                    .padding(vertical = dimensionResource(id = R.dimen.content_padding_normal_2x))
+                modifier = Modifier.padding(top = dimensionResource(id = R.dimen.content_padding_normal_2x))
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = dimensionResource(R.dimen.content_padding_normal))
-                        .padding(vertical = dimensionResource(R.dimen.content_padding_normal))
+                        .padding(top = dimensionResource(R.dimen.content_padding_normal_2x))
+                        .padding(bottom = dimensionResource(R.dimen.element_spacing_normal))
                 ) {
                     Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.element_spacing_normal)))
 
@@ -144,6 +151,10 @@ internal fun IdentityVerificationHeader(
                     }
                 }
             }
+        }
+
+        if (!isSupportScreen) {
+            Footer(modifier = Modifier, navigateToSupport)
         }
     }
 }
@@ -214,6 +225,21 @@ internal fun WelcomeImage(logoUri: Uri) {
 }
 
 @Composable
+private fun Footer(modifier: Modifier, navigateToSupport: () -> Unit) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        TextButton(onClick = { navigateToSupport() }) {
+            Text(
+                text = stringResource(R.string.identity_verification_text_help_and_support),
+                color = MaterialTheme.colorScheme.secondary
+            )
+        }
+    }
+}
+
+@Composable
 internal fun ObserveVerificationAndCompose(
     response: ResourceResponse<Verification>?,
     onError: (Throwable?) -> Unit,
@@ -223,5 +249,13 @@ internal fun ObserveVerificationAndCompose(
         onSuccess(response.resource!!)
     } else {
         onError(response?.toThrowable())
+    }
+}
+
+@Preview
+@Composable
+internal fun IdentityBasePreview() {
+    IdentityTheme {
+        IdentityVerificationHeader(Uri.EMPTY, WorkspaceInfo(name = "Showcases", country = "US"), false) {}
     }
 }

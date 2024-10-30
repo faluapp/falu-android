@@ -9,6 +9,10 @@ internal class IdentityVerificationNavActions(private val navController: NavCont
         navController.navigateTo(WelcomeDestination())
     }
 
+    fun navigateToSupport() {
+        navController.navigateTo(SupportDestination())
+    }
+
     fun navigateToDocumentSelection() {
         navController.navigateTo(DocumentSelectionDestination())
     }

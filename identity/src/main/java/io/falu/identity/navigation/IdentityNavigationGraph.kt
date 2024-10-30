@@ -19,6 +19,7 @@ import io.falu.identity.screens.ConfirmationScreen
 import io.falu.identity.screens.DocumentCaptureMethodsScreen
 import io.falu.identity.screens.DocumentSelectionScreen
 import io.falu.identity.screens.InitialLoadingScreen
+import io.falu.identity.screens.SupportScreen
 import io.falu.identity.screens.WelcomeScreen
 import io.falu.identity.screens.capture.ManualCaptureScreen
 import io.falu.identity.screens.capture.ScanCaptureScreen
@@ -45,7 +46,8 @@ internal fun IdentityNavigationGraph(
 ) {
     IdentityVerificationBaseScreen(
         viewModel = identityViewModel,
-        contractArgs = contractArgs
+        contractArgs = contractArgs,
+        navigateToSupport = { navActions.navigateToSupport() }
     ) {
         NavHost(
             navController = navController,
@@ -54,6 +56,10 @@ internal fun IdentityNavigationGraph(
         ) {
             composable(InitialDestination.ROUTE.route) {
                 InitialLoadingScreen(identityViewModel = identityViewModel, navActions = navActions)
+            }
+
+            composable(SupportDestination.ROUTE.route) {
+                SupportScreen(identityViewModel = identityViewModel)
             }
 
             composable(WelcomeDestination.ROUTE.route) {
