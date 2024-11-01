@@ -3,6 +3,7 @@ package io.falu.identity.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -29,6 +30,7 @@ import io.falu.identity.screens.error.ErrorScreenButton
 import io.falu.identity.screens.selfie.SelfieScreen
 import io.falu.identity.selfie.FaceScanViewModel
 import io.falu.identity.ui.IdentityVerificationBaseScreen
+import io.falu.identity.utils.openAppSettings
 
 @Composable
 internal fun IdentityNavigationGraph(
@@ -49,6 +51,7 @@ internal fun IdentityNavigationGraph(
         contractArgs = contractArgs,
         navigateToSupport = { navActions.navigateToSupport() }
     ) {
+        val context = LocalContext.current
         NavHost(
             navController = navController,
             startDestination = startDestination,
@@ -166,6 +169,17 @@ internal fun IdentityNavigationGraph(
                     } else {
                         null
                     }
+                )
+            }
+
+            composable(CameraPermissionDeniedDestination.ROUTE.route) {
+                ErrorScreen(
+                    title = stringResource(R.string.permission_explanation_title),
+                    desc = stringResource(R.string.permission_explanation_camera),
+                    primaryButton = ErrorScreenButton(
+                        text = stringResource(R.string.button_app_settings),
+                        onClick = { context.openAppSettings() }
+                    )
                 )
             }
         }

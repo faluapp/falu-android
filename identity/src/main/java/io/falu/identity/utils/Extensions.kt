@@ -3,8 +3,10 @@ package io.falu.identity.utils
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.Intent
 import android.graphics.Rect
 import android.net.Uri
+import android.provider.Settings
 import android.text.TextUtils
 import android.util.Size
 import android.view.View
@@ -112,4 +114,12 @@ internal fun Context.getActivity(): Activity? = when (this) {
     is Activity -> this
     is ContextWrapper -> baseContext.getActivity()
     else -> null
+}
+
+fun Context.openAppSettings() {
+    val intent = Intent(
+        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+        Uri.fromParts("package", packageName, null)
+    )
+    startActivity(intent)
 }

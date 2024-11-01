@@ -44,4 +44,8 @@ internal class IdentityVerificationNavActions(private val navController: NavCont
     fun navigateToError(error: ErrorDestination) {
         navController.navigateTo(error)
     }
+
+    fun navigateToCameraPermissionDenied() {
+        navController.navigateTo(CameraPermissionDeniedDestination())
+    }
 }

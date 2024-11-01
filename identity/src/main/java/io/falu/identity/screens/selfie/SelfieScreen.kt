@@ -43,10 +43,11 @@ import io.falu.identity.api.models.verification.VerificationSelfieUpload
 import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.camera.CameraView
+import io.falu.identity.navigation.ErrorDestination
 import io.falu.identity.navigation.IdentityVerificationNavActions
 import io.falu.identity.scan.ScanDisposition
+import io.falu.identity.screens.CameraPermissionLaunchEffect
 import io.falu.identity.screens.capture.CapturePreview
-import io.falu.identity.navigation.ErrorDestination
 import io.falu.identity.selfie.FaceScanViewModel
 import io.falu.identity.selfie.FaceScanner
 import io.falu.identity.ui.ObserveVerificationAndCompose
@@ -68,6 +69,11 @@ internal fun SelfieScreen(
                 viewModel.analyticsRequestBuilder.screenPresented(screenName = SCREEN_NAME_SELFIE)
             )
         }
+
+        CameraPermissionLaunchEffect(
+            onPermissionDenied = { navActions.navigateToCameraPermissionDenied() },
+            onPermissionGranted = {}
+        )
 
         SelfieCaptureView(
             identityViewModel = viewModel,

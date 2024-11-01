@@ -14,6 +14,7 @@
     <string name="button_cancel">Cancel</string>
     <string name="button_try_again">Try Again</string>
     <string name="button_change_method">Change Method</string>
+    <string name="button_app_settings">App Settings</string>
     <string name="identity_verification_title_identity_verification">Identity verification</string>
     <string name="identity_verification_text_mode_sandbox">Sandbox/Test</string>
     <string name="identity_verification_text_help_and_support">Help And Support</string>

@@ -37,9 +37,10 @@ import io.falu.identity.capture.AbstractCaptureFragment.Companion.getIdentityDoc
 import io.falu.identity.capture.scan.DocumentScanViewModel
 import io.falu.identity.capture.scan.DocumentScanner
 import io.falu.identity.capture.scan.ScanCaptureFragment.Companion.getScanType
-import io.falu.identity.navigation.IdentityVerificationNavActions
 import io.falu.identity.navigation.ErrorDestination
+import io.falu.identity.navigation.IdentityVerificationNavActions
 import io.falu.identity.scan.ScanDisposition
+import io.falu.identity.screens.CameraPermissionLaunchEffect
 import io.falu.identity.ui.LoadingButton
 import io.falu.identity.ui.ObserveVerificationAndCompose
 
@@ -66,6 +67,11 @@ internal fun ScanCaptureScreen(
                 viewModel.analyticsRequestBuilder.screenPresented(screenName = SCREEN_NAME_AUTO_CAPTURE)
             )
         }
+
+        CameraPermissionLaunchEffect(
+            onPermissionDenied = { navActions.navigateToCameraPermissionDenied() },
+            onPermissionGranted = {}
+        )
 
         Box(modifier = Modifier.wrapContentHeight()) {
             when {
