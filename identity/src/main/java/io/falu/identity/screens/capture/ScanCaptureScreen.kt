@@ -37,7 +37,6 @@ import io.falu.identity.capture.AbstractCaptureFragment.Companion.getIdentityDoc
 import io.falu.identity.capture.scan.DocumentScanViewModel
 import io.falu.identity.capture.scan.DocumentScanner
 import io.falu.identity.capture.scan.ScanCaptureFragment.Companion.getScanType
-import io.falu.identity.navigation.ErrorDestination
 import io.falu.identity.navigation.IdentityVerificationNavActions
 import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.screens.CameraPermissionLaunchEffect
@@ -95,15 +94,7 @@ internal fun ScanCaptureScreen(
                             uploadFront = false
                         },
                         onScanTimeOut = {
-                            navActions.navigateToError(
-                                ErrorDestination.withCameraTimeout(
-                                    title = context.getString(R.string.error_title_scan_capture),
-                                    desc = context.getString(R.string.error_description_scan_capture),
-                                    message = context.getString(R.string.error_message_scan_capture),
-                                    backButtonText = context.getString(R.string.button_try_again),
-                                    backButtonDestination = "",
-                                )
-                            )
+                            navActions.navigateToErrorWithScreenTimeout(documentType.getScanType().first)
                         }
                     )
                 }
@@ -129,15 +120,7 @@ internal fun ScanCaptureScreen(
                                 uploadBack = false
                             },
                             onScanTimeOut = {
-                                navActions.navigateToError(
-                                    ErrorDestination.withCameraTimeout(
-                                        title = context.getString(R.string.error_title_scan_capture),
-                                        desc = context.getString(R.string.error_description_scan_capture),
-                                        message = context.getString(R.string.error_message_scan_capture),
-                                        backButtonText = context.getString(R.string.button_try_again),
-                                        backButtonDestination = "",
-                                    )
-                                )
+                                navActions.navigateToErrorWithScreenTimeout(documentType.getScanType().second)
                             }
                         )
                     }
@@ -183,27 +166,11 @@ internal fun ScanCaptureScreen(
                                             verificationRequest = uploadRequest,
                                         )
                                     },
-                                    onError = {
-                                        navActions.navigateToError(
-                                            ErrorDestination.withApiFailure(
-                                                title = context.getString(R.string.error_title),
-                                                desc = context.getString(R.string.error_title_unexpected_error),
-                                                backButtonText = context.getString(R.string.button_rectify),
-                                                backButtonDestination = "",
-                                                throwable = it
-                                            )
-                                        )
+                                    onError = { throwable ->
+                                        navActions.navigateToErrorWithApiExceptions(throwable)
                                     },
-                                    onFailure = {
-                                        navActions.navigateToError(
-                                            ErrorDestination.withApiFailure(
-                                                title = context.getString(R.string.error_title),
-                                                desc = context.getString(R.string.error_title_unexpected_error),
-                                                backButtonText = context.getString(R.string.button_rectify),
-                                                backButtonDestination = "",
-                                                throwable = it
-                                            )
-                                        )
+                                    onFailure = { throwable ->
+                                        navActions.navigateToErrorWithFailure(throwable)
                                     }
                                 )
                             }
@@ -384,29 +351,13 @@ private fun uploadDocument(
         output.bitmap,
         documentSide,
         output.score,
-        onError = {
+        onError = { throwable ->
             onLoad(false)
-            navActions.navigateToError(
-                ErrorDestination.withApiFailure(
-                    title = context.getString(R.string.error_title),
-                    desc = context.getString(R.string.error_title_unexpected_error),
-                    backButtonText = context.getString(R.string.button_rectify),
-                    backButtonDestination = "",
-                    throwable = it
-                )
-            )
+            navActions.navigateToErrorWithApiExceptions(throwable)
         },
-        onFailure = {
+        onFailure = { throwable ->
             onLoad(false)
-            navActions.navigateToError(
-                ErrorDestination.withApiFailure(
-                    title = context.getString(R.string.error_title),
-                    desc = context.getString(R.string.error_title_unexpected_error),
-                    backButtonText = context.getString(R.string.button_rectify),
-                    backButtonDestination = "",
-                    throwable = it
-                )
-            )
+            navActions.navigateToErrorWithFailure(throwable)
         }
     )
 }

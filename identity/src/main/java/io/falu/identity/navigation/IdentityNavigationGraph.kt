@@ -16,6 +16,7 @@ import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.models.UploadMethod
 import io.falu.identity.capture.scan.DocumentScanViewModel
+import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.screens.ConfirmationScreen
 import io.falu.identity.screens.DocumentCaptureMethodsScreen
 import io.falu.identity.screens.DocumentSelectionScreen
@@ -155,20 +156,35 @@ internal fun IdentityNavigationGraph(
                     title = ErrorDestination.errorTitle(entry) ?: "",
                     desc = ErrorDestination.errorDescription(entry) ?: "",
                     message = ErrorDestination.errorMessage(entry),
-                    primaryButton = ErrorScreenButton(
-                        text = ErrorDestination.backButtonText(entry) ?: "",
-                        onClick = {}
-                    ),
-                    secondaryButton = if (ErrorDestination.cancelFlow(entry)) {
-                        ErrorScreenButton(
-                            text = stringResource(R.string.button_cancel),
-                            onClick = {
+                    primaryButton = ErrorDestination.primaryButtonOptions(entry)
+                        ?.let { (buttonText, buttonRequirement) ->
+                            ErrorScreenButton(
+                                text = buttonText,
+                                onClick = {}
+                            )
+                        },
+                    secondaryButton = ErrorScreenButton(
+                        text = ErrorDestination.backButtonText(entry) ?: stringResource(R.string.button_cancel),
+                        onClick = {
+                            if (ErrorDestination.cancelFlow(entry)) {
                                 verificationResultCallback.onFinishWithResult(IdentityVerificationResult.Canceled)
+                            } else {
+                                val destination = ErrorDestination.backButtonDestination(entry)
+                                if (destination.isNullOrEmpty()) {
+                                    navActions.navigateToWelcome()
+                                } else {
+                                    var shouldContinueNavigateUp = true
+                                    while (
+                                        shouldContinueNavigateUp &&
+                                        navController.currentDestination?.route?.substringBefore("?") !=
+                                        destination
+                                    ) {
+                                        shouldContinueNavigateUp = navController.resetAndNavigateUp(identityViewModel)
+                                    }
+                                }
                             }
-                        )
-                    } else {
-                        null
-                    }
+                        }
+                    )
                 )
             }
 
@@ -179,6 +195,31 @@ internal fun IdentityNavigationGraph(
                     primaryButton = ErrorScreenButton(
                         text = stringResource(R.string.button_app_settings),
                         onClick = { context.openAppSettings() }
+                    )
+                )
+            }
+
+            composable(
+                ScanTimeoutDestination.ROUTE.route,
+                arguments = ScanTimeoutDestination.ROUTE.arguments
+            ) { entry ->
+                val scanType = ScanTimeoutDestination.scanType(entry)
+
+                ErrorScreen(
+                    title = context.getString(R.string.error_title_scan_capture),
+                    desc = context.getString(R.string.error_description_scan_capture),
+                    message = if (scanType == ScanDisposition.DocumentScanType.SELFIE) {
+                        context.getString(R.string.error_description_selfie_capture)
+                    } else {
+                        context.getString(R.string.error_message_scan_capture)
+                    },
+                    secondaryButton = ErrorScreenButton(
+                        text = stringResource(R.string.button_try_again),
+                        onClick = {
+                            if (scanType != null) {
+                                navController.navigateTo(scanType.toScanDestination())
+                            }
+                        }
                     )
                 )
             }

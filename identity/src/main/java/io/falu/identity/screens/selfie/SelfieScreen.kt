@@ -43,7 +43,6 @@ import io.falu.identity.api.models.verification.VerificationSelfieUpload
 import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.camera.CameraView
-import io.falu.identity.navigation.ErrorDestination
 import io.falu.identity.navigation.IdentityVerificationNavActions
 import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.screens.CameraPermissionLaunchEffect
@@ -89,14 +88,7 @@ internal fun SelfieScreen(
                 )
             },
             onScanTimeOut = {
-                navActions.navigateToError(
-                    ErrorDestination.withCameraTimeout(
-                        title = context.getString(R.string.error_title_selfie_capture),
-                        desc = context.getString(R.string.error_description_selfie_capture),
-                        backButtonText = context.getString(R.string.button_try_again),
-                        backButtonDestination = "",
-                    )
-                )
+                navActions.navigateToErrorWithScreenTimeout(ScanDisposition.DocumentScanType.SELFIE)
             }
         )
     }
@@ -265,27 +257,11 @@ private fun uploadSelfie(
                 file = it
             )
         },
-        onFailure = {
-            navActions.navigateToError(
-                ErrorDestination.withApiFailure(
-                    title = context.getString(R.string.error_title),
-                    desc = context.getString(R.string.error_title_unexpected_error),
-                    backButtonText = context.getString(R.string.button_rectify),
-                    backButtonDestination = "",
-                    throwable = it
-                )
-            )
+        onFailure = { throwable ->
+            navActions.navigateToErrorWithFailure(throwable)
         },
-        onError = {
-            navActions.navigateToError(
-                ErrorDestination.withApiFailure(
-                    title = context.getString(R.string.error_title),
-                    desc = context.getString(R.string.error_title_unexpected_error),
-                    backButtonText = context.getString(R.string.button_rectify),
-                    backButtonDestination = "",
-                    throwable = it
-                )
-            )
+        onError = { throwable ->
+            navActions.navigateToErrorWithApiExceptions(throwable)
         }
     )
 }
@@ -316,27 +292,11 @@ private fun submitSelfieAndUploadedDocuments(
                 verificationRequest = uploadRequest,
             )
         },
-        onFailure = {
-            navActions.navigateToError(
-                ErrorDestination.withApiFailure(
-                    title = context.getString(R.string.error_title),
-                    desc = context.getString(R.string.error_title_unexpected_error),
-                    backButtonText = context.getString(R.string.button_rectify),
-                    backButtonDestination = "",
-                    throwable = it
-                )
-            )
+        onFailure = { throwable ->
+            navActions.navigateToErrorWithFailure(throwable)
         },
-        onError = {
-            navActions.navigateToError(
-                ErrorDestination.withApiFailure(
-                    title = context.getString(R.string.error_title),
-                    desc = context.getString(R.string.error_title_unexpected_error),
-                    backButtonText = context.getString(R.string.button_rectify),
-                    backButtonDestination = "",
-                    throwable = it
-                )
-            )
+        onError = { throwable ->
+            navActions.navigateToErrorWithApiExceptions(throwable)
         }
     )
 }

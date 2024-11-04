@@ -23,7 +23,6 @@ import io.falu.identity.R
 import io.falu.identity.api.models.requirements.RequirementType
 import io.falu.identity.api.models.requirements.RequirementType.Companion.nextDestination
 import io.falu.identity.api.models.verification.Verification
-import io.falu.identity.navigation.ErrorDestination
 import io.falu.identity.navigation.IdentityVerificationNavActions
 import io.falu.identity.ui.theme.IdentityTheme
 import software.tingle.api.ResourceResponse
@@ -40,16 +39,7 @@ internal fun InitialLoadingScreen(
     val verificationResponse by identityViewModel.verification.observeAsState()
 
     ObserveVerificationAndCompose(verificationResponse,
-        onError = { throwable ->
-            navActions.navigateToError(
-                ErrorDestination.withApiFailure(
-                    title = context.getString(R.string.error_title),
-                    desc = context.getString(R.string.error_title_unexpected_error),
-                    backButtonText = context.getString(R.string.button_try_again),
-                    throwable = throwable
-                )
-            )
-        }) { verification ->
+        onError = { throwable -> navActions.navigateToErrorWithFailure(throwable) }) { verification ->
         LaunchedEffect(Unit) {
             verification.requirements.pending.nextDestination(navActions, verification)
         }

@@ -33,7 +33,6 @@ import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.api.models.verification.VerificationUploadResult
 import io.falu.identity.navigation.IdentityVerificationNavActions
-import io.falu.identity.navigation.ErrorDestination
 import io.falu.identity.utils.FileUtils
 import io.falu.identity.utils.IdentityImageHandler
 import io.falu.identity.utils.isHttp
@@ -339,26 +338,10 @@ internal class IdentityVerificationViewModel(
                                 navActions.navigateToConfirmation()
                             }
                         }
-                    }, onFailure = {
-                        navActions.navigateToError(
-                            ErrorDestination.withApiFailure(
-                                title = context.getString(R.string.error_title),
-                                desc = context.getString(R.string.error_title_unexpected_error),
-                                backButtonText = context.getString(R.string.button_rectify),
-                                backButtonDestination = "",
-                                throwable = it
-                            )
-                        )
-                    }, onError = {
-                        navActions.navigateToError(
-                            ErrorDestination.withApiFailure(
-                                title = context.getString(R.string.error_title),
-                                desc = context.getString(R.string.error_title_unexpected_error),
-                                backButtonText = context.getString(R.string.button_rectify),
-                                backButtonDestination = "",
-                                throwable = it
-                            )
-                        )
+                    }, onFailure = { throwable ->
+                        navActions.navigateToErrorWithFailure(throwable)
+                    }, onError = { throwable ->
+                        navActions.navigateToErrorWithApiExceptions(throwable)
                     })
             }
         }

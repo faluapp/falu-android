@@ -5,7 +5,19 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import io.falu.identity.api.models.IdentityDocumentType
 
-internal data class ScanCaptureDestination(val documentType: IdentityDocumentType) : IdentityDestination() {
+internal data class ScanCaptureDestination(
+    val documentType: IdentityDocumentType,
+    val popToCapture: Boolean = false
+) : IdentityDestination(
+    popUpToParam = if (popToCapture) {
+        PopUpTo(
+            route = DocumentCaptureDestination.ROUTE.route,
+            inclusive = false
+        )
+    } else {
+        null
+    }
+) {
     override val workflowRoute: WorkflowRoute
         get() = ROUTE
 

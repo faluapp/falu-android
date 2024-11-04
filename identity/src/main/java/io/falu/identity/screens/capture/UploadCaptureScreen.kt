@@ -19,7 +19,6 @@ import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCRE
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.navigation.IdentityVerificationNavActions
-import io.falu.identity.navigation.ErrorDestination
 import io.falu.identity.ui.LoadingButton
 import io.falu.identity.ui.ObserveVerificationAndCompose
 
@@ -85,28 +84,8 @@ internal fun UploadCaptureScreen(
                                 verificationRequest = uploadRequest,
                             )
                         },
-                        onError = {
-                            navActions.navigateToError(
-                                ErrorDestination.withApiFailure(
-                                    title = context.getString(R.string.error_title),
-                                    desc = context.getString(R.string.error_title_unexpected_error),
-                                    backButtonText = context.getString(R.string.button_rectify),
-                                    backButtonDestination = "",
-                                    throwable = it
-                                )
-                            )
-                        },
-                        onFailure = {
-                            navActions.navigateToError(
-                                ErrorDestination.withApiFailure(
-                                    title = context.getString(R.string.error_title),
-                                    desc = context.getString(R.string.error_title_unexpected_error),
-                                    backButtonText = context.getString(R.string.button_rectify),
-                                    backButtonDestination = "",
-                                    throwable = it
-                                )
-                            )
-                        }
+                        onError = { throwable -> navActions.navigateToErrorWithApiExceptions(throwable) },
+                        onFailure = { throwable -> navActions.navigateToErrorWithFailure(throwable) }
                     )
                 }
             }

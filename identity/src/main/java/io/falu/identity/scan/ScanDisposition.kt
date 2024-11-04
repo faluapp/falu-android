@@ -1,6 +1,10 @@
 package io.falu.identity.scan
 
 import io.falu.identity.ai.DetectionOutput
+import io.falu.identity.api.models.IdentityDocumentType
+import io.falu.identity.navigation.IdentityDestination
+import io.falu.identity.navigation.ScanCaptureDestination
+import io.falu.identity.navigation.SelfieDestination
 import org.joda.time.DateTime
 
 /**
@@ -33,6 +37,29 @@ internal sealed class ScanDisposition(
             get() {
                 return this == DL_BACK || this == ID_BACK
             }
+
+        fun toScanDestination(): IdentityDestination {
+            return when (this) {
+                DL_BACK,
+                DL_FRONT -> ScanCaptureDestination(
+                    documentType = IdentityDocumentType.DRIVING_LICENSE,
+                    popToCapture = true
+                )
+
+                ID_BACK,
+                ID_FRONT -> ScanCaptureDestination(
+                    documentType = IdentityDocumentType.IDENTITY_CARD,
+                    popToCapture = true
+                )
+
+                PASSPORT -> ScanCaptureDestination(
+                    documentType = IdentityDocumentType.PASSPORT,
+                    popToCapture = true
+                )
+
+                SELFIE -> SelfieDestination()
+            }
+        }
     }
 
     /**

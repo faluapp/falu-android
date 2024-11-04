@@ -2,6 +2,7 @@ package io.falu.identity.navigation
 
 import androidx.navigation.NavController
 import io.falu.identity.api.models.IdentityDocumentType
+import io.falu.identity.scan.ScanDisposition
 
 internal class IdentityVerificationNavActions(private val navController: NavController) {
 
@@ -41,8 +42,16 @@ internal class IdentityVerificationNavActions(private val navController: NavCont
         navController.navigateTo(SelfieDestination())
     }
 
-    fun navigateToError(error: ErrorDestination) {
-        navController.navigateTo(error)
+    fun navigateToErrorWithApiExceptions(throwable: Throwable?) {
+        navController.navigateToErrorWithApiExceptions(throwable)
+    }
+
+    fun navigateToErrorWithFailure(throwable: Throwable?) {
+        navController.navigateToErrorWithFailure(throwable)
+    }
+
+    fun navigateToErrorWithScreenTimeout(scanType: ScanDisposition.DocumentScanType?) {
+        navController.navigateTo(ScanTimeoutDestination(scanType))
     }
 
     fun navigateToCameraPermissionDenied() {

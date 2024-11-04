@@ -27,7 +27,7 @@ internal fun ErrorScreen(
     title: String,
     desc: String,
     message: String? = null,
-    primaryButton: ErrorScreenButton,
+    primaryButton: ErrorScreenButton? = null,
     secondaryButton: ErrorScreenButton? = null
 ) {
     Column(
@@ -67,8 +67,10 @@ internal fun ErrorScreen(
             )
 
             Column(modifier = Modifier.padding(top = dimensionResource(id = R.dimen.element_spacing_normal))) {
-                Button(onClick = { primaryButton.onClick() }, modifier = modifier.fillMaxWidth()) {
-                    Text(primaryButton.text)
+                primaryButton?.let {
+                    Button(onClick = { primaryButton.onClick() }, modifier = modifier.fillMaxWidth()) {
+                        Text(primaryButton.text)
+                    }
                 }
 
                 secondaryButton?.let {

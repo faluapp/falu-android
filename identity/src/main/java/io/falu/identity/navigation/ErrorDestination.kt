@@ -3,15 +3,16 @@ package io.falu.identity.navigation
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import io.falu.identity.api.models.requirements.RequirementError
-import software.tingle.api.HttpApiResponseProblem
+import io.falu.identity.api.models.requirements.RequirementType
 
 internal data class ErrorDestination(
     val title: String,
     val desc: String = "",
     val message: String = "",
-    val backButtonText: String,
     val throwable: Throwable? = null,
+    val requirementType: RequirementType? = null,
+    val primaryButtonText: String = "",
+    val backButtonText: String,
     val backButtonDestination: String = "",
     val cancelFlow: Boolean = false
 ) : IdentityDestination() {
@@ -24,7 +25,9 @@ internal data class ErrorDestination(
         KEY_ERROR_MESSAGE to message,
         KEY_BACK_BUTTON_DESTINATION to backButtonDestination,
         KEY_BACK_BUTTON_TEXT to backButtonText,
-        KEY_CANCEL_FLOW to cancelFlow
+        KEY_CANCEL_FLOW to cancelFlow,
+        KEY_PRIMARY_BUTTON_TEXT to primaryButtonText,
+        KEY_REQUIREMENT_TYPE to requirementType
     )
 
     internal companion object {
@@ -36,6 +39,8 @@ internal data class ErrorDestination(
         internal const val KEY_BACK_BUTTON_DESTINATION = "button-destination"
         internal const val KEY_BACK_BUTTON_TEXT = "back-button-text"
         internal const val KEY_CANCEL_FLOW = "cancel-flow"
+        internal const val KEY_PRIMARY_BUTTON_TEXT = "primary-button-text"
+        internal const val KEY_REQUIREMENT_TYPE = "requirement-type"
 
         fun errorTitle(entry: NavBackStackEntry) = entry.getString(KEY_ERROR_TITLE)
 
@@ -50,6 +55,25 @@ internal data class ErrorDestination(
         fun backButtonText(entry: NavBackStackEntry) = entry.getString(KEY_BACK_BUTTON_TEXT)
 
         fun cancelFlow(entry: NavBackStackEntry) = entry.getBoolean(KEY_CANCEL_FLOW)
+
+        fun primaryButtonOptions(backStackEntry: NavBackStackEntry): Pair<String, RequirementType>? {
+            val primaryButtonText = backStackEntry.getString(KEY_PRIMARY_BUTTON_TEXT)
+            val primaryButtonRequirementType: RequirementType? =
+                backStackEntry.getString(KEY_REQUIREMENT_TYPE)
+                    .let { requirementString ->
+                        if (requirementString.isNullOrEmpty()) {
+                            null
+                        } else {
+                            RequirementType.valueOf(requirementString)
+                        }
+                    }
+
+            return if (!primaryButtonText.isNullOrEmpty() && primaryButtonRequirementType != null) {
+                (primaryButtonText to primaryButtonRequirementType)
+            } else {
+                null
+            }
+        }
 
         val ROUTE = object : WorkflowRoute() {
             override val base: String = ERROR
@@ -74,74 +98,5 @@ internal data class ErrorDestination(
                 }
             )
         }
-
-        fun withRequirementErrors(
-            error: RequirementError,
-            backButtonText: String,
-            backButtonDestination: String
-        ) = ErrorDestination(
-            title = error.code,
-            desc = error.description,
-            backButtonText = backButtonText,
-            backButtonDestination = backButtonDestination,
-            cancelFlow = false
-        )
-
-        fun withApiExceptions(
-            title: String,
-            desc: String,
-            error: HttpApiResponseProblem?,
-            backButtonText: String,
-            backButtonDestination: String
-        ) = ErrorDestination(
-            title = title,
-            desc = desc,
-            backButtonText = backButtonText,
-            backButtonDestination = backButtonDestination,
-            cancelFlow = true
-        )
-
-        fun withApiFailure(
-            title: String,
-            desc: String,
-            throwable: Throwable?,
-            cancelFlow: Boolean = true,
-            backButtonText: String,
-            backButtonDestination: String? = null
-        ) = ErrorDestination(
-            title = title,
-            desc = desc,
-            backButtonText = backButtonText,
-            backButtonDestination = backButtonDestination ?: "",
-            throwable = throwable,
-            cancelFlow = cancelFlow
-        )
-
-        fun withDepletedAttempts(
-            title: String,
-            desc: String,
-            backButtonText: String,
-            backButtonDestination: String
-        ) = ErrorDestination(
-            title = title,
-            desc = desc,
-            backButtonText = backButtonText,
-            backButtonDestination = backButtonDestination,
-            cancelFlow = true
-        )
-
-        fun withCameraTimeout(
-            title: String,
-            desc: String,
-            message: String = "",
-            backButtonText: String,
-            backButtonDestination: String
-        ) = ErrorDestination(
-            title = title,
-            desc = desc,
-            message = message,
-            backButtonText = backButtonText,
-            backButtonDestination = backButtonDestination
-        )
     }
 }

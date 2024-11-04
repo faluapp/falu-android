@@ -1,8 +1,12 @@
 package io.falu.identity.api.models.requirements
 
 import com.google.gson.annotations.SerializedName
-import io.falu.identity.navigation.IdentityVerificationNavActions
 import io.falu.identity.api.models.verification.Verification
+import io.falu.identity.navigation.DocumentCaptureDestination
+import io.falu.identity.navigation.DocumentSelectionDestination
+import io.falu.identity.navigation.IdentityVerificationNavActions
+import io.falu.identity.navigation.SelfieDestination
+import io.falu.identity.navigation.WelcomeDestination
 
 internal enum class RequirementType {
     @SerializedName("consent")
@@ -53,5 +57,30 @@ internal enum class RequirementType {
                 }
             }
         }
+
+        fun RequirementType.matchesFromRoute(fromRoute: String) =
+            when (this) {
+                CONSENT -> {
+                    fromRoute == WelcomeDestination.ROUTE.route
+                }
+
+                COUNTRY, DOCUMENT_TYPE -> {
+                    fromRoute == DocumentSelectionDestination.ROUTE.route
+                }
+
+                DOCUMENT_FRONT,
+                DOCUMENT_BACK -> {
+                    fromRoute == DocumentCaptureDestination.ROUTE.route
+                }
+
+                SELFIE -> {
+                    fromRoute == SelfieDestination.ROUTE.route
+                }
+
+                VIDEO -> {
+                    false
+                }
+            }
+
     }
 }
