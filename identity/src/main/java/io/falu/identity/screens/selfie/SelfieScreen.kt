@@ -44,6 +44,7 @@ import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.camera.CameraView
 import io.falu.identity.navigation.IdentityVerificationNavActions
+import io.falu.identity.navigation.SelfieDestination
 import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.screens.CameraPermissionLaunchEffect
 import io.falu.identity.screens.capture.CapturePreview
@@ -286,7 +287,7 @@ private fun submitSelfieAndUploadedDocuments(
         options,
         onSuccess = {
             identityViewModel.attemptDocumentSubmission(
-                context = context,
+                fromRoute = SelfieDestination.ROUTE.route,
                 navActions = navActions,
                 verification = verification,
                 verificationRequest = uploadRequest,

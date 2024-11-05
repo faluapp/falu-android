@@ -2,6 +2,8 @@ package io.falu.identity.navigation
 
 import androidx.navigation.NavController
 import io.falu.identity.api.models.IdentityDocumentType
+import io.falu.identity.api.models.requirements.RequirementError
+import io.falu.identity.api.models.requirements.RequirementType
 import io.falu.identity.scan.ScanDisposition
 
 internal class IdentityVerificationNavActions(private val navController: NavController) {
@@ -40,6 +42,10 @@ internal class IdentityVerificationNavActions(private val navController: NavCont
 
     fun navigateToSelfie() {
         navController.navigateTo(SelfieDestination())
+    }
+
+    fun navigateToErrorWithRequirementErrors(fromRoute: String, error: RequirementError) {
+        navController.navigateWithRequirementErrors(fromRoute, error)
     }
 
     fun navigateToErrorWithApiExceptions(throwable: Throwable?) {

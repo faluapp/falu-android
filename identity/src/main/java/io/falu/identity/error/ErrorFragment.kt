@@ -85,7 +85,7 @@ internal class ErrorFragment(identityViewModelFactory: ViewModelProvider.Factory
             val desc = error?.getErrorDescription(context)
                 ?: context.getString(R.string.error_description_server)
             val bundle = bundleOf(
-                KEY_ERROR_TITLE to context.getString(R.string.error_title),
+                KEY_ERROR_TITLE to  context.getString(R.string.error_title),
                 KEY_ERROR_DESCRIPTION to desc,
                 KEY_CANCEL_FLOW to true,
                 KEY_ERROR_CAUSE to Exception("Api Exception: $error")

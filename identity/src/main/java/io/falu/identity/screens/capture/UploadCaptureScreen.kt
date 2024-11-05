@@ -19,6 +19,7 @@ import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCRE
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.navigation.IdentityVerificationNavActions
+import io.falu.identity.navigation.UploadCaptureDestination
 import io.falu.identity.ui.LoadingButton
 import io.falu.identity.ui.ObserveVerificationAndCompose
 
@@ -78,7 +79,7 @@ internal fun UploadCaptureScreen(
                         options,
                         onSuccess = {
                             viewModel.attemptDocumentSubmission(
-                                context = context,
+                                fromRoute = UploadCaptureDestination.ROUTE.route,
                                 verification = verification,
                                 navActions = navActions,
                                 verificationRequest = uploadRequest,

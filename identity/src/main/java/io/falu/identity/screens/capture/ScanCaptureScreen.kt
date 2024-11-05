@@ -38,6 +38,7 @@ import io.falu.identity.capture.scan.DocumentScanViewModel
 import io.falu.identity.capture.scan.DocumentScanner
 import io.falu.identity.capture.scan.ScanCaptureFragment.Companion.getScanType
 import io.falu.identity.navigation.IdentityVerificationNavActions
+import io.falu.identity.navigation.ScanCaptureDestination
 import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.screens.CameraPermissionLaunchEffect
 import io.falu.identity.ui.LoadingButton
@@ -160,7 +161,7 @@ internal fun ScanCaptureScreen(
                                     options,
                                     onSuccess = {
                                         viewModel.attemptDocumentSubmission(
-                                            context = context,
+                                            fromRoute = ScanCaptureDestination.ROUTE.route,
                                             verification = verification,
                                             navActions = navActions,
                                             verificationRequest = uploadRequest,

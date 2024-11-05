@@ -1,6 +1,5 @@
 package io.falu.identity
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
@@ -33,6 +32,7 @@ import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.api.models.verification.VerificationUploadResult
 import io.falu.identity.navigation.IdentityVerificationNavActions
+import io.falu.identity.navigation.SelfieDestination
 import io.falu.identity.utils.FileUtils
 import io.falu.identity.utils.IdentityImageHandler
 import io.falu.identity.utils.isHttp
@@ -311,13 +311,13 @@ internal class IdentityVerificationViewModel(
     }
 
     internal fun attemptDocumentSubmission(
-        context: Context,
+        fromRoute: String,
         navActions: IdentityVerificationNavActions,
         verification: Verification,
         verificationRequest: VerificationUploadRequest,
     ) {
         when {
-            verification.selfieRequired -> {
+            verification.selfieRequired && fromRoute != SelfieDestination.ROUTE.route -> {
                 navActions.navigateToSelfie()
             }
 
@@ -331,7 +331,10 @@ internal class IdentityVerificationViewModel(
                     onSuccess = {
                         when {
                             it.hasRequirementErrors -> {
-                                // navActions.navigateToRequirementErrors()
+                                navActions.navigateToErrorWithRequirementErrors(
+                                    fromRoute,
+                                    it.requirements.errors.first()
+                                )
                             }
 
                             it.submitted -> {

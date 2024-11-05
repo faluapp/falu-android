@@ -31,6 +31,6 @@ internal class FaceScanner(private val context: Context) : AbstractScanner() {
     }
 
     override fun onCameraViewReady() {
-        requireCameraView().ivCameraBorder.setBackgroundResource(R.drawable.ic_falu_selfie_border)
+        // requireCameraView().ivCameraBorder.setBackgroundResource(R.drawable.ic_falu_selfie_border)
     }
 }
