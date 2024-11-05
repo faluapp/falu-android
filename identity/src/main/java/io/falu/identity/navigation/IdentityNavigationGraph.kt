@@ -12,10 +12,10 @@ import androidx.navigation.compose.rememberNavController
 import io.falu.identity.ContractArgs
 import io.falu.identity.IdentityVerificationResult
 import io.falu.identity.IdentityVerificationResultCallback
-import io.falu.identity.IdentityVerificationViewModel
+import io.falu.identity.viewModel.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.models.UploadMethod
-import io.falu.identity.capture.scan.DocumentScanViewModel
+import io.falu.identity.viewModel.DocumentScanViewModel
 import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.screens.ConfirmationScreen
 import io.falu.identity.screens.DocumentCaptureMethodsScreen
@@ -29,7 +29,7 @@ import io.falu.identity.screens.capture.UploadCaptureScreen
 import io.falu.identity.screens.error.ErrorScreen
 import io.falu.identity.screens.error.ErrorScreenButton
 import io.falu.identity.screens.selfie.SelfieScreen
-import io.falu.identity.selfie.FaceScanViewModel
+import io.falu.identity.viewModel.FaceScanViewModel
 import io.falu.identity.ui.IdentityVerificationBaseScreen
 import io.falu.identity.utils.openAppSettings
 

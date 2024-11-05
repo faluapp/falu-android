@@ -1,4 +1,4 @@
-package io.falu.identity
+package io.falu.identity.viewModel
 
 import android.graphics.Bitmap
 import android.net.Uri
@@ -18,6 +18,7 @@ import io.falu.core.AnalyticsApiClient
 import io.falu.core.models.AnalyticsTelemetry
 import io.falu.core.models.FaluFile
 import io.falu.core.utils.toThrowable
+import io.falu.identity.ContractArgs
 import io.falu.identity.analytics.AnalyticsDisposition
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder
 import io.falu.identity.analytics.ModelPerformanceMonitor

@@ -26,7 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
-import io.falu.identity.IdentityVerificationViewModel
+import io.falu.identity.viewModel.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCREEN_NAME_DOCUMENT_SELECTION
 import io.falu.identity.api.models.IdentityDocumentType

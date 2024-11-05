@@ -3,13 +3,13 @@ package io.falu.identity.screens.selfie
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import io.falu.identity.IdentityVerificationViewModel
+import io.falu.identity.viewModel.IdentityVerificationViewModel
 import io.falu.identity.ai.FaceDetectionOutput
 import io.falu.identity.analytics.AnalyticsDisposition
 import io.falu.identity.api.models.verification.VerificationCapture
 import io.falu.identity.scan.ScanDisposition
-import io.falu.identity.selfie.FaceScanViewModel
-import io.falu.identity.selfie.FaceScanner
+import io.falu.identity.viewModel.FaceScanViewModel
+import io.falu.identity.scan.FaceScanner
 
 @Composable
 internal fun SelfieCameraLaunchEffect(

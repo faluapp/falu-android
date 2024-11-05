@@ -6,11 +6,10 @@ import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
-import androidx.lifecycle.MutableLiveData
 import androidx.test.core.app.ApplicationProvider
 import io.falu.identity.ContractArgs
 import io.falu.identity.IdentityVerificationResultCallback
-import io.falu.identity.IdentityVerificationViewModel
+import io.falu.identity.viewModel.IdentityVerificationViewModel
 import io.falu.identity.TestApplication
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder
 import io.falu.identity.api.IdentityVerificationApiClient
@@ -30,7 +29,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import software.tingle.api.ResourceResponse
 
 @RunWith(RobolectricTestRunner::class)
 @Config(application = TestApplication::class, sdk = [Build.VERSION_CODES.Q])
@@ -41,7 +39,7 @@ internal class WelcomeScreenTest {
     private val mockVerificationResultCallback = mock<IdentityVerificationResultCallback>()
     private val navActions = mock<IdentityVerificationNavActions> {
         on { navigateToDocumentSelection() }.then {}
-        on { navigateToError(any()) }.then {}
+        on { navigateToErrorWithFailure(any()) }.then {}
     }
 
     private val verification = mock<Verification>().also {
@@ -112,9 +110,7 @@ internal class WelcomeScreenTest {
 
         setComposeTestRuleWith {
             onNodeWithTag(WELCOME_ACCEPT_BUTTON).performClick()
-            verify(navActions).navigateToError(
-                ErrorDestination(title = "", desc = "", message = "", backButtonText = "")
-            )
+            verify(navActions).navigateToErrorWithFailure(any())
         }
     }
 

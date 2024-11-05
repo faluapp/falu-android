@@ -1,12 +1,11 @@
-package io.falu.identity.capture.scan
+package io.falu.identity.scan
 
 import android.content.Context
 import io.falu.identity.R
 import io.falu.identity.ai.DocumentDetectionAnalyzer
+import io.falu.identity.ai.DocumentDispositionMachine
 import io.falu.identity.analytics.ModelPerformanceMonitor
 import io.falu.identity.api.models.verification.VerificationCapture
-import io.falu.identity.scan.AbstractScanner
-import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.utils.getRenderScript
 import io.falu.identity.utils.toFraction
 import org.joda.time.DateTime

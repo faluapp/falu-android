@@ -2,7 +2,7 @@ package io.falu.identity.navigation
 
 import androidx.navigation.NavController
 import io.falu.core.exceptions.ApiException
-import io.falu.identity.IdentityVerificationViewModel
+import io.falu.identity.viewModel.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.models.requirements.RequirementError
 import io.falu.identity.api.models.requirements.RequirementType.Companion.matchesFromRoute

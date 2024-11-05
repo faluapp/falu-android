@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.Rect
 import android.net.Uri
 import android.provider.Settings
+import android.renderscript.RenderScript
 import android.text.TextUtils
 import android.util.Size
 import android.view.View
@@ -108,14 +109,17 @@ internal fun DocumentOption.matches(type: ScanDisposition.DocumentScanType): Boo
             this == DocumentOption.PASSPORT && type == ScanDisposition.DocumentScanType.PASSPORT
 }
 
+/***/
 internal fun Uri.isHttp() = this.scheme!!.startsWith("http")
 
+/***/
 internal fun Context.getActivity(): Activity? = when (this) {
     is Activity -> this
     is ContextWrapper -> baseContext.getActivity()
     else -> null
 }
 
+/***/
 fun Context.openAppSettings() {
     val intent = Intent(
         Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
@@ -123,3 +127,6 @@ fun Context.openAppSettings() {
     )
     startActivity(intent)
 }
+
+/***/
+internal fun Context.getRenderScript() = RenderScript.create(this)

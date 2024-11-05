@@ -41,15 +41,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import io.falu.core.utils.toThrowable
 import io.falu.identity.ContractArgs
-import io.falu.identity.IdentityVerificationViewModel
+import io.falu.identity.viewModel.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.models.WorkspaceInfo
 import io.falu.identity.api.models.verification.Verification
-import io.falu.identity.navigation.SupportDestination
 import io.falu.identity.ui.theme.IdentityTheme
 import software.tingle.api.ResourceResponse
 

@@ -1,6 +1,5 @@
 package io.falu.identity.screens.capture
 
-import android.content.Context
 import androidx.camera.core.CameraSelector
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,25 +23,25 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import io.falu.identity.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.ai.DocumentDetectionOutput
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCREEN_NAME_AUTO_CAPTURE
 import io.falu.identity.api.models.DocumentSide
 import io.falu.identity.api.models.IdentityDocumentType
+import io.falu.identity.api.models.getIdentityDocumentName
+import io.falu.identity.api.models.getScanType
 import io.falu.identity.api.models.verification.VerificationCapture
 import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.camera.CameraView
-import io.falu.identity.capture.AbstractCaptureFragment.Companion.getIdentityDocumentName
-import io.falu.identity.capture.scan.DocumentScanViewModel
-import io.falu.identity.capture.scan.DocumentScanner
-import io.falu.identity.capture.scan.ScanCaptureFragment.Companion.getScanType
 import io.falu.identity.navigation.IdentityVerificationNavActions
 import io.falu.identity.navigation.ScanCaptureDestination
+import io.falu.identity.scan.DocumentScanner
 import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.screens.CameraPermissionLaunchEffect
 import io.falu.identity.ui.LoadingButton
 import io.falu.identity.ui.ObserveVerificationAndCompose
+import io.falu.identity.viewModel.DocumentScanViewModel
+import io.falu.identity.viewModel.IdentityVerificationViewModel
 
 @Composable
 internal fun ScanCaptureScreen(
@@ -85,7 +84,6 @@ internal fun ScanCaptureScreen(
                         onUpload = {
                             frontLoading = true
                             uploadDocument(
-                                context,
                                 viewModel,
                                 navActions,
                                 it,
@@ -111,7 +109,6 @@ internal fun ScanCaptureScreen(
                             onUpload = { output ->
                                 backLoading = true
                                 uploadDocument(
-                                    context,
                                     viewModel,
                                     navActions,
                                     output,
@@ -341,7 +338,6 @@ private fun DocumentSideCapture(
 }
 
 private fun uploadDocument(
-    context: Context,
     identityViewModel: IdentityVerificationViewModel,
     navActions: IdentityVerificationNavActions,
     output: DocumentDetectionOutput,

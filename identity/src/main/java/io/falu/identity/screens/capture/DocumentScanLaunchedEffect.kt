@@ -3,12 +3,12 @@ package io.falu.identity.screens.capture
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import io.falu.identity.IdentityVerificationViewModel
+import io.falu.identity.viewModel.IdentityVerificationViewModel
 import io.falu.identity.ai.DocumentDetectionOutput
 import io.falu.identity.analytics.AnalyticsDisposition
 import io.falu.identity.api.models.verification.VerificationCapture
-import io.falu.identity.capture.scan.DocumentScanViewModel
-import io.falu.identity.capture.scan.DocumentScanner
+import io.falu.identity.viewModel.DocumentScanViewModel
+import io.falu.identity.scan.DocumentScanner
 import io.falu.identity.scan.ScanDisposition
 
 @Composable

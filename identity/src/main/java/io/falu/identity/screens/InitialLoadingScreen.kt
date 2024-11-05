@@ -18,7 +18,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.falu.core.utils.toThrowable
-import io.falu.identity.IdentityVerificationViewModel
+import io.falu.identity.viewModel.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.models.requirements.RequirementType
 import io.falu.identity.api.models.requirements.RequirementType.Companion.nextDestination

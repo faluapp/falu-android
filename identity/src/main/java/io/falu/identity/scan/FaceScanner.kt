@@ -1,15 +1,10 @@
-package io.falu.identity.selfie
+package io.falu.identity.scan
 
 import android.content.Context
-import android.renderscript.RenderScript
-import io.falu.identity.R
 import io.falu.identity.ai.FaceDetectionAnalyzer
 import io.falu.identity.analytics.ModelPerformanceMonitor
 import io.falu.identity.api.models.verification.VerificationCapture
-import io.falu.identity.scan.AbstractScanner
-import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.utils.getRenderScript
-import org.joda.time.DateTime
 import java.io.File
 
 internal class FaceScanner(private val context: Context) : AbstractScanner() {

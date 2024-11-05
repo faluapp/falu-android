@@ -1,4 +1,4 @@
-package io.falu.identity.capture
+package io.falu.identity.utils
 
 import android.app.Activity
 import android.content.Context
@@ -9,7 +9,6 @@ import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.SavedStateHandle
-import io.falu.identity.utils.FileUtils
 
 /**
  * Use camera to capture an image

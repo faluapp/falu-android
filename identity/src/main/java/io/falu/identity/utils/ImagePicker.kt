@@ -1,4 +1,4 @@
-package io.falu.identity.capture
+package io.falu.identity.utils
 
 import android.net.Uri
 import androidx.activity.result.ActivityResultCaller

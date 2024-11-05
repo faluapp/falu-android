@@ -32,7 +32,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import io.falu.core.models.FaluFile
-import io.falu.identity.IdentityVerificationViewModel
+import io.falu.identity.viewModel.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.ai.FaceDetectionOutput
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCREEN_NAME_SELFIE
@@ -48,8 +48,8 @@ import io.falu.identity.navigation.SelfieDestination
 import io.falu.identity.scan.ScanDisposition
 import io.falu.identity.screens.CameraPermissionLaunchEffect
 import io.falu.identity.screens.capture.CapturePreview
-import io.falu.identity.selfie.FaceScanViewModel
-import io.falu.identity.selfie.FaceScanner
+import io.falu.identity.viewModel.FaceScanViewModel
+import io.falu.identity.scan.FaceScanner
 import io.falu.identity.ui.ObserveVerificationAndCompose
 
 internal const val SELFIE_VIEW_ASPECT_RATIO = 1f

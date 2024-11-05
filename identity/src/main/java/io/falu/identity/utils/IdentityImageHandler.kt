@@ -4,8 +4,6 @@ import android.content.Context
 import android.net.Uri
 import androidx.activity.result.ActivityResultCaller
 import androidx.lifecycle.SavedStateHandle
-import io.falu.identity.capture.ImageCapture
-import io.falu.identity.capture.ImagePicker
 
 internal class IdentityImageHandler {
 

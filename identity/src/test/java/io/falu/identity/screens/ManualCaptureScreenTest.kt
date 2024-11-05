@@ -11,7 +11,7 @@ import androidx.compose.ui.test.performClick
 import androidx.lifecycle.MutableLiveData
 import androidx.test.core.app.ApplicationProvider
 import io.falu.identity.ContractArgs
-import io.falu.identity.IdentityVerificationViewModel
+import io.falu.identity.viewModel.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.TestApplication
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder
