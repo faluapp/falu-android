@@ -116,7 +116,7 @@ private fun ConsentView(
 
 @Preview
 @Composable
-fun WelcomePreview() {
+private fun WelcomePreview() {
     IdentityTheme {
         IdentityVerificationHeader(Uri.EMPTY, WorkspaceInfo(name = "Showcases", country = "US"), false) {
             ConsentView(workspaceName = "Showcases", loading = true, onAccepted = {}, onDeclined = {})

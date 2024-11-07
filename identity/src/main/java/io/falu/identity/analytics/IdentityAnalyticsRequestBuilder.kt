@@ -182,6 +182,7 @@ internal class IdentityAnalyticsRequestBuilder(
         const val SCREEN_NAME_UPLOAD_CAPTURE = "upload_capture"
         const val SCREEN_NAME_SUPPORT = "support"
         const val SCREEN_NAME_SELFIE = "selfie"
+        const val SCREEN_NAME_DOCUMENT_VERIFICATION = "document_verification"
         const val SCREEN_NAME_CONFIRMATION = "confirmation"
     }
 }

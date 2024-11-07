@@ -63,4 +63,8 @@ internal class IdentityVerificationNavActions(private val navController: NavCont
     fun navigateToCameraPermissionDenied() {
         navController.navigateTo(CameraPermissionDeniedDestination())
     }
+
+    fun navigateToDocumentVerification(documentType: IdentityDocumentType) {
+        navController.navigateTo(DocumentVerificationDestination(documentType))
+    }
 }

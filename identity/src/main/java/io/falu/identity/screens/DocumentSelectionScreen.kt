@@ -26,7 +26,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
-import io.falu.identity.viewModel.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCREEN_NAME_DOCUMENT_SELECTION
 import io.falu.identity.api.models.IdentityDocumentType
@@ -38,6 +37,7 @@ import io.falu.identity.ui.CountriesView
 import io.falu.identity.ui.LoadingButton
 import io.falu.identity.ui.ObserveVerificationAndCompose
 import io.falu.identity.ui.theme.IdentityTheme
+import io.falu.identity.viewModel.IdentityVerificationViewModel
 import software.tingle.api.ResourceResponse
 
 internal const val TAG_DOCUMENT_ID_CARD = "Identity Card"
@@ -48,7 +48,7 @@ internal const val TAG_CONTINUE_BUTTON = "Continue"
 @Composable
 internal fun DocumentSelectionScreen(
     viewModel: IdentityVerificationViewModel,
-    navActions: IdentityVerificationNavActions,
+    navActions: IdentityVerificationNavActions
 ) {
     val verificationResponse by viewModel.verification.observeAsState()
     val supportedCountriesResponse by viewModel.supportedCountries.observeAsState()
@@ -85,7 +85,13 @@ internal fun DocumentSelectionScreen(
 
                     viewModel.updateVerification(
                         updateOptions,
-                        onSuccess = { navActions.navigateToDocumentCaptureMethods(selectedDocumentType!!) },
+                        onSuccess = {
+                            if (verification.idNumberVerification) {
+                                navActions.navigateToDocumentVerification(selectedDocumentType!!)
+                            } else {
+                                navActions.navigateToDocumentCaptureMethods(selectedDocumentType!!)
+                            }
+                        },
                         onError = { throwable ->
                             navActions.navigateToErrorWithApiExceptions(throwable)
                         },
