@@ -29,6 +29,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
@@ -54,8 +55,14 @@ import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCRE
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.WorkspaceInfo
 import io.falu.identity.api.models.verification.Gender
+import io.falu.identity.api.models.verification.Verification
+import io.falu.identity.api.models.verification.VerificationIdNumberUpload
+import io.falu.identity.api.models.verification.VerificationUpdateOptions
+import io.falu.identity.api.models.verification.VerificationUploadRequest
+import io.falu.identity.navigation.DocumentVerificationDestination
 import io.falu.identity.navigation.IdentityVerificationNavActions
 import io.falu.identity.ui.IdentityVerificationHeader
+import io.falu.identity.ui.LoadingButton
 import io.falu.identity.ui.TextFieldError
 import io.falu.identity.ui.theme.IdentityTheme
 import io.falu.identity.viewModel.IdentityVerificationViewModel
@@ -68,6 +75,8 @@ internal fun DocumentVerificationScreen(
     identityDocumentType: IdentityDocumentType
 ) {
     val verificationResponse by viewModel.verification.observeAsState()
+    var loading by remember { mutableStateOf(false) }
+
     ObserveVerificationAndCompose(verificationResponse, onError = {}) { verification ->
         LaunchedEffect(Unit) {
             viewModel.reportTelemetry(
@@ -75,13 +84,15 @@ internal fun DocumentVerificationScreen(
             )
         }
 
-        DocumentVerificationForm()
+        DocumentVerificationForm(loading = loading) { idNumberUpload ->
+            attemptSubmission(viewModel, navActions, idNumberUpload, verification, onLoading = { loading = it })
+        }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun DocumentVerificationForm() {
+private fun DocumentVerificationForm(loading: Boolean, onSubmit: (VerificationIdNumberUpload) -> Unit) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
 
@@ -293,15 +304,14 @@ private fun DocumentVerificationForm() {
 
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.element_spacing_normal_half)))
 
-        Button(
-            onClick = {
-                if (formValid()) {
-
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
+        LoadingButton(
+            modifier = Modifier.fillMaxWidth(),
+            text = stringResource(R.string.button_continue),
+            isLoading = loading
         ) {
-            Text(text = stringResource(R.string.button_continue))
+            if (formValid()) {
+                onSubmit(attemptSubmission(documentNumber, firstName, lastName, birthday!!, gender))
+            }
         }
     }
 }
@@ -309,7 +319,11 @@ private fun DocumentVerificationForm() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DateOfBirthPicker(onDismiss: () -> Unit, onSelected: (Long?) -> Unit) {
-    val dateState = rememberDatePickerState()
+    val dateState = rememberDatePickerState(
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long) = utcTimeMillis <= System.currentTimeMillis()
+        }
+    )
     val millisToLocalDate = dateState.selectedDateMillis
 
     DatePickerDialog(
@@ -329,12 +343,59 @@ private fun DateOfBirthPicker(onDismiss: () -> Unit, onSelected: (Long?) -> Unit
     }
 }
 
+private fun attemptSubmission(
+    documentNumber: String,
+    firstName: String,
+    lastName: String,
+    dateOfBirth: Date,
+    gender: String
+) = VerificationIdNumberUpload(
+    type = IdentityDocumentType.IDENTITY_CARD,
+    number = documentNumber,
+    firstName = firstName,
+    lastName = lastName,
+    birthday = dateOfBirth,
+    sex = gender
+)
+
+private fun attemptSubmission(
+    viewModel: IdentityVerificationViewModel,
+    navActions: IdentityVerificationNavActions,
+    idNumberUpload: VerificationIdNumberUpload,
+    verification: Verification,
+    onLoading: (Boolean) -> Unit = {},
+) {
+    val options = VerificationUpdateOptions(idNumber = idNumberUpload)
+    val uploadRequest = VerificationUploadRequest(idNumber = idNumberUpload)
+
+    viewModel.updateVerification(options,
+        onSuccess = {
+            onLoading(false)
+            viewModel.attemptDocumentSubmission(
+                DocumentVerificationDestination.ROUTE.route,
+                navActions,
+                verification,
+                uploadRequest
+            )
+        },
+        onError = { throwable ->
+            onLoading(false)
+            navActions.navigateToErrorWithApiExceptions(throwable)
+        },
+        onFailure = { throwable ->
+            onLoading(false)
+            navActions.navigateToErrorWithFailure(throwable)
+        }
+    )
+}
+
+
 @Preview
 @Composable
 private fun DocumentVerificationPreview() {
     IdentityTheme {
         IdentityVerificationHeader(Uri.EMPTY, WorkspaceInfo(name = "Showcases", country = "US"), false) {
-            DocumentVerificationForm()
+            DocumentVerificationForm(loading = true) {}
         }
     }
 }

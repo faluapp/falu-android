@@ -7,13 +7,13 @@ import io.falu.identity.api.models.requirements.RequirementType
 
 internal data class ErrorDestination(
     val title: String,
-    val desc: String = "",
-    val message: String = "",
+    val desc: String = KEY_UNSET,
+    val message: String = KEY_UNSET,
     val throwable: Throwable? = null,
     val requirementType: RequirementType? = null,
-    val primaryButtonText: String = "",
+    val primaryButtonText: String = KEY_UNSET,
     val backButtonText: String,
-    val backButtonDestination: String = "",
+    val backButtonDestination: String = KEY_UNSET,
     val cancelFlow: Boolean = false
 ) : IdentityDestination() {
 
@@ -41,6 +41,7 @@ internal data class ErrorDestination(
         internal const val KEY_CANCEL_FLOW = "cancel-flow"
         internal const val KEY_PRIMARY_BUTTON_TEXT = "primary-button-text"
         internal const val KEY_REQUIREMENT_TYPE = "requirement-type"
+        internal const val KEY_UNSET = "unset"
 
         fun errorTitle(entry: NavBackStackEntry) = entry.getString(KEY_ERROR_TITLE)
 
