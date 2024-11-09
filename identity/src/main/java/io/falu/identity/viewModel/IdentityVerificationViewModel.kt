@@ -34,6 +34,7 @@ import io.falu.identity.api.models.verification.VerificationUploadRequest
 import io.falu.identity.api.models.verification.VerificationUploadResult
 import io.falu.identity.navigation.IdentityVerificationNavActions
 import io.falu.identity.navigation.SelfieDestination
+import io.falu.identity.navigation.TaxPinDestination
 import io.falu.identity.utils.FileUtils
 import io.falu.identity.utils.IdentityImageHandler
 import io.falu.identity.utils.isHttp
@@ -322,8 +323,8 @@ internal class IdentityVerificationViewModel(
                 navActions.navigateToSelfie()
             }
 
-            verification.taxPinRequired -> {
-                // navActions.navigateToTaxPin()
+            verification.taxPinRequired && fromRoute != TaxPinDestination.ROUTE.route -> {
+                navActions.navigateToTaxPin()
             }
 
             else -> {

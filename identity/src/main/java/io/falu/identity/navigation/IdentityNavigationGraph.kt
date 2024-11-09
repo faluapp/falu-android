@@ -21,6 +21,7 @@ import io.falu.identity.screens.DocumentSelectionScreen
 import io.falu.identity.screens.DocumentVerificationScreen
 import io.falu.identity.screens.InitialLoadingScreen
 import io.falu.identity.screens.SupportScreen
+import io.falu.identity.screens.TaxPinVerificationScreen
 import io.falu.identity.screens.WelcomeScreen
 import io.falu.identity.screens.capture.ManualCaptureScreen
 import io.falu.identity.screens.capture.ScanCaptureScreen
@@ -83,6 +84,10 @@ internal fun IdentityNavigationGraph(
                 DocumentSelectionScreen(viewModel = identityViewModel, navActions = navActions)
             }
 
+            composable(TaxPinDestination.ROUTE.route) {
+                TaxPinVerificationScreen(viewModel = identityViewModel, navActions = navActions)
+            }
+
             composable(SelfieDestination.ROUTE.route) {
                 SelfieScreen(
                     viewModel = identityViewModel,
@@ -98,7 +103,6 @@ internal fun IdentityNavigationGraph(
                 DocumentVerificationScreen(
                     viewModel = identityViewModel,
                     navActions = navActions,
-                    identityDocumentType = DocumentVerificationDestination.identityDocumentType(it)
                 )
             }
 

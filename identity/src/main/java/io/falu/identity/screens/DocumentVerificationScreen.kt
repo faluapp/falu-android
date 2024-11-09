@@ -71,8 +71,7 @@ import java.util.Date
 @Composable
 internal fun DocumentVerificationScreen(
     viewModel: IdentityVerificationViewModel,
-    navActions: IdentityVerificationNavActions,
-    identityDocumentType: IdentityDocumentType
+    navActions: IdentityVerificationNavActions
 ) {
     val verificationResponse by viewModel.verification.observeAsState()
     var loading by remember { mutableStateOf(false) }

@@ -183,6 +183,7 @@ internal class IdentityAnalyticsRequestBuilder(
         const val SCREEN_NAME_SUPPORT = "support"
         const val SCREEN_NAME_SELFIE = "selfie"
         const val SCREEN_NAME_DOCUMENT_VERIFICATION = "document_verification"
+        const val SCREEN_NAME_TAX_PIN_VERIFICATION = "tax_pin_verification"
         const val SCREEN_NAME_CONFIRMATION = "confirmation"
     }
 }
