@@ -33,6 +33,7 @@ import io.falu.identity.ui.IdentityVerificationBaseScreen
 import io.falu.identity.utils.openAppSettings
 import io.falu.identity.viewModel.DocumentScanViewModel
 import io.falu.identity.viewModel.FaceScanViewModel
+import io.falu.identity.viewModel.FallbackUrlCallback
 import io.falu.identity.viewModel.IdentityVerificationViewModel
 
 @Composable
@@ -44,6 +45,7 @@ internal fun IdentityNavigationGraph(
     faceScanViewModel: FaceScanViewModel,
     verificationResultCallback: IdentityVerificationResultCallback,
     contractArgs: ContractArgs,
+    fallbackUrlCallback: FallbackUrlCallback,
     startDestination: String = InitialDestination.ROUTE.route,
     navActions: IdentityVerificationNavActions = remember(navController) {
         IdentityVerificationNavActions(navController)
@@ -61,7 +63,11 @@ internal fun IdentityNavigationGraph(
             modifier = modifier
         ) {
             composable(InitialDestination.ROUTE.route) {
-                InitialLoadingScreen(identityViewModel = identityViewModel, navActions = navActions)
+                InitialLoadingScreen(
+                    identityViewModel = identityViewModel,
+                    navActions = navActions,
+                    fallbackUrlCallback = fallbackUrlCallback
+                )
             }
 
             composable(SupportDestination.ROUTE.route) {

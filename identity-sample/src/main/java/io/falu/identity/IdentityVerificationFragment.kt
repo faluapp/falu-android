@@ -48,16 +48,15 @@ class IdentityVerificationFragment : Fragment(), IdentityVerificationCallback {
         )
 
         binding.buttonStartVerification.setOnClickListener {
-            verificationView.open("idv_2mbpjDpQTR1yJ3aRsTLz7Sy8IcZ", "ftkt_5uBxEDyRLf3QTPJhWKgqeWQqj4N5DvAHmd")
-//            startVerification(
-//                allowDrivingLicense = binding.swAllowedTypeDl.isChecked,
-//                allowPassport = binding.swAllowedTypePassport.isChecked,
-//                allowIdentityCard = binding.swAllowedTypeId.isChecked,
-//                allowUploads = binding.swAllowUploads.isChecked,
-//                allowDocumentSelfie = binding.swAllowDocumentSelfie.isChecked,
-//                allowIdNumberVerification = binding.swAllowIdNumberVerification.isChecked,
-//                allowTaxPin = binding.swAllowTaxPinVerification.isChecked
-//            )
+            startVerification(
+                allowDrivingLicense = binding.swAllowedTypeDl.isChecked,
+                allowPassport = binding.swAllowedTypePassport.isChecked,
+                allowIdentityCard = binding.swAllowedTypeId.isChecked,
+                allowUploads = binding.swAllowUploads.isChecked,
+                allowDocumentSelfie = binding.swAllowDocumentSelfie.isChecked,
+                allowIdNumberVerification = binding.swAllowIdNumberVerification.isChecked,
+                allowTaxPin = binding.swAllowTaxPinVerification.isChecked
+            )
         }
     }
 

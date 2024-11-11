@@ -19,9 +19,10 @@ import io.falu.identity.utils.FileUtils
 import io.falu.identity.utils.IdentityImageHandler
 import io.falu.identity.viewModel.DocumentScanViewModel
 import io.falu.identity.viewModel.FaceScanViewModel
+import io.falu.identity.viewModel.FallbackUrlCallback
 import io.falu.identity.viewModel.IdentityVerificationViewModel
 
-internal class IdentityVerificationActivity : AppCompatActivity(),
+internal class IdentityVerificationActivity : AppCompatActivity(), FallbackUrlCallback,
     IdentityVerificationResultCallback {
 
     @VisibleForTesting
@@ -84,6 +85,7 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
                     documentScanViewModel = documentScanViewModel,
                     faceScanViewModel = faceScanViewModel,
                     contractArgs = contractArgs,
+                    fallbackUrlCallback = this,
                     verificationResultCallback = this
                 )
             }
@@ -99,18 +101,12 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
         verificationViewModel.observeForVerificationResults(
             this,
             onSuccess = {
-
                 if (savedInstanceState?.getBoolean(KEY_OPENED, false) != true) {
                     verificationViewModel.reportTelemetry(verificationViewModel.analyticsRequestBuilder.viewOpened())
                 }
-
-                if (!it.supported) {
-                    launchFallbackUrl(it.url.orEmpty())
-                } else {
-                    // onVerificationSuccessful(it)
-                }
             },
-            onError = { onVerificationFailure(false, it) })
+            onError = { onVerificationFailure(false, it) }
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -129,7 +125,6 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
     }
 
     private fun finishWithVerificationResult(result: IdentityVerificationResult) {
-
         verificationViewModel.reportTelemetry(
             verificationViewModel.analyticsRequestBuilder.viewClosed(result.javaClass.name)
         )
@@ -164,7 +159,7 @@ internal class IdentityVerificationActivity : AppCompatActivity(),
             }
     }
 
-    private fun launchFallbackUrl(url: String) {
+    override fun launchFallbackUrl(url: String) {
         val customTabsIntent = CustomTabsIntent.Builder()
             .build()
         customTabsIntent.intent.data = Uri.parse(url)

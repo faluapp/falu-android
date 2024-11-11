@@ -18,13 +18,14 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.falu.core.utils.toThrowable
-import io.falu.identity.viewModel.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.models.requirements.RequirementType
 import io.falu.identity.api.models.requirements.RequirementType.Companion.nextDestination
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.navigation.IdentityVerificationNavActions
 import io.falu.identity.ui.theme.IdentityTheme
+import io.falu.identity.viewModel.FallbackUrlCallback
+import io.falu.identity.viewModel.IdentityVerificationViewModel
 import software.tingle.api.ResourceResponse
 
 /**
@@ -33,15 +34,19 @@ import software.tingle.api.ResourceResponse
 @Composable
 internal fun InitialLoadingScreen(
     identityViewModel: IdentityVerificationViewModel,
-    navActions: IdentityVerificationNavActions
+    navActions: IdentityVerificationNavActions,
+    fallbackUrlCallback: FallbackUrlCallback
 ) {
-    val context = LocalContext.current
     val verificationResponse by identityViewModel.verification.observeAsState()
 
     ObserveVerificationAndCompose(verificationResponse,
         onError = { throwable -> navActions.navigateToErrorWithFailure(throwable) }) { verification ->
         LaunchedEffect(Unit) {
-            verification.requirements.pending.nextDestination(navActions, verification)
+            if (!verification.supported) {
+                fallbackUrlCallback.launchFallbackUrl(verification.url.orEmpty())
+            } else {
+                verification.requirements.pending.nextDestination(navActions, verification)
+            }
         }
     }
 }
