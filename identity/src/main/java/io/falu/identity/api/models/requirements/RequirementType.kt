@@ -6,6 +6,7 @@ import io.falu.identity.navigation.DocumentCaptureDestination
 import io.falu.identity.navigation.DocumentSelectionDestination
 import io.falu.identity.navigation.IdentityVerificationNavActions
 import io.falu.identity.navigation.SelfieDestination
+import io.falu.identity.navigation.TaxPinDestination
 import io.falu.identity.navigation.WelcomeDestination
 
 internal enum class RequirementType {
@@ -26,6 +27,9 @@ internal enum class RequirementType {
 
     @SerializedName("selfie")
     SELFIE,
+
+    @SerializedName("tax_id")
+    TAX,
 
     @SerializedName("video")
     VIDEO;
@@ -55,6 +59,10 @@ internal enum class RequirementType {
                 contains(SELFIE) -> {
                     navActions.navigateToSelfie()
                 }
+
+                contains(TAX) -> {
+                    navActions.navigateToTaxPin()
+                }
             }
         }
 
@@ -75,6 +83,10 @@ internal enum class RequirementType {
 
                 SELFIE -> {
                     fromRoute == SelfieDestination.ROUTE.route
+                }
+
+                TAX -> {
+                    fromRoute == TaxPinDestination.ROUTE.route
                 }
 
                 VIDEO -> {

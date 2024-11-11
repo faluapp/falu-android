@@ -11,6 +11,7 @@ import androidx.activity.viewModels
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.navigation.NavController
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder
 import io.falu.identity.api.IdentityVerificationApiClient
 import io.falu.identity.navigation.IdentityNavigationGraph
@@ -35,6 +36,11 @@ internal class IdentityVerificationActivity : AppCompatActivity(), FallbackUrlCa
             { IdentityImageHandler() },
             { contractArgs }
         )
+
+    @VisibleForTesting
+    internal lateinit var navController: NavController
+
+    private lateinit var onBackPressedCallback: IdentityBackPressHandler
 
     private val verificationViewModel: IdentityVerificationViewModel by viewModels {
         factory
@@ -87,7 +93,11 @@ internal class IdentityVerificationActivity : AppCompatActivity(), FallbackUrlCa
                     contractArgs = contractArgs,
                     fallbackUrlCallback = this,
                     verificationResultCallback = this
-                )
+                ) {
+                    this.navController = it
+                    onBackPressedCallback = IdentityBackPressHandler(navController, this)
+                    onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+                }
             }
         }
 

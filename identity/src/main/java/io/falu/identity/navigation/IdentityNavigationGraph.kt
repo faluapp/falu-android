@@ -1,10 +1,12 @@
 package io.falu.identity.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -49,7 +51,8 @@ internal fun IdentityNavigationGraph(
     startDestination: String = InitialDestination.ROUTE.route,
     navActions: IdentityVerificationNavActions = remember(navController) {
         IdentityVerificationNavActions(navController)
-    }
+    },
+    onNavControllerCreated: (NavController) -> Unit
 ) {
     IdentityVerificationBaseScreen(
         viewModel = identityViewModel,
@@ -57,6 +60,11 @@ internal fun IdentityNavigationGraph(
         navigateToSupport = { navActions.navigateToSupport() }
     ) {
         val context = LocalContext.current
+
+        LaunchedEffect(Unit) {
+            onNavControllerCreated(navController)
+        }
+
         NavHost(
             navController = navController,
             startDestination = startDestination,

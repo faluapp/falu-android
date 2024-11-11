@@ -36,24 +36,42 @@ internal data class ErrorDestination(
         internal const val KEY_ERROR_DESCRIPTION = "description"
         internal const val KEY_ERROR_MESSAGE = "message"
         internal const val KEY_ERROR_CAUSE = "cause"
-        internal const val KEY_BACK_BUTTON_DESTINATION = "button-destination"
-        internal const val KEY_BACK_BUTTON_TEXT = "back-button-text"
-        internal const val KEY_CANCEL_FLOW = "cancel-flow"
-        internal const val KEY_PRIMARY_BUTTON_TEXT = "primary-button-text"
-        internal const val KEY_REQUIREMENT_TYPE = "requirement-type"
+        internal const val KEY_BACK_BUTTON_DESTINATION = "buttonDestination"
+        internal const val KEY_BACK_BUTTON_TEXT = "backButtonText"
+        internal const val KEY_CANCEL_FLOW = "cancelFlow"
+        internal const val KEY_PRIMARY_BUTTON_TEXT = "primaryButtonText"
+        internal const val KEY_REQUIREMENT_TYPE = "requirementType"
         internal const val KEY_UNSET = "unset"
 
         fun errorTitle(entry: NavBackStackEntry) = entry.getString(KEY_ERROR_TITLE)
 
         fun errorDescription(entry: NavBackStackEntry) = entry.getString(KEY_ERROR_DESCRIPTION)
 
-        fun errorMessage(entry: NavBackStackEntry) = entry.getString(KEY_ERROR_MESSAGE)
+        fun errorMessage(entry: NavBackStackEntry) = entry.getString(KEY_ERROR_MESSAGE).let {
+            if (it == KEY_UNSET) {
+                null
+            } else {
+                it
+            }
+        }
 
         fun errorCause(entry: NavBackStackEntry) = entry.getString(KEY_ERROR_CAUSE)
 
-        fun backButtonDestination(entry: NavBackStackEntry) = entry.getString(KEY_BACK_BUTTON_DESTINATION)
+        fun backButtonDestination(entry: NavBackStackEntry) = entry.getString(KEY_BACK_BUTTON_DESTINATION).let {
+            if (it == KEY_UNSET) {
+                null
+            } else {
+                it
+            }
+        }
 
-        fun backButtonText(entry: NavBackStackEntry) = entry.getString(KEY_BACK_BUTTON_TEXT)
+        fun backButtonText(entry: NavBackStackEntry) = entry.getString(KEY_BACK_BUTTON_TEXT).let {
+            if (it == KEY_UNSET) {
+                null
+            } else {
+                it
+            }
+        }
 
         fun cancelFlow(entry: NavBackStackEntry) = entry.getBoolean(KEY_CANCEL_FLOW)
 
