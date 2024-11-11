@@ -35,6 +35,7 @@ internal fun NavController.navigateToErrorWithApiExceptions(throwable: Throwable
             title = context.getString(R.string.error_title),
             desc = context.getString(R.string.error_title_verification_data_mismatch),
             message = error?.getErrorDescription(context) ?: context.getString(R.string.error_description_server),
+            primaryButtonText = context.getString(R.string.button_rectify),
             backButtonText = context.getString(R.string.button_cancel),
             throwable = throwable,
             cancelFlow = true

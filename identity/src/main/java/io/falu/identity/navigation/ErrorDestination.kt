@@ -75,7 +75,7 @@ internal data class ErrorDestination(
 
         fun cancelFlow(entry: NavBackStackEntry) = entry.getBoolean(KEY_CANCEL_FLOW)
 
-        fun primaryButtonOptions(backStackEntry: NavBackStackEntry): Pair<String, RequirementType>? {
+        fun primaryButtonOptions(backStackEntry: NavBackStackEntry): Pair<String, RequirementType?>? {
             val primaryButtonText = backStackEntry.getString(KEY_PRIMARY_BUTTON_TEXT)
             val primaryButtonRequirementType: RequirementType? =
                 backStackEntry.getString(KEY_REQUIREMENT_TYPE)
@@ -87,7 +87,7 @@ internal data class ErrorDestination(
                         }
                     }
 
-            return if (!primaryButtonText.isNullOrEmpty() && primaryButtonRequirementType != null) {
+            return if (!primaryButtonText.isNullOrEmpty()) {
                 (primaryButtonText to primaryButtonRequirementType)
             } else {
                 null
@@ -114,6 +114,9 @@ internal data class ErrorDestination(
                 },
                 navArgument(KEY_CANCEL_FLOW) {
                     type = NavType.BoolType
+                },
+                navArgument(KEY_PRIMARY_BUTTON_TEXT) {
+                    type = NavType.StringType
                 }
             )
         }

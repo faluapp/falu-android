@@ -190,7 +190,13 @@ internal fun IdentityNavigationGraph(
                         ?.let { (buttonText, buttonRequirement) ->
                             ErrorScreenButton(
                                 text = buttonText,
-                                onClick = {}
+                                onClick = {
+                                    if (buttonRequirement != null) {
+                                        // NOOP
+                                    } else {
+                                        navController.resetAndNavigateUp(identityViewModel)
+                                    }
+                                }
                             )
                         },
                     secondaryButton = ErrorScreenButton(

@@ -10,7 +10,7 @@
     <string name="button_verify">Verify</string>
     <string name="button_take_again">Take Again</string>
     <string name="button_scan_again">Scan Again</string>
-    <string name="button_rectify">Resolve Error</string>
+    <string name="button_rectify">Resolve</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_try_again">Try Again</string>
     <string name="button_change_method">Change Method</string>
