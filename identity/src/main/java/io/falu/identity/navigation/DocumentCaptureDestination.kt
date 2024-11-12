@@ -5,7 +5,6 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import io.falu.identity.api.models.IdentityDocumentType
 
-
 internal data class DocumentCaptureDestination(val documentType: IdentityDocumentType) : IdentityDestination() {
     override val workflowRoute: WorkflowRoute
         get() = ROUTE

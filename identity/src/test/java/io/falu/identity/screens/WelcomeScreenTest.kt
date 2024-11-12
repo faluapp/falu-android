@@ -9,7 +9,6 @@ import androidx.compose.ui.test.performClick
 import androidx.test.core.app.ApplicationProvider
 import io.falu.identity.ContractArgs
 import io.falu.identity.IdentityVerificationResultCallback
-import io.falu.identity.viewModel.IdentityVerificationViewModel
 import io.falu.identity.TestApplication
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder
 import io.falu.identity.api.IdentityVerificationApiClient
@@ -18,8 +17,8 @@ import io.falu.identity.api.models.requirements.Requirement
 import io.falu.identity.api.models.requirements.RequirementType
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationUpdateOptions
-import io.falu.identity.navigation.ErrorDestination
 import io.falu.identity.navigation.IdentityVerificationNavActions
+import io.falu.identity.viewModel.IdentityVerificationViewModel
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

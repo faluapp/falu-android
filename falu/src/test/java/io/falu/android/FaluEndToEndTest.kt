@@ -45,7 +45,6 @@ class FaluEndToEndTest {
 
     @Test
     fun `test mpesa payment works`() {
-
         val mpesa = MpesaPaymentRequest(
             phone = "+254712345678",
             reference = "254712345678",

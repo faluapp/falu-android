@@ -48,9 +48,8 @@ internal fun ScanCaptureScreen(
     viewModel: IdentityVerificationViewModel,
     documentScanViewModel: DocumentScanViewModel,
     navActions: IdentityVerificationNavActions,
-    documentType: IdentityDocumentType,
+    documentType: IdentityDocumentType
 ) {
-    val context = LocalContext.current
     val verificationResponse by viewModel.verification.observeAsState()
     val documentDisposition by viewModel.documentUploadDisposition.observeAsState()
 
@@ -161,7 +160,7 @@ internal fun ScanCaptureScreen(
                                             fromRoute = ScanCaptureDestination.ROUTE.route,
                                             verification = verification,
                                             navActions = navActions,
-                                            verificationRequest = uploadRequest,
+                                            verificationRequest = uploadRequest
                                         )
                                     },
                                     onError = { throwable ->

@@ -124,7 +124,6 @@ internal class IdentityVerificationActivity : AppCompatActivity(), FallbackUrlCa
         outState.putBoolean(KEY_OPENED, true)
     }
 
-
     private fun onVerificationFailure(fromFallbackUrl: Boolean, throwable: Throwable?) {
         verificationViewModel.reportTelemetry(
             verificationViewModel.analyticsRequestBuilder.verificationFailed(

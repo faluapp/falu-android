@@ -116,7 +116,7 @@ internal fun IdentityNavigationGraph(
             ) {
                 DocumentVerificationScreen(
                     viewModel = identityViewModel,
-                    navActions = navActions,
+                    navActions = navActions
                 )
             }
 

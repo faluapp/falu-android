@@ -8,7 +8,7 @@ import io.falu.identity.utils.getRenderScript
 import java.io.File
 
 internal class FaceScanner(private val context: Context) : AbstractScanner() {
-    
+
     override fun addAnalyzers(
         model: File,
         capture: VerificationCapture,

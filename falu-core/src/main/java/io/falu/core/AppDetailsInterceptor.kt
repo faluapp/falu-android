@@ -38,7 +38,7 @@ class AppDetailsInterceptor(private val context: Context) : Interceptor {
         val versionRelease = Build.VERSION.RELEASE
 
         return "falu-android/${BuildConfig.FALU_VERSION_NAME} (Android $versionRelease; $manufacturer $model) " +
-                "$packageName/${context.appVersionName}"
+          "$packageName/${context.appVersionName}"
     }
 
     private val packageName: String

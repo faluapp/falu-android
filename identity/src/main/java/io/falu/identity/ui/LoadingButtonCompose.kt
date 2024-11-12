@@ -30,7 +30,7 @@ fun LoadingButton(
                 modifier = Modifier.size(dimensionResource(R.dimen.content_padding_normal)),
                 color = MaterialTheme.colorScheme.secondary,
                 strokeWidth = dimensionResource(R.dimen.element_spacing_normal_quarter),
-                trackColor = Color.LightGray,
+                trackColor = Color.LightGray
             )
         } else {
             Text(text = text)

@@ -245,7 +245,7 @@ private fun uploadSelfie(
     identityViewModel: IdentityVerificationViewModel,
     navActions: IdentityVerificationNavActions,
     verification: Verification,
-    output: FaceDetectionOutput,
+    output: FaceDetectionOutput
 ) {
     identityViewModel.uploadSelfieImage(
         output.bitmap,

@@ -2,15 +2,15 @@ package io.falu.identity.navigation
 
 import androidx.navigation.NavController
 import io.falu.core.exceptions.ApiException
-import io.falu.identity.viewModel.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.models.requirements.RequirementError
 import io.falu.identity.api.models.requirements.RequirementType.Companion.matchesFromRoute
 import io.falu.identity.utils.getErrorDescription
+import io.falu.identity.viewModel.IdentityVerificationViewModel
 
 internal fun NavController.navigateWithRequirementErrors(
     route: String,
-    requirementError: RequirementError,
+    requirementError: RequirementError
 ) {
     navigateTo(
         ErrorDestination(
@@ -73,7 +73,6 @@ private val DOCUMENT_UPLOAD_ROUTES = setOf(
     ManualCaptureDestination.ROUTE.route,
     UploadCaptureDestination.ROUTE.route
 )
-
 
 internal fun NavController.resetAndNavigateUp(identityViewModel: IdentityVerificationViewModel): Boolean {
     currentBackStackEntry?.destination?.route?.let { currentEntryRoute ->

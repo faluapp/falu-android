@@ -281,7 +281,7 @@ internal class CameraView @JvmOverloads constructor(
      */
     private fun withCameraProvider(
         executor: Executor = ContextCompat.getMainExecutor(context),
-        task: (ProcessCameraProvider) -> Unit,
+        task: (ProcessCameraProvider) -> Unit
     ) {
         cameraProviderFuture.addListener({ task(cameraProviderFuture.get()) }, executor)
     }

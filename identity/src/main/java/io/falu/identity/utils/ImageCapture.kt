@@ -20,12 +20,11 @@ internal class ImageCapture(
     uriId: String,
     onImageCaptured: ((Uri) -> Unit)
 ) {
-    private val capturedImageUri: Uri =
-        stateHandle.get<Uri>(uriId) ?: run {
-            val newUri = utils.internalFileUri
-            stateHandle[uriId] = newUri
-            newUri
-        }
+    private val capturedImageUri: Uri = stateHandle.get<Uri>(uriId) ?: run {
+        val newUri = utils.internalFileUri
+        stateHandle[uriId] = newUri
+        newUri
+    }
 
     private val cameraLauncher: ActivityResultLauncher<Intent> = caller.registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()

@@ -82,7 +82,7 @@ internal fun UploadCaptureScreen(
                                 fromRoute = UploadCaptureDestination.ROUTE.route,
                                 verification = verification,
                                 navActions = navActions,
-                                verificationRequest = uploadRequest,
+                                verificationRequest = uploadRequest
                             )
                         },
                         onError = { throwable -> navActions.navigateToErrorWithApiExceptions(throwable) },

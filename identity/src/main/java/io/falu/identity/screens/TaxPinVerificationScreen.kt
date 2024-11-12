@@ -129,7 +129,7 @@ private fun attemptSubmission(
     navActions: IdentityVerificationNavActions,
     pinUploadOptions: VerificationTaxPinUpload,
     verification: Verification,
-    onLoading: (Boolean) -> Unit = {},
+    onLoading: (Boolean) -> Unit = {}
 ) {
     val options = VerificationUpdateOptions(taxPin = pinUploadOptions)
     val uploadRequest = VerificationUploadRequest(taxPin = pinUploadOptions)

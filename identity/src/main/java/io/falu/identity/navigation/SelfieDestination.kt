@@ -3,7 +3,7 @@ package io.falu.identity.navigation
 internal class SelfieDestination : IdentityDestination() {
     override val workflowRoute: WorkflowRoute
         get() = ROUTE
-    
+
     internal companion object {
         const val SELFIE = "selfie"
 

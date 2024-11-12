@@ -266,13 +266,13 @@ private fun DocumentVerificationForm(loading: Boolean, onSubmit: (VerificationId
                     color = Color.Gray,
                     shape = RoundedCornerShape(dimensionResource(R.dimen.element_spacing_normal))
                 )
-                .clickable { showDatePicker = true },
+                .clickable { showDatePicker = true }
         ) {
             Row(
                 modifier = Modifier
                     .padding(all = dimensionResource(R.dimen.content_padding_normal))
                     .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = if (birthday == null) {
@@ -366,7 +366,7 @@ private fun attemptSubmission(
     navActions: IdentityVerificationNavActions,
     idNumberUpload: VerificationIdNumberUpload,
     verification: Verification,
-    onLoading: (Boolean) -> Unit = {},
+    onLoading: (Boolean) -> Unit = {}
 ) {
     val options = VerificationUpdateOptions(idNumber = idNumberUpload)
     val uploadRequest = VerificationUploadRequest(idNumber = idNumberUpload)
@@ -391,7 +391,6 @@ private fun attemptSubmission(
         }
     )
 }
-
 
 @Preview
 @Composable

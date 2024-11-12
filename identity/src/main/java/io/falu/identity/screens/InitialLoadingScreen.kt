@@ -13,18 +13,17 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.falu.core.utils.toThrowable
+import io.falu.identity.FallbackUrlCallback
 import io.falu.identity.R
 import io.falu.identity.api.models.requirements.RequirementType
 import io.falu.identity.api.models.requirements.RequirementType.Companion.nextDestination
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.navigation.IdentityVerificationNavActions
 import io.falu.identity.ui.theme.IdentityTheme
-import io.falu.identity.viewModel.FallbackUrlCallback
 import io.falu.identity.viewModel.IdentityVerificationViewModel
 import software.tingle.api.ResourceResponse
 
@@ -62,7 +61,7 @@ internal fun LoadingScreen() {
             modifier = Modifier.size(dimensionResource(R.dimen.content_padding_normal_2x)),
             color = MaterialTheme.colorScheme.secondary,
             strokeWidth = 4.dp,
-            trackColor = Color.LightGray,
+            trackColor = Color.LightGray
         )
     }
 }

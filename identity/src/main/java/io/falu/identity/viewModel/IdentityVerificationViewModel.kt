@@ -316,7 +316,7 @@ internal class IdentityVerificationViewModel(
         fromRoute: String,
         navActions: IdentityVerificationNavActions,
         verification: Verification,
-        verificationRequest: VerificationUploadRequest,
+        verificationRequest: VerificationUploadRequest
     ) {
         when {
             verification.selfieRequired && fromRoute != SelfieDestination.ROUTE.route -> {

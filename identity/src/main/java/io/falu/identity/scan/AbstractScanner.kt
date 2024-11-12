@@ -29,7 +29,7 @@ internal abstract class AbstractScanner {
         model: File,
         capture: VerificationCapture,
         scanType: ScanDisposition.DocumentScanType,
-        performanceMonitor: ModelPerformanceMonitor,
+        performanceMonitor: ModelPerformanceMonitor
     )
 
     fun requireCameraView() = requireNotNull(cameraView)
