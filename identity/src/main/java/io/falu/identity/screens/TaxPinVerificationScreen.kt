@@ -88,6 +88,7 @@ private fun TaxPinVerificationForm(loading: Boolean, onSubmit: (VerificationTaxP
         OutlinedTextField(
             value = pinNumber,
             onValueChange = { pinNumber = it },
+            maxLines = 1,
             label = {
                 Text(
                     text = stringResource(R.string.tax_pin_verification_hint_tax_pin),

@@ -83,7 +83,8 @@ internal fun DocumentVerificationScreen(
             )
         }
 
-        DocumentVerificationForm(loading = loading) { idNumberUpload ->
+        DocumentVerificationForm(loading = loading) { idNumberUpload, isLoading ->
+            loading = isLoading
             attemptSubmission(viewModel, navActions, idNumberUpload, verification, onLoading = { loading = it })
         }
     }
@@ -91,7 +92,7 @@ internal fun DocumentVerificationScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun DocumentVerificationForm(loading: Boolean, onSubmit: (VerificationIdNumberUpload) -> Unit) {
+private fun DocumentVerificationForm(loading: Boolean, onSubmit: (VerificationIdNumberUpload, Boolean) -> Unit) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
 
@@ -138,6 +139,7 @@ private fun DocumentVerificationForm(loading: Boolean, onSubmit: (VerificationId
         OutlinedTextField(
             value = documentNumber,
             onValueChange = { documentNumber = it },
+            maxLines = 1,
             label = {
                 Text(
                     text = stringResource(R.string.document_verification_hint_document_number),
@@ -161,6 +163,7 @@ private fun DocumentVerificationForm(loading: Boolean, onSubmit: (VerificationId
         OutlinedTextField(
             value = firstName,
             onValueChange = { firstName = it },
+            maxLines = 1,
             label = {
                 Text(
                     text = stringResource(R.string.document_verification_hint_first_name),
@@ -184,6 +187,7 @@ private fun DocumentVerificationForm(loading: Boolean, onSubmit: (VerificationId
         OutlinedTextField(
             value = lastName,
             onValueChange = { lastName = it },
+            maxLines = 1,
             label = {
                 Text(
                     text = stringResource(R.string.document_verification_hint_last_name),
@@ -309,7 +313,7 @@ private fun DocumentVerificationForm(loading: Boolean, onSubmit: (VerificationId
             isLoading = loading
         ) {
             if (formValid()) {
-                onSubmit(attemptSubmission(documentNumber, firstName, lastName, birthday!!, gender))
+                onSubmit(attemptSubmission(documentNumber, firstName, lastName, birthday!!, gender), true)
             }
         }
     }
@@ -394,7 +398,7 @@ private fun attemptSubmission(
 private fun DocumentVerificationPreview() {
     IdentityTheme {
         IdentityVerificationHeader(Uri.EMPTY, WorkspaceInfo(name = "Showcases", country = "US"), false) {
-            DocumentVerificationForm(loading = true) {}
+            DocumentVerificationForm(loading = true) { _, _ -> }
         }
     }
 }

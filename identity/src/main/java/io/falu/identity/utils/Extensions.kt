@@ -13,7 +13,6 @@ import android.util.Size
 import android.view.View
 import androidx.annotation.CheckResult
 import androidx.annotation.RestrictTo
-import io.falu.identity.R
 import io.falu.identity.ai.DocumentOption
 import io.falu.identity.scan.ScanDisposition
 import software.tingle.api.HttpApiResponseProblem
@@ -24,14 +23,14 @@ import kotlin.math.roundToInt
 internal fun HttpApiResponseProblem.getErrorDescription(context: Context): String {
     if (errors.isNullOrEmpty()) {
         val desc = description ?: code
-        return context.getString(R.string.error_description_http_error, desc)
+        return desc.orEmpty()
     }
 
     var desc = ""
     for (errors in errors!!.values) {
         desc = TextUtils.join("\n", errors)
     }
-    return context.getString(R.string.error_description_http_error, desc)
+    return desc
 }
 
 /**
