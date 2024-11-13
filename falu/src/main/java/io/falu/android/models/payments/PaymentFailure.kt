@@ -1,8 +1,8 @@
 package io.falu.android.models.payments
 
 import android.os.Parcelable
-import java.util.Date
 import kotlinx.parcelize.Parcelize
+import java.util.Date
 
 /**
  * [The Payment Failure object](https://falu.io)

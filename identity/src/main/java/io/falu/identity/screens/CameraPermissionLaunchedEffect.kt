@@ -20,7 +20,8 @@ internal fun CameraPermissionLaunchEffect(onPermissionGranted: () -> Unit, onPer
     var hasCameraPermission by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(
-                context, Manifest.permission.CAMERA
+                context,
+                Manifest.permission.CAMERA
             ) == PackageManager.PERMISSION_GRANTED
         )
     }

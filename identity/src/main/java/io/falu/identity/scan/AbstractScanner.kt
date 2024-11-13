@@ -35,7 +35,6 @@ internal abstract class AbstractScanner {
     fun requireCameraView() = requireNotNull(cameraView)
 
     internal fun onResult(output: DetectionOutput) {
-
         val (provisionalResult, identityResult) = collectResults(output)
 
         callbacks.onProgress(provisionalResult)
@@ -66,11 +65,11 @@ internal abstract class AbstractScanner {
             val provisionalResult = ProvisionalResult(disposition!!)
 
             provisionalResult to
-                    if (disposition!!.terminate) {
-                        IdentityResult(output, disposition!!)
-                    } else {
-                        null
-                    }
+                if (disposition!!.terminate) {
+                    IdentityResult(output, disposition!!)
+                } else {
+                    null
+                }
         } else {
             isFirstOutput = true
             ProvisionalResult(disposition!!) to null

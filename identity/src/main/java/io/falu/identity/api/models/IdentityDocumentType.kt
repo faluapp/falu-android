@@ -31,7 +31,7 @@ internal fun IdentityDocumentType.getIdentityDocumentName(context: Context) =
     context.getString(this.titleRes)
 
 internal fun IdentityDocumentType.getScanType():
-        Pair<ScanDisposition.DocumentScanType, ScanDisposition.DocumentScanType?> {
+    Pair<ScanDisposition.DocumentScanType, ScanDisposition.DocumentScanType?> {
     return when (this) {
         IdentityDocumentType.IDENTITY_CARD -> {
             Pair(

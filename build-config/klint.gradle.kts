@@ -19,8 +19,9 @@ tasks {
     val ktlintFormat by creating(JavaExec::class) {
         group = "formatting"
         description = "Fix Kotlin code style deviations."
-        mainClass.set("com.pinterest.ktlint.Main")
         classpath = configurations["ktlint"]
-        args("-F", "src/**/*.kt")
+        jvmArgs = listOf("--add-opens=java.base/java.lang=ALL-UNNAMED")
+        setProperty("mainClass", "com.pinterest.ktlint.Main")
+        args = listOf("-F", "src/**/*.kt")
     }
 }

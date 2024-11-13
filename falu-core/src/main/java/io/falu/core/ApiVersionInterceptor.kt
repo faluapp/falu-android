@@ -14,7 +14,6 @@ class ApiVersionInterceptor(private val code: String) : Interceptor {
             .request()
             .newBuilder()
             .header("X-Falu-Version", code)
-
             .build()
 
         return chain.proceed(request)

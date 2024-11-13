@@ -3,12 +3,12 @@ package io.falu.android.networking
 import android.content.Context
 import io.falu.core.exceptions.ApiException
 import io.falu.core.exceptions.FaluException
-import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
 import software.tingle.api.ResourceResponse
+import kotlin.coroutines.CoroutineContext
 
 /**
  * A base class for Falu-related API requests.

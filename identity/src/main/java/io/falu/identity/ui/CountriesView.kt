@@ -50,7 +50,6 @@ internal fun CountriesView(
     selected: SupportedCountry?,
     onCountrySelected: (SupportedCountry) -> Unit = {}
 ) {
-
     ObserveCountriesAndCompose(response, onError = {}) { supportedCountries ->
         SupportedCountryViews(selected, supportedCountries, onCountrySelected)
     }
@@ -125,7 +124,9 @@ private fun SupportedCountryViews(
                                 )
                                 Text(
                                     text = option.country.name,
-                                    modifier = Modifier.padding(start = dimensionResource(R.dimen.element_spacing_normal))
+                                    modifier = Modifier.padding(
+                                        start = dimensionResource(R.dimen.element_spacing_normal)
+                                    )
                                 )
                             }
                         },

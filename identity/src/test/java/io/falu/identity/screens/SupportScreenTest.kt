@@ -10,12 +10,12 @@ import androidx.compose.ui.test.performClick
 import androidx.lifecycle.MutableLiveData
 import androidx.test.core.app.ApplicationProvider
 import io.falu.identity.ContractArgs
-import io.falu.identity.viewModel.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.TestApplication
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder
 import io.falu.identity.api.models.Support
 import io.falu.identity.api.models.verification.Verification
+import io.falu.identity.viewModel.IdentityVerificationViewModel
 import okhttp3.Headers
 import org.junit.Rule
 import org.junit.Test

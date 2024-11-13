@@ -20,10 +20,11 @@ import io.falu.identity.utils.FileUtils
 import io.falu.identity.utils.IdentityImageHandler
 import io.falu.identity.viewModel.DocumentScanViewModel
 import io.falu.identity.viewModel.FaceScanViewModel
-import io.falu.identity.viewModel.FallbackUrlCallback
 import io.falu.identity.viewModel.IdentityVerificationViewModel
 
-internal class IdentityVerificationActivity : AppCompatActivity(), FallbackUrlCallback,
+internal class IdentityVerificationActivity :
+    AppCompatActivity(),
+    FallbackUrlCallback,
     IdentityVerificationResultCallback {
 
     @VisibleForTesting
@@ -66,7 +67,9 @@ internal class IdentityVerificationActivity : AppCompatActivity(), FallbackUrlCa
 
     private val apiClient: IdentityVerificationApiClient by lazy {
         IdentityVerificationApiClient(
-            this, contractArgs.temporaryKey, contractArgs.maxNetworkRetries,
+            this,
+            contractArgs.temporaryKey,
+            contractArgs.maxNetworkRetries,
             BuildConfig.DEBUG
         )
     }
@@ -150,7 +153,8 @@ internal class IdentityVerificationActivity : AppCompatActivity(), FallbackUrlCa
                 verificationViewModel.fetchVerification {
                     finishWithVerificationResult(IdentityVerificationResult.Failed(it))
                 }
-                verificationViewModel.observeForVerificationResults(this,
+                verificationViewModel.observeForVerificationResults(
+                    this,
                     onSuccess = {
                         if (it.submitted) {
                             finishWithVerificationResult(IdentityVerificationResult.Succeeded)

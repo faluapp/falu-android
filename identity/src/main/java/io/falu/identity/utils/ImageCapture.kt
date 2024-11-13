@@ -35,12 +35,14 @@ internal class ImageCapture(
     }
 
     internal fun captureImage(context: Context) {
-        cameraLauncher.launch(Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { captureImageIntent ->
-            // ensure that there's a camera activity to handle the intent
-            captureImageIntent.resolveActivity(context.packageManager).also {
-                // create the File where the photo should go
-                captureImageIntent.putExtra(MediaStore.EXTRA_OUTPUT, capturedImageUri)
+        cameraLauncher.launch(
+            Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { captureImageIntent ->
+                // ensure that there's a camera activity to handle the intent
+                captureImageIntent.resolveActivity(context.packageManager).also {
+                    // create the File where the photo should go
+                    captureImageIntent.putExtra(MediaStore.EXTRA_OUTPUT, capturedImageUri)
+                }
             }
-        })
+        )
     }
 }

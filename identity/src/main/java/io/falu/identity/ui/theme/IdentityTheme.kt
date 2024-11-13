@@ -55,7 +55,7 @@ private fun createTheme(
     context: Context,
     layoutDirection: LayoutDirection,
     readColorScheme: Boolean = true,
-    readTypography: Boolean = true,
+    readTypography: Boolean = true
 ): ThemeParameters {
     return context.obtainStyledAttributes(R.styleable.ThemeAdapterMaterialTheme).use { ta ->
         val colorScheme: ColorScheme? = if (readColorScheme) {
@@ -156,7 +156,9 @@ private fun createTheme(
                     scrim = scrimBackground
                 )
             }
-        } else null
+        } else {
+            null
+        }
         // Extract typography if readTypography is true
 
         // You can extract shapes similarly if needed or return default shapes

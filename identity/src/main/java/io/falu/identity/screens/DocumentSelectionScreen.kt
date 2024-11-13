@@ -139,7 +139,6 @@ private fun DocumentOptions(
             .fillMaxWidth()
             .padding(horizontal = dimensionResource(R.dimen.content_padding_normal))
     ) {
-
         Text(
             text = stringResource(id = R.string.document_selection_accepted_documents),
             modifier = Modifier

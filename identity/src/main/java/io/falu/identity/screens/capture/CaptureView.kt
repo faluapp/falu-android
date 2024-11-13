@@ -156,6 +156,7 @@ internal fun DocumentCapturePreview() {
             isFrontUploaded = false,
             isBackUploaded = false,
             onFront = {},
-            onBack = {})
+            onBack = {}
+        )
     }
 }

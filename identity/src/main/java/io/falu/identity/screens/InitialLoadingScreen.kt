@@ -38,8 +38,10 @@ internal fun InitialLoadingScreen(
 ) {
     val verificationResponse by identityViewModel.verification.observeAsState()
 
-    ObserveVerificationAndCompose(verificationResponse,
-        onError = { throwable -> navActions.navigateToErrorWithFailure(throwable) }) { verification ->
+    ObserveVerificationAndCompose(
+        verificationResponse,
+        onError = { throwable -> navActions.navigateToErrorWithFailure(throwable) }
+    ) { verification ->
         LaunchedEffect(Unit) {
             if (!verification.supported) {
                 fallbackUrlCallback.launchFallbackUrl(verification.url.orEmpty())
@@ -65,7 +67,6 @@ internal fun LoadingScreen() {
         )
     }
 }
-
 
 @Composable
 internal fun ObserveVerificationAndCompose(

@@ -371,7 +371,8 @@ private fun attemptSubmission(
     val options = VerificationUpdateOptions(idNumber = idNumberUpload)
     val uploadRequest = VerificationUploadRequest(idNumber = idNumberUpload)
 
-    viewModel.updateVerification(options,
+    viewModel.updateVerification(
+        options,
         onSuccess = {
             onLoading(false)
             viewModel.attemptDocumentSubmission(

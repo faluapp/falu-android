@@ -37,7 +37,7 @@ internal data class DocumentUploadDisposition(
         get() = front != null && back != null
 
     fun generateVerificationUploadRequest(identityDocumentType: IdentityDocumentType):
-            VerificationUploadRequest {
+        VerificationUploadRequest {
         val front = VerificationDocumentSide(
             method = front!!.method!!,
             file = front!!.file.id,

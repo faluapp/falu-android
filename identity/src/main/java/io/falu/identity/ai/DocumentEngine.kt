@@ -68,7 +68,8 @@ internal class DocumentEngine(
         val detectionsBuffer = TensorBuffer.createFixedSize(detectionsTensorShape, DataType.FLOAT32)
 
         interpreter.runForMultipleInputsOutputs(
-            arrayOf(tensorImage.buffer), mapOf(
+            arrayOf(tensorImage.buffer),
+            mapOf(
                 0 to documentOptionScoresBuffer.buffer,
                 1 to boundingBoxesBuffer.buffer,
                 2 to detectionsBuffer.buffer,

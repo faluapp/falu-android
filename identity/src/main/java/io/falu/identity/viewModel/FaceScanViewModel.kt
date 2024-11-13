@@ -27,8 +27,10 @@ import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import kotlin.coroutines.CoroutineContext
 
-internal class FaceScanViewModel(private val performanceMonitor: ModelPerformanceMonitor) : ViewModel(),
-    ScanResultCallback<ProvisionalResult, IdentityResult>, CoroutineScope {
+internal class FaceScanViewModel(private val performanceMonitor: ModelPerformanceMonitor) :
+    ViewModel(),
+    ScanResultCallback<ProvisionalResult, IdentityResult>,
+    CoroutineScope {
 
     override val coroutineContext: CoroutineContext
         get() = Job() + Dispatchers.IO

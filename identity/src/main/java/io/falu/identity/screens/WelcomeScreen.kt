@@ -23,7 +23,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import io.falu.identity.IdentityVerificationResult
 import io.falu.identity.IdentityVerificationResultCallback
-import io.falu.identity.viewModel.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCREEN_NAME_WELCOME
 import io.falu.identity.api.models.WorkspaceInfo
@@ -33,6 +32,7 @@ import io.falu.identity.ui.IdentityVerificationHeader
 import io.falu.identity.ui.LoadingButton
 import io.falu.identity.ui.ObserveVerificationAndCompose
 import io.falu.identity.ui.theme.IdentityTheme
+import io.falu.identity.viewModel.IdentityVerificationViewModel
 
 @Composable
 internal fun WelcomeScreen(

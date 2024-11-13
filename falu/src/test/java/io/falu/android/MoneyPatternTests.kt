@@ -1,9 +1,9 @@
 package io.falu.android
 
 import io.falu.android.models.payments.Money
+import org.junit.Test
 import java.util.Currency
 import kotlin.test.assertEquals
-import org.junit.Test
 
 class MoneyPatternTests {
 

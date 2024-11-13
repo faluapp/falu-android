@@ -28,8 +28,9 @@ internal class LumaAnalyzer(val listener: LumaListener) : ImageAnalysis.Analyzer
 
         // Compute the FPS using a moving average
         while (frameTimestamps.size >= frameRateWindow) frameTimestamps.removeLast()
-        framesPerSecond = 1.0 / ((frameTimestamps.peekFirst() -
-                frameTimestamps.peekLast()) / frameTimestamps.size.toDouble()) * 1000.0
+        framesPerSecond = 1.0 / (
+            (frameTimestamps.peekFirst() - frameTimestamps.peekLast()) / frameTimestamps.size.toDouble()
+            ) * 1000.0
 
         // Calculate the average luma no more often than every second
         if (frameTimestamps.first - lastAnalyzedTimestamp >= FRAME_THRESHOLD) {

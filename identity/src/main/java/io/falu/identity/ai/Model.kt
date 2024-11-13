@@ -16,7 +16,7 @@ internal enum class DocumentOption {
     ID_BACK,
     ID_FRONT,
     PASSPORT,
-    INVALID;
+    INVALID
 }
 
 /**

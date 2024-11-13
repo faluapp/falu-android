@@ -16,10 +16,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import io.falu.identity.IdentityVerificationResult
 import io.falu.identity.IdentityVerificationResultCallback
-import io.falu.identity.viewModel.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCREEN_NAME_CONFIRMATION
 import io.falu.identity.ui.ObserveVerificationAndCompose
+import io.falu.identity.viewModel.IdentityVerificationViewModel
 
 @Composable
 internal fun ConfirmationScreen(

@@ -22,10 +22,8 @@ abstract class FaluException(
     }
 
     private fun typedEquals(ex: FaluException): Boolean {
-        return problem == ex.problem &&
-                statusCode == ex.statusCode &&
-                errorCode == ex.errorCode &&
-                message == ex.message
+        return problem == ex.problem && statusCode == ex.statusCode && errorCode == ex.errorCode &&
+            message == ex.message
     }
 
     override fun equals(other: Any?): Boolean {

@@ -136,7 +136,8 @@ internal fun ScanCaptureScreen(
                             isFrontLoading = frontLoading,
                             isBackLoading = backLoading,
                             onFront = { uploadFront = true },
-                            onBack = { uploadBack = true })
+                            onBack = { uploadBack = true }
+                        )
 
                         Column(
                             modifier = Modifier
@@ -263,7 +264,6 @@ private fun DocumentSideCapture(
             .padding(horizontal = dimensionResource(R.dimen.content_padding_normal))
             .padding(bottom = dimensionResource(R.dimen.element_spacing_normal))
     ) {
-
         Text(
             text = stringResource(
                 if (scanType.isFront) {
@@ -319,10 +319,11 @@ private fun DocumentSideCapture(
                                 CameraView(ctx).apply {
                                     bindLifecycle(owner)
                                     lensFacing = CameraSelector.LENS_FACING_BACK
-                                    cameraViewType = if (documentType != IdentityDocumentType.PASSPORT)
+                                    cameraViewType = if (documentType != IdentityDocumentType.PASSPORT) {
                                         CameraView.CameraViewType.ID
-                                    else
+                                    } else {
                                         CameraView.CameraViewType.PASSPORT
+                                    }
                                 }
                             },
                             update = {
@@ -341,7 +342,7 @@ private fun uploadDocument(
     navActions: IdentityVerificationNavActions,
     output: DocumentDetectionOutput,
     documentSide: DocumentSide,
-    onLoad: (Boolean) -> Unit,
+    onLoad: (Boolean) -> Unit
 ) {
     identityViewModel.uploadScannedDocument(
         output.bitmap,

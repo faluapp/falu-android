@@ -10,7 +10,6 @@ import androidx.compose.ui.test.performClick
 import androidx.lifecycle.MutableLiveData
 import androidx.test.core.app.ApplicationProvider
 import io.falu.identity.ContractArgs
-import io.falu.identity.viewModel.IdentityVerificationViewModel
 import io.falu.identity.TestApplication
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder
 import io.falu.identity.api.models.IdentityDocumentType
@@ -22,6 +21,7 @@ import io.falu.identity.api.models.verification.VerificationOptionsForDocument
 import io.falu.identity.api.models.verification.VerificationType
 import io.falu.identity.navigation.IdentityVerificationNavActions
 import io.falu.identity.ui.TAG_INPUT_ISSUING_COUNTRY
+import io.falu.identity.viewModel.IdentityVerificationViewModel
 import okhttp3.Headers
 import org.junit.Rule
 import org.junit.Test
@@ -127,7 +127,9 @@ internal class DocumentSelectionScreenTest {
         verificationResponse.postValue(response)
         supportedCountriesResponse.postValue(
             ResourceResponse(
-                200, Headers.headersOf(), supportedCountries,
+                200,
+                Headers.headersOf(),
+                supportedCountries,
                 null
             )
         )

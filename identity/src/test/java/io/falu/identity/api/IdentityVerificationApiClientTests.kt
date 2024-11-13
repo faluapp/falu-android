@@ -18,9 +18,9 @@ import io.falu.identity.api.models.verification.VerificationDocumentUpload
 import io.falu.identity.api.models.verification.VerificationModel
 import io.falu.identity.api.models.verification.VerificationOptions
 import io.falu.identity.api.models.verification.VerificationOptionsForDocument
-import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.api.models.verification.VerificationStatus
 import io.falu.identity.api.models.verification.VerificationType
+import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.api.models.verification.VerificationUploadRequest
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -55,7 +55,8 @@ class IdentityVerificationApiClientTests {
         type = VerificationType.IDENTITY_NUMBER,
         status = VerificationStatus.INPUT_REQUIRED,
         options = VerificationOptions(
-            countries = mutableListOf("ken"), document = VerificationOptionsForDocument(
+            countries = mutableListOf("ken"),
+            document = VerificationOptionsForDocument(
                 mutableListOf(IdentityDocumentType.IDENTITY_CARD, IdentityDocumentType.PASSPORT)
             )
         ),

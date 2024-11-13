@@ -21,13 +21,13 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.falu.identity.viewModel.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCREEN_NAME_DOCUMENT_CAPTURE_METHODS
 import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.UploadMethod
 import io.falu.identity.ui.ObserveVerificationAndCompose
 import io.falu.identity.ui.theme.IdentityTheme
+import io.falu.identity.viewModel.IdentityVerificationViewModel
 
 @Composable
 internal fun DocumentCaptureMethodsScreen(
@@ -47,7 +47,8 @@ internal fun DocumentCaptureMethodsScreen(
         DocumentSelectionView(
             documentType,
             allowUploads = true,
-            onCaptureMethod = { navigateToCaptureMethod(it) })
+            onCaptureMethod = { navigateToCaptureMethod(it) }
+        )
     }
 }
 

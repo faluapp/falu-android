@@ -102,10 +102,10 @@ internal fun Size.maxAspectRatio(ratio: Float): Size {
 /***/
 internal fun DocumentOption.matches(type: ScanDisposition.DocumentScanType): Boolean {
     return this == DocumentOption.DL_BACK && type == ScanDisposition.DocumentScanType.DL_BACK ||
-            this == DocumentOption.DL_FRONT && type == ScanDisposition.DocumentScanType.DL_FRONT ||
-            this == DocumentOption.ID_BACK && type == ScanDisposition.DocumentScanType.ID_BACK ||
-            this == DocumentOption.ID_FRONT && type == ScanDisposition.DocumentScanType.ID_FRONT ||
-            this == DocumentOption.PASSPORT && type == ScanDisposition.DocumentScanType.PASSPORT
+        this == DocumentOption.DL_FRONT && type == ScanDisposition.DocumentScanType.DL_FRONT ||
+        this == DocumentOption.ID_BACK && type == ScanDisposition.DocumentScanType.ID_BACK ||
+        this == DocumentOption.ID_FRONT && type == ScanDisposition.DocumentScanType.ID_FRONT ||
+        this == DocumentOption.PASSPORT && type == ScanDisposition.DocumentScanType.PASSPORT
 }
 
 /***/

@@ -25,9 +25,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import io.falu.identity.viewModel.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder.Companion.SCREEN_NAME_SUPPORT
+import io.falu.identity.viewModel.IdentityVerificationViewModel
 
 @Composable
 internal fun SupportScreen(identityViewModel: IdentityVerificationViewModel) {

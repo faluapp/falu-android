@@ -64,7 +64,7 @@ internal class FaceDetectionAnalyzer internal constructor(
         tensorImage = processor.process(tensorImage)
         preprocessingMonitor.monitor(
             stats = "width: ${tensorImage.width}; height: ${tensorImage.height}; " +
-                    "rotation: ${image.imageInfo.rotationDegrees}"
+                "rotation: ${image.imageInfo.rotationDegrees}"
         )
 
         val inferenceMonitor = performanceMonitor.monitorInference()

@@ -194,9 +194,12 @@ internal class CameraView @JvmOverloads constructor(
             .setImageQueueDepth(1)
             .build()
             .also {
-                it.setAnalyzer(cameraExecutor, LumaAnalyzer { luma ->
-                    brightness = luma
-                })
+                it.setAnalyzer(
+                    cameraExecutor,
+                    LumaAnalyzer { luma ->
+                        brightness = luma
+                    }
+                )
 
                 analyzers.forEach { analyzer ->
                     it.setAnalyzer(cameraExecutor, analyzer)

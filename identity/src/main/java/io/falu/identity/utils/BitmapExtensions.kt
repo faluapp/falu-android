@@ -107,7 +107,7 @@ internal fun Bitmap.toSize() = Size(this.width, this.height)
  */
 @CheckResult
 internal fun Bitmap.withBoundingBox(bounds: Rect): Bitmap {
-    val bitmap = copy(config, true)
+    val bitmap = copy(config!!    , true)
     val canvas = Canvas(bitmap)
 
     Paint().apply {

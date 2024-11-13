@@ -66,7 +66,7 @@ internal class DocumentDispositionMachine(
                 Log.d(
                     TAG,
                     "Score (${output.score}) for (${output.option}) " +
-                            "doesn't meet the required threshold."
+                        "doesn't meet the required threshold."
                 )
                 state.reached = DateTime.now()
                 state

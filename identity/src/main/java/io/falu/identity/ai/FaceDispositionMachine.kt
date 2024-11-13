@@ -1,8 +1,8 @@
 package io.falu.identity.ai
 
 import android.util.Log
-import io.falu.identity.scan.ScanDispositionDetector
 import io.falu.identity.scan.ScanDisposition
+import io.falu.identity.scan.ScanDispositionDetector
 import org.joda.time.DateTime
 import org.joda.time.Seconds
 

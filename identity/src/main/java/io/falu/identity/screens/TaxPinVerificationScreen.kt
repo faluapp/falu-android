@@ -134,7 +134,8 @@ private fun attemptSubmission(
     val options = VerificationUpdateOptions(taxPin = pinUploadOptions)
     val uploadRequest = VerificationUploadRequest(taxPin = pinUploadOptions)
 
-    viewModel.updateVerification(options,
+    viewModel.updateVerification(
+        options,
         onSuccess = {
             onLoading(false)
             viewModel.attemptDocumentSubmission(

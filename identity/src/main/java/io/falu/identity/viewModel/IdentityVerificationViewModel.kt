@@ -128,7 +128,6 @@ internal class IdentityVerificationViewModel(
                     if (it.successful() && it.resource != null) {
                         val verification = it.resource!!
                         if (modelRequired) {
-
                             downloadAIModel(
                                 verification.capture.models.document.url,
                                 _documentDetectorModelFile
@@ -190,7 +189,8 @@ internal class IdentityVerificationViewModel(
                     handleResponse(
                         response,
                         onSuccess = { onSuccess(it) },
-                        onError = { onError(it) })
+                        onError = { onError(it) }
+                    )
                 },
                 onFailure = {
                     Log.e(TAG, "Error uploading selfie image", it)
@@ -278,7 +278,8 @@ internal class IdentityVerificationViewModel(
                     handleResponse(
                         response,
                         onSuccess = { onSuccess(it) },
-                        onError = { onError(it) })
+                        onError = { onError(it) }
+                    )
                 },
                 onFailure = {
                     Log.e(TAG, "Error updating verification", it)
@@ -302,7 +303,8 @@ internal class IdentityVerificationViewModel(
                     handleResponse(
                         response,
                         onSuccess = onSuccess,
-                        onError = { onError(it) })
+                        onError = { onError(it) }
+                    )
                 },
                 onFailure = {
                     Log.e(TAG, "Error submitting verification", it)
@@ -343,11 +345,14 @@ internal class IdentityVerificationViewModel(
                                 navActions.navigateToConfirmation()
                             }
                         }
-                    }, onFailure = { throwable ->
+                    },
+                    onFailure = { throwable ->
                         navActions.navigateToErrorWithFailure(throwable)
-                    }, onError = { throwable ->
+                    },
+                    onError = { throwable ->
                         navActions.navigateToErrorWithApiExceptions(throwable)
-                    })
+                    }
+                )
             }
         }
     }

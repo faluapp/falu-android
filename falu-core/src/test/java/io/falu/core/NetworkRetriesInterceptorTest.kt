@@ -3,15 +3,15 @@ package io.falu.core
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
-import org.junit.runner.RunWith
-import org.mockito.Mockito.`when`
-import org.robolectric.RobolectricTestRunner
-import kotlin.test.BeforeTest
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.Mockito
-import kotlin.test.assertEquals
+import org.mockito.Mockito.`when`
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.robolectric.RobolectricTestRunner
+import kotlin.test.BeforeTest
+import kotlin.test.assertEquals
 
 @RunWith(RobolectricTestRunner::class)
 class NetworkRetriesInterceptorTest {

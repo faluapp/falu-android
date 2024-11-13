@@ -44,11 +44,11 @@ import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
 import io.falu.core.utils.toThrowable
 import io.falu.identity.ContractArgs
-import io.falu.identity.viewModel.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.api.models.WorkspaceInfo
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.ui.theme.IdentityTheme
+import io.falu.identity.viewModel.IdentityVerificationViewModel
 import software.tingle.api.ResourceResponse
 
 @Composable
@@ -119,7 +119,8 @@ internal fun IdentityVerificationHeader(
 
                     // Identity Verification Title
                     Text(
-                        text = stringResource(id = R.string.identity_verification_title_identity_verification).uppercase(),
+                        text = stringResource(id = R.string.identity_verification_title_identity_verification)
+                            .uppercase(),
                         style = MaterialTheme.typography.labelSmall,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
@@ -177,7 +178,7 @@ internal fun SandboxView() {
                 .wrapContentWidth()
                 .wrapContentHeight()
                 .clip(RoundedCornerShape(dimensionResource(R.dimen.element_spacing_normal))) // Rounded corners
-                .background(Color(0xFFFFB100)),
+                .background(Color(0xFFFFB100))
         ) {
             Column(
                 modifier = Modifier

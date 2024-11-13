@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import io.falu.identity.ContractArgs
+import io.falu.identity.FallbackUrlCallback
 import io.falu.identity.IdentityVerificationResult
 import io.falu.identity.IdentityVerificationResultCallback
 import io.falu.identity.R
@@ -35,7 +36,6 @@ import io.falu.identity.ui.IdentityVerificationBaseScreen
 import io.falu.identity.utils.openAppSettings
 import io.falu.identity.viewModel.DocumentScanViewModel
 import io.falu.identity.viewModel.FaceScanViewModel
-import io.falu.identity.viewModel.FallbackUrlCallback
 import io.falu.identity.viewModel.IdentityVerificationViewModel
 
 @Composable
@@ -141,7 +141,8 @@ internal fun IdentityNavigationGraph(
                                 documentType = DocumentCaptureDestination.identityDocumentType(entry)
                             )
                         }
-                    })
+                    }
+                )
             }
 
             composable(

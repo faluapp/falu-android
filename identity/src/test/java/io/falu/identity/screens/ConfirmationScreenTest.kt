@@ -12,7 +12,6 @@ import androidx.test.core.app.ApplicationProvider
 import io.falu.identity.ContractArgs
 import io.falu.identity.IdentityVerificationResult
 import io.falu.identity.IdentityVerificationResultCallback
-import io.falu.identity.viewModel.IdentityVerificationViewModel
 import io.falu.identity.R
 import io.falu.identity.TestApplication
 import io.falu.identity.analytics.IdentityAnalyticsRequestBuilder
@@ -20,6 +19,7 @@ import io.falu.identity.api.models.IdentityDocumentType
 import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationOptions
 import io.falu.identity.api.models.verification.VerificationOptionsForDocument
+import io.falu.identity.viewModel.IdentityVerificationViewModel
 import okhttp3.Headers
 import org.junit.Rule
 import org.junit.Test
