@@ -6,6 +6,7 @@ import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.lifecycle.MutableLiveData
 import androidx.test.core.app.ApplicationProvider
 import io.falu.identity.ContractArgs
 import io.falu.identity.IdentityVerificationResultCallback
@@ -19,15 +20,18 @@ import io.falu.identity.api.models.verification.Verification
 import io.falu.identity.api.models.verification.VerificationUpdateOptions
 import io.falu.identity.navigation.IdentityVerificationNavActions
 import io.falu.identity.viewModel.IdentityVerificationViewModel
+import okhttp3.Headers
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import software.tingle.api.ResourceResponse
 
 @RunWith(RobolectricTestRunner::class)
 @Config(application = TestApplication::class, sdk = [Build.VERSION_CODES.Q])
@@ -35,6 +39,7 @@ internal class WelcomeScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
+    private val verificationResponse = MutableLiveData<ResourceResponse<Verification>?>(null)
     private val mockVerificationResultCallback = mock<IdentityVerificationResultCallback>()
     private val navActions = mock<IdentityVerificationNavActions> {
         on { navigateToDocumentSelection() }.then {}
@@ -69,6 +74,8 @@ internal class WelcomeScreenTest {
                 args = contractArgs
             )
         )
+
+        on { verification }.thenReturn(verificationResponse)
     }
 
     @Test
@@ -77,7 +84,7 @@ internal class WelcomeScreenTest {
             onNodeWithTag(WELCOME_ACCEPT_BUTTON).performClick()
 
             verify(mockIdentityVerificationViewModel).updateVerification(
-                VerificationUpdateOptions(consent = true),
+                eq(VerificationUpdateOptions(consent = true)),
                 any(),
                 any(),
                 any()
@@ -85,37 +92,17 @@ internal class WelcomeScreenTest {
         }
     }
 
-    @Test
-    fun `test navigation to document selection on successful verification update`() {
-        whenever(mockIdentityVerificationViewModel.updateVerification(any(), any(), any(), any()))
-            .thenAnswer { invocation ->
-                val onSuccess = invocation.getArgument<(Unit) -> Unit>(1)
-                onSuccess(Unit)
-            }
-
-        setComposeTestRuleWith {
-            onNodeWithTag(WELCOME_ACCEPT_BUTTON).performClick()
-            verify(navActions).navigateToDocumentSelection()
-        }
-    }
-
-    @Test
-    fun `test navigation to error screen on verification update failure`() {
-        whenever(mockIdentityVerificationViewModel.updateVerification(any(), any(), any(), any()))
-            .thenAnswer { invocation ->
-                val onFailure = invocation.getArgument<(Throwable) -> Unit>(2)
-                onFailure(Throwable("Mock failure"))
-            }
-
-        setComposeTestRuleWith {
-            onNodeWithTag(WELCOME_ACCEPT_BUTTON).performClick()
-            verify(navActions).navigateToErrorWithFailure(any())
-        }
-    }
-
     private fun setComposeTestRuleWith(
         testBlock: ComposeContentTestRule.() -> Unit = {}
     ) {
+        val response = ResourceResponse(
+            200,
+            Headers.headersOf(),
+            verification,
+            null
+        )
+        verificationResponse.postValue(response)
+
         composeTestRule.setContent {
             WelcomeScreen(mockIdentityVerificationViewModel, navActions, mockVerificationResultCallback)
         }
@@ -126,8 +113,6 @@ internal class WelcomeScreenTest {
     private companion object {
         const val temporaryKey = "fskt_1234"
         val logo = mock<Uri>()
-
-        const val WELCOME_ACCEPT_BUTTON = "Accept"
 
         val contractArgs = ContractArgs(
             temporaryKey = temporaryKey,

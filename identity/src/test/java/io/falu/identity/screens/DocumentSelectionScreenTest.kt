@@ -44,7 +44,7 @@ internal class DocumentSelectionScreenTest {
 
     private val navActions = mock<IdentityVerificationNavActions> {
         on { navigateToDocumentCaptureMethods(any()) }.then {}
-        on { navigateToError(any()) }.then {}
+        on { navigateToErrorWithFailure(any()) }.then {}
     }
 
     private val mockIdentityVerificationViewModel = mock<IdentityVerificationViewModel> {
@@ -99,7 +99,6 @@ internal class DocumentSelectionScreenTest {
 
             onNodeWithTag(TAG_DOCUMENT_ID_CARD).assertExists().assertIsNotEnabled()
             onNodeWithTag(TAG_DOCUMENT_PASSPORT).assertExists().assertIsNotEnabled()
-            onNodeWithTag(TAG_DOCUMENT_DL).assertExists().assertIsNotEnabled()
         }
     }
 

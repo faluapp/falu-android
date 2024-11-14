@@ -16,9 +16,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import io.falu.identity.IdentityVerificationResult
@@ -34,13 +35,14 @@ import io.falu.identity.ui.ObserveVerificationAndCompose
 import io.falu.identity.ui.theme.IdentityTheme
 import io.falu.identity.viewModel.IdentityVerificationViewModel
 
+internal const val WELCOME_ACCEPT_BUTTON = "Accept"
+
 @Composable
 internal fun WelcomeScreen(
     viewModel: IdentityVerificationViewModel,
     navActions: IdentityVerificationNavActions,
     verificationResultCallback: IdentityVerificationResultCallback
 ) {
-    val context = LocalContext.current
     val response by viewModel.verification.observeAsState()
     var isAcceptLoading by remember { mutableStateOf(false) }
 
@@ -106,7 +108,11 @@ private fun ConsentView(
             textAlign = TextAlign.Start
         )
 
-        LoadingButton(text = stringResource(R.string.welcome_button_accept), isLoading = loading) {
+        LoadingButton(
+            modifier = Modifier.semantics { testTag = WELCOME_ACCEPT_BUTTON },
+            text = stringResource(R.string.welcome_button_accept),
+            isLoading = loading
+        ) {
             onAccepted()
         }
 
@@ -119,7 +125,7 @@ private fun ConsentView(
 private fun WelcomePreview() {
     IdentityTheme {
         IdentityVerificationHeader(Uri.EMPTY, WorkspaceInfo(name = "Showcases", country = "US"), false) {
-            ConsentView(workspaceName = "Showcases", loading = true, onAccepted = {}, onDeclined = {})
+            ConsentView(workspaceName = "Showcases", loading = false, onAccepted = {}, onDeclined = {})
         }
     }
 }

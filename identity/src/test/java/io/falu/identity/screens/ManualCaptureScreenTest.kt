@@ -67,7 +67,7 @@ internal class ManualCaptureScreenTest {
 
     private val navActions = mock<IdentityVerificationNavActions> {
         on { navigateToDocumentCaptureMethods(any()) }.then {}
-        on { navigateToError(any()) }.then {}
+        on { navigateToErrorWithFailure(any()) }.then {}
     }
 
     @get:Rule

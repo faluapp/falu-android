@@ -87,9 +87,9 @@ internal fun Bitmap.crop(rect: Rect): Bitmap {
     require(rect.left < rect.right && rect.top < rect.bottom) { "Cannot crop negative values" }
     require(
         rect.left >= 0 &&
-                rect.top >= 0 &&
-                rect.bottom <= this.height &&
-                rect.right <= this.width
+            rect.top >= 0 &&
+            rect.bottom <= this.height &&
+            rect.right <= this.width
     ) {
         "Invalid dimensions for crop"
     }
@@ -107,7 +107,7 @@ internal fun Bitmap.toSize() = Size(this.width, this.height)
  */
 @CheckResult
 internal fun Bitmap.withBoundingBox(bounds: Rect): Bitmap {
-    val bitmap = copy(config!!    , true)
+    val bitmap = copy(config!!, true)
     val canvas = Canvas(bitmap)
 
     Paint().apply {
