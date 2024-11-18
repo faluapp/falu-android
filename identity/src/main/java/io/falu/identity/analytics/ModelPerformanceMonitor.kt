@@ -45,7 +45,8 @@ internal class ModelPerformanceMonitor(
                 preprocessing = preprocessingStats.duration(),
                 imageInfo = preprocessingStats.lastOrNull()?.result,
                 frames = preprocessingStats.size
-            ), IdentityAnalyticsRequestBuilder.ORIGIN
+            ),
+            IdentityAnalyticsRequestBuilder.ORIGIN
         )
 
         preprocessingStats.clear()

@@ -33,6 +33,9 @@ internal data class Verification(
     var capture: VerificationCapture,
     var supported: Boolean = true
 ) {
+    val idNumberVerification: Boolean
+        get() = type == VerificationType.IDENTITY_NUMBER
+
     val selfieRequired: Boolean
         get() = options.selfie != null
 

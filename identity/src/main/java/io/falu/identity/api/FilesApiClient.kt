@@ -88,8 +88,9 @@ internal class FilesApiClient : AbstractHttpApiClient(EmptyAuthenticationProvide
                     }
                 }
 
-                400 -> errorModel =
-                    gson.fromJson(body.charStream(), HttpApiResponseProblem::class.java)
+                400 ->
+                    errorModel =
+                        gson.fromJson(body.charStream(), HttpApiResponseProblem::class.java)
             }
             body.close()
         }

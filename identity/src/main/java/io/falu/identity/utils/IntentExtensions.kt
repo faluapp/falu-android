@@ -12,7 +12,8 @@ inline fun <reified T : Serializable> Bundle.serializable(key: String): T? = whe
     }
 
     else -> {
-        @Suppress("DEPRECATION") getSerializable(key) as? T
+        @Suppress("DEPRECATION")
+        getSerializable(key) as? T
     }
 }
 
@@ -22,7 +23,8 @@ inline fun <reified T : Serializable> Intent.serializable(key: String): T? = whe
     }
 
     else -> {
-        @Suppress("DEPRECATION") getSerializableExtra(key) as? T
+        @Suppress("DEPRECATION")
+        getSerializableExtra(key) as? T
     }
 }
 
@@ -32,7 +34,8 @@ inline fun <reified T : Parcelable> Intent.parcelable(key: String): T? = when {
     }
 
     else -> {
-        @Suppress("DEPRECATION") getParcelableExtra(key) as? T
+        @Suppress("DEPRECATION")
+        getParcelableExtra(key) as? T
     }
 }
 
@@ -42,6 +45,7 @@ inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? = when {
     }
 
     else -> {
-        @Suppress("DEPRECATION") getParcelable(key) as? T
+        @Suppress("DEPRECATION")
+        getParcelable(key) as? T
     }
 }

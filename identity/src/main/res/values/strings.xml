@@ -3,15 +3,18 @@
     <string name="button_continue">Continue</string>
     <string name="button_finish">Complete</string>
     <string name="button_select">Select</string>
+    <string name="button_select_front">Select Front</string>
+    <string name="button_select_back">Select Back</string>
     <string name="button_take_photo">Take Photo</string>
     <string name="button_scan">Scan</string>
     <string name="button_verify">Verify</string>
     <string name="button_take_again">Take Again</string>
     <string name="button_scan_again">Scan Again</string>
-    <string name="button_rectify">Resolve Error</string>
+    <string name="button_rectify">Resolve</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_try_again">Try Again</string>
     <string name="button_change_method">Change Method</string>
+    <string name="button_app_settings">App Settings</string>
     <string name="identity_verification_title_identity_verification">Identity verification</string>
     <string name="identity_verification_text_mode_sandbox">Sandbox/Test</string>
     <string name="identity_verification_text_help_and_support">Help And Support</string>
@@ -22,10 +25,10 @@
 
     <!--Errors-->
     <string name="error_title">Something went wrong!</string>
-    <string name="error_description_server">The connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. Retry later.</string>
+    <string name="error_description_server">The connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. Retry later</string>
     <string name="error_title_verification_data_incomplete">Missing Verification Data!</string>
+    <string name="error_title_verification_data_mismatch">An error occurred when processing your verification data. Please try again!</string>
     <string name="error_title_unexpected_error">An unexpected error occurred. Please try again later.</string>
-    <string name="error_description_http_error">The following unexpected errors occurred:\n\n<b>%1$s</b>.\n\nPlease try again later!</string>
     <string name="error_title_depleted_attempts">Verification Attempts Depleted</string>
     <string name="error_description_depleted_attempts">You have depleted your allocated number of verification attempts. Please contact support to start a new verification!</string>
     <string name="error_title_scan_capture">Could not scan document!</string>
@@ -38,7 +41,7 @@
     <string name="welcome_button_accept">Accept</string>
     <string name="welcome_button_decline">Decline</string>
     <string name="welcome_subtitle">%1$s partners with Falu for secure identity verification.</string>
-    <string name="welcome_body">Falu identity was built with the global privacy regulations in mind.\nData security &amp; privacy are important to us. You are about to begin the identity verification process.\nData collected will be handled according to the Falu <b><a href='https://tingle.software/legal/privacy-policy'>Privacy Policy</a></b>.\n\nKindly have your identification document close by and get started with the process!</string>
+    <string name="welcome_body">Falu identity was built with the global privacy regulations in mind.\nData security &amp; privacy are important to us. You are about to begin the identity verification process.\nData collected will be handled according to the Falu <b><a href='https://tingle.software/legal/privacy-policy'>Privacy Policy</a></b>.\nKindly have your identification document close by and get started with the process!</string>
 
     <!--Document Selection-->
     <string name="document_selection_subtitle">Select issuing country to which see which identity documents are acceptable.</string>
@@ -56,7 +59,7 @@
 
     <!--Upload Document -->
     <string name="upload_document_capture_title">%1$s upload</string>
-    <string name="upload_document_capture_document_font">Front of %1$s</string>
+    <string name="upload_document_capture_document_front">Front of %1$s</string>
     <string name="upload_document_capture_document_back">Back of %1$s</string>
 
     <!--Scan Capture -->
@@ -79,7 +82,7 @@
     <!--Selfie-->
     <string name="selfie_text_take_selfie">Scan your face!</string>
     <string name="selfie_text_scan_message">Position your face in the center.</string>
-    <string name="selfie_text_face_detected">Face detected, stay still scan in progress!</string>
+    <string name="selfie_text_face_detected">Face detected, scan in progress. Stay still!</string>
     <string name="selfie_text_selfie_scan_completed">Scan Complete!</string>
 
     <!-- Document Verification -->
@@ -95,6 +98,8 @@
     <string name="document_verification_error_invalid_document_number">Invalid document number.</string>
     <string name="document_verification_error_invalid_first_name">The first name is required.</string>
     <string name="document_verification_error_invalid_last_name">The last name is required.</string>
+    <string name="document_verification_error_invalid_gender">The gender is required.</string>
+    <string name="document_verification_error_invalid_birthday">The date of birth is required.</string>
 
     <!--  Tax Pin Verification  -->
     <string name="tax_pin_verification_title_tax_pin">Kindly provide your tax PIN number</string>

@@ -7,7 +7,7 @@ id("com.android.library")
 apply(from = "${rootDir}/build-config/klint.gradle.kts")
 
 android {
-    compileSdk = 34
+    compileSdk = 35
     namespace = project.properties["FALU_SDK_NAMESPACE"].toString()
 
     defaultConfig {

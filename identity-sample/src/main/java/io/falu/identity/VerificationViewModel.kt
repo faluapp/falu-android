@@ -32,16 +32,18 @@ class VerificationViewModel(application: Application) : AndroidViewModel(applica
         allowIdNumberVerification: Boolean,
         allowTaxPin: Boolean
     ) = liveData {
-
         val request = IdentityVerificationCreationRequest(
             options = IdentityVerificationOptions(
                 allowUploads = allowUploads,
-                document = if (allowDrivingLicense || allowPassport || allowIdentityCard)
+                document = if (allowDrivingLicense || allowPassport || allowIdentityCard) {
                     generateDocumentOptions(
                         allowDrivingLicense,
                         allowPassport,
                         allowIdentityCard
-                    ) else null,
+                    )
+                } else {
+                    null
+                },
                 selfie = if (allowDocumentSelfie) IdentityVerificationOptionsForSelfie() else null,
                 idNumber = if (allowIdNumberVerification) IdentityVerificationOptionsForIdNumber() else null,
                 tax = if (allowTaxPin) IdentityVerificationOptionsForTax(allowed = mutableListOf("ken_pin")) else null
@@ -92,7 +94,7 @@ class VerificationViewModel(application: Application) : AndroidViewModel(applica
 
 class ApiClient : AbstractHttpApiClient(EmptyAuthenticationProvider()) {
     suspend fun createIdentityVerification(request: IdentityVerificationCreationRequest):
-            ResourceResponse<IdentityVerification> {
+        ResourceResponse<IdentityVerification> {
         val builder = Request.Builder()
             .url("https://identity-verification.hst-smpls.falu.io/identity/create-verification")
             .post(makeJson(request).toRequestBody(MEDIA_TYPE_JSON))

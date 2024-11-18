@@ -1,2 +1,3 @@
 [codespell]
-skip = .git,countries.json
+skip = .git,countries.json,libs.versions.toml
+ignore-words-list = OptIn,expresso,statics

@@ -21,12 +21,11 @@ internal data class DocumentUploadDisposition(
     fun modify(
         documentSide: DocumentSide,
         result: VerificationUploadResult
-    ) =
-        if (documentSide == DocumentSide.FRONT) {
-            this.copy(front = result)
-        } else {
-            this.copy(back = result)
-        }
+    ) = if (documentSide == DocumentSide.FRONT) {
+        this.copy(front = result)
+    } else {
+        this.copy(back = result)
+    }
 
     val isFrontUpload: Boolean
         get() = front != null
@@ -38,7 +37,7 @@ internal data class DocumentUploadDisposition(
         get() = front != null && back != null
 
     fun generateVerificationUploadRequest(identityDocumentType: IdentityDocumentType):
-            VerificationUploadRequest {
+        VerificationUploadRequest {
         val front = VerificationDocumentSide(
             method = front!!.method!!,
             file = front!!.file.id,

@@ -28,9 +28,16 @@ material = "1.12.0"
 joda = "2.13.0"
 nexus = "2.0.0"
 coil = "2.7.0"
+compose-bom = "2024.09.02"
+accompanist = "0.34.0"
+runtime-livedata = "1.7.2"
+ui-test-junit4-android = "1.7.2"
 
 [libraries]
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+androidx-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
+androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 abstractions = { module = "software.tingle:abstractions", version.ref = "abstractions" }
 junit = { module = "junit:junit", version.ref = "junit" }
@@ -73,11 +80,24 @@ androidx-test-runner = { module = "androidx.test:runner", version.ref = "android
 androidx-browser = { group = "androidx.browser", name = "browser", version = "1.8.0" }
 coil-ktx = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil-svg = { module = "io.coil-kt:coil-svg", version.ref = "coil" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
+compose-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+runtime = { module = "androidx.compose.runtime:runtime" }
+ui-tests = { module = "androidx.compose.ui:ui-test-junit4" }
+ui-tests-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+material3 = { module = "androidx.compose.material3:material3" }
+accompanist = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
+compose-activity = { module = "androidx.activity:activity-compose" }
+compose-navigation = { module = "androidx.navigation:navigation-compose" }
 
 tensorflow-lite = { module = "org.tensorflow:tensorflow-lite", version.ref = "tensorflow-lite" }
 tensorflow-support = { module = "org.tensorflow:tensorflow-lite-support", version.ref = "tensorflow-support" }
 
 joda = { module = "joda-time:joda-time", version.ref = "joda" }
+androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtime-livedata" }
+androidx-ui-test-junit4-android = { group = "androidx.compose.ui", name = "ui-test-junit4-android", version.ref = "ui-test-junit4-android" }
 
 [bundles]
 mokito = ["mokito-core", "mokito-inline"]
@@ -85,7 +105,8 @@ kotlin-test = ["kotlin-test-junit", "kotlin-test-annotations"]
 androidx-lifecycle = ["androidx-livedata", "androidx-viewmodel", "androidx-runtime"]
 camera = ["androidx-camera-core", "androidx-camera-camera2", "androidx-camera-lifecycle", "androidx-camera-video", "androidx-camera-extensions", "androidx-camera-view"]
 navigation = ["androidx-navigation-fragment", "androidx-navigation-ui"]
-coil = ["coil-ktx", "coil-svg"]
+coil = ["coil-ktx", "coil-svg", "coil-compose"]
 
 [plugins]
 nexus = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexus" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

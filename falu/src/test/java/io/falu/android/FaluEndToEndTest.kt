@@ -8,13 +8,13 @@ import io.falu.android.models.payments.Payment
 import io.falu.android.models.payments.PaymentRequest
 import io.falu.android.networking.FaluRepository
 import io.falu.core.ApiResultCallback
-import java.util.Date
-import kotlin.test.Test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.runner.RunWith
 import org.mockito.kotlin.mock
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import java.util.Date
+import kotlin.test.Test
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O_MR1])
@@ -45,7 +45,6 @@ class FaluEndToEndTest {
 
     @Test
     fun `test mpesa payment works`() {
-
         val mpesa = MpesaPaymentRequest(
             phone = "+254712345678",
             reference = "254712345678",

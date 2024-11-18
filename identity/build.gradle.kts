@@ -2,12 +2,13 @@ plugins {
     id("com.android.library")
     kotlin("android")
     id("kotlin-parcelize")
+    alias(libs.plugins.compose.compiler)
 }
 
 apply(from = "${rootDir}/build-config/klint.gradle.kts")
 
 android {
-    compileSdk = 34
+    compileSdk = 35
     namespace = project.properties["FALU_SDK_NAMESPACE"].toString()
 
     defaultConfig {
@@ -46,6 +47,7 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
+        compose = true
     }
 
     lint.enable += "Interoperability"
@@ -73,6 +75,18 @@ dependencies {
     implementation(libs.constraint)
     implementation(libs.androidx.appcompat)
 
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.preview)
+    implementation(libs.material3)
+    implementation(libs.compose.activity)
+    implementation(libs.compose.navigation)
+    implementation(libs.runtime)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.accompanist)
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.ui.test.junit4.android)
+    implementation(libs.androidx.ui.tooling.preview)
+
     implementation(libs.tensorflow.lite)
     implementation(libs.tensorflow.support)
 
@@ -85,6 +99,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.joda)
     implementation(libs.bundles.coil)
+    implementation(libs.androidx.browser)
 
     testImplementation(libs.junit)
     testImplementation(libs.bundles.mokito)
@@ -98,7 +113,9 @@ dependencies {
     testImplementation(libs.androidx.espresso.core)
     testImplementation(libs.androidx.fragment.testing)
     testImplementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.browser)
+    testImplementation(libs.ui.tests)
+    testImplementation(libs.ui.tests.manifest)
+    testImplementation(libs.androidx.ui.tooling)
 
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.test.runner)

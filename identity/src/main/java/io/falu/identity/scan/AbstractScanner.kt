@@ -1,34 +1,40 @@
 package io.falu.identity.scan
 
-import android.renderscript.RenderScript
 import io.falu.identity.ai.DetectionOutput
+import io.falu.identity.analytics.ModelPerformanceMonitor
 import io.falu.identity.api.models.verification.VerificationCapture
 import io.falu.identity.camera.CameraView
+import java.io.File
 
-internal abstract class AbstractScanner(
-    private val callbacks: ScanResultCallback<ProvisionalResult, IdentityResult>
-) {
+internal abstract class AbstractScanner {
+    internal lateinit var callbacks: ScanResultCallback<ProvisionalResult, IdentityResult>
 
-    protected var disposition: ScanDisposition? = null
+    internal var disposition: ScanDisposition? = null
+    private var cameraView: CameraView? = null
+
     private var previousDisposition: ScanDisposition? = null
 
     private var isFirstOutput = false
 
-    internal abstract fun scan(
-        view: CameraView,
-        scanType: ScanDisposition.DocumentScanType,
-        capture: VerificationCapture,
-        renderScript: RenderScript
-    )
-
-    internal fun stopScan(view: CameraView) {
-        view.analyzers.clear()
-        view.stopAnalyzer()
+    internal fun onUpdateCameraView(view: CameraView) {
+        if (cameraView == null) {
+            cameraView = view
+            onCameraViewReady()
+        }
     }
 
-    internal fun onResult(output: DetectionOutput) {
-        requireNotNull(disposition) { "Initial Disposition cannot be null" }
+    protected open fun onCameraViewReady() {}
 
+    internal abstract fun addAnalyzers(
+        model: File,
+        capture: VerificationCapture,
+        scanType: ScanDisposition.DocumentScanType,
+        performanceMonitor: ModelPerformanceMonitor
+    )
+
+    fun requireCameraView() = requireNotNull(cameraView)
+
+    internal fun onResult(output: DetectionOutput) {
         val (provisionalResult, identityResult) = collectResults(output)
 
         callbacks.onProgress(provisionalResult)
@@ -59,11 +65,11 @@ internal abstract class AbstractScanner(
             val provisionalResult = ProvisionalResult(disposition!!)
 
             provisionalResult to
-                    if (disposition!!.terminate) {
-                        IdentityResult(output, disposition!!)
-                    } else {
-                        null
-                    }
+                if (disposition!!.terminate) {
+                    IdentityResult(output, disposition!!)
+                } else {
+                    null
+                }
         } else {
             isFirstOutput = true
             ProvisionalResult(disposition!!) to null

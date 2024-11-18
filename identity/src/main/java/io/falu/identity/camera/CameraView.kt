@@ -1,9 +1,6 @@
 package io.falu.identity.camera
 
-import android.app.Activity
 import android.content.Context
-import android.hardware.camera2.CameraCharacteristics
-import android.hardware.camera2.CameraManager
 import android.os.Build
 import android.util.AttributeSet
 import android.util.DisplayMetrics
@@ -13,9 +10,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.camera.core.Camera
-import androidx.camera.core.CameraInfo
 import androidx.camera.core.CameraSelector
-import androidx.camera.core.CameraState
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -23,12 +18,15 @@ import androidx.camera.view.PreviewView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.withStyledAttributes
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import io.falu.identity.R
-import io.falu.identity.api.models.CameraLens
-import io.falu.identity.api.models.CameraSettings
-import io.falu.identity.api.models.Exposure
+import io.falu.identity.utils.getActivity
 import io.falu.identity.utils.size
+import java.util.concurrent.Executor
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 import kotlin.math.max
 import kotlin.math.min
 
@@ -36,12 +34,7 @@ internal class CameraView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : ConstraintLayout(context, attrs, defStyleAttr) {
-
-    /**
-     *
-     */
-    private lateinit var onCameraInfoAvailable: (CameraInfo) -> Unit
+) : ConstraintLayout(context, attrs, defStyleAttr), LifecycleEventObserver {
 
     /**
      *
@@ -56,9 +49,7 @@ internal class CameraView @JvmOverloads constructor(
     /**
      *
      */
-    private val ivCameraBorder: ImageView
-
-    private lateinit var _lifecycleOwner: LifecycleOwner
+    internal val ivCameraBorder: ImageView
 
     private var _cameraViewType: CameraViewType = CameraViewType.DEFAULT
     private var _lensFacing: Int = CameraSelector.LENS_FACING_BACK
@@ -70,14 +61,9 @@ internal class CameraView @JvmOverloads constructor(
     private var preview: Preview? = null
     private var imageAnalysis: ImageAnalysis? = null
     private var camera: Camera? = null
-    private var cameraProvider: ProcessCameraProvider? = null
 
-    /**
-     * Detects, characterizes, and connects to a CameraDevice (used for all camera operations)
-     */
-    private val cameraManager: CameraManager by lazy {
-        context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
-    }
+    private val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
+    private var cameraExecutor: ExecutorService = Executors.newSingleThreadExecutor()
 
     /**
      * The direction of the camera, front or back
@@ -91,11 +77,7 @@ internal class CameraView @JvmOverloads constructor(
     /**
      * The lifecycle owner
      */
-    var lifecycleOwner: LifecycleOwner
-        get() = _lifecycleOwner
-        set(value) {
-            _lifecycleOwner = value
-        }
+    private lateinit var lifecycleOwner: LifecycleOwner
 
     /**
      *
@@ -111,22 +93,18 @@ internal class CameraView @JvmOverloads constructor(
      */
     val analyzers: MutableList<ImageAnalysis.Analyzer> = mutableListOf()
 
-    /**
-     *
-     */
     private val displayInfo by lazy {
-        val activity = context as Activity
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            activity.display
+            requireNotNull(context.getActivity()).display
         } else {
             null
-        } ?: @Suppress("Deprecation")
-        activity.windowManager.defaultDisplay
+        }
+            ?: @Suppress("Deprecation")
+            requireNotNull(context.getActivity()).windowManager.defaultDisplay
     }
 
     private val displayRotation by lazy { displayInfo.rotation }
-    private val displayMetrics by lazy { DisplayMetrics().also { display.getRealMetrics(it) } }
+    private val displayMetrics by lazy { DisplayMetrics().also { displayInfo.getRealMetrics(it) } }
     private val displaySize by lazy {
         Size(
             displayMetrics.widthPixels,
@@ -156,11 +134,16 @@ internal class CameraView @JvmOverloads constructor(
         }
     }
 
-    /**
-     *
-     */
-    fun setCameraInfoListener(onCameraInfoAvailable: (CameraInfo) -> Unit) {
-        this.onCameraInfoAvailable = onCameraInfoAvailable
+    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+        when (event) {
+            Lifecycle.Event.ON_DESTROY -> onDestroyed()
+            Lifecycle.Event.ON_PAUSE -> onPause()
+            Lifecycle.Event.ON_CREATE -> onCreate()
+            Lifecycle.Event.ON_START -> onStart()
+            Lifecycle.Event.ON_RESUME -> onResume()
+            Lifecycle.Event.ON_STOP -> onStop()
+            Lifecycle.Event.ON_ANY -> onAny()
+        }
     }
 
     /**
@@ -186,31 +169,24 @@ internal class CameraView @JvmOverloads constructor(
      *
      */
     private fun configureCamera() {
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
-        cameraProviderFuture.addListener({
-            cameraProvider = cameraProviderFuture.get()
-
-            bindCameraUseCases()
-        }, ContextCompat.getMainExecutor(context))
+        withCameraProvider {
+            bindCameraUseCases(it)
+        }
     }
 
-    /**
-     * Declare and bind preview, capture and analysis use cases
-     */
-    private fun bindCameraUseCases() {
-        val cameraProvider = cameraProvider
-            ?: throw IllegalStateException("Camera initialization failed.")
-
+    @Synchronized
+    private fun bindCameraUseCases(cameraProvider: ProcessCameraProvider) {
         val cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
 
-        preview = Preview.Builder()
-            .setTargetRotation(displayRotation)
-            .setTargetResolution(viewCameraPreview.size())
-            .build()
-            .also {
-                it.setSurfaceProvider(viewCameraPreview.surfaceProvider)
-            }
-
+        if (preview == null) {
+            preview = Preview.Builder()
+                .setTargetRotation(displayRotation)
+                .setTargetResolution(viewCameraPreview.size())
+                .build()
+                .also {
+                    it.setSurfaceProvider(viewCameraPreview.surfaceProvider)
+                }
+        }
         imageAnalysis = ImageAnalysis.Builder()
             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
             .setTargetRotation(displayRotation)
@@ -218,12 +194,15 @@ internal class CameraView @JvmOverloads constructor(
             .setImageQueueDepth(1)
             .build()
             .also {
-                it.setAnalyzer(ContextCompat.getMainExecutor(context), LumaAnalyzer { luma ->
-                    brightness = luma
-                })
+                it.setAnalyzer(
+                    cameraExecutor,
+                    LumaAnalyzer { luma ->
+                        brightness = luma
+                    }
+                )
 
                 analyzers.forEach { analyzer ->
-                    it.setAnalyzer(ContextCompat.getMainExecutor(context), analyzer)
+                    it.setAnalyzer(cameraExecutor, analyzer)
                 }
             }
 
@@ -240,8 +219,15 @@ internal class CameraView @JvmOverloads constructor(
             val surfaceProvider = viewCameraPreview.surfaceProvider
 
             preview?.setSurfaceProvider(surfaceProvider)
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.e(TAG, "Use case binding failed", e)
+        }
+    }
+
+    internal fun startAnalyzer() {
+        cameraExecutor = Executors.newSingleThreadExecutor()
+        withCameraProvider {
+            configureCamera()
         }
     }
 
@@ -249,48 +235,59 @@ internal class CameraView @JvmOverloads constructor(
         imageAnalysis?.clearAnalyzer()
     }
 
-    internal fun startAnalyzer() {
-        imageAnalysis?.also {
-            analyzers.forEach { analyzer ->
-                it.setAnalyzer(ContextCompat.getMainExecutor(context), analyzer)
-            }
+    private fun onDestroyed() {
+        withCameraProvider {
+            it.unbindAll()
+            cameraExecutor.shutdown()
         }
     }
 
-    /**
-     * */
-    private fun observeCameraState(cameraInfo: CameraInfo?) {
-        cameraInfo?.cameraState?.observe(lifecycleOwner) {
-            when (it.type) {
-                CameraState.Type.OPEN -> {
-                    onCameraInfoAvailable(cameraInfo)
-                }
+    private fun onPause() {
+    }
 
-                else -> {}
-            }
+    private fun onCreate() {
+        cameraExecutor = Executors.newSingleThreadExecutor()
+        viewCameraPreview.post {
+            configureCamera()
         }
     }
 
+    private fun onStart() {
+    }
+
+    private fun onResume() {
+    }
+
+    private fun onStop() {
+    }
+
+    private fun onAny() {
+    }
+
+    internal fun unbindFromLifecycle(lifecycleOwner: LifecycleOwner) {
+        lifecycleOwner.lifecycle.removeObserver(this)
+        withCameraProvider { cameraProvider ->
+            preview?.let { preview ->
+                cameraProvider.unbind(preview)
+            }
+        }
+        onPause()
+    }
+
+    internal fun bindLifecycle(lifecycleOwner: LifecycleOwner) {
+        lifecycleOwner.lifecycle.addObserver(this)
+        this.lifecycleOwner = lifecycleOwner
+    }
+
     /**
-     *
+     * Run a task with the camera provider.
      */
-    internal val cameraSettings: CameraSettings
-        get() {
-            val extensions = cameraManager.getCameraCharacteristics(cameraId)
-            val focalLength = extensions.get(CameraCharacteristics.LENS_INFO_AVAILABLE_FOCAL_LENGTHS)?.first()
-            val duration =
-                extensions.get(CameraCharacteristics.SENSOR_INFO_EXPOSURE_TIME_RANGE)?.lower ?: Float.MIN_VALUE
-            val iso = extensions.get(CameraCharacteristics.SENSOR_INFO_SENSITIVITY_RANGE)?.upper ?: Float.MIN_VALUE
-
-            return CameraSettings(
-                lens = CameraLens(model = "Camera-X", focalLength = focalLength!!),
-                brightness = brightness.toFloat(),
-                exposure = Exposure(iso = iso.toFloat(), duration = duration.toFloat())
-            )
-        }
-
-    private val cameraId: String
-        get() = cameraManager.cameraIdList.first()
+    private fun withCameraProvider(
+        executor: Executor = ContextCompat.getMainExecutor(context),
+        task: (ProcessCameraProvider) -> Unit
+    ) {
+        cameraProviderFuture.addListener({ task(cameraProviderFuture.get()) }, executor)
+    }
 
     private fun Size.toResolution(display: Size) = when {
         display.width >= display.height -> Size(

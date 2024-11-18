@@ -27,7 +27,8 @@ internal class IdentityAnalyticsRequestBuilder(
     )
 
     fun viewClosed(verificationResult: String) = createRequest(
-        EVENT_VERIFICATION_VIEW_CLOSED, makeEventParameters(
+        EVENT_VERIFICATION_VIEW_CLOSED,
+        makeEventParameters(
             KEY_VIEW_RESULT to verificationResult
         )
     )
@@ -41,7 +42,8 @@ internal class IdentityAnalyticsRequestBuilder(
         selfieModelScore: Float? = null,
         selfie: Boolean? = null
     ) = createRequest(
-        EVENT_VERIFICATION_SUCCESSFUL, makeEventParameters(
+        EVENT_VERIFICATION_SUCCESSFUL,
+        makeEventParameters(
             KEY_FROM_FALLBACK_URL to fromFallbackUrl.toString(),
             KEY_DOCUMENT_SCAN_TYPE to scanType?.name,
             KEY_SELFIE_REQUIRED to selfie,
@@ -58,7 +60,8 @@ internal class IdentityAnalyticsRequestBuilder(
         selfie: Boolean? = null,
         previousScreenName: String? = null
     ) = createRequest(
-        EVENT_VERIFICATION_CANCELED, makeEventParameters(
+        EVENT_VERIFICATION_CANCELED,
+        makeEventParameters(
             KEY_FROM_FALLBACK_URL to fromFallbackUrl,
             KEY_DOCUMENT_SCAN_TYPE to scanType?.name,
             KEY_SELFIE_REQUIRED to selfie,
@@ -72,7 +75,8 @@ internal class IdentityAnalyticsRequestBuilder(
         selfie: Boolean? = null,
         throwable: Throwable?
     ) = createRequest(
-        EVENT_VERIFICATION_FAILED, makeEventParameters(
+        EVENT_VERIFICATION_FAILED,
+        makeEventParameters(
             KEY_FROM_FALLBACK_URL to fromFallbackUrl,
             KEY_DOCUMENT_SCAN_TYPE to scanType?.name,
             KEY_SELFIE_REQUIRED to selfie,
@@ -84,7 +88,8 @@ internal class IdentityAnalyticsRequestBuilder(
     )
 
     fun documentScanTimeOut(scanType: ScanDisposition.DocumentScanType) = createRequest(
-        EVENT_IDENTITY_DOCUMENT_TIMEOUT, makeEventParameters(KEY_DOCUMENT_SCAN_TYPE to scanType.name)
+        EVENT_IDENTITY_DOCUMENT_TIMEOUT,
+        makeEventParameters(KEY_DOCUMENT_SCAN_TYPE to scanType.name)
     )
 
     fun cameraPermissionDenied(
@@ -106,7 +111,8 @@ internal class IdentityAnalyticsRequestBuilder(
     )
 
     fun cameraInfo(rotation: Int?) = createRequest(
-        EVENT_CAMERA_INFO, makeEventParameters(
+        EVENT_CAMERA_INFO,
+        makeEventParameters(
             KEY_CAMERA_ROTATION to rotation.toString()
         )
     )
@@ -182,5 +188,8 @@ internal class IdentityAnalyticsRequestBuilder(
         const val SCREEN_NAME_UPLOAD_CAPTURE = "upload_capture"
         const val SCREEN_NAME_SUPPORT = "support"
         const val SCREEN_NAME_SELFIE = "selfie"
+        const val SCREEN_NAME_DOCUMENT_VERIFICATION = "document_verification"
+        const val SCREEN_NAME_TAX_PIN_VERIFICATION = "tax_pin_verification"
+        const val SCREEN_NAME_CONFIRMATION = "confirmation"
     }
 }

@@ -1,13 +1,18 @@
 package io.falu.identity.utils
 
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
+import android.content.Intent
 import android.graphics.Rect
+import android.net.Uri
+import android.provider.Settings
+import android.renderscript.RenderScript
 import android.text.TextUtils
 import android.util.Size
 import android.view.View
 import androidx.annotation.CheckResult
 import androidx.annotation.RestrictTo
-import io.falu.identity.R
 import io.falu.identity.ai.DocumentOption
 import io.falu.identity.scan.ScanDisposition
 import software.tingle.api.HttpApiResponseProblem
@@ -18,14 +23,14 @@ import kotlin.math.roundToInt
 internal fun HttpApiResponseProblem.getErrorDescription(context: Context): String {
     if (errors.isNullOrEmpty()) {
         val desc = description ?: code
-        return context.getString(R.string.error_description_http_error, desc)
+        return desc.orEmpty()
     }
 
     var desc = ""
     for (errors in errors!!.values) {
         desc = TextUtils.join("\n", errors)
     }
-    return context.getString(R.string.error_description_http_error, desc)
+    return desc
 }
 
 /**
@@ -97,8 +102,30 @@ internal fun Size.maxAspectRatio(ratio: Float): Size {
 /***/
 internal fun DocumentOption.matches(type: ScanDisposition.DocumentScanType): Boolean {
     return this == DocumentOption.DL_BACK && type == ScanDisposition.DocumentScanType.DL_BACK ||
-            this == DocumentOption.DL_FRONT && type == ScanDisposition.DocumentScanType.DL_FRONT ||
-            this == DocumentOption.ID_BACK && type == ScanDisposition.DocumentScanType.ID_BACK ||
-            this == DocumentOption.ID_FRONT && type == ScanDisposition.DocumentScanType.ID_FRONT ||
-            this == DocumentOption.PASSPORT && type == ScanDisposition.DocumentScanType.PASSPORT
+        this == DocumentOption.DL_FRONT && type == ScanDisposition.DocumentScanType.DL_FRONT ||
+        this == DocumentOption.ID_BACK && type == ScanDisposition.DocumentScanType.ID_BACK ||
+        this == DocumentOption.ID_FRONT && type == ScanDisposition.DocumentScanType.ID_FRONT ||
+        this == DocumentOption.PASSPORT && type == ScanDisposition.DocumentScanType.PASSPORT
 }
+
+/***/
+internal fun Uri.isHttp() = this.scheme!!.startsWith("http")
+
+/***/
+internal fun Context.getActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.getActivity()
+    else -> null
+}
+
+/***/
+fun Context.openAppSettings() {
+    val intent = Intent(
+        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+        Uri.fromParts("package", packageName, null)
+    )
+    startActivity(intent)
+}
+
+/***/
+internal fun Context.getRenderScript() = RenderScript.create(this)

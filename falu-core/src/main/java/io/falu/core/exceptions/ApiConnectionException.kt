@@ -20,8 +20,8 @@ class ApiConnectionException(
             ).joinToString(" ")
             return ApiConnectionException(
                 "IOException during API request to $displayUrl: ${e.message}. " +
-                        "Please check your internet connection and try again. " +
-                        "If this problem persists, let us know at support@falu.io.",
+                    "Please check your internet connection and try again. " +
+                    "If this problem persists, let us know at support@falu.io.",
                 e
             )
         }

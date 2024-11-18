@@ -6,13 +6,13 @@ plugins {
 apply(from = "${rootDir}/build-config/klint.gradle.kts")
 
 android {
-    compileSdk = 34
+    compileSdk = 35
     namespace = project.properties["FALU_SDK_NAMESPACE"].toString()
 
     defaultConfig {
         applicationId = "io.falu.identity.sample"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
 
         versionCode = 1
         versionName = "1.0"
