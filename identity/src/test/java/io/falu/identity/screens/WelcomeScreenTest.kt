@@ -104,7 +104,11 @@ internal class WelcomeScreenTest {
         verificationResponse.postValue(response)
 
         composeTestRule.setContent {
-            WelcomeScreen(mockIdentityVerificationViewModel, navActions, mockVerificationResultCallback)
+            WelcomeScreen(
+                mockIdentityVerificationViewModel,
+                navActions,
+                mockVerificationResultCallback
+            )
         }
 
         with(composeTestRule, testBlock)

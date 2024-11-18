@@ -35,6 +35,9 @@ ui-test-junit4-android = "1.7.2"
 
 [libraries]
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+androidx-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
+androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 abstractions = { module = "software.tingle:abstractions", version.ref = "abstractions" }
 junit = { module = "junit:junit", version.ref = "junit" }
@@ -81,6 +84,7 @@ coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
 compose-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+runtime = { module = "androidx.compose.runtime:runtime" }
 ui-tests = { module = "androidx.compose.ui:ui-test-junit4" }
 ui-tests-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 material3 = { module = "androidx.compose.material3:material3" }
