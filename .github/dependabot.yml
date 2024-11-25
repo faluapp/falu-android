@@ -3,8 +3,9 @@ updates:
   - package-ecosystem: "gradle"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
       time: "02:00"
+    open-pull-requests-limit: 20
     groups:
       ktx:
         patterns:
@@ -20,7 +21,7 @@ updates:
           - "android"
           - "com.android.tools.build*"
     reviewers:
-      - sethonyango
+      - mburumaxwell
     ignore:
       # Ignore patch updates for some packages
       - dependency-name: "mockito-*"
@@ -30,8 +31,8 @@ updates:
   - package-ecosystem: "github-actions" # See documentation for possible values
     directory: "/" # Location of package manifests
     schedule:
-      interval: "weekly"
+      interval: "monthly"
       time: "02:00"
+    open-pull-requests-limit: 10
     reviewers:
-      - sethonyango
       - mburumaxwell
