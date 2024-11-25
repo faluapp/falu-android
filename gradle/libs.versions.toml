@@ -30,7 +30,7 @@ nexus = "2.0.0"
 coil = "2.7.0"
 compose-bom = "2024.09.02"
 accompanist = "0.34.0"
-runtime-livedata = "1.7.2"
+runtime-livedata = "1.7.5"
 ui-test-junit4-android = "1.7.2"
 
 [libraries]
