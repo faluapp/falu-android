@@ -31,7 +31,7 @@ coil = "2.7.0"
 compose-bom = "2024.11.00"
 accompanist = "0.34.0"
 runtime-livedata = "1.7.5"
-ui-test-junit4-android = "1.7.2"
+ui-test-junit4-android = "1.7.5"
 
 [libraries]
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
